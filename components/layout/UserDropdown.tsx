@@ -1,0 +1,134 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import { useAuthStore } from "@/lib/stores/auth-store";
+import { logout } from "@/lib/actions/auth-actions";
+
+interface UserDropdownProps {
+  onClose: () => void;
+}
+
+export default function UserDropdown({ onClose }: UserDropdownProps) {
+  const { user, logout: clearAuth } = useAuthStore();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [onClose]);
+
+  const handleLogout = async () => {
+    await logout();
+    clearAuth();
+    onClose();
+  };
+
+  if (!user) return null;
+
+  return (
+    <div
+      ref={dropdownRef}
+      className="absolute top-full right-0 mt-2 w-[320px] bg-white rounded-xl shadow-[0_8px_40px_rgba(0,0,0,0.16)] border border-[#e5e3de]/60 overflow-hidden z-[200] fade-up"
+    >
+      {/* User Header */}
+      <div className="p-4 border-b border-[#e5e3de]">
+        <div className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f7f6f3] transition cursor-pointer">
+          <div className="w-10 h-10 bg-gradient-to-br from-[#e8500a] to-[#ff7a3d] rounded-full flex items-center justify-center text-white text-sm font-bold shadow-sm">
+            {(user.name || "U")[0].toUpperCase()}
+          </div>
+          <div>
+            <p className="text-[14px] font-semibold text-[#111]">{user.name || "User"}</p>
+            <p className="text-[11px] text-[#9a9590]">{user.email}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Menu Items */}
+      <div className="p-2">
+        {/* Profile & Dashboard */}
+        <a
+          href="/dashboard"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#f7f6f3] transition cursor-pointer group"
+          onClick={onClose}
+        >
+          <div className="w-9 h-9 bg-[#f0ede7] rounded-full flex items-center justify-center group-hover:bg-[#e5e3de] transition">
+            <svg className="w-[18px] h-[18px] text-[#333]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <p className="text-[13px] font-medium text-[#111]">โปรไฟล์ & แดชบอร์ด</p>
+          </div>
+          <svg className="w-4 h-4 text-[#b0ada6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+
+        {/* Settings & Privacy */}
+        <button
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#f7f6f3] transition cursor-pointer group"
+          onClick={onClose}
+        >
+          <div className="w-9 h-9 bg-[#f0ede7] rounded-full flex items-center justify-center group-hover:bg-[#e5e3de] transition">
+            <svg className="w-[18px] h-[18px] text-[#333]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <div className="flex-1 text-left">
+            <p className="text-[13px] font-medium text-[#111]">การตั้งค่าและความเป็นส่วนตัว</p>
+          </div>
+          <svg className="w-4 h-4 text-[#b0ada6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+        {/* Help & Support */}
+        <button
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#f7f6f3] transition cursor-pointer group"
+          onClick={onClose}
+        >
+          <div className="w-9 h-9 bg-[#f0ede7] rounded-full flex items-center justify-center group-hover:bg-[#e5e3de] transition">
+            <svg className="w-[18px] h-[18px] text-[#333]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div className="flex-1 text-left">
+            <p className="text-[13px] font-medium text-[#111]">ความช่วยเหลือและการสนับสนุน</p>
+          </div>
+          <svg className="w-4 h-4 text-[#b0ada6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+        {/* Divider */}
+        <div className="my-1.5 border-t border-[#e5e3de]" />
+
+        {/* Logout */}
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-50 transition cursor-pointer group"
+        >
+          <div className="w-9 h-9 bg-[#f0ede7] rounded-full flex items-center justify-center group-hover:bg-red-100 transition">
+            <svg className="w-[18px] h-[18px] text-[#333] group-hover:text-red-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+          </div>
+          <p className="text-[13px] font-medium text-[#111] group-hover:text-red-600 transition">ออกจากระบบ</p>
+        </button>
+      </div>
+
+      {/* Footer */}
+      <div className="px-4 py-3 border-t border-[#e5e3de] bg-[#fafaf8]">
+        <p className="text-[10px] text-[#b0ada6] text-center">
+          PSU Store © 2026 · <a href="#" className="hover:underline">ข้อกำหนด</a> · <a href="#" className="hover:underline">นโยบาย</a>
+        </p>
+      </div>
+    </div>
+  );
+}
