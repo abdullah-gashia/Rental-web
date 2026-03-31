@@ -30,7 +30,9 @@ export interface ItemWithDetails {
   color: string | null;
   listingType: "SELL" | "RENT";
   condition: "LIKE_NEW" | "GOOD" | "FAIR" | "NEEDS_REPAIR";
-  status: "ACTIVE" | "SOLD" | "RENTED" | "EXPIRED" | "REMOVED";
+  status: "ACTIVE" | "SOLD" | "RENTED" | "EXPIRED" | "REMOVED" | "PENDING" | "APPROVED" | "REJECTED" | "UNAVAILABLE";
+  rejectReason: string | null;
+  scheduledForDeletionAt: string | null; // ISO string; null = not scheduled
   negotiable: boolean;
   shippable: boolean;
   location: string | null;

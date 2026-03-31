@@ -40,6 +40,7 @@ export async function createItem(data: CreateItemInput) {
       price: data.price,
       listingType: data.listingType,
       condition: data.condition,
+      status: "PENDING", // explicit — do not rely on DB default alone
       location: data.location || null,
       contact: data.contact || null,
       negotiable: data.negotiable || false,
@@ -50,6 +51,8 @@ export async function createItem(data: CreateItemInput) {
   });
 
   revalidatePath("/");
+  revalidatePath("/dashboard/my-items");
+  revalidatePath("/admin/approvals");
   return { success: true, itemId: item.id };
 }
 
@@ -82,6 +85,15 @@ export async function toggleWishlist(itemId: string) {
 }
 
 // ─── Delete Item ─────────────────────────────────────
+//
+// Seller path  → soft delete: sets scheduledForDeletionAt = now().
+//   The item remains visible on the storefront for 24 hours with a
+//   warning banner, giving active buyers time to react.
+//   The seller can cancel within that window via cancelDeletion().
+//
+// Admin path → hard delete: immediately sets status = UNAVAILABLE.
+//   Admins have no reason to use the grace period (anti-fraud tool
+//   is specifically for sellers trying to vanish mid-transaction).
 
 export async function deleteItem(itemId: string) {
   const session = await auth();
@@ -90,17 +102,65 @@ export async function deleteItem(itemId: string) {
   }
 
   const item = await prisma.item.findUnique({ where: { id: itemId } });
-
   if (!item) return { error: "Item not found" };
-  if (item.sellerId !== session.user.id && (session.user as any).role !== "ADMIN") {
+
+  const isAdmin  = (session.user as any).role === "ADMIN";
+  const isSeller = item.sellerId === session.user.id;
+
+  if (!isSeller && !isAdmin) {
     return { error: "Not authorized" };
+  }
+
+  if (isAdmin) {
+    // Hard delete — instant
+    await prisma.item.update({
+      where: { id: itemId },
+      data: { status: "UNAVAILABLE" },
+    });
+  } else {
+    // Soft delete — 24-hour grace period
+    await prisma.item.update({
+      where: { id: itemId },
+      data: { scheduledForDeletionAt: new Date() },
+    });
+  }
+
+  revalidatePath("/");
+  revalidatePath("/dashboard/my-items");
+  return { success: true };
+}
+
+// ─── Cancel Scheduled Deletion ───────────────────────
+//
+// Seller-only: clears scheduledForDeletionAt, restoring the item
+// to its current status with no deletion pending.
+
+export async function cancelDeletion(itemId: string) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { error: "Not authenticated" };
+  }
+
+  const item = await prisma.item.findUnique({ where: { id: itemId } });
+  if (!item) return { error: "Item not found" };
+  if (item.sellerId !== session.user.id) {
+    return { error: "Not authorized" }; // admins cannot cancel a seller's deletion
+  }
+
+  // Only allow cancel if the grace period has not already expired
+  if (item.scheduledForDeletionAt) {
+    const expiry = new Date(item.scheduledForDeletionAt.getTime() + 24 * 60 * 60 * 1000);
+    if (expiry < new Date()) {
+      return { error: "Grace period has already expired — item cannot be restored" };
+    }
   }
 
   await prisma.item.update({
     where: { id: itemId },
-    data: { status: "REMOVED" },
+    data: { scheduledForDeletionAt: null },
   });
 
   revalidatePath("/");
+  revalidatePath("/dashboard/my-items");
   return { success: true };
 }

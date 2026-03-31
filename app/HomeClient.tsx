@@ -225,17 +225,19 @@ export default function HomeClient({ items }: HomeClientProps) {
 
       <Footer />
 
-      {/* Mobile FAB */}
-      <button
-        onClick={() => open("postAd")}
-        id="floatBtn"
-        className="fixed bottom-6 right-5 z-40 items-center gap-2 bg-[#e8500a] text-white font-semibold text-sm px-5 py-3.5 rounded-2xl shadow-xl hover:bg-[#c94208] transition"
-      >
-        <svg className="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-        </svg>
-        ลงประกาศ
-      </button>
+      {/* Mobile FAB — hidden for admins */}
+      {user?.role !== "ADMIN" && (
+        <button
+          onClick={() => open("postAd")}
+          id="floatBtn"
+          className="fixed bottom-6 right-5 z-40 items-center gap-2 bg-[#e8500a] text-white font-semibold text-sm px-5 py-3.5 rounded-2xl shadow-xl hover:bg-[#c94208] transition"
+        >
+          <svg className="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+          </svg>
+          ลงประกาศ
+        </button>
+      )}
 
       {/* Modals */}
       <ProductDetail

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useLocaleStore } from "@/lib/stores/locale-store";
 import { useToastStore } from "@/lib/stores/toast-store";
 import Modal from "@/components/ui/Modal";
+import { createItem } from "@/lib/actions/item-actions";
 
 interface PostAdModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
   const [negotiable, setNegotiable] = useState(false);
   const [shippable, setShippable] = useState(false);
   const [contact, setContact] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const conditions = [
     { key: "LIKE_NEW", label: t("post_cond_like_new") },
@@ -36,12 +38,56 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
     setStep(1); setAdType("sell"); setCategory(""); setName(""); setDesc("");
     setCondition("LIKE_NEW"); setPrice(""); setLocation("");
     setNegotiable(false); setShippable(false); setContact("");
+    setLoading(false);
   };
 
-  const handleSubmit = () => {
-    if (!name) { showToast(t("post_error_name")); setStep(2); return; }
-    if (!price) { showToast(t("post_error_price")); return; }
-    showToast(t("post_success", { name }));
+  const handleNextFromStep1 = () => {
+    if (!category) {
+      showToast("⚠️ กรุณาเลือกหมวดหมู่ก่อน");
+      return;
+    }
+    setStep(2);
+  };
+
+  const handleSubmit = async () => {
+    // ── Client-side validation ──────────────────────────
+    if (!name.trim()) {
+      showToast(t("post_error_name"));
+      setStep(2);
+      return;
+    }
+    const parsedPrice = Number(price);
+    if (!price || isNaN(parsedPrice) || parsedPrice <= 0) {
+      showToast(t("post_error_price"));
+      return;
+    }
+
+    setLoading(true);
+
+    // ── Call the real server action ─────────────────────
+    const result = await createItem({
+      title:       name.trim(),
+      description: desc.trim() || "-",        // description is required in DB
+      price:       parsedPrice,
+      listingType: adType === "sell" ? "SELL" : "RENT",
+      condition:   condition as "LIKE_NEW" | "GOOD" | "FAIR" | "NEEDS_REPAIR",
+      categorySlug: category,
+      location:    location || undefined,
+      negotiable,
+      shippable,
+      contact:     contact || undefined,
+    });
+
+    setLoading(false);
+
+    if (result.error) {
+      // Show the exact server error — never silently swallow it
+      showToast(`❌ ${result.error}`);
+      return;
+    }
+
+    // ── Only reach here on confirmed success ────────────
+    showToast(t("post_success", { name: name.trim() }));
     resetForm();
     onClose();
   };
@@ -91,7 +137,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
             <option value="books">{t("cat_books")}</option>
             <option value="rental">{t("cat_rental")}</option>
           </select>
-          <button onClick={() => setStep(2)} className="w-full bg-[#111] text-white font-semibold py-3 rounded-xl hover:bg-[#333] transition">
+          <button onClick={handleNextFromStep1} className="w-full bg-[#111] text-white font-semibold py-3 rounded-xl hover:bg-[#333] transition">
             {t("post_next")}
           </button>
         </div>
@@ -167,8 +213,28 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
           )}
 
           <div className="flex gap-3">
-            <button onClick={() => setStep(2)} className="flex-1 border border-[#e5e3de] font-semibold py-3 rounded-xl hover:bg-[#f0ede7] transition">{t("post_back")}</button>
-            <button onClick={handleSubmit} className="flex-1 bg-[#e8500a] text-white font-semibold py-3 rounded-xl hover:bg-[#c94208] transition">{t("post_submit")}</button>
+            <button
+              onClick={() => setStep(2)}
+              disabled={loading}
+              className="flex-1 border border-[#e5e3de] font-semibold py-3 rounded-xl hover:bg-[#f0ede7] transition disabled:opacity-40"
+            >
+              {t("post_back")}
+            </button>
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="flex-1 bg-[#e8500a] text-white font-semibold py-3 rounded-xl hover:bg-[#c94208] transition disabled:opacity-70 flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <>
+                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  กำลังลงประกาศ...
+                </>
+              ) : t("post_submit")}
+            </button>
           </div>
         </div>
       )}

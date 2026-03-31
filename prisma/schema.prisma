@@ -31,6 +31,10 @@ enum ItemStatus {
   RENTED
   EXPIRED
   REMOVED
+  PENDING
+  APPROVED
+  REJECTED
+  UNAVAILABLE
 }
 
 // ─── Auth.js (NextAuth v5) Models ────────────────────
@@ -138,14 +142,16 @@ model Item {
   color       String?
   listingType ListingType   @default(SELL)
   condition   ItemCondition @default(GOOD)
-  status      ItemStatus    @default(ACTIVE)
+  status      ItemStatus    @default(PENDING)
+  rejectReason String?      @db.Text
   negotiable  Boolean       @default(false)
   shippable   Boolean       @default(false)
   location    String?
   contact     String?
-  rating      Float         @default(0)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  rating               Float     @default(0)
+  scheduledForDeletionAt DateTime? // set when seller schedules deletion; null = not scheduled
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
   sellerId   String
   seller     User     @relation(fields: [sellerId], references: [id])
@@ -161,6 +167,7 @@ model Item {
   @@index([status])
   @@index([listingType])
   @@index([createdAt])
+  @@index([scheduledForDeletionAt])
 }
 
 model ItemImage {

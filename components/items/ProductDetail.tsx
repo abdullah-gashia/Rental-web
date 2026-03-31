@@ -8,6 +8,9 @@ import StarRating from "@/components/ui/StarRating";
 import WishlistButton from "@/components/ui/WishlistButton";
 import Badge from "@/components/ui/Badge";
 import Modal from "@/components/ui/Modal";
+import CountdownTimer from "@/components/ui/CountdownTimer";
+
+const GRACE_MS = 24 * 60 * 60 * 1000;
 
 interface ProductDetailProps {
   item: ItemWithDetails | null;
@@ -22,6 +25,11 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
   const showToast = useToastStore((s) => s.show);
 
   if (!item) return null;
+
+  const gracePeriodExpiry = item.scheduledForDeletionAt
+    ? new Date(new Date(item.scheduledForDeletionAt).getTime() + GRACE_MS)
+    : null;
+  const isInGracePeriod = gracePeriodExpiry !== null && gracePeriodExpiry > new Date();
 
   const conditionMap: Record<string, string> = {
     LIKE_NEW: t("post_cond_like_new"),
@@ -60,6 +68,26 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
 
         {/* Content panel */}
         <div className="flex-1 p-7 overflow-y-auto">
+          {/* Grace-period warning banner */}
+          {isInGracePeriod && gracePeriodExpiry && (
+            <div className="mb-5 flex items-start gap-3 bg-red-50 border border-red-300 rounded-xl px-4 py-3">
+              <span className="text-red-500 text-lg leading-none mt-0.5">⚠️</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-red-700">
+                  WARNING: This item is scheduled for deletion
+                </p>
+                <p className="text-xs text-red-600 mt-0.5">
+                  Deletes in{" "}
+                  <CountdownTimer
+                    targetDate={gracePeriodExpiry.toISOString()}
+                    className="font-bold"
+                  />
+                  {" "}— Please finalize any transactions or contact the seller immediately.
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="flex justify-between items-start">
             <div className="flex-1">
               <div className="flex flex-wrap gap-1.5 mb-2">

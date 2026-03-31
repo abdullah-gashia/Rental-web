@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
 import ToastContainer from "@/components/ui/Toast";
+import AuthInitializer from "@/components/auth/AuthInitializer";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="th" className={`${dmSans.variable} ${dmMono.variable}`}>
       <body className="font-sans">
+        <AuthInitializer />
         {children}
         <ToastContainer />
       </body>
