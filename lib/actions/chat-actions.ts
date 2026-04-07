@@ -1,5 +1,6 @@
 "use server";
 
+import { unstable_noStore as noStore } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
@@ -135,6 +136,7 @@ export async function getUserConversations() {
 // ─── Get messages for a conversation ─────────────────
 
 export async function getMessages(conversationId: string) {
+  noStore(); // always hit the DB — never serve a cached response
   const session = await auth();
   if (!session?.user?.id) return { error: "Not authenticated" };
 

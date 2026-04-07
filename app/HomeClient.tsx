@@ -5,7 +5,7 @@ import type { ItemWithDetails, CategorySlug } from "@/lib/types";
 import { useModalStore } from "@/lib/stores/modal-store";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { useToastStore } from "@/lib/stores/toast-store";
-import { getOrCreateConversation, sendMessage, getMessages } from "@/lib/actions/chat-actions";
+import { getOrCreateConversation } from "@/lib/actions/chat-actions";
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -23,13 +23,6 @@ interface HomeClientProps {
   items: ItemWithDetails[];
 }
 
-interface ChatMessage {
-  id: string;
-  content: string;
-  createdAt: string;
-  sender: { id: string; name: string | null; image: string | null };
-}
-
 export default function HomeClient({ items }: HomeClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCat, setActiveCat] = useState<CategorySlug>("all");
@@ -39,7 +32,6 @@ export default function HomeClient({ items }: HomeClientProps) {
   // Chat state
   const [chatItem, setChatItem] = useState<ItemWithDetails | null>(null);
   const [chatConvId, setChatConvId] = useState<string | null>(null);
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatLoading, setChatLoading] = useState(false);
 
   const user = useAuthStore((s) => s.user);
@@ -92,7 +84,7 @@ export default function HomeClient({ items }: HomeClientProps) {
     }
 
     setChatItem(item);
-    setChatMessages([]);
+    setChatConvId(null);
     setChatLoading(true);
     open("chat");
 
@@ -102,50 +94,23 @@ export default function HomeClient({ items }: HomeClientProps) {
       if (result.error) {
         showToast(`⚠️ ${result.error}`);
         close();
-        setChatLoading(false);
         return;
       }
 
       if (result.conversation) {
         setChatConvId(result.conversation.id);
-
-        // Fetch messages
-        const msgResult = await getMessages(result.conversation.id);
-        if (msgResult.messages) {
-          setChatMessages(msgResult.messages as ChatMessage[]);
-        }
       }
-    } catch (err) {
+    } catch {
       showToast("⚠️ ไม่สามารถเปิดแชทได้");
     } finally {
       setChatLoading(false);
     }
   }, [user, open, close, showToast]);
 
-  const handleSendMessage = useCallback(async (content: string) => {
-    if (!chatConvId) return;
-
-    try {
-      const result = await sendMessage(chatConvId, content);
-
-      if (result.error) {
-        showToast(`⚠️ ${result.error}`);
-        return;
-      }
-
-      if (result.message) {
-        setChatMessages((prev) => [...prev, result.message as ChatMessage]);
-      }
-    } catch {
-      showToast("⚠️ ส่งข้อความไม่สำเร็จ");
-    }
-  }, [chatConvId, showToast]);
-
   const handleChatClose = () => {
     close();
     setChatItem(null);
     setChatConvId(null);
-    setChatMessages([]);
   };
 
   // Handler for opening chat from the navbar ChatDropdown
@@ -156,7 +121,7 @@ export default function HomeClient({ items }: HomeClientProps) {
 
     // Create a minimal chat item for the modal header
     setChatItem({ id: itemId, title, emoji, price, seller: { id: sellerId } } as any);
-    setChatMessages([]);
+    setChatConvId(null);
     setChatLoading(true);
     open("chat");
 
@@ -165,15 +130,10 @@ export default function HomeClient({ items }: HomeClientProps) {
       if (result.error) {
         showToast(`⚠️ ${result.error}`);
         close();
-        setChatLoading(false);
         return;
       }
       if (result.conversation) {
         setChatConvId(result.conversation.id);
-        const msgResult = await getMessages(result.conversation.id);
-        if (msgResult.messages) {
-          setChatMessages(msgResult.messages as ChatMessage[]);
-        }
       }
     } catch {
       showToast("⚠️ ไม่สามารถเปิดแชทได้");
@@ -255,10 +215,9 @@ export default function HomeClient({ items }: HomeClientProps) {
         itemTitle={chatItem?.title || ""}
         itemEmoji={chatItem?.emoji || null}
         itemPrice={chatItem?.price || 0}
-        messages={chatMessages}
+        conversationId={chatConvId}
         currentUserId={user?.id || null}
-        onSend={handleSendMessage}
-        loading={chatLoading}
+        convLoading={chatLoading}
       />
     </div>
   );
