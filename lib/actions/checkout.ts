@@ -203,20 +203,36 @@ export async function createOrder(input: CreateOrderInput): Promise<OrderResult>
       // ──────────────────────────────────────
       if (data.deliveryMethod === "SHIPPING" && data.saveAddress && data.shippingAddress) {
         const addr = data.shippingAddress;
-        await tx.savedAddress.create({
-          data: {
-            userId: buyerId,
-            label: "ที่อยู่ใหม่",
+
+        // Prevent duplicate: same recipient + phone + first line + postal code
+        const existing = await tx.savedAddress.findFirst({
+          where: {
+            userId:        buyerId,
             recipientName: addr.recipientName,
-            phone: addr.phone,
-            addressLine1: addr.addressLine1,
-            addressLine2: addr.addressLine2,
-            district: addr.district,
-            province: addr.province,
-            postalCode: addr.postalCode,
-            note: addr.note,
+            phone:         addr.phone,
+            addressLine1:  addr.addressLine1,
+            postalCode:    addr.postalCode,
           },
         });
+
+        if (!existing) {
+          const addressCount = await tx.savedAddress.count({ where: { userId: buyerId } });
+          await tx.savedAddress.create({
+            data: {
+              userId:        buyerId,
+              label:         addressCount === 0 ? "ที่อยู่หลัก" : "ที่อยู่ใหม่",
+              isDefault:     addressCount === 0, // first address becomes the default
+              recipientName: addr.recipientName,
+              phone:         addr.phone,
+              addressLine1:  addr.addressLine1,
+              addressLine2:  addr.addressLine2 ?? null,
+              district:      addr.district,
+              province:      addr.province,
+              postalCode:    addr.postalCode,
+              note:          addr.note ?? null,
+            },
+          });
+        }
       }
 
       // ──────────────────────────────────────

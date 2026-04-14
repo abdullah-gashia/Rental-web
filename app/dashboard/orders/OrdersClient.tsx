@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { confirmReceipt } from "@/lib/actions/escrow-actions";
 import DisputeModal          from "@/components/forms/DisputeModal";
@@ -56,9 +56,12 @@ interface BaseOrder {
   shippingProofImage: string | null;
   deliveryMethod:     string | null;
   paymentMethod:      string | null;
-  meetupLocation:     string | null;
-  meetupDateTime:     string | null;
-  meetupNote:         string | null;
+  meetupLocation:       string | null;
+  meetupDateTime:       string | null;
+  meetupNote:           string | null;
+  handoverSignature:    string | null;   // base64 PNG
+  handoverPhotoUrl:     string | null;
+  handoverConfirmedAt:  string | null;   // ISO
   review: { id: string; rating: number } | null;
   item: OrderItem;
 }
@@ -267,8 +270,24 @@ function OrderCard({
     order.status === "SHIPPED" || order.status === "COD_SHIPPED"
   );
 
-  const canCancel = order.status === "FUNDS_HELD" || order.status === "AWAITING_SHIPMENT"
-    || order.status === "MEETUP_SCHEDULED" || order.status === "MEETUP_ARRANGED";
+  // Meetup 30-min grace period for sellers
+  const isMeetupStatus = order.status === "MEETUP_SCHEDULED" || order.status === "MEETUP_ARRANGED";
+  const meetupCutoffPassed = order.meetupDateTime
+    ? Date.now() >= new Date(order.meetupDateTime).getTime() + 30 * 60 * 1000
+    : false;
+  const meetupCutoffTime = order.meetupDateTime
+    ? new Date(new Date(order.meetupDateTime).getTime() + 30 * 60 * 1000)
+        .toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })
+    : null;
+
+  // Buyer can cancel any pre-shipment status; seller can cancel meetup only after 30 min
+  const cancelableStatuses = ["FUNDS_HELD", "AWAITING_SHIPMENT", "MEETUP_SCHEDULED", "MEETUP_ARRANGED"];
+  const canCancel = cancelableStatuses.includes(order.status) && (
+    !isSeller ||                               // buyers always can
+    !isMeetupStatus ||                         // seller non-meetup always can
+    meetupCutoffPassed                         // seller meetup — only after 30-min grace
+  );
+  const sellerMeetupWaiting = isSeller && isMeetupStatus && !meetupCutoffPassed;
 
   const isCompleted = order.status === "COMPLETED";
   const canReview   = role === "buyer" && isCompleted && !order.review;
@@ -373,6 +392,14 @@ function OrderCard({
                 </button>
               )}
 
+              {/* Seller meetup — show locked hint until 30-min grace period passes */}
+              {sellerMeetupWaiting && meetupCutoffTime && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-700">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                  ยกเลิกได้หลัง {meetupCutoffTime} น.
+                </span>
+              )}
+
               {/* Seller waiting notice — shipped, no actions for seller */}
               {isSeller && (order.status === "SHIPPED" || order.status === "COD_SHIPPED") && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-700">
@@ -433,6 +460,14 @@ export default function OrdersClient({ buying, selling, walletBalance, escrowBal
   const [meetupHandoverTarget, setMeetupHandoverTarget] = useState<BuyOrder | SellOrder | null>(null);
   const [receiptData, setReceiptData]             = useState<ReceiptData | null>(null);
   const [reviewTarget, setReviewTarget]           = useState<BuyOrder | null>(null);
+  const [escrowTooltipOpen, setEscrowTooltipOpen] = useState(false);
+  const toggleEscrowTooltip = useCallback(() => setEscrowTooltipOpen((v) => !v), []);
+  const closeEscrowTooltip  = useCallback(() => setEscrowTooltipOpen(false), []);
+
+  // Count buying orders where funds are actively held in escrow
+  const activeEscrowOrderCount = buying.filter((o) =>
+    ["FUNDS_HELD", "SHIPPED", "MEETUP_SCHEDULED", "DISPUTED"].includes(o.status)
+  ).length;
 
   function handleConfirm(orderId: string) {
     const order = buying.find((o) => o.id === orderId) ?? null;
@@ -453,22 +488,26 @@ export default function OrdersClient({ buying, selling, walletBalance, escrowBal
     const bo = order as BuyOrder;
     const so = order as SellOrder;
     setReceiptData({
-      orderId:            order.id,
-      itemTitle:          order.item.title,
-      amount:             order.amount,
-      completedAt:        order.updatedAt,
-      buyerName:          bo.buyer?.name  ?? so.buyer?.name  ?? "ไม่ระบุ",
-      sellerName:         bo.seller?.name ?? so.seller?.name ?? "ไม่ระบุ",
-      shippingMethod:     order.shippingMethod     ?? undefined,
-      trackingNumber:     order.trackingNumber     ?? undefined,
-      shippingProofImage: order.shippingProofImage ?? undefined,
+      orderId:              order.id,
+      itemTitle:            order.item.title,
+      amount:               order.amount,
+      completedAt:          order.updatedAt,
+      buyerName:            bo.buyer?.name  ?? so.buyer?.name  ?? "ไม่ระบุ",
+      sellerName:           bo.seller?.name ?? so.seller?.name ?? "ไม่ระบุ",
+      deliveryMethod:       order.deliveryMethod   ?? undefined,
+      shippingMethod:       order.shippingMethod   ?? undefined,
+      trackingNumber:       order.trackingNumber   ?? undefined,
+      shippingProofImage:   order.shippingProofImage  ?? undefined,
+      handoverSignature:    order.handoverSignature   ?? undefined,
+      handoverPhotoUrl:     order.handoverPhotoUrl    ?? undefined,
+      handoverConfirmedAt:  order.handoverConfirmedAt ?? undefined,
     });
   }
 
   const activeTab = tab === "buying" ? buying : selling;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" onClick={escrowTooltipOpen ? closeEscrowTooltip : undefined}>
 
       {/* Heading */}
       <div>
@@ -483,10 +522,50 @@ export default function OrdersClient({ buying, selling, walletBalance, escrowBal
           <p className="text-2xl font-extrabold text-[#111]">฿{walletBalance.toLocaleString()}</p>
           <p className="text-xs text-emerald-600 mt-0.5">พร้อมใช้งาน</p>
         </div>
-        <div className="bg-white rounded-2xl border border-[#e5e3de] px-5 py-4">
-          <p className="text-xs text-[#9a9590] mb-1">เงิน Escrow</p>
+        <div className="relative bg-white rounded-2xl border border-[#e5e3de] px-5 py-4">
+          {/* Label row with info icon */}
+          <div className="flex items-center gap-1 mb-1">
+            <p className="text-xs text-[#9a9590]">เงิน Escrow</p>
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); toggleEscrowTooltip(); }}
+              aria-label="Escrow information"
+              className="group relative flex-shrink-0 w-4 h-4 rounded-full bg-[#e5e3de] hover:bg-amber-200 flex items-center justify-center transition focus:outline-none focus:ring-2 focus:ring-amber-400"
+            >
+              <svg className="w-2.5 h-2.5 text-[#9a9590] group-hover:text-amber-700 transition" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
+
           <p className="text-2xl font-extrabold text-amber-600">฿{escrowBalance.toLocaleString()}</p>
-          <p className="text-xs text-amber-500 mt-0.5">รอการยืนยัน</p>
+          <p className="text-xs text-amber-500 mt-0.5">
+            {activeEscrowOrderCount > 0
+              ? `${activeEscrowOrderCount} คำสั่งซื้อที่ถือเงินอยู่`
+              : "รอการยืนยัน"}
+          </p>
+
+          {/* Tooltip — shown on hover (desktop) or tap toggle (mobile) */}
+          {escrowTooltipOpen && (
+            <div
+              className="absolute bottom-full left-0 mb-2 z-30 w-64 rounded-2xl bg-[#1a1a1a] text-white px-4 py-3 shadow-xl text-xs leading-relaxed"
+              style={{ animation: "fadeIn 0.15s ease" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <p className="font-bold text-amber-400 mb-1">ระบบ Escrow คืออะไร?</p>
+              <p className="text-[#ccc]">
+                เมื่อคุณซื้อสินค้า เงินจะถูกพักไว้กับ PSU.Store อย่างปลอดภัย
+                และจะโอนให้ผู้ขายก็ต่อเมื่อคุณยืนยันว่าได้รับสินค้าแล้วเท่านั้น
+              </p>
+              {activeEscrowOrderCount > 0 && (
+                <p className="mt-1.5 text-amber-300 font-semibold">
+                  ขณะนี้มีเงินค้างอยู่ใน {activeEscrowOrderCount} คำสั่งซื้อ
+                </p>
+              )}
+              {/* Arrow pointer */}
+              <div className="absolute top-full left-6 -translate-y-px w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-[#1a1a1a]" />
+            </div>
+          )}
         </div>
       </div>
 
@@ -566,6 +645,8 @@ export default function OrdersClient({ buying, selling, walletBalance, escrowBal
           itemTitle={cancelTarget.item.title}
           amount={cancelTarget.amount}
           role={tab === "buying" ? "buyer" : "seller"}
+          paymentMethod={(cancelTarget as BuyOrder).buyer ? (cancelTarget as any).paymentMethod : undefined}
+          meetupDateTime={(cancelTarget as any).meetupDateTime ?? null}
           onClose={() => setCancelTarget(null)}
           onSuccess={() => { setCancelTarget(null); router.refresh(); }}
         />

@@ -114,8 +114,9 @@ export default function UserDropdown({ onClose }: UserDropdownProps) {
         </button>
 
         {/* Help & Support */}
-        <button
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#f7f6f3] transition cursor-pointer group"
+        <a
+          href="/support"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#f7f6f3] transition cursor-pointer group"
           onClick={onClose}
         >
           <div className="w-9 h-9 bg-[#f0ede7] rounded-full flex items-center justify-center group-hover:bg-[#e5e3de] transition">
@@ -129,7 +130,7 @@ export default function UserDropdown({ onClose }: UserDropdownProps) {
           <svg className="w-4 h-4 text-[#b0ada6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
-        </button>
+        </a>
 
         {/* Divider */}
         <div className="my-1.5 border-t border-[#e5e3de]" />

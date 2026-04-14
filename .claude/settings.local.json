@@ -6,7 +6,13 @@
       "Bash(node -e \"require\\('zod'\\); console.log\\('zod ok'\\)\")",
       "Bash(python3 -c \"import json,sys; p=json.load\\(sys.stdin\\); print\\('next:', p['dependencies'].get\\('next','missing'\\)\\); print\\('zod:', p['dependencies'].get\\('zod', p.get\\('devDependencies',{}\\).get\\('zod','NOT FOUND'\\)\\)\\)\")",
       "Bash(node -e \"console.log\\(require\\('./node_modules/next/package.json'\\).version\\)\")",
-      "Bash(npx prisma:*)"
+      "Bash(npx prisma:*)",
+      "Bash(node -e \"const z = require\\('zod'\\); const r = z.string\\(\\).safeParse\\(1\\); console.log\\(Object.keys\\(r.error\\)\\)\")",
+      "Bash(node -e \"const z = require\\('zod'\\); const r = z.string\\(\\).safeParse\\(1\\); console.log\\(r.error.issues\\)\")",
+      "Bash(node -e \"const bcrypt = require\\('bcryptjs'\\); bcrypt.hash\\('password1234', 12\\).then\\(h => console.log\\(h\\)\\)\")",
+      "Bash(node -e ':*)",
+      "Bash(PGPASSWORD=\"npg_6HrDabg9oltf\" psql \"postgresql://neondb_owner@ep-soft-queen-a17ej4pp-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require\" -c \"SELECT id, name, email, role, \\\\\"verificationStatus\\\\\" FROM \\\\\"User\\\\\" WHERE email = 'muhammadshareef@psu.ac.th';\")",
+      "Bash(npx tsx -e ':*)"
     ]
   }
 }

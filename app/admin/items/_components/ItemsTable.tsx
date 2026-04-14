@@ -237,9 +237,7 @@ function ItemActionsDropdown({
               </>
             )}
             <a
-              href={`/items/${item.id}`}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={`/admin/items/${item.id}`}
               onClick={() => setOpen(false)}
               className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f7f6f3] text-[#333] transition"
             >

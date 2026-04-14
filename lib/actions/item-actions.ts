@@ -119,6 +119,15 @@ export async function createItem(data: CreateItemInput) {
     return { error: "Not authenticated" };
   }
 
+  // ── Verification gate ─────────────────────────────────────────────────────
+  const seller = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { verificationStatus: true },
+  });
+  if (seller?.verificationStatus !== "APPROVED") {
+    return { error: "UNVERIFIED" };
+  }
+
   const category = await prisma.category.findUnique({
     where: { slug: data.categorySlug },
   });

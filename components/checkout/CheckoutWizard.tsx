@@ -8,6 +8,7 @@ import { createOrder } from "@/lib/actions/checkout";
 import { getPriceBreakdown } from "@/lib/utils/pricing";
 import type { CreateOrderInput } from "@/lib/validations/checkout";
 import { useCheckoutReducer, canAdvanceFromStep } from "./useCheckoutReducer";
+import { getSavedAddresses } from "@/lib/actions/saved-addresses";
 import WizardProgressBar from "./WizardProgressBar";
 import OrderSummaryCard from "./OrderSummaryCard";
 import DeliveryStep from "./DeliveryStep";
@@ -44,7 +45,6 @@ interface CheckoutWizardProps {
     seller: { id: string; name: string | null };
     images: { url: string; isMain: boolean }[];
   };
-  savedAddresses?: SavedAddr[];
 }
 
 // ─── Main Component ──────────────────────────────────────────────────────────
@@ -53,22 +53,29 @@ export default function CheckoutWizard({
   isOpen,
   onClose,
   item,
-  savedAddresses = [],
 }: CheckoutWizardProps) {
   const router    = useRouter();
   const showToast = useToastStore((s) => s.show);
   const { state, dispatch, reset } = useCheckoutReducer();
 
-  const [walletBalance,  setWalletBalance]  = useState<number | null>(null);
-  const [loadingBalance, setLoadingBalance] = useState(true);
+  const [walletBalance,   setWalletBalance]   = useState<number | null>(null);
+  const [loadingBalance,  setLoadingBalance]   = useState(true);
+  const [savedAddresses,  setSavedAddresses]   = useState<SavedAddr[]>([]);
 
   useEffect(() => {
     if (isOpen) {
       setLoadingBalance(true);
-      getWalletBalance().then((res) => {
-        if ("walletBalance" in res) setWalletBalance(res.walletBalance ?? null);
+      // Fetch wallet balance and saved addresses in parallel
+      Promise.all([
+        getWalletBalance(),
+        getSavedAddresses(),
+      ]).then(([walletRes, addrRes]) => {
+        if ("walletBalance" in walletRes) setWalletBalance(walletRes.walletBalance ?? null);
+        setSavedAddresses((addrRes.addresses ?? []) as SavedAddr[]);
         setLoadingBalance(false);
       });
+    } else {
+      setSavedAddresses([]);
     }
   }, [isOpen]);
 

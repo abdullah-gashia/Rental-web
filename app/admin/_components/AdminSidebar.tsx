@@ -4,28 +4,31 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 
 interface NavItem {
-  href:   string;
-  emoji:  string;
-  label:  string;
+  href:  string;
+  emoji: string;
+  label: string;
+  badge?: number;
 }
-
-const NAV_ITEMS: NavItem[] = [
-  { href: "/admin/dashboard", emoji: "📊", label: "แดชบอร์ด"        },
-  { href: "/admin/users",     emoji: "👤", label: "ผู้ใช้งาน"        },
-  { href: "/admin/items",     emoji: "📦", label: "สินค้า"           },
-  { href: "/admin/orders",    emoji: "💰", label: "รายการสั่งซื้อ"   },
-  { href: "/admin/disputes",  emoji: "🚨", label: "ข้อพิพาท"         },
-  { href: "/admin/approvals", emoji: "✅", label: "ตรวจสอบสินค้า"   },
-];
 
 interface AdminSidebarProps {
-  adminName: string | null;
-  adminEmail: string;
+  adminName:                 string | null;
+  adminEmail:                string;
+  pendingVerificationCount?: number;
 }
 
-export default function AdminSidebar({ adminName, adminEmail }: AdminSidebarProps) {
-  const pathname   = usePathname();
+export default function AdminSidebar({ adminName, adminEmail, pendingVerificationCount = 0 }: AdminSidebarProps) {
+  const pathname        = usePathname();
   const [open, setOpen] = useState(false);
+
+  const NAV_ITEMS: NavItem[] = [
+    { href: "/admin/dashboard",     emoji: "📊", label: "แดชบอร์ด"              },
+    { href: "/admin/users",         emoji: "👤", label: "ผู้ใช้งาน"              },
+    { href: "/admin/items",         emoji: "📦", label: "สินค้า"                 },
+    { href: "/admin/orders",        emoji: "💰", label: "รายการสั่งซื้อ"         },
+    { href: "/admin/disputes",      emoji: "🚨", label: "ข้อพิพาท"               },
+    { href: "/admin/verifications", emoji: "🔍", label: "ยืนยันตัวตน KYC", badge: pendingVerificationCount },
+    { href: "/admin/approvals",     emoji: "✅", label: "ตรวจสอบสินค้า"          },
+  ];
 
   function isActive(href: string) {
     return pathname === href || pathname.startsWith(href + "/");
@@ -46,7 +49,12 @@ export default function AdminSidebar({ adminName, adminEmail }: AdminSidebarProp
           }`}
         >
           <span className="text-base">{item.emoji}</span>
-          {item.label}
+          <span className="flex-1">{item.label}</span>
+          {!!item.badge && item.badge > 0 && (
+            <span className="px-1.5 py-0.5 text-[10px] font-bold bg-red-500 text-white rounded-full min-w-[18px] text-center">
+              {item.badge > 99 ? "99+" : item.badge}
+            </span>
+          )}
         </a>
       ))}
     </nav>

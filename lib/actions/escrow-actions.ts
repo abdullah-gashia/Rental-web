@@ -375,15 +375,17 @@ export async function confirmReceipt(orderId: string) {
   const order = await prisma.escrowOrder.findUnique({
     where:   { id: orderId },
     select: {
-      id:       true,
-      status:   true,
-      buyerId:  true,
-      sellerId: true,
-      itemId:   true,
-      amount:   true,
-      item:     { select: { title: true } },
-      buyer:    { select: { name: true } },
-      seller:   { select: { name: true } },
+      id:           true,
+      status:       true,
+      buyerId:      true,
+      sellerId:     true,
+      itemId:       true,
+      amount:       true,
+      sellerPayout: true,   // present for checkout-wizard orders; null for legacy
+      totalAmount:  true,   // present for checkout-wizard orders; null for legacy
+      item:         { select: { title: true } },
+      buyer:        { select: { name: true } },
+      seller:       { select: { name: true } },
     },
   });
 
@@ -437,18 +439,23 @@ export async function confirmReceipt(orderId: string) {
         sellerName:  order.seller.name ?? "ไม่ระบุ",
       });
 
+      // For checkout-wizard orders sellerPayout / totalAmount are set.
+      // For legacy orders (initiatePurchase) they're null — fall back to amount.
+      const payout         = order.sellerPayout ?? order.amount;
+      const escrowDecrement = order.totalAmount  ?? order.amount;
+
       await Promise.all([
         // Complete the order
         tx.escrowOrder.update({
           where: { id: orderId },
-          data:  { status: "COMPLETED" },
+          data:  { status: "COMPLETED", completedAt: completedAt },
         }),
-        // Release funds: move from seller's escrow to spendable wallet
+        // Release funds: clear the full held amount from escrow, credit sellerPayout to wallet
         tx.user.update({
           where: { id: order.sellerId },
           data:  {
-            escrowBalance: Math.max(0, seller.escrowBalance - order.amount),
-            walletBalance: { increment: order.amount },
+            escrowBalance: Math.max(0, seller.escrowBalance - escrowDecrement),
+            walletBalance: { increment: payout },
           },
         }),
         // Reward buyer trust (clamped)
@@ -474,7 +481,7 @@ export async function confirmReceipt(orderId: string) {
           data: {
             userId:  order.sellerId,
             type:    "ORDER",
-            message: `✅ ผู้ซื้อยืนยันรับสินค้า "${order.item.title}" แล้ว — ฿${order.amount.toLocaleString()} ถูกโอนเข้ากระเป๋าของคุณ`,
+            message: `✅ ผู้ซื้อยืนยันรับสินค้า "${order.item.title}" แล้ว — ฿${payout.toLocaleString()} ถูกโอนเข้ากระเป๋าของคุณ`,
             link:    "/dashboard/orders",
           },
         }),
@@ -833,7 +840,8 @@ export async function checkAndAutoReleaseEscrows() {
       shippedAt: { lt: cutoff },
     },
     select: {
-      id: true, amount: true, buyerId: true, sellerId: true,
+      id: true, amount: true, sellerPayout: true, totalAmount: true,
+      buyerId: true, sellerId: true,
       item: { select: { title: true } },
     },
   });
@@ -847,22 +855,24 @@ export async function checkAndAutoReleaseEscrows() {
         const seller = await tx.user.findUniqueOrThrow({
           where: { id: order.sellerId }, select: { escrowBalance: true },
         });
+        const payout          = order.sellerPayout ?? order.amount;
+        const escrowDecrement = order.totalAmount  ?? order.amount;
         await Promise.all([
           tx.escrowOrder.update({
             where: { id: order.id },
-            data:  { status: "COMPLETED" },
+            data:  { status: "COMPLETED", completedAt: new Date() },
           }),
           tx.user.update({
             where: { id: order.sellerId },
             data:  {
-              escrowBalance: Math.max(0, seller.escrowBalance - order.amount),
-              walletBalance: { increment: order.amount },
+              escrowBalance: Math.max(0, seller.escrowBalance - escrowDecrement),
+              walletBalance: { increment: payout },
             },
           }),
           tx.notification.create({
             data: {
               userId:  order.sellerId, type: "ORDER",
-              message: `✅ ระบบปลดล็อคเงิน ฿${order.amount.toLocaleString()} อัตโนมัติ — "${order.item.title}" (ผ่าน 7 วันหลังจัดส่ง)`,
+              message: `✅ ระบบปลดล็อคเงิน ฿${payout.toLocaleString()} อัตโนมัติ — "${order.item.title}" (ผ่าน 7 วันหลังจัดส่ง)`,
               link: "/dashboard/orders",
             },
           }),
@@ -946,14 +956,17 @@ export async function getMyOrders() {
   // Serialize dates for client components
   const serialize = (o: typeof buying[number] | typeof selling[number]) => ({
     ...o,
-    createdAt:      o.createdAt.toISOString(),
-    updatedAt:      o.updatedAt.toISOString(),
-    shippedAt:      (o as { shippedAt?: Date | null }).shippedAt
-                      ? (o as { shippedAt: Date }).shippedAt.toISOString()
-                      : null,
-    meetupDateTime: (o as { meetupDateTime?: Date | null }).meetupDateTime
-                      ? (o as { meetupDateTime: Date }).meetupDateTime.toISOString()
-                      : null,
+    createdAt:             o.createdAt.toISOString(),
+    updatedAt:             o.updatedAt.toISOString(),
+    shippedAt:             (o as { shippedAt?: Date | null }).shippedAt
+                             ? (o as { shippedAt: Date }).shippedAt.toISOString()
+                             : null,
+    meetupDateTime:        (o as { meetupDateTime?: Date | null }).meetupDateTime
+                             ? (o as { meetupDateTime: Date }).meetupDateTime.toISOString()
+                             : null,
+    handoverConfirmedAt:   (o as { handoverConfirmedAt?: Date | null }).handoverConfirmedAt
+                             ? (o as { handoverConfirmedAt: Date }).handoverConfirmedAt.toISOString()
+                             : null,
   });
 
   return {

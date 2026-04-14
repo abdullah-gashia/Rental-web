@@ -1,5 +1,6 @@
 import { auth }        from "@/lib/auth";
 import { redirect }    from "next/navigation";
+import { prisma }      from "@/lib/prisma";
 import AdminSidebar    from "./_components/AdminSidebar";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -8,6 +9,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if ((session.user as any).role !== "ADMIN")         redirect("/");
 
   const user = session.user as { name?: string | null; email?: string | null };
+
+  const pendingVerificationCount = await prisma.verificationRequest.count({
+    where: { status: "PENDING" },
+  });
 
   return (
     <div className="min-h-screen bg-[#f7f6f3] flex flex-col">
@@ -36,6 +41,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <AdminSidebar
           adminName={user.name ?? null}
           adminEmail={user.email ?? "admin"}
+          pendingVerificationCount={pendingVerificationCount}
         />
 
         {/* Main content */}

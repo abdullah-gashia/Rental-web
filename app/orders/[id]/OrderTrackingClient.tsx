@@ -125,8 +125,9 @@ export default function OrderTrackingClient({
 
   function handleCancel() {
     if (!confirm("คุณแน่ใจหรือไม่ว่าต้องการยกเลิกคำสั่งซื้อนี้?")) return;
+    const role = isBuyer ? "BUYER" : "SELLER";
     startTransition(async () => {
-      const res = await cancelOrderNew(order.id);
+      const res = await cancelOrderNew(order.id, role, "ยกเลิกโดยผู้ใช้");
       if (res.error) showToast(`❌ ${res.error}`);
       else { showToast("✅ ยกเลิกเรียบร้อย"); router.refresh(); }
     });

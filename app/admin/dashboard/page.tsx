@@ -1,22 +1,29 @@
 // Server Component — no "use client"
 import { getAdminDashboardStats } from "./actions";
+import { getAdminRevenueStats }   from "@/lib/actions/admin-revenue";
 import KpiCard            from "./_components/KpiCard";
 import SalesChart         from "./_components/SalesChart";
 import StatusPieChart     from "./_components/StatusPieChart";
 import RecentOrdersTable  from "./_components/RecentOrdersTable";
 import RefreshButton      from "./_components/RefreshButton";
+import RevenueChart       from "./_components/RevenueChart";
 
 // KPI icon helpers — inline SVGs keep this file self-contained
 function UsersIcon()    { return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>; }
 function PackageIcon()  { return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>; }
 function CartIcon()     { return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>; }
 function BanknoteIcon() { return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>; }
+function TrendIcon()    { return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>; }
+function ClockIcon()    { return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>; }
 
 function fmt(n: number)      { return new Intl.NumberFormat("th-TH").format(n); }
 function baht(n: number)     { return new Intl.NumberFormat("th-TH", { style: "currency", currency: "THB", maximumFractionDigits: 0 }).format(n); }
 
 export default async function AdminDashboardPage() {
-  const stats = await getAdminDashboardStats();
+  const [stats, revenue] = await Promise.all([
+    getAdminDashboardStats(),
+    getAdminRevenueStats(),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -62,6 +69,41 @@ export default async function AdminDashboardPage() {
           icon={<BanknoteIcon />}
         />
       </div>
+
+      {/* ── Platform revenue KPI row ───────────────────────────────────── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <KpiCard
+          label="รายได้รวมทั้งหมด"
+          value={baht(revenue.platformFeeTotal)}
+          sublabel="ค่าธรรมเนียมที่เก็บได้ตั้งแต่เริ่ม"
+          accent="bg-purple-100 text-purple-600"
+          icon={<BanknoteIcon />}
+        />
+        <KpiCard
+          label="รายได้เดือนนี้"
+          value={baht(revenue.platformFeeMonth)}
+          sublabel="30 วันที่ผ่านมา"
+          accent="bg-violet-100 text-violet-600"
+          icon={<TrendIcon />}
+        />
+        <KpiCard
+          label="รายได้สัปดาห์นี้"
+          value={baht(revenue.platformFeeWeek)}
+          sublabel="7 วันที่ผ่านมา"
+          accent="bg-indigo-100 text-indigo-600"
+          icon={<TrendIcon />}
+        />
+        <KpiCard
+          label="รายได้รอดำเนินการ"
+          value={baht(revenue.pendingPlatformFee)}
+          sublabel="คำสั่งซื้อที่ยังไม่เสร็จสิ้น"
+          accent="bg-amber-100 text-amber-600"
+          icon={<ClockIcon />}
+        />
+      </div>
+
+      {/* ── Revenue bar chart ──────────────────────────────────────────── */}
+      <RevenueChart data={revenue.dailyRevenue} />
 
       {/* ── Charts row ─────────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">

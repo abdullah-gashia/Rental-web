@@ -9,10 +9,15 @@ export interface ReceiptData {
   completedAt:   string;   // ISO
   buyerName:     string;
   sellerName:    string;
-  // Shipping details (optional — only present if status is COMPLETED)
-  shippingMethod?:     string;
-  trackingNumber?:     string;
-  shippingProofImage?: string;
+  deliveryMethod?:      string;
+  // Shipping details (optional)
+  shippingMethod?:      string;
+  trackingNumber?:      string;
+  shippingProofImage?:  string;
+  // Meetup proof of delivery (optional)
+  handoverSignature?:   string;   // base64 PNG
+  handoverPhotoUrl?:    string;
+  handoverConfirmedAt?: string;   // ISO
 }
 
 interface Props {
@@ -66,6 +71,14 @@ export default function ReceiptModal({ data, onClose }: Props) {
     .amount { font-size: 28px; font-weight: 900; color: #10b981; text-align: center; margin: 8px 0; }
     .proof { margin-top: 12px; border-radius: 8px; overflow: hidden; max-height: 200px; text-align: center; }
     .proof img { max-width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; }
+    .evidence { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .evidence-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #6b7280; margin-bottom: 12px; }
+    .evidence-label { font-size: 11px; color: #6b7280; margin-bottom: 6px; }
+    .sig-box { background: #fff; border: 1px solid #d1d5db; border-radius: 8px; padding: 8px; text-align: center; margin-bottom: 12px; }
+    .sig-box img { max-height: 80px; object-fit: contain; }
+    .photo-box { background: #fff; border: 1px solid #d1d5db; border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
+    .photo-box img { width: 100%; max-height: 220px; object-fit: contain; display: block; }
+    .timestamp { font-size: 10px; color: #9ca3af; margin-top: 4px; }
     .footer { margin-top: 32px; border-top: 1px solid #e5e7eb; padding-top: 16px; text-align: center; font-size: 11px; color: #9ca3af; }
     @media print { body { padding: 20px; } }
   </style>
@@ -95,6 +108,22 @@ export default function ReceiptModal({ data, onClose }: Props) {
     <div class="row"><span class="label">วิธีจัดส่ง</span><span class="value">${methodLabel}</span></div>
     ${data.trackingNumber ? `<div class="row"><span class="label">หมายเลขพัสดุ</span><span class="value">${data.trackingNumber}</span></div>` : ""}
     ${data.shippingProofImage ? `<div class="proof"><img src="${data.shippingProofImage}" alt="หลักฐานจัดส่ง"/></div>` : ""}
+  </div>` : ""}
+
+  ${data.deliveryMethod === "MEETUP" && (data.handoverSignature || data.handoverPhotoUrl) ? `
+  <div class="evidence">
+    <div class="evidence-title">🤝 หลักฐานการส่งมอบสินค้า (Proof of Delivery)</div>
+    ${data.handoverSignature ? `
+    <div class="evidence-label">ลายมือชื่อผู้รับสินค้า</div>
+    <div class="sig-box">
+      <img src="${data.handoverSignature}" alt="ลายมือชื่อผู้รับสินค้า" />
+    </div>` : ""}
+    ${data.handoverPhotoUrl ? `
+    <div class="evidence-label">ภาพถ่ายหลักฐานการส่งมอบ</div>
+    <div class="photo-box">
+      <img src="${data.handoverPhotoUrl}" alt="ภาพถ่ายหลักฐานการส่งมอบ" />
+    </div>
+    ${data.handoverConfirmedAt ? `<div class="timestamp">บันทึกเมื่อ: ${new Date(data.handoverConfirmedAt).toLocaleString("th-TH", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}</div>` : ""}` : ""}
   </div>` : ""}
 
   <div class="footer">
@@ -193,6 +222,57 @@ export default function ReceiptModal({ data, onClose }: Props) {
                     className="w-full max-h-36 object-cover rounded-xl border border-blue-200 hover:opacity-90 transition cursor-zoom-in"
                   />
                 </a>
+              )}
+            </div>
+          )}
+
+          {/* Proof of Delivery — meetup completed orders only */}
+          {data.deliveryMethod === "MEETUP" && (data.handoverSignature || data.handoverPhotoUrl) && (
+            <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 space-y-4">
+              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+                <span>🤝</span> หลักฐานการส่งมอบสินค้า
+              </p>
+
+              {/* Signature block */}
+              {data.handoverSignature && (
+                <div className="space-y-1.5">
+                  <p className="text-xs font-semibold text-[#555]">ลายมือชื่อผู้รับสินค้า</p>
+                  <div className="bg-white border border-gray-200 rounded-lg p-2 flex items-center justify-center">
+                    <img
+                      src={data.handoverSignature}
+                      alt="ลายมือชื่อผู้รับสินค้า"
+                      className="h-24 w-full object-contain"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Photo block */}
+              {data.handoverPhotoUrl && (
+                <div className="space-y-1.5">
+                  <p className="text-xs font-semibold text-[#555]">ภาพถ่ายหลักฐานการส่งมอบ</p>
+                  <a
+                    href={data.handoverPhotoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block cursor-zoom-in"
+                  >
+                    <img
+                      src={data.handoverPhotoUrl}
+                      alt="ภาพถ่ายหลักฐานการส่งมอบ"
+                      className="aspect-video h-40 w-full object-contain rounded-md border border-gray-200 hover:opacity-90 transition"
+                    />
+                  </a>
+                  {data.handoverConfirmedAt && (
+                    <p className="text-[10px] text-[#9a9590]">
+                      บันทึกเมื่อ:{" "}
+                      {new Date(data.handoverConfirmedAt).toLocaleString("th-TH", {
+                        day: "numeric", month: "long", year: "numeric",
+                        hour: "2-digit", minute: "2-digit",
+                      })}
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           )}

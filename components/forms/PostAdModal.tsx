@@ -110,6 +110,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
   const [allowCOD,      setAllowCOD]      = useState(true);
   const [contact,       setContact]       = useState("");
   const [loading,       setLoading]       = useState(false);
+  const [showVerifyGate, setShowVerifyGate] = useState(false);
 
   const conditions = [
     { key: "LIKE_NEW",     label: t("post_cond_like_new") },
@@ -210,6 +211,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
     });
 
     setLoading(false);
+    if (result.error === "UNVERIFIED") { setShowVerifyGate(true); return; }
     if (result.error) { showToast(`❌ ${result.error}`); return; }
     showToast(t("post_success", { name: name.trim() }));
     resetForm();
@@ -219,6 +221,48 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
   const handleClose = () => { resetForm(); onClose(); };
 
   const stepLabels = ["ประเภท & หมวดหมู่", "รายละเอียดสินค้า", "ราคา & ที่ตั้ง"];
+
+  // ── Verification gate overlay ─────────────────────────────────────────────
+  if (showVerifyGate) {
+    return (
+      <Modal isOpen={isOpen} onClose={() => { setShowVerifyGate(false); handleClose(); }}>
+        <div className="flex flex-col items-center text-center gap-5 py-6 px-2">
+          <div className="text-5xl">🔒</div>
+          <div>
+            <h2 className="text-xl font-bold text-[#111]">ต้องยืนยันตัวตนก่อน</h2>
+            <p className="text-sm text-[#9a9590] mt-2 leading-relaxed">
+              คุณต้องยืนยันตัวตน PSU ก่อนจึงจะลงขายสินค้าได้
+              <br />กระบวนการใช้เวลาประมาณ 2-3 นาที
+            </p>
+          </div>
+          <div className="bg-[#f7f6f3] rounded-2xl px-5 py-4 text-left text-sm space-y-2 w-full">
+            {["อัปโหลดรูปบัตรประจำตัว PSU", "ถ่ายรูปยืนยันใบหน้า (Face Liveness)", "รอแอดมินอนุมัติภายใน 24 ชั่วโมง"].map((step, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <span className="w-5 h-5 rounded-full bg-[#e8500a] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
+                  {i + 1}
+                </span>
+                <span className="text-[#333]">{step}</span>
+              </div>
+            ))}
+          </div>
+          <div className="flex gap-3 w-full">
+            <button
+              onClick={() => { setShowVerifyGate(false); handleClose(); }}
+              className="flex-1 py-2.5 border border-[#e5e3de] rounded-xl text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition"
+            >
+              ยกเลิก
+            </button>
+            <a
+              href="/profile/verify"
+              className="flex-1 py-2.5 bg-[#e8500a] text-white rounded-xl text-sm font-bold text-center hover:bg-[#c94208] transition"
+            >
+              ยืนยันตัวตน →
+            </a>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>

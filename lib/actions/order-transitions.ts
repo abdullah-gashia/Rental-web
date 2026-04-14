@@ -366,74 +366,145 @@ export async function confirmMeetupWithProof(
 }
 
 // ─── Cancel Order (Buyer or Seller) ──────────────────────────────────────────
+//
+// Role-aware cancellation with meetup no-show grace period:
+//  • Seller may only cancel a MEETUP order ≥30 min after meetupDateTime passes.
+//  • Escrow orders always trigger a refund; COD orders have no money movement.
+//  • Item is restored to APPROVED so it re-appears on the marketplace.
 
-export async function cancelOrderNew(orderId: string, reason?: string) {
+const BUYER_CANCELLABLE_STATUSES: EscrowStatus[] = [
+  "PENDING_CONFIRMATION",
+  "FUNDS_HELD",
+  "AWAITING_SHIPMENT",
+  "MEETUP_SCHEDULED",
+  "MEETUP_ARRANGED",
+];
+
+const SELLER_CANCELLABLE_STATUSES: EscrowStatus[] = [
+  "PENDING_CONFIRMATION",
+  "FUNDS_HELD",
+  "AWAITING_SHIPMENT",
+  "MEETUP_SCHEDULED",
+  "MEETUP_ARRANGED",
+];
+
+// Statuses where Escrow funds have been held and must be refunded on cancel
+const ESCROW_REFUND_STATUSES: EscrowStatus[] = [
+  "FUNDS_HELD",
+  "MEETUP_SCHEDULED",
+  "PENDING_CONFIRMATION",
+];
+
+export async function cancelOrderNew(
+  orderId: string,
+  cancelledBy: "BUYER" | "SELLER",
+  reason: string
+) {
   const session = await auth();
   if (!session?.user?.id) return { error: "กรุณาเข้าสู่ระบบ" };
   const userId = session.user.id;
 
+  if (!reason.trim()) return { error: "กรุณาระบุเหตุผลในการยกเลิก" };
+
   const order = await prisma.escrowOrder.findUnique({
     where: { id: orderId },
-    include: { item: { select: { title: true } } },
+    select: {
+      id: true, status: true, amount: true, totalAmount: true,
+      paymentMethod: true, meetupDateTime: true,
+      buyerId: true, sellerId: true, itemId: true,
+      statusHistory: true,
+      item: { select: { title: true } },
+    },
   });
   if (!order) return { error: "ไม่พบคำสั่งซื้อ" };
 
-  const isParty = order.buyerId === userId || order.sellerId === userId;
-  if (!isParty) return { error: "ไม่มีสิทธิ์" };
+  // ── Authorisation ──────────────────────────────────────────────────────────
+  if (cancelledBy === "BUYER"  && order.buyerId  !== userId) return { error: "ไม่มีสิทธิ์" };
+  if (cancelledBy === "SELLER" && order.sellerId !== userId) return { error: "ไม่มีสิทธิ์" };
 
-  if (!canTransition(order.status, "CANCELLED")) {
-    return { error: "ไม่สามารถยกเลิกคำสั่งซื้อในสถานะนี้ได้" };
+  const allowed = cancelledBy === "BUYER" ? BUYER_CANCELLABLE_STATUSES : SELLER_CANCELLABLE_STATUSES;
+  if (!allowed.includes(order.status)) {
+    return { error: "ไม่สามารถยกเลิกคำสั่งซื้อในสถานะนี้ได้ หากมีปัญหากรุณาเปิดข้อพิพาทแทน" };
   }
 
-  await prisma.$transaction(async (tx) => {
-    // Refund if Escrow payment was held
-    if (order.paymentMethod === "ESCROW" || order.paymentMethod === null) {
-      const refundAmount = order.totalAmount ?? order.amount;
-
-      await tx.user.update({
-        where: { id: order.buyerId },
-        data: { walletBalance: { increment: refundAmount } },
-      });
-
-      await tx.user.update({
-        where: { id: order.sellerId },
-        data: { escrowBalance: { decrement: refundAmount } },
-      });
+  // ── 30-min grace period for seller meetup no-show ──────────────────────────
+  if (
+    cancelledBy === "SELLER" &&
+    (order.status === "MEETUP_SCHEDULED" || order.status === "MEETUP_ARRANGED") &&
+    order.meetupDateTime
+  ) {
+    const cutoff = new Date(order.meetupDateTime.getTime() + 30 * 60 * 1000);
+    if (new Date() < cutoff) {
+      const minutesLeft = Math.ceil((cutoff.getTime() - Date.now()) / 60_000);
+      return {
+        error: `ยังไม่สามารถยกเลิกได้ กรุณารออีก ${minutesLeft} นาที หลังจากเวลานัดรับผ่านไปแล้ว (เพื่อให้ผู้ซื้อมีเวลาเดินทาง)`,
+      };
     }
+  }
 
-    // Update order
-    await tx.escrowOrder.update({
-      where: { id: orderId },
-      data: {
-        status: "CANCELLED",
-        cancelReason: reason || "ผู้ใช้ยกเลิก",
-        cancelledBy: userId,
-        cancelledAt: new Date(),
-        statusHistory: pushHistory(order.statusHistory, "CANCELLED", userId, reason || "ผู้ใช้ยกเลิก"),
-      },
+  // ── Transaction ────────────────────────────────────────────────────────────
+  try {
+    await prisma.$transaction(async (tx) => {
+      const needsEscrowRefund =
+        (order.paymentMethod === "ESCROW" || order.paymentMethod === null) &&
+        ESCROW_REFUND_STATUSES.includes(order.status);
+
+      if (needsEscrowRefund) {
+        const refundAmount = order.totalAmount ?? order.amount;
+        await tx.user.update({
+          where: { id: order.buyerId },
+          data: { walletBalance: { increment: refundAmount } },
+        });
+        await tx.user.update({
+          where: { id: order.sellerId },
+          data: { escrowBalance: { decrement: refundAmount } },
+        });
+      }
+
+      await tx.escrowOrder.update({
+        where: { id: orderId },
+        data: {
+          status: "CANCELLED",
+          cancelReason: reason,
+          cancelledBy: userId,
+          cancelledAt: new Date(),
+          statusHistory: pushHistory(
+            order.statusHistory,
+            "CANCELLED",
+            userId,
+            `${cancelledBy === "SELLER" ? "ผู้ขาย" : "ผู้ซื้อ"}ยกเลิก: ${reason}`
+          ),
+        },
+      });
+
+      await tx.item.update({
+        where: { id: order.itemId },
+        data: { status: "APPROVED" },
+      });
     });
 
-    // Restore item status
-    await tx.item.update({
-      where: { id: order.itemId },
-      data: { status: "APPROVED" },
-    });
-  });
+    // ── Notifications (outside transaction — non-critical) ─────────────────
+    const otherId    = cancelledBy === "BUYER" ? order.sellerId : order.buyerId;
+    const roleLabel  = cancelledBy === "BUYER" ? "ผู้ซื้อ" : "ผู้ขาย";
+    const wasEscrow  = order.paymentMethod === "ESCROW" || order.paymentMethod === null;
+    const refundAmt  = order.totalAmount ?? order.amount;
+    const isMeetupNoShow = cancelledBy === "SELLER" &&
+      (order.status === "MEETUP_SCHEDULED" || order.status === "MEETUP_ARRANGED");
 
-  // Notify the other party
-  const otherUserId = userId === order.buyerId ? order.sellerId : order.buyerId;
-  const role = userId === order.buyerId ? "ผู้ซื้อ" : "ผู้ขาย";
-  await prisma.notification.create({
-    data: {
-      userId: otherUserId,
-      type: "ORDER",
-      message: `❌ ${role}ยกเลิกคำสั่งซื้อ "${order.item.title}"${order.paymentMethod === "ESCROW" || !order.paymentMethod ? " — เงินคืนแล้ว" : ""}`,
-      link: "/dashboard/orders",
-    },
-  });
+    const msg = isMeetupNoShow
+      ? `❌ ผู้ขายยกเลิกการนัดรับ "${order.item.title}" (ไม่สามารถติดต่อผู้ซื้อได้)${wasEscrow ? ` — เงิน ฿${refundAmt.toLocaleString()} คืนแล้ว` : ""}`
+      : `❌ ${roleLabel}ยกเลิกคำสั่งซื้อ "${order.item.title}"${wasEscrow && ESCROW_REFUND_STATUSES.includes(order.status) ? ` — เงิน ฿${refundAmt.toLocaleString()} คืนแล้ว` : ""}`;
 
-  revalidatePath("/dashboard/orders");
-  return { success: true };
+    await prisma.notification.create({
+      data: { userId: otherId, type: "ORDER", message: msg, link: "/dashboard/orders" },
+    }).catch(console.error);
+
+    revalidatePath("/dashboard/orders");
+    return { success: true };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "เกิดข้อผิดพลาด";
+    return { error: msg };
+  }
 }
 
 // ─── Get Order Details ───────────────────────────────────────────────────────
