@@ -25,6 +25,16 @@ enum ItemCondition {
   NEEDS_REPAIR
 }
 
+enum DeliveryMethod {
+  SHIPPING
+  MEETUP
+}
+
+enum PaymentMethod {
+  ESCROW
+  COD
+}
+
 enum ItemStatus {
   ACTIVE
   SOLD
@@ -47,6 +57,11 @@ model User {
   image         String?
   password      String? // bcrypt hash — null for OAuth-only users
   role          Role      @default(STUDENT)
+  trustScore    Int       @default(100)
+  walletBalance Float     @default(1000) // mock starting balance for testing
+  escrowBalance Float     @default(0)    // funds held pending order completion
+  isBanned      Boolean   @default(false)
+  bannedAt      DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -60,6 +75,22 @@ model User {
   sentMessages  Message[]      @relation("SentMessages")
   conversations Conversation[] @relation("ConversationMembers")
   notifications Notification[]
+
+  // Trust system
+  buyerTransactions  Transaction[] @relation("BuyerTransactions")
+  sellerTransactions Transaction[] @relation("SellerTransactions")
+  reviewsGiven       Review[]      @relation("ReviewsGiven")
+  reviewsReceived    Review[]      @relation("ReviewsReceived")
+
+  // Escrow system
+  escrowOrdersBuying  EscrowOrder[] @relation("EscrowBuyer")
+  escrowOrdersSelling EscrowOrder[] @relation("EscrowSeller")
+  filedDisputes       Dispute[]     @relation("FiledDisputes")
+  savedAddresses      SavedAddress[]
+
+  // Recommendation system
+  interactions        UserInteraction[]
+  trackingEnabled     Boolean   @default(true)
 }
 
 // ─── Notifications ───────────────────────────────────
@@ -69,6 +100,40 @@ enum NotificationType {
   SYSTEM
   ORDER
   MODERATION
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum EscrowStatus {
+  // === Legacy statuses (still used by existing orders) ===
+  FUNDS_HELD             // money deducted from buyer; sitting in escrow
+  SHIPPED                // seller marked shipped; waiting on buyer confirmation
+  COMPLETED              // buyer confirmed receipt; funds released to seller
+  DISPUTED               // frozen by either party; awaiting admin resolution
+  REFUNDED               // admin resolved in buyer's favour; money returned
+  CANCELLED_BY_ADMIN     // admin closed dispute and overrode both parties
+  CANCELLED              // buyer or seller cancelled before shipment; auto-refunded
+
+  // === New checkout wizard statuses ===
+  PENDING_CONFIRMATION   // seller hasn't confirmed yet
+  DELIVERED              // buyer confirmed receipt (before payout release)
+
+  // Escrow + Meetup
+  MEETUP_SCHEDULED       // meetup arranged, funds held in escrow
+  MEETUP_COMPLETED       // met up successfully, funds released
+
+  // COD + Shipping
+  AWAITING_SHIPMENT      // waiting for seller to ship (no money held)
+  COD_SHIPPED            // shipped, awaiting COD collection
+  COD_DELIVERED          // COD collected successfully
+
+  // COD + Meetup
+  MEETUP_ARRANGED        // meetup arranged, pay cash on meet
+  MEETUP_CASH_COMPLETED  // met + paid cash successfully
 }
 
 model Notification {
@@ -149,9 +214,17 @@ model Item {
   location    String?
   contact     String?
   rating               Float     @default(0)
+  viewCount            Int       @default(0)      // denormalized view counter for trending
+  lastViewedAt         DateTime?                   // for "recently popular" signals
   scheduledForDeletionAt DateTime? // set when seller schedules deletion; null = not scheduled
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
+
+  // Checkout wizard: delivery/payment settings (per-item seller config)
+  allowShipping     Boolean   @default(true)
+  allowMeetup       Boolean   @default(true)
+  allowCOD          Boolean   @default(true)
+  shippingNote      String?   // e.g., "จัดส่งได้เฉพาะวันจันทร์-ศุกร์"
 
   sellerId   String
   seller     User     @relation(fields: [sellerId], references: [id])
@@ -161,6 +234,9 @@ model Item {
   images        ItemImage[]
   wishlists     Wishlist[]
   conversations Conversation[]
+  transactions  Transaction[]
+  escrowOrders  EscrowOrder[]
+  interactions  UserInteraction[]
 
   @@index([sellerId])
   @@index([categoryId])
@@ -212,6 +288,7 @@ model Conversation {
 model Message {
   id        String   @id @default(cuid())
   content   String   @db.Text
+  imageUrl  String?  // optional image attached to the message
   createdAt DateTime @default(now())
   read      Boolean  @default(false)
 
@@ -222,4 +299,203 @@ model Message {
 
   @@index([conversationId])
   @@index([senderId])
+}
+
+// ─── Trust System ────────────────────────────────────
+
+model Transaction {
+  id        String            @id @default(cuid())
+  status    TransactionStatus @default(PENDING)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  itemId   String
+  item     Item   @relation(fields: [itemId], references: [id])
+  buyerId  String
+  buyer    User   @relation("BuyerTransactions",  fields: [buyerId],  references: [id])
+  sellerId String
+  seller   User   @relation("SellerTransactions", fields: [sellerId], references: [id])
+
+  review   Review?
+
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([itemId])
+  @@index([status])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int      // 1–5; enforced in application layer
+  comment   String?  @db.Text
+  createdAt DateTime @default(now())
+
+  transactionId String?      @unique   // one review per legacy Transaction
+  transaction   Transaction? @relation(fields: [transactionId], references: [id])
+
+  orderId String?      @unique   // one review per EscrowOrder
+  order   EscrowOrder? @relation(fields: [orderId], references: [id])
+
+  reviewerId String
+  reviewer   User   @relation("ReviewsGiven",    fields: [reviewerId], references: [id])
+  revieweeId String
+  reviewee   User   @relation("ReviewsReceived", fields: [revieweeId], references: [id])
+
+  @@index([revieweeId])
+  @@index([reviewerId])
+}
+
+// ─── Dispute System ──────────────────────────────────
+
+enum DisputeStatus {
+  OPEN
+  RESOLVED
+}
+
+model Dispute {
+  id             String        @id @default(cuid())
+  reason         String        @db.Text
+  evidenceImages String[]
+  status         DisputeStatus @default(OPEN)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  orderId    String      @unique  // one dispute per order
+  order      EscrowOrder @relation(fields: [orderId], references: [id])
+  reporterId String
+  reporter   User        @relation("FiledDisputes", fields: [reporterId], references: [id])
+
+  @@index([status])
+}
+
+// ─── Escrow / Payment System ─────────────────────────
+
+model EscrowOrder {
+  id                 String       @id @default(cuid())
+  amount             Float        // locked at purchase time; never mutated afterward
+  status             EscrowStatus @default(FUNDS_HELD)
+  // Cancellation
+  cancelReason       String?      @db.Text
+  cancelledBy        String?      // userId who cancelled
+  cancelledAt        DateTime?
+  // Shipping details (filled by seller in confirmShipment)
+  shippedAt          DateTime?
+  shippingMethod     String?      // "POST" | "KERRY" | "FLASH" | "MEETUP" | other
+  trackingNumber     String?
+  trackingCarrier    String?      // carrier name (e.g., "Kerry Express")
+  shippingProofImage String?      // URL of receipt / parcel photo
+  // Legacy dispute field kept for backward-compat; new disputes use Dispute model
+  disputeReason      String?      @db.Text
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  // ─── Checkout Wizard fields (nullable for legacy orders) ────────────
+  deliveryMethod     DeliveryMethod?   // null = legacy (assumed SHIPPING)
+  paymentMethod      PaymentMethod?    // null = legacy (assumed ESCROW)
+
+  // Delivery details
+  shippingAddress    Json?             // structured { recipientName, phone, ... }
+  meetupLocation     String?
+  meetupDateTime     DateTime?
+  meetupNote         String?
+
+  // Financial breakdown
+  platformFee        Float     @default(0)
+  shippingCost       Float     @default(0)
+  totalAmount        Float?            // null for legacy (= amount)
+  sellerPayout       Float?            // null for legacy (= amount)
+
+  // Extended timestamps
+  confirmedAt        DateTime?         // seller confirmed
+  deliveredAt        DateTime?         // buyer confirmed delivery
+  completedAt        DateTime?         // money released / transaction finished
+  codConfirmedAt     DateTime?         // when COD payment was confirmed
+
+  // Meetup proof of delivery
+  handoverPhotoUrl      String?           // uploaded photo URL from /api/upload
+  handoverSignature     String?  @db.Text  // base64 PNG of buyer's signature
+  handoverConfirmedAt   DateTime?
+
+  // Status tracking
+  statusHistory      Json      @default("[]")
+  expiresAt          DateTime?         // auto-cancel if seller doesn't confirm
+
+  // Review references
+  buyerReviewId      String?
+  sellerReviewId     String?
+
+  itemId   String
+  item     Item   @relation(fields: [itemId], references: [id])
+  buyerId  String
+  buyer    User   @relation("EscrowBuyer",  fields: [buyerId],  references: [id])
+  sellerId String
+  seller   User   @relation("EscrowSeller", fields: [sellerId], references: [id])
+
+  dispute  Dispute?
+  review   Review?
+
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([itemId])
+  @@index([status])
+  @@index([status, createdAt])
+}
+
+// ─── Recommendation / Interaction System ─────────────
+
+enum InteractionType {
+  VIEW            // visited item detail
+  SEARCH_CLICK    // clicked from search results
+  WISHLIST_ADD    // added to wishlist
+  CONTACT_SELLER  // opened chat with seller
+  PURCHASE        // completed escrow purchase
+}
+
+enum PriceRange {
+  BUDGET    // ฿0 – ฿100
+  MID       // ฿101 – ฿500
+  PREMIUM   // ฿501 – ฿2,000
+  LUXURY    // ฿2,001+
+}
+
+model UserInteraction {
+  id         String          @id @default(cuid())
+  userId     String
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemId     String
+  item       Item            @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  type       InteractionType @default(VIEW)
+  category   String          // denormalized category slug — avoids JOIN on reads
+  priceRange PriceRange?     // bucketed price at time of interaction
+  source     String?         // "search" | "browse" | "recommendation" | "direct"
+  createdAt  DateTime        @default(now())
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, category])
+  @@index([itemId])
+  @@index([createdAt])
+  @@map("user_interactions")
+}
+
+// ─── Saved Addresses ─────────────────────────────────
+
+model SavedAddress {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label           String   @default("บ้าน")
+  recipientName   String
+  phone           String
+  addressLine1    String
+  addressLine2    String?
+  district        String
+  province        String
+  postalCode      String
+  note            String?
+  isDefault       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@map("saved_addresses")
 }

@@ -3,6 +3,7 @@
 import { useWishlistStore } from "@/lib/stores/wishlist-store";
 import { useToastStore } from "@/lib/stores/toast-store";
 import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useAuthStore } from "@/lib/stores/auth-store";
 
 interface WishlistButtonProps {
   itemId: string;
@@ -19,8 +20,12 @@ export default function WishlistButton({
   const toggle = useWishlistStore((s) => s.toggle);
   const showToast = useToastStore((s) => s.show);
   const t = useLocaleStore((s) => s.t);
+  const userRole = useAuthStore((s) => s.user?.role);
 
   const isWished = has(itemId);
+
+  // Admins are moderators — they don't save to wishlist
+  if (userRole === "ADMIN") return null;
   const iconSize = size === "sm" ? "w-4 h-4" : "w-5 h-5";
 
   const handleClick = (e: React.MouseEvent) => {

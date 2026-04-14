@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(npm install:*)",
+      "Bash(node -e \"require\\('zod'\\); console.log\\('zod ok'\\)\")",
+      "Bash(python3 -c \"import json,sys; p=json.load\\(sys.stdin\\); print\\('next:', p['dependencies'].get\\('next','missing'\\)\\); print\\('zod:', p['dependencies'].get\\('zod', p.get\\('devDependencies',{}\\).get\\('zod','NOT FOUND'\\)\\)\\)\")",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/next/package.json'\\).version\\)\")",
+      "Bash(npx prisma:*)"
+    ]
+  }
+}

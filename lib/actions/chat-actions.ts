@@ -37,8 +37,12 @@ export async function getOrCreateConversation(itemId: string, sellerId: string) 
       conversation: {
         ...existing,
         messages: existing.messages.map((m) => ({
-          ...m,
+          id:        m.id,
+          content:   m.content,
+          imageUrl:  (m as any).imageUrl ?? null,
+          read:      m.read,
           createdAt: m.createdAt.toISOString(),
+          sender:    m.sender,
         })),
         createdAt: existing.createdAt.toISOString(),
         updatedAt: existing.updatedAt.toISOString(),
@@ -70,14 +74,19 @@ export async function getOrCreateConversation(itemId: string, sellerId: string) 
 
 // ─── Send message ────────────────────────────────────
 
-export async function sendMessage(conversationId: string, content: string) {
+export async function sendMessage(
+  conversationId: string,
+  content: string,
+  imageUrl?: string
+) {
   const session = await auth();
   if (!session?.user?.id) return { error: "Not authenticated" };
-  if (!content.trim()) return { error: "Empty message" };
+  if (!content.trim() && !imageUrl) return { error: "Empty message" };
 
   const message = await prisma.message.create({
     data: {
-      content: content.trim(),
+      content:  content.trim(),
+      imageUrl: imageUrl ?? null,
       senderId: session.user.id,
       conversationId,
     },
@@ -98,6 +107,24 @@ export async function sendMessage(conversationId: string, content: string) {
       createdAt: message.createdAt.toISOString(),
     },
   };
+}
+
+// ─── Mark incoming messages as read ──────────────────
+
+export async function markMessagesAsRead(conversationId: string) {
+  const session = await auth();
+  if (!session?.user?.id) return { error: "Not authenticated" };
+
+  await prisma.message.updateMany({
+    where: {
+      conversationId,
+      senderId: { not: session.user.id },
+      read: false,
+    },
+    data: { read: true },
+  });
+
+  return { success: true };
 }
 
 // ─── Get user conversations ─────────────────────────
@@ -160,8 +187,12 @@ export async function getMessages(conversationId: string) {
 
   return {
     messages: messages.map((m) => ({
-      ...m,
-      createdAt: m.createdAt.toISOString(),
+      id:             m.id,
+      content:        m.content,
+      imageUrl:       m.imageUrl ?? null,
+      read:           m.read,
+      createdAt:      m.createdAt.toISOString(),
+      sender:         m.sender,
     })),
     currentUserId: session.user.id,
   };

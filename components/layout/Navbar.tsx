@@ -78,17 +78,17 @@ export default function Navbar({ searchQuery, onSearchChange, activeCat, onCatCh
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-[#f7f6f3]/90 backdrop-blur-md border-b border-[#e5e3de]">
-      <div className="max-w-7xl mx-auto px-5 py-4 flex items-center gap-4">
+    <header className="sticky top-0 z-50 bg-[#f7f6f3]/95 backdrop-blur-md border-b border-[#e5e3de]/80 shadow-[0_1px_0_rgba(0,0,0,0.04)]">
+      <div className="max-w-7xl mx-auto px-5 py-3.5 flex items-center gap-4">
         {/* Logo */}
         <div className="flex-shrink-0">
-          <span className="text-xl font-extrabold tracking-tighter">
-            PSU<span style={{ color: "var(--accent)" }}>.</span>STORE
+          <span className="text-xl font-extrabold tracking-tighter text-[#111]">
+            PSU<span className="text-[#e8500a]">.</span>STORE
           </span>
         </div>
 
         {/* Search */}
-        <div className="search-bar flex-1 max-w-xl bg-white border border-[#e5e3de] rounded-xl px-4 py-2.5 flex items-center gap-2.5 transition-all mx-auto">
+        <div className="search-bar flex-1 max-w-xl bg-white border border-[#e5e3de] rounded-2xl px-4 py-2.5 flex items-center gap-2.5 mx-auto shadow-[var(--shadow-xs)]">
           <svg className="w-4 h-4 flex-shrink-0 text-[#9a9590]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>

@@ -42,6 +42,10 @@ export interface ItemWithDetails {
   seller: SellerInfo;
   category: CategoryInfo;
   images: ItemImage[];
+  // Checkout wizard delivery/payment settings
+  allowShipping: boolean;
+  allowMeetup: boolean;
+  allowCOD: boolean;
 }
 
 export interface TrendCard {

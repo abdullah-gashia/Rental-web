@@ -17,6 +17,20 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <span className="text-[#e5e3de]">/</span>
             <span className="text-sm font-medium text-[#555]">แดชบอร์ด</span>
           </div>
+          <nav className="hidden sm:flex items-center gap-1">
+            <a
+              href="/dashboard/my-items"
+              className="px-3 py-1.5 rounded-lg text-sm text-[#555] hover:text-[#111] hover:bg-[#f7f6f3] transition font-medium"
+            >
+              สินค้าของฉัน
+            </a>
+            <a
+              href="/dashboard/orders"
+              className="px-3 py-1.5 rounded-lg text-sm text-[#555] hover:text-[#111] hover:bg-[#f7f6f3] transition font-medium"
+            >
+              คำสั่งซื้อ
+            </a>
+          </nav>
           <div className="flex items-center gap-3">
             <a
               href="/"
