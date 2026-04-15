@@ -10,7 +10,7 @@ import { getOrCreateConversation } from "@/lib/actions/chat-actions";
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import TrendingCarousel from "@/components/items/TrendingCarousel";
+import TrendingSection from "@/app/_components/TrendingSection";
 import StatsBar from "@/components/sections/StatsBar";
 import ProductGrid from "@/components/items/ProductGrid";
 import RecentlyAdded from "@/components/sections/RecentlyAdded";
@@ -26,6 +26,7 @@ import type { RecommendedItem } from "@/lib/actions/recommendations";
 
 interface HomeClientProps {
   items: ItemWithDetails[];
+  trendingItems?:          any[];
   recommendedItems?:       RecommendedItem[];
   recommendationStrategy?: "personalized" | "trending" | "newest";
   // Initial values hydrated from server-read searchParams
@@ -39,6 +40,7 @@ interface HomeClientProps {
 
 export default function HomeClient({
   items,
+  trendingItems              = [],
   recommendedItems       = [],
   recommendationStrategy = "trending",
   initialQ         = "",
@@ -191,7 +193,10 @@ export default function HomeClient({
       />
 
       <main className="max-w-7xl mx-auto px-5 pt-8">
-        <TrendingCarousel />
+        <TrendingSection items={trendingItems} onItemClick={(id) => {
+          const item = items.find((i) => i.id === id);
+          if (item) handleItemClick(item);
+        }} />
         <StatsBar totalItems={items.length} />
 
         {/* ── Advanced filter bar ──────────────────────────────────── */}

@@ -85,10 +85,12 @@ export type AdminItemDetail = {
     createdAt: string;
   }>;
 
-  // Placeholders for future models
   reportCount: number;
   reports: Array<{ reporterName: string; reason: string; createdAt: string }>;
   auditLog: Array<{ action: string; adminName: string; note: string | null; createdAt: string }>;
+
+  // Trending/featured status
+  trending: { featuredId: string; position: number; addedAt: string } | null;
 };
 
 // ─── getAdminItemDetail ───────────────────────────────────────────────────────
@@ -151,6 +153,12 @@ export async function getAdminItemDetail(itemId: string): Promise<AdminItemDetai
 
   if (!item) return null;
 
+  // Fetch trending record separately (avoids include complexity)
+  const trendingRecord = await prisma.featuredItem.findUnique({
+    where: { itemId_section: { itemId: item.id, section: "trending" } },
+    select: { id: true, position: true, addedAt: true },
+  });
+
   return {
     id: item.id,
     title: item.title,
@@ -210,10 +218,18 @@ export async function getAdminItemDetail(itemId: string): Promise<AdminItemDetai
       createdAt: o.createdAt.toISOString(),
     })),
 
-    // No AuditLog or Report models yet — placeholder
     reportCount: 0,
     reports: [],
     auditLog: [],
+
+    // Trending status for this item
+    trending: trendingRecord
+      ? {
+          featuredId: trendingRecord.id,
+          position:   trendingRecord.position,
+          addedAt:    trendingRecord.addedAt.toISOString(),
+        }
+      : null,
   };
 }
 

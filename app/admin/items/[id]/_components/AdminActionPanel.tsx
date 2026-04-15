@@ -11,12 +11,14 @@ import {
   reapproveItemDetail,
   deleteItemDetail,
 } from "../actions";
+import { addToFeatured, removeFromFeatured } from "@/lib/actions/featured";
 
 interface Props {
   item: {
     id: string;
     title: string;
     status: string;
+    trending: { featuredId: string; position: number; addedAt: string } | null;
   };
 }
 
@@ -28,6 +30,9 @@ export default function AdminActionPanel({ item }: Props) {
   const [rejectOpen, setRejectOpen] = useState(false);
   const [suspendOpen, setSuspendOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+
+  // Trending state (optimistic)
+  const [trending, setTrending] = useState(item.trending);
 
   function showToast(ok: boolean, msg: string) {
     setToast({ ok, msg });
@@ -170,6 +175,50 @@ export default function AdminActionPanel({ item }: Props) {
                          disabled:opacity-50 text-sm"
             >
               {pending ? <Spinner /> : "✅"} อนุมัติใหม่
+            </button>
+          )}
+
+          {/* ── Trending Toggle ── */}
+          <div className="border-t border-[#f0ede7] my-2" />
+          {trending ? (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs text-[#555] bg-orange-50 border border-orange-200 rounded-xl px-3 py-2.5">
+                <div>
+                  <p className="font-semibold text-orange-700">🔥 อยู่ในรายการมาแรง</p>
+                  <p className="text-orange-600 mt-0.5">ตำแหน่ง #{trending.position}</p>
+                </div>
+                <button
+                  onClick={() => startTransition(async () => {
+                    const res = await removeFromFeatured(trending.featuredId);
+                    if (res.success) { setTrending(null); showToast(true, res.message); }
+                    else showToast(false, res.error);
+                  })}
+                  disabled={pending}
+                  className="text-xs text-red-500 hover:text-red-700 font-medium disabled:opacity-40"
+                >
+                  ลบออก
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => startTransition(async () => {
+                const res = await addToFeatured({ itemId: item.id, section: "trending" });
+                if (res.success) {
+                  showToast(true, res.message);
+                  // Refresh to get the new featuredId — simple page reload
+                  window.location.reload();
+                } else {
+                  showToast(false, res.error);
+                }
+              })}
+              disabled={pending || item.status !== "APPROVED"}
+              title={item.status !== "APPROVED" ? "สินค้าต้องได้รับการอนุมัติก่อน" : undefined}
+              className="w-full px-4 py-2.5 border border-orange-300 text-orange-700 rounded-xl font-medium
+                         hover:bg-orange-50 transition-colors flex items-center justify-center gap-2
+                         disabled:opacity-40 text-sm"
+            >
+              🔥 เพิ่มเป็นสินค้ามาแรง
             </button>
           )}
 

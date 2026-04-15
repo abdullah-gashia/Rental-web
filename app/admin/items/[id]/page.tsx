@@ -99,7 +99,7 @@ export default async function AdminItemDetailPage({ params }: Props) {
         <div className="space-y-5 md:order-2">
           <ItemDetailsCard item={item} />
           <SystemMetadataCard item={item} />
-          <AdminActionPanel item={item} />
+          <AdminActionPanel item={{ id: item.id, title: item.title, status: item.status, trending: item.trending }} />
         </div>
 
         {/* ── LEFT COLUMN ── */}

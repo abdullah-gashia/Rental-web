@@ -192,7 +192,7 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
                   {t("chat_seller")}
                 </button>
 
-                {/* Buy Now — only for SELL items the current user doesn't own */}
+                {/* Buy Now — SELL items only */}
                 {item.listingType === "SELL" &&
                   item.status === "APPROVED" &&
                   isAuthenticated &&
@@ -205,6 +205,22 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
                     className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition text-sm"
                   >
                     🛒 ซื้อเลย
+                  </button>
+                )}
+
+                {/* Rent Now — RENT items only, not the seller, not admin */}
+                {item.listingType === "RENT" &&
+                  item.status === "APPROVED" &&
+                  isAuthenticated &&
+                  user?.id !== item.seller.id && (
+                  <button
+                    onClick={() => {
+                      onClose();
+                      setCheckoutOpen(true);
+                    }}
+                    className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition text-sm"
+                  >
+                    🔑 เช่าเลย
                   </button>
                 )}
               </>

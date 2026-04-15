@@ -69,6 +69,7 @@ export async function getItems(
         seller: { select: { id: true, name: true, email: true } },
         category: { select: { nameTh: true } },
         images: { where: { isMain: true }, take: 1 },
+        featuredIn: { where: { section: "trending" }, select: { id: true }, take: 1 },
       },
     }),
     prisma.item.count({ where }),
@@ -86,6 +87,8 @@ export async function getItems(
       listingType:  item.listingType,
       createdAt:    item.createdAt.toISOString(),
       rejectReason: item.rejectReason ?? null,
+      isTrending:        item.featuredIn.length > 0,
+      featuredTrendingId: item.featuredIn[0]?.id ?? null,
     })),
     meta: paginationMeta(totalCount, page, pageSize),
   };

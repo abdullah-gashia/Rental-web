@@ -148,3 +148,175 @@ export async function updateUserRole(
     return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
   }
 }
+
+// ─── getUserDetail ────────────────────────────────────────────────────────────
+
+import type { UserDetail } from "../_lib/types";
+import { EscrowStatus, ItemStatus } from "@prisma/client";
+
+export async function getUserDetail(userId: string): Promise<UserDetail | null> {
+  await requireAdmin();
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true, name: true, email: true, image: true, phone: true, bio: true,
+      role: true, isBanned: true, trustScore: true,
+      walletBalance: true, escrowBalance: true,
+      createdAt: true, verificationStatus: true,
+      psuIdNumber: true, psuIdType: true, verifiedAt: true,
+    },
+  });
+  if (!user) return null;
+
+  // ── Financial aggregations ──────────────────────────────────────────────
+  const ACTIVE_ESCROW_STATUSES: EscrowStatus[] = [
+    "PENDING_CONFIRMATION", "FUNDS_HELD", "SHIPPED",
+    "DELIVERED", "MEETUP_SCHEDULED", "MEETUP_COMPLETED", "DISPUTED",
+  ];
+
+  const [buyerEscrow, sellerPayout, totalSales, totalPurchases] = await Promise.all([
+    prisma.escrowOrder.aggregate({
+      where: { buyerId: userId, status: { in: ACTIVE_ESCROW_STATUSES } },
+      _sum: { amount: true },
+      _count: { _all: true },
+    }),
+    prisma.escrowOrder.aggregate({
+      where: {
+        sellerId: userId,
+        status: { in: ["FUNDS_HELD", "SHIPPED", "DELIVERED", "MEETUP_SCHEDULED", "MEETUP_COMPLETED"] as EscrowStatus[] },
+      },
+      _sum: { amount: true },
+      _count: { _all: true },
+    }),
+    prisma.escrowOrder.aggregate({
+      where: {
+        sellerId: userId,
+        status: { in: ["COMPLETED", "MEETUP_COMPLETED", "MEETUP_CASH_COMPLETED", "COD_DELIVERED"] as EscrowStatus[] },
+      },
+      _sum: { amount: true },
+      _count: { _all: true },
+    }),
+    prisma.escrowOrder.aggregate({
+      where: {
+        buyerId: userId,
+        status: { in: ["COMPLETED", "MEETUP_COMPLETED", "MEETUP_CASH_COMPLETED", "COD_DELIVERED"] as EscrowStatus[] },
+      },
+      _sum: { amount: true },
+      _count: { _all: true },
+    }),
+  ]);
+
+  // ── Activity counts ─────────────────────────────────────────────────────
+  const [itemCount, activeItemCount, soldItemCount, buyOrderCount, sellOrderCount, disputeCount, cancelledCount] =
+    await Promise.all([
+      prisma.item.count({ where: { sellerId: userId } }),
+      prisma.item.count({ where: { sellerId: userId, status: { in: ["ACTIVE", "APPROVED"] as ItemStatus[] } } }),
+      prisma.item.count({ where: { sellerId: userId, status: "SOLD" } }),
+      prisma.escrowOrder.count({ where: { buyerId: userId } }),
+      prisma.escrowOrder.count({ where: { sellerId: userId } }),
+      prisma.dispute.count({ where: { reporterId: userId } }),
+      prisma.escrowOrder.count({
+        where: {
+          OR: [{ buyerId: userId }, { sellerId: userId }],
+          status: { in: ["CANCELLED", "CANCELLED_BY_ADMIN"] as EscrowStatus[] },
+        },
+      }),
+    ]);
+
+  // ── Active escrow orders ────────────────────────────────────────────────
+  const escrowOrders = await prisma.escrowOrder.findMany({
+    where: {
+      OR: [{ buyerId: userId }, { sellerId: userId }],
+      status: {
+        notIn: ["COMPLETED", "CANCELLED", "REFUNDED", "CANCELLED_BY_ADMIN",
+                "MEETUP_CASH_COMPLETED", "COD_DELIVERED"] as EscrowStatus[],
+      },
+    },
+    select: {
+      id: true, amount: true, totalAmount: true, sellerPayout: true,
+      status: true, buyerId: true, sellerId: true, createdAt: true,
+      item: { select: { title: true } },
+    },
+    orderBy: { createdAt: "desc" },
+    take: 10,
+  });
+
+  return {
+    ...user,
+    createdAt: user.createdAt.toISOString(),
+    verifiedAt: user.verifiedAt?.toISOString() ?? null,
+    buyerEscrowTotal:    buyerEscrow._sum.amount ?? 0,
+    buyerEscrowCount:    buyerEscrow._count._all,
+    sellerPayoutTotal:   sellerPayout._sum.amount ?? 0,
+    sellerPayoutCount:   sellerPayout._count._all,
+    totalSalesAmount:    totalSales._sum.amount ?? 0,
+    totalSalesCount:     totalSales._count._all,
+    totalPurchaseAmount: totalPurchases._sum.amount ?? 0,
+    totalPurchaseCount:  totalPurchases._count._all,
+    itemCount, activeItemCount, soldItemCount,
+    buyOrderCount, sellOrderCount, disputeCount, cancelledCount,
+    escrowOrders: escrowOrders.map((o) => ({
+      id: o.id,
+      amount: o.amount,
+      totalAmount: o.totalAmount,
+      sellerPayout: o.sellerPayout,
+      status: o.status,
+      buyerId: o.buyerId,
+      sellerId: o.sellerId,
+      itemTitle: o.item.title,
+      createdAt: o.createdAt.toISOString(),
+    })),
+  };
+}
+
+// ─── adminEditUser ────────────────────────────────────────────────────────────
+
+const AdminEditUserSchema = z.object({
+  userId:             z.string().min(1),
+  name:               z.string().min(2, "ชื่อต้องมีอย่างน้อย 2 ตัวอักษร").max(50),
+  phone:              z.string().regex(/^0\d{9}$/).nullable().optional(),
+  role:               z.enum(["ADMIN", "STUDENT"]),
+  isBanned:           z.boolean(),
+  trustScore:         z.number().min(0).max(200),
+  verificationStatus: z.enum(["UNVERIFIED", "PENDING", "APPROVED", "REJECTED", "SUSPENDED"]),
+  adminNote:          z.string().max(500).optional(),
+});
+
+export async function adminEditUser(
+  input: z.infer<typeof AdminEditUserSchema>
+): Promise<ActionResult> {
+  try {
+    const admin = await requireAdmin();
+    const parsed = AdminEditUserSchema.parse(input);
+
+    // Safety guards
+    if (parsed.userId === admin.id && parsed.role !== "ADMIN") {
+      return { success: false, error: "ไม่สามารถเปลี่ยนบทบาทของตัวเองได้" };
+    }
+    if (parsed.userId === admin.id && parsed.isBanned) {
+      return { success: false, error: "ไม่สามารถแบนตัวเองได้" };
+    }
+
+    await prisma.user.update({
+      where: { id: parsed.userId },
+      data: {
+        name:               parsed.name,
+        phone:              parsed.phone || null,
+        role:               parsed.role,
+        isBanned:           parsed.isBanned,
+        bannedAt:           parsed.isBanned ? new Date() : null,
+        trustScore:         parsed.trustScore,
+        verificationStatus: parsed.verificationStatus as any,
+      },
+    });
+
+    revalidatePath("/admin/users");
+    return { success: true, message: "บันทึกข้อมูลผู้ใช้เรียบร้อยแล้ว" };
+  } catch (e: unknown) {
+    if (e instanceof z.ZodError) {
+      return { success: false, error: e.issues[0].message };
+    }
+    return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
+  }
+}

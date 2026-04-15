@@ -7,6 +7,7 @@ import { formatThaiDate, formatCurrency } from "../../_lib/utils";
 import StatusBadge                  from "../../_components/StatusBadge";
 import ConfirmDialog                from "../../_components/ConfirmDialog";
 import { approveItem, rejectItem, forceDeleteItem } from "../actions";
+import { addToFeatured, removeFromFeatured }          from "@/lib/actions/featured";
 
 interface Props {
   rows: ItemRow[];
@@ -164,7 +165,14 @@ export default function ItemsTable({ rows }: Props) {
 
                 {/* Status */}
                 <td className="px-4 py-3">
-                  <StatusBadge status={item.status} type="item" />
+                  <div className="flex items-center gap-1.5">
+                    <StatusBadge status={item.status} type="item" />
+                    {item.isTrending && (
+                      <span className="inline-flex items-center text-[10px] text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded-full font-medium">
+                        🔥 มาแรง
+                      </span>
+                    )}
+                  </div>
                 </td>
 
                 {/* Date */}
@@ -179,6 +187,14 @@ export default function ItemsTable({ rows }: Props) {
                     onApprove={() => setDialog({ kind: "approve", itemId: item.id, label: item.title })}
                     onReject={() => setDialog({ kind: "reject",  itemId: item.id, label: item.title })}
                     onDelete={() => setDialog({ kind: "delete",  itemId: item.id, label: item.title })}
+                    onTrendingToggle={() => {
+                      startTransition(async () => {
+                        const res = item.isTrending && item.featuredTrendingId
+                          ? await removeFromFeatured(item.featuredTrendingId)
+                          : await addToFeatured({ itemId: item.id, section: "trending" });
+                        showToast(res.success, res.success ? res.message : res.error);
+                      });
+                    }}
                   />
                 </td>
               </tr>
@@ -193,12 +209,13 @@ export default function ItemsTable({ rows }: Props) {
 // ─── Actions dropdown ─────────────────────────────────────────────────────────
 
 function ItemActionsDropdown({
-  item, onApprove, onReject, onDelete,
+  item, onApprove, onReject, onDelete, onTrendingToggle,
 }: {
   item:      ItemRow;
   onApprove: () => void;
   onReject:  () => void;
   onDelete:  () => void;
+  onTrendingToggle: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const isPending = item.status === "PENDING";
@@ -243,6 +260,15 @@ function ItemActionsDropdown({
             >
               🔗 ดูสินค้า
             </a>
+            {/* Trending toggle */}
+            {item.status === "APPROVED" && (
+              <button
+                onClick={() => { setOpen(false); onTrendingToggle(); }}
+                className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f7f6f3] text-orange-600 transition"
+              >
+                {item.isTrending ? "🔥 ลบออกจากมาแรง" : "🔥 ตั้งเป็นสินค้ามาแรง"}
+              </button>
+            )}
             {item.status !== "REMOVED" && (
               <button
                 onClick={() => { setOpen(false); onDelete(); }}

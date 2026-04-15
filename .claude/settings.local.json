@@ -12,7 +12,9 @@
       "Bash(node -e \"const bcrypt = require\\('bcryptjs'\\); bcrypt.hash\\('password1234', 12\\).then\\(h => console.log\\(h\\)\\)\")",
       "Bash(node -e ':*)",
       "Bash(PGPASSWORD=\"npg_6HrDabg9oltf\" psql \"postgresql://neondb_owner@ep-soft-queen-a17ej4pp-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require\" -c \"SELECT id, name, email, role, \\\\\"verificationStatus\\\\\" FROM \\\\\"User\\\\\" WHERE email = 'muhammadshareef@psu.ac.th';\")",
-      "Bash(npx tsx -e ':*)"
+      "Bash(npx tsx -e ':*)",
+      "Bash(mkdir -p \"d:/Project/New folder/Web app/app/lending/[id]/_components\")",
+      "Bash(mkdir -p \"d:/Project/New folder/Web app/app/lending/orders/[id]/_components\")"
     ]
   }
 }

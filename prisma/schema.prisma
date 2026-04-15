@@ -111,8 +111,24 @@ model User {
   interactions        UserInteraction[]
   trackingEnabled     Boolean   @default(true)
 
+  // Profile extras
+  bio                 String?   @db.Text
+  phone               String?
+  deletionRequestedAt DateTime?
+
   // KYC relation
   verificationRequests VerificationRequest[]
+
+  // Preferences
+  preferences         UserPreferences?
+
+  // Lending system
+  ownedLendingItems   LendingItem[]     @relation("OwnedLendings")
+  borrowerOrders      LendingOrder[]    @relation("BorrowerLendings")
+  lenderOrders        LendingOrder[]    @relation("LenderLendings")
+  lenderRating        Float?
+  borrowerRating      Float?
+  lendingTier         LendingTier       @default(NEW_USER)
 }
 
 // ─── Notifications ───────────────────────────────────
@@ -259,6 +275,7 @@ model Item {
   transactions  Transaction[]
   escrowOrders  EscrowOrder[]
   interactions  UserInteraction[]
+  featuredIn    FeaturedItem[]
 
   @@index([sellerId])
   @@index([categoryId])
@@ -561,3 +578,231 @@ model VerificationRequest {
   @@index([status, submittedAt])
   @@map("verification_requests")
 }
+
+// ─── User Preferences ────────────────────────────────
+
+model UserPreferences {
+  id                    String  @id @default(cuid())
+  userId                String  @unique
+  user                  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Notification preferences
+  notifyOrders          Boolean @default(true)
+  notifyMessages        Boolean @default(true)
+  notifyItemUpdates     Boolean @default(true)
+  notifyPromotions      Boolean @default(false)
+  emailWeeklySummary    Boolean @default(false)
+  emailRecommendations  Boolean @default(true)
+
+  // Display preferences
+  language              String  @default("th")
+  theme                 String  @default("system")
+
+  // Privacy
+  showProfilePublic     Boolean @default(true)
+  showTrustScore        Boolean @default(true)
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("user_preferences")
+}
+
+// ─── P2P Lending System ──────────────────────────────
+
+enum LendingCategory {
+  TEXTBOOKS
+  LAB_EQUIPMENT
+  ELECTRONICS
+  TOOLS
+  SPORTS
+  MUSIC_INSTRUMENTS
+  COSTUMES_OUTFITS
+  STUDY_SUPPLIES
+  VEHICLES
+  OTHER
+}
+
+enum RentalType {
+  FREE
+  DAILY_RATE
+  FLAT_FEE
+}
+
+enum LendingItemStatus {
+  AVAILABLE
+  LENT_OUT
+  RESERVED
+  UNAVAILABLE
+  SUSPENDED
+}
+
+enum LendingOrderStatus {
+  REQUESTED
+  APPROVED
+  DEPOSIT_HELD
+  REJECTED
+  CANCELLED
+  PICKUP_SCHEDULED
+  PICKUP_IN_PROGRESS
+  ITEM_HANDED_OVER
+  ACTIVE
+  OVERDUE
+  RENEWAL_REQUESTED
+  RENEWED
+  RETURN_REQUESTED
+  RETURN_SCHEDULED
+  RETURN_IN_PROGRESS
+  RETURNED
+  COMPLETED
+  COMPLETED_WITH_DEDUCTION
+  DISPUTED
+  LOST
+}
+
+enum LendingTier {
+  NEW_USER
+  STANDARD
+  TRUSTED
+  RESTRICTED
+  BANNED
+}
+
+model LendingItem {
+  id              String            @id @default(cuid())
+  ownerId         String
+  owner           User              @relation("OwnedLendings", fields: [ownerId], references: [id])
+
+  title           String
+  description     String?           @db.Text
+  category        LendingCategory
+  condition       ItemCondition     @default(GOOD)
+  images          String[]
+  tags            String[]
+
+  rentalType      RentalType        @default(DAILY_RATE)
+  dailyRate       Float?
+  flatFee         Float?
+  depositAmount   Float             @default(0)
+  lateFeePerDay   Float             @default(0)
+
+  status          LendingItemStatus @default(AVAILABLE)
+  maxLendingDays  Int               @default(7)
+  minLendingDays  Int               @default(1)
+  availableFrom   DateTime?
+  availableUntil  DateTime?
+  isRenewable     Boolean           @default(true)
+  maxRenewals     Int               @default(1)
+
+  allowMeetup     Boolean           @default(true)
+  meetupLocations String[]
+
+  totalLentCount  Int               @default(0)
+  viewCount       Int               @default(0)
+  averageRating   Float?
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  lendingOrders   LendingOrder[]
+
+  @@index([ownerId, status])
+  @@index([category, status])
+  @@index([status, createdAt])
+  @@map("lending_items")
+}
+
+model LendingOrder {
+  id              String              @id @default(cuid())
+  refCode         String              @unique @default(cuid())
+
+  borrowerId      String
+  borrower        User                @relation("BorrowerLendings", fields: [borrowerId], references: [id])
+  lenderId        String
+  lender          User                @relation("LenderLendings", fields: [lenderId], references: [id])
+  lendingItemId   String
+  lendingItem     LendingItem         @relation(fields: [lendingItemId], references: [id])
+
+  rentalType      RentalType
+  dailyRate       Float?
+  flatFee         Float?
+  depositAmount   Float
+  requestedDays   Int
+  estimatedRentalFee Float
+  actualRentalFee Float?
+  lateFees        Float               @default(0)
+  damageFees      Float               @default(0)
+  platformFee     Float               @default(0)
+  totalPaidByBorrower Float
+  lenderPayout    Float?
+
+  requestedAt     DateTime            @default(now())
+  approvedAt      DateTime?
+  scheduledPickupAt DateTime?
+  actualPickupAt  DateTime?
+  dueDate         DateTime?
+  returnRequestedAt DateTime?
+  scheduledReturnAt DateTime?
+  actualReturnAt  DateTime?
+  completedAt     DateTime?
+
+  renewalCount    Int                 @default(0)
+  originalDueDate DateTime?
+  renewalHistory  Json                @default("[]")
+
+  meetupLocation  String?
+  meetupNote      String?
+
+  pickupPhotos    String[]
+  pickupBorrowerConfirm Boolean       @default(false)
+  pickupLenderConfirm   Boolean       @default(false)
+  pickupNote      String?
+
+  returnPhotos    String[]
+  returnBorrowerConfirm Boolean       @default(false)
+  returnLenderConfirm   Boolean       @default(false)
+  returnNote      String?
+  returnCondition ItemCondition?
+  damageFeeRequested Float?
+
+  status          LendingOrderStatus
+  statusHistory   Json                @default("[]")
+
+  cancelledAt     DateTime?
+  cancelledBy     String?
+  cancelReason    String?
+
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([borrowerId, status])
+  @@index([lenderId, status])
+  @@index([lendingItemId])
+  @@index([status, dueDate])
+  @@map("lending_orders")
+}
+
+// ─── Featured Items (Admin-Curated Trending) ─────────
+
+model FeaturedItem {
+  id            String    @id @default(cuid())
+  itemId        String
+  item          Item      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  section       String    @default("trending")
+  position      Int
+  customLabel   String?
+  customBadge   String?
+
+  startDate     DateTime  @default(now())
+  endDate       DateTime?
+
+  addedBy       String
+  addedAt       DateTime  @default(now())
+  note          String?
+
+  @@unique([itemId, section])
+  @@index([section, position])
+  @@map("featured_items")
+}
+

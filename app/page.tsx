@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { prisma }                   from "@/lib/prisma";
 import { auth }                     from "@/lib/auth";
 import { getCachedRecommendations } from "@/lib/actions/recommendations";
+import { getTrendingSection }       from "@/lib/actions/featured";
 import HomeClient from "./HomeClient";
 
 type SearchParamsRaw = { [key: string]: string | string[] | undefined };
@@ -90,7 +91,7 @@ export default async function Home({
   const session = await auth();
   const userId  = (session?.user as any)?.id ?? null;
 
-  const [items, recommendations] = await Promise.all([
+  const [items, recommendations, trendingItems] = await Promise.all([
     prisma.item.findMany({
       where,
       orderBy,
@@ -101,6 +102,7 @@ export default async function Home({
       },
     }),
     getCachedRecommendations(userId),
+    getTrendingSection(),
   ]);
 
   console.log("Items fetched:", items.length);
@@ -117,6 +119,7 @@ export default async function Home({
   return (
     <HomeClient
       items={(serialized ?? []) as any}
+      trendingItems={trendingItems as any}
       recommendedItems={(recommendations?.items ?? []) as any}
       recommendationStrategy={recommendations.strategy}
       initialQ={q         ?? ""}

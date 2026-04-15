@@ -53,6 +53,60 @@ export type ItemRow = {
   listingType:  string;
   createdAt:    string;
   rejectReason: string | null;
+  isTrending:          boolean;
+  featuredTrendingId:   string | null;
+};
+
+// ─── Admin user detail types ──────────────────────────────────────────────────
+
+export type EscrowOrderDetail = {
+  id:          string;
+  amount:      number;
+  totalAmount: number | null;
+  sellerPayout: number | null;
+  status:      string;
+  buyerId:     string;
+  sellerId:    string;
+  itemTitle:   string;
+  createdAt:   string;
+};
+
+export type UserDetail = {
+  id:                 string;
+  name:               string | null;
+  email:              string;
+  image:              string | null;
+  phone:              string | null;
+  bio:                string | null;
+  role:               "ADMIN" | "STUDENT";
+  isBanned:           boolean;
+  trustScore:         number;
+  walletBalance:      number;
+  escrowBalance:      number;
+  createdAt:          string;
+  verificationStatus: string;
+  psuIdNumber:        string | null;
+  psuIdType:          string | null;
+  verifiedAt:         string | null;
+  // Financial
+  buyerEscrowTotal:   number;
+  buyerEscrowCount:   number;
+  sellerPayoutTotal:  number;
+  sellerPayoutCount:  number;
+  totalSalesAmount:   number;
+  totalSalesCount:    number;
+  totalPurchaseAmount: number;
+  totalPurchaseCount: number;
+  // Activity
+  itemCount:          number;
+  activeItemCount:    number;
+  soldItemCount:      number;
+  buyOrderCount:      number;
+  sellOrderCount:     number;
+  disputeCount:       number;
+  cancelledCount:     number;
+  // Escrow orders
+  escrowOrders:       EscrowOrderDetail[];
 };
 
 export type OrderRow = {

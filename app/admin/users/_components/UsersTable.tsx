@@ -5,6 +5,7 @@ import type { UserRow }             from "../../_lib/types";
 import { formatThaiDate }           from "../../_lib/utils";
 import StatusBadge                  from "../../_components/StatusBadge";
 import ConfirmDialog                from "../../_components/ConfirmDialog";
+import UserDetailPanel              from "./UserDetailPanel";
 import { banUser, unbanUser, updateUserRole } from "../actions";
 
 interface Props {
@@ -24,6 +25,9 @@ export default function UsersTable({ rows }: Props) {
   } | null>(null);
 
   const [toast, setToast] = useState<{ ok: boolean; msg: string } | null>(null);
+
+  // ── Detail panel state ──────────────────────────────────────────────────────
+  const [detailUserId, setDetailUserId] = useState<string | null>(null);
 
   function showToast(ok: boolean, msg: string) {
     setToast({ ok, msg });
@@ -82,6 +86,15 @@ export default function UsersTable({ rows }: Props) {
         onConfirm={handleConfirm}
         onCancel={() => setDialog(null)}
       />
+
+      {/* Detail Panel */}
+      {detailUserId && (
+        <UserDetailPanel
+          userId={detailUserId}
+          onClose={() => setDetailUserId(null)}
+          showToast={showToast}
+        />
+      )}
 
       {/* Table */}
       <div className="overflow-x-auto">
@@ -148,6 +161,8 @@ export default function UsersTable({ rows }: Props) {
                 <td className="px-4 py-3">
                   <ActionsDropdown
                     user={u}
+                    onView={() => setDetailUserId(u.id)}
+                    onEdit={() => setDetailUserId(u.id)}
                     onBan={() => setDialog({ kind: "ban",   userId: u.id, label: u.name ?? u.email })}
                     onUnban={() => setDialog({ kind: "unban", userId: u.id, label: u.name ?? u.email })}
                     onRole={(r) => setDialog({ kind: "role", userId: u.id, label: u.name ?? u.email, newRole: r })}
@@ -165,9 +180,11 @@ export default function UsersTable({ rows }: Props) {
 // ─── Actions dropdown ─────────────────────────────────────────────────────────
 
 function ActionsDropdown({
-  user, onBan, onUnban, onRole,
+  user, onView, onEdit, onBan, onUnban, onRole,
 }: {
   user:    UserRow;
+  onView:  () => void;
+  onEdit:  () => void;
   onBan:   () => void;
   onUnban: () => void;
   onRole:  (r: "ADMIN" | "STUDENT") => void;
@@ -189,7 +206,23 @@ function ActionsDropdown({
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-9 z-50 w-44 bg-white rounded-xl border border-[#e5e3de] shadow-lg py-1">
+          <div className="absolute right-0 top-9 z-50 w-48 bg-white rounded-xl border border-[#e5e3de] shadow-lg py-1">
+            {/* NEW: View details */}
+            <MenuItem
+              label="ดูรายละเอียด"
+              icon="👁️"
+              onClick={() => { setOpen(false); onView(); }}
+            />
+            {/* NEW: Edit */}
+            <MenuItem
+              label="แก้ไขข้อมูล"
+              icon="✏️"
+              onClick={() => { setOpen(false); onEdit(); }}
+            />
+
+            <div className="my-1 border-t border-[#f0ede7]" />
+
+            {/* Ban / Unban */}
             {user.isBanned ? (
               <MenuItem
                 label="ปลดแบน"
@@ -204,7 +237,10 @@ function ActionsDropdown({
                 onClick={() => { setOpen(false); onBan(); }}
               />
             )}
+
             <div className="my-1 border-t border-[#f0ede7]" />
+
+            {/* Role change */}
             {user.role !== "ADMIN" && (
               <MenuItem
                 label="เลื่อนเป็นแอดมิน"
