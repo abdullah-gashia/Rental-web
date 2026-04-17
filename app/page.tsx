@@ -96,7 +96,7 @@ export default async function Home({
       where,
       orderBy,
       include: {
-        seller:   { select: { id: true, name: true, email: true, image: true } },
+        seller:   { select: { id: true, name: true, email: true, image: true, reviewsReceived: { select: { rating: true } } } },
         category: { select: { id: true, slug: true, nameTh: true, nameEn: true, emoji: true } },
         images:   { select: { id: true, url: true, isMain: true }, orderBy: { order: "asc" } },
       },

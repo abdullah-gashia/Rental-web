@@ -24,8 +24,16 @@ export default function ProductCard({ item, index = 0, onClick }: ProductCardPro
   const badgeInfo  = getBadgeType(item);
   const isRent     = item.listingType === "RENT";
   const priceColor = isRent ? "#1d4ed8" : "#111";
+
+  // For rent items, use the entered rate amount (rentalRate) or the computed dailyRate.
+  // item.price is always 0 for RENT listings — never display it.
+  const rentAmount  = item.rentalRate ?? item.dailyRate ?? 0;
+  const rateSuffix  =
+    item.rentalRateType === "MONTHLY" ? t("per_month") :
+    item.rentalRateType === "YEARLY"  ? t("per_year")  :
+    t("per_day");
   const priceLabel = isRent
-    ? `฿${item.price.toLocaleString()}${t("per_day")}`
+    ? `฿${rentAmount.toLocaleString()}${rateSuffix}`
     : `฿${item.price.toLocaleString()}`;
 
   return (
@@ -55,11 +63,16 @@ export default function ProductCard({ item, index = 0, onClick }: ProductCardPro
           <span className="text-[11px] font-semibold text-[#333] truncate">
             {item.seller.name || "User"}
           </span>
-          {item.rating > 0 && (
-            <span className="flex items-center gap-0.5 text-[10px] font-bold text-[#f59e0b] flex-shrink-0">
-              ★ {item.rating.toFixed(1)}
-            </span>
-          )}
+          {(() => {
+            const reviews = item.seller.reviewsReceived ?? [];
+            if (reviews.length === 0) return null;
+            const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
+            return (
+              <span className="flex items-center gap-0.5 text-[10px] font-bold text-[#f59e0b] flex-shrink-0">
+                ★ {avg.toFixed(1)}
+              </span>
+            );
+          })()}
         </div>
 
         {/* Wishlist button */}

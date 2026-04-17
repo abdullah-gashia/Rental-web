@@ -5,6 +5,7 @@ export interface SellerInfo {
   name: string | null;
   email: string;
   image: string | null;
+  reviewsReceived?: { rating: number }[];
 }
 
 export interface CategoryInfo {
@@ -46,6 +47,18 @@ export interface ItemWithDetails {
   allowShipping: boolean;
   allowMeetup: boolean;
   allowCOD: boolean;
+  // Rental-specific fields (only populated when listingType === "RENT")
+  rentalRateType: "DAILY" | "MONTHLY" | "YEARLY" | null;
+  rentalRate: number | null;    // rate in chosen unit (e.g. 500/เดือน)
+  dailyRate: number | null;     // computed daily equivalent for backend
+  securityDeposit: number | null;
+  minRentalDays: number | null;
+  maxRentalDays: number | null;
+  lateFeePerDay: number | null;
+  isRenewable: boolean;
+  maxRenewals: number;
+  rentalTerms: string | null;
+  rentalInstructions: string | null;
 }
 
 export interface TrendCard {

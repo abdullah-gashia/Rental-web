@@ -112,12 +112,23 @@ function serializeItem(item: any): ItemWithDetails {
     allowShipping:          item.allowShipping ?? true,
     allowMeetup:            item.allowMeetup ?? true,
     allowCOD:               item.allowCOD ?? true,
+    rentalRateType:         item.rentalRateType ?? null,
+    rentalRate:             item.rentalRate ?? null,
+    dailyRate:              item.dailyRate ?? null,
+    securityDeposit:        item.securityDeposit ?? null,
+    minRentalDays:          item.minRentalDays ?? null,
+    maxRentalDays:          item.maxRentalDays ?? null,
+    lateFeePerDay:          item.lateFeePerDay ?? null,
+    isRenewable:            item.isRenewable ?? true,
+    maxRenewals:            item.maxRenewals ?? 1,
+    rentalTerms:            item.rentalTerms ?? null,
+    rentalInstructions:     item.rentalInstructions ?? null,
   };
 }
 
 // Prisma include shape reused across all item queries
 const ITEM_INCLUDE = {
-  seller:   { select: { id: true, name: true, email: true, image: true } },
+  seller:   { select: { id: true, name: true, email: true, image: true, reviewsReceived: { select: { rating: true } } } },
   category: { select: { id: true, slug: true, nameTh: true, nameEn: true, emoji: true } },
   images:   { select: { id: true, url: true, isMain: true }, orderBy: { order: "asc" as const } },
 } as const;

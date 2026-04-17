@@ -1,0 +1,185 @@
+<!-- CHAPTER 3 PART A: Spec, Architecture, Design -->
+
+<div class="page">
+  <h1>Chapter 3: Proposed Solution</h1>
+
+  <h2>3.1 Software Specification</h2>
+
+  <p>The Equipment Rental System is a web-based application that runs in any modern browser.
+  It's designed to be responsive, so it works reasonably well on a phone's browser even though
+  a dedicated mobile app is not part of Project I. The system has three distinct user roles —
+  Renter, Owner, and Admin — each with different views, permissions, and available actions.</p>
+
+  <p>The system is organized into the following functional modules:</p>
+
+  <ul>
+    <li><span class="bold">User Management:</span> Registration, login, profile management,
+    KYC submission and review, role assignment, account suspension, and wallet top-up.</li>
+
+    <li><span class="bold">Listing Management:</span> Equipment posting with photo upload,
+    rental rate configuration (daily/monthly/yearly), deposit setting, availability management,
+    and soft-delete with a 24-hour grace period.</li>
+
+    <li><span class="bold">Discovery and Search:</span> Homepage browse with AI-based
+    recommendations, category filtering, keyword search, and item detail view with image gallery.</li>
+
+    <li><span class="bold">Rental Booking (Checkout Wizard):</span> Four-step guided flow
+    covering date selection with pricing preview, meetup scheduling, payment confirmation
+    with wallet balance check, and digital agreement review and acceptance.</li>
+
+    <li><span class="bold">Payment and Escrow:</span> Wallet system for holding rental fees
+    and deposits, automated settlement calculations, late fee accumulation, and payout tracking.</li>
+
+    <li><span class="bold">Handshake System:</span> Dual-party photo upload and digital
+    signature capture for both pickup and return events, with condition rating and damage
+    fee setting at return.</li>
+
+    <li><span class="bold">Order Management:</span> Rental order detail pages, status history
+    timeline, renewal requests, return initiation, and PDF document downloads.</li>
+
+    <li><span class="bold">Admin Panel:</span> KYC review queue, item moderation dashboard,
+    rental order monitoring, dispute review, user management, and platform statistics.</li>
+
+    <li><span class="bold">Notification System:</span> In-app notifications for status changes,
+    approaching due dates, overdue alerts, and system messages.</li>
+  </ul>
+
+  <h2>3.2 System Architecture</h2>
+
+  <p>The system follows a standard three-tier web architecture, but because Next.js 14 with
+  Server Actions blurs the line between presentation and application layers, the separation
+  is more logical than physical.</p>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-1: System Architecture Diagram<br><br>
+  Diagram should show three tiers stacked vertically:<br>
+  Top tier (Presentation): Renter UI | Owner UI | Admin UI<br>
+  Middle tier (Application): Server Actions + API Routes — Rental Logic, Escrow Engine, Notification Dispatch<br>
+  Bottom tier (Data): PostgreSQL Database via Prisma ORM | File Storage (Uploads)<br><br>
+  Stick figures at top for Renter, Owner, Admin connecting to their respective UIs.]</div>
+  <p class="fig-caption">Figure 3-1: Three-Tier System Architecture</p>
+
+  <p><span class="bold">Presentation Layer:</span> The UI is built with Next.js React components
+  using Tailwind CSS. There are effectively three UI contexts: the public-facing marketplace
+  (available to all users including unauthenticated visitors), the authenticated user dashboard
+  (for renters and owners managing their rentals), and the admin panel (restricted to ADMIN role).
+  Client-side state is managed through Zustand stores for authentication, locale, notifications,
+  and wishlist.</p>
+
+  <p><span class="bold">Application Layer:</span> Business logic lives in Next.js Server Actions
+  and Route Handlers. Server actions handle all the transactional operations — creating rental
+  orders, processing escrow movements, confirming handshakes, calculating settlements. API routes
+  handle file uploads and any operations that need to return non-JSON responses (like the PDF
+  receipt page). A scheduled cron job (running via a protected API route) handles automated
+  overdue detection and late fee accumulation.</p>
+
+  <p><span class="bold">Data Layer:</span> PostgreSQL is the primary database, accessed through
+  Prisma ORM. Prisma handles migrations and generates TypeScript types automatically from the
+  schema. Uploaded files (item photos, handshake photos, KYC documents) are stored in the local
+  filesystem during development, with Vercel Blob intended for production. Digital signatures are
+  stored as base64-encoded PNG data URLs.</p>
+
+  <div class="page-num">17</div>
+</div>
+
+<div class="page">
+  <h2>3.3 System Design</h2>
+
+  <p>This section describes the use cases for each user role and the intermediary role of the
+  admin in more detail. Each role has distinct capabilities and permissions, but they interact
+  with the same underlying data and lifecycle.</p>
+
+  <h3>3.3.1 Renter Use Cases</h3>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-2: Use Case Diagram — Renter<br><br>
+  UML Use Case diagram with a Renter actor on the left connected to an oval "Equipment Rental System" boundary containing the following use cases:<br>
+  Register / Login — Complete KYC Verification — Browse Equipment — Search by Category/Keyword — View Item Detail — Request to Rent — Pay Deposit + Rental Fee — Confirm Pickup (photos + signature) — Track Rental Period — Request Renewal — Initiate Return — Confirm Return (photos + signature) — Download Rental Contract — Download Return Receipt — Report Dispute — Rate Owner]</div>
+  <p class="fig-caption">Figure 3-2: Use Case Diagram — Renter</p>
+
+  <p>The Renter is the primary consumer role in the system. Before a user can rent anything, they
+  need to register with a valid email, complete KYC verification (submit their PSU student ID and
+  a selfie), and wait for admin approval. This gate is intentional — it keeps the platform closed
+  to PSU community members and makes sure both parties know who they're dealing with.</p>
+
+  <p>Once verified, the renter can browse the marketplace, filter by category, and open an item's
+  detail page. Clicking "เช่าเลย" (Rent Now) launches the four-step checkout wizard. After the
+  owner approves the request and the deposit is held in escrow, the renter can schedule the pickup
+  meetup and confirm the handover through the Digital Handshake. During the active rental period,
+  the renter can track the remaining days and request a renewal if needed. When they're ready to
+  return, they initiate the return process, which schedules the return meetup and eventually
+  triggers Digital Handshake #2.</p>
+
+  <h3>3.3.2 Owner Use Cases</h3>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-3: Use Case Diagram — Owner<br><br>
+  UML Use Case diagram with Owner actor connected to: Register/Login + KYC — List Equipment (set rate, deposit, terms, photos) — Manage Listings (edit/pause/delete) — Receive Rental Requests — Approve / Reject Requests — Confirm Pickup (photos + signature) — Track Active Rentals — Handle Renewal Requests — Inspect Returned Item (rate condition, set damage fee) — Confirm Return (photos + signature) — Receive Payout — Respond to Disputes — Rate Renter]</div>
+  <p class="fig-caption">Figure 3-3: Use Case Diagram — Owner</p>
+
+  <p>The Owner role is for users who list their own equipment. In practice, the same person can be
+  both an Owner (listing items) and a Renter (renting others' items) — the roles aren't mutually
+  exclusive. What triggers Owner behavior is posting an item for rental.</p>
+
+  <p>The Owner receives notifications when rental requests come in and has 24 hours to respond
+  before the request expires. If they approve, the renter's wallet is debited immediately and the
+  order moves forward. At the return stage, the Owner is specifically responsible for the condition
+  assessment — they rate the item's condition (same / minor damage / major damage / lost) and set
+  a damage fee if applicable. The Owner then signs the return receipt digitally, which triggers
+  the settlement calculation.</p>
+
+  <div class="page-num">19</div>
+</div>
+
+<div class="page">
+  <h3>3.3.3 Admin Use Cases and the Intermediary Role</h3>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-4: Use Case Diagram — Admin<br><br>
+  UML Use Case diagram with Admin actor connected to: View/Manage Users — Approve/Reject KYC — Moderate Item Listings — Monitor Rental Orders — Intervene in Disputes — Manage Escrow Oversight — Generate Platform Reports — Handle Account Deletion — Curate Trending Items]</div>
+  <p class="fig-caption">Figure 3-4: Use Case Diagram — Admin</p>
+
+  <p>The admin role is more than just content moderation. In this system, the admin acts as the
+  neutral intermediary (คนกลาง) in every rental transaction, even when things are going smoothly.
+  This intermediary role has four dimensions:</p>
+
+  <p><span class="bold">The Evidence Vault.</span> Every action in the rental lifecycle creates
+  a timestamped record: photos uploaded at pickup, photos uploaded at return, digital signatures
+  with timestamps, chat messages, status change history. The admin can access all of this at any
+  point. If a dispute opens, the admin doesn't have to rely on either party's claims — they can
+  look at the actual photos and compare the item's condition at pickup versus return. They can
+  check the signatures to confirm both parties acknowledged the agreement. This evidence-first
+  approach is what makes the dispute resolution process fair rather than arbitrary.</p>
+
+  <p><span class="bold">The Escrow Agent.</span> The admin (representing the platform) holds the
+  rental fee and security deposit from the time the request is approved until the rental is
+  completed. Neither the renter nor the owner ever holds the other's money directly. This means
+  a renter can't claim to have paid when they haven't, and an owner can't pocket the deposit
+  unfairly. All financial movements happen through the platform's wallet system, which keeps a
+  full transaction history. Even the admin cannot arbitrarily move funds — the settlement is
+  calculated by the system according to the rules both parties agreed to at booking.</p>
+
+  <p><span class="bold">The Tracker.</span> The system automatically monitors rental periods and
+  flags overdue orders. The cron job runs daily and identifies any orders where the
+  <code>rentalEndDate</code> has passed without the renter initiating a return. It applies a
+  configurable daily late fee to the escrow amount and sends notifications to both parties.
+  This removes the awkward situation where an owner has to personally chase a renter for a late
+  return — the system does it automatically and creates a financial incentive to return on time.</p>
+
+  <p><span class="bold">The Court.</span> When a dispute is opened, the admin reviews the complete
+  evidence record and makes a ruling on how the escrow should be distributed. They can access
+  both parties' uploaded photos, the digital signatures, the agreed-upon damage terms, and any
+  messages exchanged. This is a significant responsibility — the admin's decision is final in
+  this system — but because the evidence is comprehensive and timestamped, the decision is
+  grounded in facts rather than personal impressions.</p>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-17: Admin Dashboard — Overview<br>
+  Screenshot showing KPI cards: Total Items, Active Orders, Pending KYC, Deposits Held, Revenue]</div>
+  <p class="fig-caption">Figure 3-17: Admin Dashboard Overview</p>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-18: Admin Rental Management Panel<br>
+  Screenshot showing the rental orders table with status filters and financial summaries]</div>
+  <p class="fig-caption">Figure 3-18: Admin Rental Management Panel</p>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-19: Admin KYC Approval Page<br>
+  Screenshot showing pending KYC submissions with PSU ID and selfie review interface]</div>
+  <p class="fig-caption">Figure 3-19: Admin KYC Approval Page</p>
+
+  <div class="page-num">21</div>
+</div>

@@ -1,0 +1,212 @@
+<!-- CHAPTER 3 PART C: DB, PDF, Dev Env, Project Plan -->
+
+<div class="page">
+  <h3>3.4.5 Database and Data Management</h3>
+
+  <p>The database schema is defined using Prisma's schema language. The main models are:</p>
+
+  <p class="bold">Table 3-2: Prisma Database Models Summary</p>
+  <table style="font-size:11.5pt;">
+    <tr><th>Model</th><th>Key Fields</th><th>Purpose</th></tr>
+    <tr>
+      <td>User</td>
+      <td>id, name, email, role, isBanned, verificationStatus, walletBalance</td>
+      <td>Platform user, can be Renter, Owner, or Admin</td>
+    </tr>
+    <tr>
+      <td>Item</td>
+      <td>id, title, price, listingType, status, rentalRateType, rentalRate, dailyRate, securityDeposit, minRentalDays, lateFeePerDay</td>
+      <td>A listed item; listingType distinguishes SELL vs RENT</td>
+    </tr>
+    <tr>
+      <td>ItemImage</td>
+      <td>id, itemId, url, isMain, order</td>
+      <td>Photos attached to an Item listing</td>
+    </tr>
+    <tr>
+      <td>RentalOrder</td>
+      <td>id, refCode, itemId, renterId, ownerId, status, rentalStartDate, rentalEndDate, rentalDays, dailyRate, rentalFee, securityDeposit, platformFee, totalPaid, lateFees, damageFees, depositRefund, ownerPayout, statusHistory (JSON), pickupRenterConfirm, pickupOwnerConfirm, returnRenterConfirm, returnOwnerConfirm, returnCondition, returnPhotos</td>
+      <td>The central rental transaction record; contains the full lifecycle state</td>
+    </tr>
+    <tr>
+      <td>WalletTransaction</td>
+      <td>id, userId, amount, type, orderId, description, balanceAfter</td>
+      <td>Ledger entry for every wallet movement</td>
+    </tr>
+    <tr>
+      <td>KYCVerification</td>
+      <td>id, userId, idCardUrl, selfieUrl, status, reviewNote, reviewedAt</td>
+      <td>KYC submission awaiting admin review</td>
+    </tr>
+    <tr>
+      <td>Notification</td>
+      <td>id, userId, type, message, isRead, link</td>
+      <td>In-app notification for a user</td>
+    </tr>
+    <tr>
+      <td>UserInteraction</td>
+      <td>id, userId, itemId, type, category, priceRange</td>
+      <td>Behavioral data for the recommendation engine</td>
+    </tr>
+    <tr>
+      <td>Wishlist</td>
+      <td>userId, itemId</td>
+      <td>Saved items for a user</td>
+    </tr>
+    <tr>
+      <td>Category</td>
+      <td>id, slug, nameTh, nameEn, emoji</td>
+      <td>Equipment categories (electronics, books, sports, etc.)</td>
+    </tr>
+  </table>
+
+  <p>One design decision worth explaining is how <code>statusHistory</code> is stored as a
+  JSON field on <code>RentalOrder</code> rather than as a separate table. The status history
+  is append-only and never queried independently — it's always read as part of the full
+  order. Storing it as JSON avoids an extra join and keeps the order record self-contained.
+  The field is a JSON array of objects like
+  <code>{"status": "APPROVED", "changedAt": "...", "note": "..."}</code>.</p>
+
+  <p>A similar approach is used for <code>returnPhotos</code> on the rental order — storing
+  the array of uploaded photo URLs directly on the order record rather than creating a
+  separate evidence table. For a prototype this is fine; a production system might want a
+  dedicated evidence table with more metadata per photo.</p>
+
+  <p>The <code>walletBalance</code> field on <code>User</code> is updated atomically using
+  Prisma transactions. Every operation that touches a wallet uses
+  <code>prisma.$transaction([...])</code> to ensure that the debit and credit happen together
+  or not at all. This prevents race conditions where two simultaneous requests could both read
+  the same balance and both succeed, resulting in an overdraft.</p>
+
+  <h3>3.4.6 PDF Receipt Generation</h3>
+
+  <p>PDF generation was something I found harder than expected. My first idea was to use
+  <code>@react-pdf/renderer</code> (a React-based PDF library), but getting it to work with
+  Thai characters and custom fonts in a server-side Next.js environment turned out to be really
+  complicated. I spent about two days on it before deciding to take a simpler approach.</p>
+
+  <p>The solution I ended up using is a print-optimized HTML page. The receipt page
+  (<code>app/rental/orders/[id]/receipt/page.tsx</code>) is a server component that fetches
+  the order data and renders a styled HTML document. It has a <code>PrintBar</code> client
+  component at the top (hidden when printing) with a "Print / Save PDF" button, and an
+  <code>AutoPrint</code> client component that triggers <code>window.print()</code> after a
+  short delay when the page loads.</p>
+
+  <p>The print CSS uses <code>@media print</code> to hide the browser's native UI and the
+  action bar, set margins to 20mm, and ensure the colors print correctly with
+  <code>-webkit-print-color-adjust: exact</code>. When the user clicks the print button or
+  opens the page, Chrome shows the native print dialog. They can choose "Save as PDF" and get
+  a clean A4 document. It's not as automated as a true server-side PDF generation approach,
+  but it produces a better-looking result for Thai text and requires no additional dependencies.</p>
+
+  <p>The two receipt types are: the <span class="bold">Rental Contract</span> (available at
+  <code>?type=contract</code> once the order is ACTIVE), which shows party names, item details,
+  rental period, financial summary, agreed terms, and a signature block; and the
+  <span class="bold">Return Receipt</span> (available at <code>?type=return</code> after
+  COMPLETED), which includes all of the above plus the return condition, damage assessment,
+  final settlement amounts, and a return date.</p>
+
+  <div class="page-num">37</div>
+</div>
+
+<div class="page">
+  <h3>3.4.7 Development Environment</h3>
+
+  <p>Development was done on Windows 11 with Node.js 18 and npm. The local database is SQLite
+  for quick setup (Prisma supports both SQLite and PostgreSQL with the same schema, just
+  different connection strings). For the development database, I used
+  <code>npx prisma db push</code> rather than migrations — this is fine for development but
+  a production deployment will use proper migration files.</p>
+
+  <p>The project uses Git for version control with a GitHub repository. The development workflow
+  was basically feature branches merged to main when complete. I didn't set up CI/CD for
+  Project I since everything is running locally, but the plan for Project II is to deploy
+  to Vercel with automatic deployments on push to main.</p>
+
+  <p>Environment variables are managed in <code>.env.local</code> for local development. Key
+  variables include the database URL, NextAuth secret, NextAuth URL, and file upload path.
+  The <code>.env.local</code> file is excluded from version control via <code>.gitignore</code>.</p>
+
+  <h2>3.5 Project Plan</h2>
+
+  <p>The following Gantt chart shows the planned development timeline for Project I
+  (August to December 2025). Darker cells represent completed work; lighter cells represent
+  planned but not yet completed work at the time of writing.</p>
+
+  <p class="bold">Table 3-3: Project Development Gantt Chart (Aug–Dec 2025)</p>
+  <table style="font-size:10.5pt;">
+    <tr>
+      <th style="width:32%;">Task</th>
+      <th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th>
+    </tr>
+    <tr>
+      <td>1. Requirement gathering &amp; survey</td>
+      <td class="act"></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td>2. Literature review &amp; research</td>
+      <td class="act"></td><td class="act"></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td>3. System architecture design</td>
+      <td></td><td class="act"></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td>4. Database schema design</td>
+      <td></td><td class="act"></td><td class="act"></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td>5. UI wireframes &amp; mockups (Figma)</td>
+      <td></td><td class="act"></td><td class="act"></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td>6. Frontend — home, auth, listing</td>
+      <td></td><td></td><td class="act"></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td>7. Frontend — checkout wizard</td>
+      <td></td><td></td><td class="act"></td><td class="act"></td><td></td>
+    </tr>
+    <tr>
+      <td>8. Backend — rental lifecycle &amp; escrow</td>
+      <td></td><td></td><td></td><td class="act"></td><td></td>
+    </tr>
+    <tr>
+      <td>9. Digital Handshake &amp; signature system</td>
+      <td></td><td></td><td></td><td class="act"></td><td></td>
+    </tr>
+    <tr>
+      <td>10. Admin panel implementation</td>
+      <td></td><td></td><td></td><td class="act"></td><td></td>
+    </tr>
+    <tr>
+      <td>11. PDF receipt generation</td>
+      <td></td><td></td><td></td><td class="act"></td><td class="pln"></td>
+    </tr>
+    <tr>
+      <td>12. Recommendation engine</td>
+      <td></td><td></td><td></td><td class="act"></td><td></td>
+    </tr>
+    <tr>
+      <td>13. Integration testing</td>
+      <td></td><td></td><td></td><td></td><td class="act"></td>
+    </tr>
+    <tr>
+      <td>14. User testing with peers</td>
+      <td></td><td></td><td></td><td></td><td class="act"></td>
+    </tr>
+    <tr>
+      <td>15. Report writing</td>
+      <td></td><td></td><td></td><td></td><td class="act"></td>
+    </tr>
+    <tr>
+      <td>16. Presentation preparation</td>
+      <td></td><td></td><td></td><td></td><td class="pln"></td>
+    </tr>
+  </table>
+  <p style="font-size:10.5pt;margin-top:4pt;">
+    ■ Dark cell = completed &nbsp;&nbsp; □ Light cell = planned
+  </p>
+
+  <div class="page-num">39</div>
+</div>

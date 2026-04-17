@@ -12,6 +12,7 @@ import Modal from "@/components/ui/Modal";
 import CountdownTimer from "@/components/ui/CountdownTimer";
 import ImageGallery from "@/components/items/ImageGallery";
 import CheckoutWizard from "@/components/checkout/CheckoutWizard";
+import RentalCheckoutWizard from "@/components/rental-checkout/RentalCheckoutWizard";
 import { useTrackView } from "@/lib/hooks/useTrackView";
 
 const GRACE_MS = 24 * 60 * 60 * 1000;
@@ -42,7 +43,8 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
     source:          "browse",
   });
   const showToast = useToastStore((s) => s.show);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [checkoutOpen,       setCheckoutOpen]       = useState(false);
+  const [rentalCheckoutOpen, setRentalCheckoutOpen] = useState(false);
 
   if (!item) return null;
 
@@ -59,10 +61,17 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
   };
 
   const priceColor = item.listingType === "RENT" ? "#1d4ed8" : "#111";
+
+  // For rent items item.price is always 0 — use the stored rate amount instead
+  const rentAmount  = item.rentalRate ?? item.dailyRate ?? 0;
+  const rateSuffix  =
+    item.rentalRateType === "MONTHLY" ? t("per_month") :
+    item.rentalRateType === "YEARLY"  ? t("per_year")  :
+    t("per_day");
   const priceDisplay =
     item.listingType === "RENT"
-      ? `${item.price.toLocaleString()} ฿${t("per_day")}`
-      : `${item.price.toLocaleString()} ฿`;
+      ? `฿${rentAmount.toLocaleString()}${rateSuffix}`
+      : `฿${item.price.toLocaleString()}`;
 
   return (
     <>
@@ -146,14 +155,17 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
               </div>
             </a>
             <div className="ml-auto text-sm flex-shrink-0">
-              {item.rating > 0 ? (
-                <>
-                  <StarRating rating={item.rating} />
-                  <span className="text-[#9a9590] ml-1">{item.rating}.0</span>
-                </>
-              ) : (
-                <span className="text-[#9a9590]">{t("no_review")}</span>
-              )}
+              {(() => {
+                const reviews = item.seller.reviewsReceived ?? [];
+                if (reviews.length === 0) return <span className="text-xs text-[#bbb] italic">ยังไม่มีรีวิว</span>;
+                const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
+                return (
+                  <span className="flex items-center gap-1">
+                    <StarRating rating={avg} />
+                    <span className="text-[#555] font-semibold text-xs">{avg.toFixed(1)}</span>
+                  </span>
+                );
+              })()}
             </div>
           </div>
 
@@ -208,7 +220,7 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
                   </button>
                 )}
 
-                {/* Rent Now — RENT items only, not the seller, not admin */}
+                {/* Rent Now — RENT items only, opens RentalCheckoutWizard */}
                 {item.listingType === "RENT" &&
                   item.status === "APPROVED" &&
                   isAuthenticated &&
@@ -216,9 +228,9 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
                   <button
                     onClick={() => {
                       onClose();
-                      setCheckoutOpen(true);
+                      setRentalCheckoutOpen(true);
                     }}
-                    className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition text-sm"
+                    className="flex-1 bg-[#e8500a] text-white font-bold py-3 rounded-xl hover:bg-[#c94208] transition text-sm"
                   >
                     🔑 เช่าเลย
                   </button>
@@ -243,7 +255,7 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
       </div>
     </Modal>
 
-    {/* CheckoutWizard lives OUTSIDE the detail Modal so its backdrop never stacks */}
+    {/* Buy CheckoutWizard — SELL items */}
     {checkoutOpen && (
       <CheckoutWizard
         isOpen={checkoutOpen}
@@ -258,6 +270,31 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
           allowCOD: item.allowCOD ?? true,
           seller: item.seller,
           images: item.images,
+        }}
+      />
+    )}
+
+    {/* RentalCheckoutWizard — RENT items (dedicated 4-step flow) */}
+    {rentalCheckoutOpen && (
+      <RentalCheckoutWizard
+        isOpen={rentalCheckoutOpen}
+        onClose={() => setRentalCheckoutOpen(false)}
+        item={{
+          id:                 item.id,
+          title:              item.title,
+          price:              item.price,
+          emoji:              item.emoji,
+          dailyRate:          item.dailyRate,
+          securityDeposit:    item.securityDeposit,
+          minRentalDays:      item.minRentalDays,
+          maxRentalDays:      item.maxRentalDays,
+          lateFeePerDay:      item.lateFeePerDay,
+          isRenewable:        item.isRenewable,
+          maxRenewals:        item.maxRenewals,
+          rentalTerms:        item.rentalTerms,
+          rentalInstructions: item.rentalInstructions,
+          seller:             item.seller,
+          images:             item.images,
         }}
       />
     )}

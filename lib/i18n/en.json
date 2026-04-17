@@ -88,5 +88,7 @@
   "badge_price_good": "Great Price",
   "main_image": "Main",
   "per_day": "/day",
+  "per_month": "/month",
+  "per_year": "/year",
   "negotiable_suffix": "(negotiable)"
 }

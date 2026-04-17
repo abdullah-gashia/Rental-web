@@ -88,5 +88,7 @@
   "badge_price_good": "ราคาดี",
   "main_image": "หลัก",
   "per_day": "/วัน",
+  "per_month": "/เดือน",
+  "per_year": "/ปี",
   "negotiable_suffix": "(ต่อได้)"
 }

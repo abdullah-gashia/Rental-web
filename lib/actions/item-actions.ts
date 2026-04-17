@@ -75,7 +75,7 @@ export async function getAdvancedItems(params: ItemSearchParams) {
       ...(andConditions.length > 0 ? { AND: andConditions } : {}),
     },
     include: {
-      seller:   { select: { id: true, name: true, email: true, image: true } },
+      seller:   { select: { id: true, name: true, email: true, image: true, reviewsReceived: { select: { rating: true } } } },
       category: { select: { id: true, slug: true, nameTh: true, nameEn: true, emoji: true } },
       images:   { select: { id: true, url: true, isMain: true }, orderBy: { order: "asc" } },
     },
@@ -90,6 +90,17 @@ export async function getAdvancedItems(params: ItemSearchParams) {
     allowShipping: item.allowShipping ?? true,
     allowMeetup: item.allowMeetup ?? true,
     allowCOD: item.allowCOD ?? true,
+    rentalRateType: item.rentalRateType ?? null,
+    rentalRate: item.rentalRate ?? null,
+    dailyRate: item.dailyRate ?? null,
+    securityDeposit: item.securityDeposit ?? null,
+    minRentalDays: item.minRentalDays ?? null,
+    maxRentalDays: item.maxRentalDays ?? null,
+    lateFeePerDay: item.lateFeePerDay ?? null,
+    isRenewable: item.isRenewable ?? true,
+    maxRenewals: item.maxRenewals ?? 1,
+    rentalTerms: item.rentalTerms ?? null,
+    rentalInstructions: item.rentalInstructions ?? null,
   }));
 }
 
@@ -111,6 +122,18 @@ interface CreateItemInput {
   allowCOD?: boolean;
   /** Public URLs returned by /api/upload — saved as ItemImage rows */
   imageUrls?: string[];
+  // Rental-specific (only used when listingType = RENT)
+  rentalRateType?: "DAILY" | "MONTHLY" | "YEARLY";
+  rentalRate?: number;
+  dailyRate?: number;
+  securityDeposit?: number;
+  minRentalDays?: number;
+  maxRentalDays?: number;
+  lateFeePerDay?: number;
+  isRenewable?: boolean;
+  maxRenewals?: number;
+  rentalTerms?: string;
+  rentalInstructions?: string;
 }
 
 export async function createItem(data: CreateItemInput) {
@@ -151,6 +174,20 @@ export async function createItem(data: CreateItemInput) {
       allowShipping: data.allowShipping ?? true,
       allowMeetup: data.allowMeetup ?? true,
       allowCOD: data.allowCOD ?? true,
+      // Rental fields
+      ...(data.listingType === "RENT" ? {
+        rentalRateType:     data.rentalRateType     ?? "DAILY",
+        rentalRate:         data.rentalRate          ?? null,
+        dailyRate:          data.dailyRate          ?? null,
+        securityDeposit:    data.securityDeposit    ?? null,
+        minRentalDays:      data.minRentalDays       ?? 1,
+        maxRentalDays:      data.maxRentalDays       ?? 30,
+        lateFeePerDay:      data.lateFeePerDay       ?? 0,
+        isRenewable:        data.isRenewable         ?? true,
+        maxRenewals:        data.maxRenewals         ?? 1,
+        rentalTerms:        data.rentalTerms         ?? null,
+        rentalInstructions: data.rentalInstructions  ?? null,
+      } : {}),
       sellerId: session.user.id,
       categoryId: category.id,
     },

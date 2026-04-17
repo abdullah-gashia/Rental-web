@@ -14,7 +14,28 @@
       "Bash(PGPASSWORD=\"npg_6HrDabg9oltf\" psql \"postgresql://neondb_owner@ep-soft-queen-a17ej4pp-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require\" -c \"SELECT id, name, email, role, \\\\\"verificationStatus\\\\\" FROM \\\\\"User\\\\\" WHERE email = 'muhammadshareef@psu.ac.th';\")",
       "Bash(npx tsx -e ':*)",
       "Bash(mkdir -p \"d:/Project/New folder/Web app/app/lending/[id]/_components\")",
-      "Bash(mkdir -p \"d:/Project/New folder/Web app/app/lending/orders/[id]/_components\")"
+      "Bash(mkdir -p \"d:/Project/New folder/Web app/app/lending/orders/[id]/_components\")",
+      "Bash(ls app/lending/orders/[id]/_components/)",
+      "Bash(cat lib/config/meetup-locations.ts)",
+      "Bash(cat lib/config/meetup-locations.js)",
+      "Bash(xargs grep *)",
+      "Bash(ls app/dashboard/edit/[id]/)",
+      "Bash(head -30 app/dashboard/edit/[id]/EditItemClient.tsx)",
+      "Bash(grep -n \"listingType\\\\|dailyRate\\\\|securityDeposit\\\\|rentalFields\\\\|RENT\" app/dashboard/edit/[id]/EditItemClient.tsx)",
+      "Bash(grep -n \"handleSave\\\\|updateItem\\\\|keepImageIds\\\\|newImageUrls\" app/dashboard/edit/[id]/EditItemClient.tsx)",
+      "Bash(grep -n \"ราคา\\\\|description\\\\|</form\\\\|<form\\\\|บันทึก\" app/dashboard/edit/[id]/EditItemClient.tsx)",
+      "Bash(where chrome *)",
+      "Bash(where \"chrome.exe\")",
+      "Read(//c/Program Files/Google/Chrome/Application/**)",
+      "Read(//c/Program Files \\(x86\\)/Google/Chrome/Application/**)",
+      "Bash(where msedge *)",
+      "Bash(\"/c/Program Files/Google/Chrome/Application/chrome.exe\" --headless=new --print-to-pdf=\"senior-project-report.pdf\" --print-to-pdf-no-header --no-margins --no-pdf-header-footer \"file:///d:/Project/New%20folder/Web%20app/report/senior-project-report.html\")",
+      "Bash(\"/c/Program Files/Google/Chrome/Application/chrome.exe\" --headless=new --print-to-pdf=\"C:/Users/Lenovo/Desktop/senior-project-report.pdf\" --print-to-pdf-no-header --no-pdf-header-footer \"file:///d:/Project/New%20folder/Web%20app/report/senior-project-report.html\")",
+      "Read(//c/Users/Lenovo/Desktop/**)",
+      "Bash(start \"C:/Users/Lenovo/Desktop/senior-project-report.pdf\")"
+    ],
+    "additionalDirectories": [
+      "d:\\Project\\New folder\\Web app\\app\\lending"
     ]
   }
 }

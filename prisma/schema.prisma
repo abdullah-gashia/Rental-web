@@ -31,6 +31,12 @@ enum ListingType {
   RENT
 }
 
+enum RentalRateType {
+  DAILY    // บาท/วัน
+  MONTHLY  // บาท/เดือน
+  YEARLY   // บาท/ปี
+}
+
 enum ItemCondition {
   LIKE_NEW
   GOOD
@@ -129,6 +135,10 @@ model User {
   lenderRating        Float?
   borrowerRating      Float?
   lendingTier         LendingTier       @default(NEW_USER)
+
+  // Rental system (marketplace RENT items)
+  renterOrders        RentalOrder[]     @relation("RenterOrders")
+  ownerRentalOrders   RentalOrder[]     @relation("OwnerRentalOrders")
 }
 
 // ─── Notifications ───────────────────────────────────
@@ -264,6 +274,19 @@ model Item {
   allowCOD          Boolean   @default(true)
   shippingNote      String?   // e.g., "จัดส่งได้เฉพาะวันจันทร์-ศุกร์"
 
+  // ── Rental-specific fields (only used when listingType = RENT) ──
+  rentalRateType      RentalRateType?   @default(DAILY)   // rate unit: วัน / เดือน / ปี
+  rentalRate          Float?            // rate amount in the chosen unit (e.g. 500/เดือน)
+  dailyRate           Float?            // ฿ per day — computed equivalent, used for backend calcs
+  securityDeposit     Float?            // refundable deposit held in escrow
+  minRentalDays       Int?              @default(1)
+  maxRentalDays       Int?              @default(30)
+  lateFeePerDay       Float?            @default(0)
+  isRenewable         Boolean           @default(true)
+  maxRenewals         Int               @default(1)
+  rentalTerms         String?           @db.Text
+  rentalInstructions  String?           @db.Text
+
   sellerId   String
   seller     User     @relation(fields: [sellerId], references: [id])
   categoryId String
@@ -276,6 +299,7 @@ model Item {
   escrowOrders  EscrowOrder[]
   interactions  UserInteraction[]
   featuredIn    FeaturedItem[]
+  rentalOrders  RentalOrder[]
 
   @@index([sellerId])
   @@index([categoryId])
@@ -780,6 +804,119 @@ model LendingOrder {
   @@index([lendingItemId])
   @@index([status, dueDate])
   @@map("lending_orders")
+}
+
+// ─── Rental Orders (Marketplace RENT items) ──────────
+
+enum RentalOrderStatus {
+  // Request phase
+  REQUESTED           // ผู้เช่าส่งคำขอ รอเจ้าของตอบรับ
+  APPROVED            // เจ้าของตอบรับแล้ว
+  DEPOSIT_HELD        // เงินถูกกักใน escrow
+  REJECTED            // เจ้าของปฏิเสธ
+  EXPIRED             // ไม่ตอบภายใน 24 ชม.
+  CANCELLED           // ยกเลิก
+
+  // Pickup phase
+  PICKUP_SCHEDULED    // นัดรับแล้ว
+  HANDED_OVER         // ส่งมอบแล้ว ทั้งสองฝ่ายยืนยัน
+
+  // Active phase
+  ACTIVE              // กำลังเช่าอยู่
+  OVERDUE             // เลยกำหนดคืน
+  RENEWAL_REQUESTED   // ขอต่ออายุ
+
+  // Return phase
+  RETURN_SCHEDULED    // นัดคืนแล้ว
+  RETURNED            // คืนแล้ว ทั้งสองฝ่ายยืนยัน
+
+  // Settlement
+  COMPLETED                 // เสร็จสิ้น
+  COMPLETED_WITH_DEDUCTION  // เสร็จ แต่หักค่าเสียหายจากมัดจำ
+
+  // Problems
+  DISPUTED            // มีข้อพิพาท
+  ITEM_LOST           // ของหาย
+}
+
+model RentalOrder {
+  id        String  @id @default(cuid())
+  refCode   String  @unique @default(cuid())
+
+  // ── Parties ──
+  renterId  String
+  renter    User    @relation("RenterOrders",      fields: [renterId],  references: [id])
+  ownerId   String
+  owner     User    @relation("OwnerRentalOrders",  fields: [ownerId],   references: [id])
+  itemId    String
+  item      Item    @relation(fields: [itemId], references: [id])
+
+  // ── Rental Period ──
+  rentalStartDate   DateTime
+  rentalEndDate     DateTime
+  actualReturnDate  DateTime?
+  rentalDays        Int
+  originalEndDate   DateTime?   // before renewal
+
+  // ── Financial snapshot ──
+  dailyRate         Float
+  rentalFee         Float
+  securityDeposit   Float
+  platformFee       Float       @default(0)
+  totalPaid         Float
+  lateFees          Float       @default(0)
+  damageFees        Float       @default(0)
+  depositRefund     Float?
+  ownerPayout       Float?
+
+  // ── Pickup (Digital Handshake #1) ──
+  pickupLocation        String?
+  pickupDateTime        DateTime?
+  pickupNote            String?
+  pickupPhotos          String[]
+  pickupRenterConfirm   Boolean   @default(false)
+  pickupOwnerConfirm    Boolean   @default(false)
+  pickupConditionNote   String?
+  actualPickupAt        DateTime?
+
+  // ── Return (Digital Handshake #2) ──
+  returnLocation        String?
+  returnDateTime        DateTime?
+  returnNote            String?
+  returnPhotos          String[]
+  returnRenterConfirm   Boolean   @default(false)
+  returnOwnerConfirm    Boolean   @default(false)
+  returnCondition       String?   // SAME | MINOR_DAMAGE | MAJOR_DAMAGE | LOST
+  returnConditionNote   String?
+
+  // ── Renewal ──
+  renewalCount      Int     @default(0)
+  renewalHistory    Json    @default("[]")
+
+  // ── Status ──
+  status            RentalOrderStatus
+  statusHistory     Json    @default("[]")
+
+  // ── Agreement ──
+  agreementAcceptedAt DateTime?
+  agreementText       String?   @db.Text
+
+  // ── Cancellation ──
+  cancelledAt   DateTime?
+  cancelledBy   String?
+  cancelReason  String?
+
+  // ── System ──
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  expiresAt   DateTime?     // auto-cancel if owner doesn't approve in 24h
+  completedAt DateTime?
+
+  @@index([renterId, status])
+  @@index([ownerId, status])
+  @@index([itemId])
+  @@index([status, rentalEndDate])
+  @@map("rental_orders")
 }
 
 // ─── Featured Items (Admin-Curated Trending) ─────────

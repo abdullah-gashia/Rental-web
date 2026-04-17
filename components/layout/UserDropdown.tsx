@@ -94,6 +94,28 @@ export default function UserDropdown({ onClose }: UserDropdownProps) {
           </a>
         )}
 
+        {/* Rental Dashboard — hidden for ADMIN */}
+        {user.role !== "ADMIN" && (
+          <a
+            href="/dashboard/rentals"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#f7f6f3] transition cursor-pointer group"
+            onClick={onClose}
+          >
+            <div className="w-9 h-9 bg-[#f0ede7] rounded-full flex items-center justify-center group-hover:bg-[#e5e3de] transition">
+              <svg className="w-[18px] h-[18px] text-[#333]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <p className="text-[13px] font-medium text-[#111]">ระบบปล่อยเช่า</p>
+              <p className="text-[11px] text-[#9a9590]">การเช่าและให้เช่าของฉัน</p>
+            </div>
+            <svg className="w-4 h-4 text-[#b0ada6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        )}
+
         {/* Settings & Privacy — hidden for ADMIN (admins manage settings via Admin Panel) */}
         {user.role !== "ADMIN" && (
           <a

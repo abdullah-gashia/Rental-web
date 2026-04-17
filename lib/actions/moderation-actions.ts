@@ -129,6 +129,16 @@ export async function updateItem(
     keepImageIds: string[];
     /** Public URLs returned by /api/upload for newly added images */
     newImageUrls: string[];
+    // Rental fields (optional — only updated when item is RENT)
+    dailyRate?: number | null;
+    securityDeposit?: number | null;
+    minRentalDays?: number | null;
+    maxRentalDays?: number | null;
+    lateFeePerDay?: number | null;
+    isRenewable?: boolean;
+    maxRenewals?: number;
+    rentalTerms?: string | null;
+    rentalInstructions?: string | null;
   }
 ) {
   const session = await auth();
@@ -150,6 +160,16 @@ export async function updateItem(
       description: data.description.trim(),
       status: "PENDING",
       rejectReason: null,
+      // Rental fields — only persist if provided
+      ...(data.dailyRate !== undefined       ? { dailyRate: data.dailyRate }             : {}),
+      ...(data.securityDeposit !== undefined ? { securityDeposit: data.securityDeposit } : {}),
+      ...(data.minRentalDays !== undefined   ? { minRentalDays: data.minRentalDays }     : {}),
+      ...(data.maxRentalDays !== undefined   ? { maxRentalDays: data.maxRentalDays }     : {}),
+      ...(data.lateFeePerDay !== undefined   ? { lateFeePerDay: data.lateFeePerDay }     : {}),
+      ...(data.isRenewable !== undefined     ? { isRenewable: data.isRenewable }         : {}),
+      ...(data.maxRenewals !== undefined     ? { maxRenewals: data.maxRenewals }         : {}),
+      ...(data.rentalTerms !== undefined     ? { rentalTerms: data.rentalTerms }         : {}),
+      ...(data.rentalInstructions !== undefined ? { rentalInstructions: data.rentalInstructions } : {}),
     },
   });
 

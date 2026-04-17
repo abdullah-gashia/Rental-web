@@ -1,0 +1,237 @@
+<!-- CHAPTER 1 FRAGMENT — will be merged into main report -->
+
+<!-- ══════════════════════════════════════════════════════════
+     CHAPTER 1: INTRODUCTION
+     ══════════════════════════════════════════════════════════ -->
+<div class="page">
+  <h1>Chapter 1: Introduction</h1>
+
+  <h2>1.1 Overview</h2>
+
+  <p>During my time at PSU Phuket, I noticed a pretty consistent pattern: students regularly need
+  equipment they don't actually own. A third-year student needs a DSLR camera for a media project
+  but only for one weekend. A first-year engineering student needs a scientific calculator for exam
+  week. A group putting on a campus event needs costumes, props, or audio equipment for just two
+  days. For most students, buying these things outright makes no sense financially — it's expensive,
+  and you end up with something you'll use once and then forget about.</p>
+
+  <p>The natural solution, at least the way it works now, is to borrow from friends. And that works
+  fine until it doesn't. Items come back late. Items come back damaged with no clear record of when
+  the damage happened. Sometimes items don't come back at all. There's no formal process, no deposit
+  system, and no record anyone can refer to if something goes wrong. Most people just absorb the
+  loss because confronting a classmate over a borrowed item feels awkward, and there's no evidence
+  to point to anyway.</p>
+
+  <p>Some students have tried using Facebook groups or LINE group chats to do informal rentals
+  or sales. These work better than nothing, but they have real problems. There's no verification
+  that the person you're dealing with is actually a PSU student. There's no deposit mechanism, so
+  there's no financial accountability. Condition isn't recorded before handover, so disputes over
+  damage are purely word-against-word. And because the transactions happen in chat, there's no
+  structured record — finding an old conversation about a rental from three months ago is
+  basically impossible.</p>
+
+  <p>The Equipment Rental System this project proposes is an attempt to fix these problems with a
+  proper digital platform. The basic idea is a web application exclusively for the PSU community
+  where students and staff can list their equipment for rent and rent equipment from others,
+  with the platform managing the deposit, the agreement, and the evidence record. Because both
+  parties verify their PSU identity before using the system (through a KYC process that checks
+  their student or staff ID), the community stays closed and trust is built in from the start.</p>
+
+  <p>What makes this different from just posting in a Facebook group is the escrow system. When a
+  renter books an item, they pay a deposit and the rental fee upfront, but that money goes into the
+  platform's escrow wallet — not directly to the owner. The owner only receives their payout after
+  the rental is completed successfully. This gives both sides a reason to follow through properly:
+  the renter doesn't lose their deposit for no reason, and the owner knows the payment is secured.
+  If the item comes back damaged, the platform deducts the damage fee from the deposit based on
+  what both parties agreed when signing the rental agreement.</p>
+
+  <p>The "Digital Handshake" is the other core mechanism. At both handover and return, both the
+  owner and the renter independently open the platform on their devices, upload photos of the item,
+  and sign a digital agreement using a canvas-based signature. The platform records the photos,
+  signatures, and timestamps. This creates a tamper-evident evidence record. If someone claims the
+  item was already damaged when it was returned, the photos from the handover and return are both
+  on file and an admin can compare them directly.</p>
+
+  <p>Admin plays a specific role in this system as a neutral intermediary. They don't just moderate
+  content — they hold the escrow, they enforce the rules, and in a dispute they function like a
+  small-claims mediator. The admin can see every photo, every signature, every timestamp, and every
+  message that's been exchanged. This "evidence vault" approach is what makes the system viable for
+  handling real disputes between real people who have to see each other on campus.</p>
+
+  <p>From a practical standpoint, a system like this could save students real money. A DSLR camera
+  rental for a weekend at ฿300 is much more accessible than buying one for ฿30,000. A costume
+  rental at ฿150 for an event is far cheaper than buying something you'll wear once. Over time,
+  a well-maintained rental platform creates a campus circular economy where people with equipment
+  they don't constantly need can earn a small income from it, and people who need it temporarily
+  can access it affordably.</p>
+
+  <div class="page-num">1</div>
+</div>
+
+<div class="page">
+  <h2>1.2 Objectives</h2>
+
+  <p>This project has three main objectives:</p>
+  <ol>
+    <li style="margin-bottom:6pt;">
+      <span class="bold">Build a peer-to-peer rental platform exclusively for the PSU community.</span>
+      The system should support the full rental lifecycle — from listing and discovery through
+      to booking, handover, rental period management, return, and settlement — within a closed
+      community gated by KYC identity verification.
+    </li>
+    <li style="margin-bottom:6pt;">
+      <span class="bold">Implement a safe escrow-based deposit and payment system.</span>
+      The platform should hold rental fees and security deposits in an escrow wallet, with
+      automatic calculation and settlement of final amounts (including late fees and damage
+      deductions) upon rental completion.
+    </li>
+    <li>
+      <span class="bold">Design a Digital Handshake system that creates a verifiable evidence record.</span>
+      Both pickup and return should be confirmed through a dual-party photo upload plus digital
+      signature process, timestamped and stored so that admins have sufficient evidence to
+      resolve disputes fairly.
+    </li>
+  </ol>
+
+  <h2>1.3 Scope</h2>
+
+  <h3>In Scope (Project I)</h3>
+  <ul>
+    <li>User registration and login via email/password using NextAuth.js</li>
+    <li>KYC verification flow (student submits PSU ID + selfie, admin approves)</li>
+    <li>Equipment listing with photo upload, rental rate type (daily/monthly/yearly), deposit amount, and rental terms</li>
+    <li>Homepage browse and category/keyword search</li>
+    <li>Four-step rental checkout wizard (date selection, meetup scheduling, payment confirmation, agreement acceptance)</li>
+    <li>Rental request and owner approval/rejection workflow</li>
+    <li>Escrow wallet system: deposit held on approval, released on completion</li>
+    <li>Digital Handshake at pickup: both parties upload photos and confirm; renter signs digital agreement</li>
+    <li>Rental period tracking with countdown timer and automated overdue detection</li>
+    <li>Digital Handshake at return: both parties upload photos and confirm; owner rates condition and signs return agreement</li>
+    <li>Automated settlement on completion: damage fee deduction, deposit refund, owner payout</li>
+    <li>Rental contract PDF (downloadable at ACTIVE status)</li>
+    <li>Return receipt PDF (downloadable at COMPLETED status)</li>
+    <li>In-app notification system for status changes and reminders</li>
+    <li>Admin panel: KYC review, item moderation, order monitoring, basic dispute view</li>
+    <li>Role-based access control (RENTER / OWNER / ADMIN)</li>
+    <li>Soft-delete with grace period for item listings</li>
+    <li>AI-based item recommendations on homepage (category and price-match scoring)</li>
+  </ul>
+
+  <h3>Out of Scope (Planned for Project II)</h3>
+  <ul>
+    <li>Real payment gateway integration (PromptPay, Stripe). The current wallet system uses mock top-up only.</li>
+    <li>Native mobile application. The current system is web-only, though it is responsive for mobile browsers.</li>
+    <li>AI-powered photo damage comparison between pickup and return images</li>
+    <li>Integration with PSU official Single Sign-On (SSO) for automatic identity verification</li>
+    <li>Real-time in-app chat between renter and owner</li>
+    <li>Multi-campus expansion beyond Phuket Campus</li>
+    <li>Advanced analytics and financial reporting for administrators</li>
+    <li>Production deployment with monitoring, logging, and backup systems</li>
+  </ul>
+
+  <div class="page-num">4</div>
+</div>
+
+<div class="page">
+  <h2>1.4 Procedures</h2>
+
+  <p>The development followed roughly seven phases, though in practice they overlapped
+  quite a bit — especially design and development:</p>
+
+  <ol>
+    <li><span class="bold">Requirement Gathering.</span> I surveyed around 30 PSU students from
+    different faculties about their equipment needs, current borrowing habits, and what features
+    they'd want in a rental platform. I also informally interviewed a few people who'd had bad
+    experiences lending things informally. The results shaped the feature priorities significantly.</li>
+
+    <li><span class="bold">System Design and Architecture Planning.</span> Decided on the
+    three-tier web architecture, chose the tech stack, and sketched out the main user flows
+    using diagrams. This phase also included planning the rental lifecycle state machine, which
+    turned out to be one of the most complex parts of the design.</li>
+
+    <li><span class="bold">Database Schema Design.</span> Designed the Prisma schema with
+    all the main models: User, Item, RentalOrder, Wallet, WalletTransaction, KYCVerification,
+    Notification, and more. Getting the relations right, especially around the escrow wallet and
+    the rental order status history, took several iterations.</li>
+
+    <li><span class="bold">Frontend Development.</span> Built the UI components using
+    Next.js 14 App Router with Tailwind CSS. Started with the main layout, homepage, and item
+    cards, then moved to the more complex flows like the checkout wizard and
+    the handshake screens.</li>
+
+    <li><span class="bold">Backend Development.</span> Implemented server actions and API routes
+    for all the major operations: creating orders, processing escrow transactions, confirming
+    handshakes, calculating settlements. This also included the rental lifecycle state machine logic.</li>
+
+    <li><span class="bold">Integration Testing.</span> Tested the complete rental flow end-to-end,
+    checking edge cases like concurrent booking requests, expired orders, and the overdue
+    detection cron job.</li>
+
+    <li><span class="bold">User Testing with Peers.</span> Had five PSU students test the
+    prototype, observed them using the system, and collected feedback. Used the results to make
+    final adjustments before writing up the report.</li>
+  </ol>
+
+  <h2>1.5 Expected Project Results</h2>
+
+  <p>By the end of Project I, the prototype should demonstrate:</p>
+  <ul>
+    <li>A working rental lifecycle from initial request all the way through return and settlement</li>
+    <li>A functional escrow wallet system that correctly calculates fees, deposits, and payouts</li>
+    <li>A dual-party Digital Handshake system with photo evidence and digital signature capture</li>
+    <li>Downloadable rental contract and return receipt PDFs</li>
+    <li>Admin tools for KYC review, content moderation, and order oversight</li>
+    <li>Positive usability feedback from at least five testers who successfully complete a full rental flow</li>
+  </ul>
+
+  <div class="page-num">6</div>
+</div>
+
+<div class="page">
+  <h2>1.6 Locations</h2>
+
+  <p>Development and testing for this project took place entirely at Prince of Songkla University,
+  Phuket Campus, within the College of Computing. All user testing was conducted with PSU students
+  on campus. The system was run on local development machines during Project I; production
+  deployment is planned for Project II.</p>
+
+  <h2>1.7 Development Tools</h2>
+
+  <p>The following tools and technologies were used in this project:</p>
+
+  <table>
+    <tr><th style="width:32%;">Category</th><th>Tool / Technology</th></tr>
+    <tr><td>Frontend Framework</td><td>Next.js 14 (App Router), React 18</td></tr>
+    <tr><td>Language</td><td>TypeScript 5</td></tr>
+    <tr><td>Styling</td><td>Tailwind CSS 3</td></tr>
+    <tr><td>State Management</td><td>Zustand (client stores), React Context</td></tr>
+    <tr><td>Backend</td><td>Next.js Server Actions and Route Handlers (Node.js runtime)</td></tr>
+    <tr><td>Database</td><td>PostgreSQL (production), SQLite (local dev)</td></tr>
+    <tr><td>ORM</td><td>Prisma ORM</td></tr>
+    <tr><td>Authentication</td><td>NextAuth.js v4</td></tr>
+    <tr><td>File Storage</td><td>Local filesystem (development); Vercel Blob planned for production</td></tr>
+    <tr><td>PDF Generation</td><td>Browser print-to-PDF (HTML + CSS @media print)</td></tr>
+    <tr><td>Version Control</td><td>Git, GitHub</td></tr>
+    <tr><td>Deployment (planned)</td><td>Vercel</td></tr>
+    <tr><td>UI Design</td><td>Figma (wireframes and mockups)</td></tr>
+    <tr><td>Diagram Tools</td><td>PlantUML, draw.io</td></tr>
+    <tr><td>Package Manager</td><td>npm / Node.js 18+</td></tr>
+  </table>
+
+  <p>I chose Next.js 14 mainly because of the App Router, which makes server-side rendering
+  and server actions much easier to work with than a traditional separate frontend/backend
+  split. The fact that server actions run on the server but are called from client components
+  basically eliminates the need for a separate REST API for most operations, which simplified
+  the codebase significantly.</p>
+
+  <p>Prisma was the ORM choice because the schema-first approach with auto-generated TypeScript types
+  makes the database integration very safe. Whenever I changed the schema, the TypeScript types
+  updated automatically and the compiler would flag any code that was accessing fields that no
+  longer existed. This saved me from a few potential runtime bugs during development.</p>
+
+  <p>Tailwind CSS was a natural fit because it keeps the styling close to the component logic.
+  For a project where I'm building and iterating quickly, not having to jump between CSS files
+  and component files was a real time saver.</p>
+
+  <div class="page-num">7</div>
+</div>

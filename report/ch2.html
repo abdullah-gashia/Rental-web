@@ -1,0 +1,196 @@
+<!-- CHAPTER 2 FRAGMENT -->
+
+<div class="page">
+  <h1>Chapter 2: Literature Review</h1>
+
+  <h2>2.1 Peer-to-Peer Rental Platforms</h2>
+
+  <p>The concept of peer-to-peer (P2P) rental — where individuals rent their own assets to other
+  individuals, with a platform acting as the connector and trust facilitator — became mainstream
+  largely through companies like Airbnb and Uber. Airbnb demonstrated that strangers would pay
+  real money to stay in another person's home, given enough trust signals and a reliable payment
+  and review system [1]. This insight eventually spread to physical equipment rental through
+  platforms like Fat Lama (UK-based equipment rental marketplace), RentMy, and similar services.</p>
+
+  <p>What these platforms have in common is a set of mechanisms designed to build trust between
+  strangers. Hamari, Sjöklint, and Ukkonen [2] studied motivation factors in the sharing economy
+  and found that both economic benefits and social factors (reputation, community) drive
+  participation. Platforms that invest in reputation systems — verified identity, star ratings,
+  review histories — consistently see higher transaction rates and lower dispute frequencies than
+  those that don't.</p>
+
+  <p>For equipment specifically, the main challenges are around condition disputes and late returns.
+  A study by Möhlmann [3] on P2P sharing platform satisfaction identified "item condition
+  matching expectations" as one of the top predictors of whether a user would repeat their
+  experience. When a renter receives an item in worse condition than advertised, or an owner
+  gets an item back damaged, the lack of a documented pre-rental condition record makes resolution
+  nearly impossible without a formal evidence system.</p>
+
+  <p>Fat Lama, one of the more established equipment rental platforms, addresses this through a
+  mandatory photo-upload process at both handover and return, combined with an insurance product
+  that covers damage. For a university-scale platform, a full insurance product isn't realistic,
+  but the photo-upload handshake is directly applicable and is what this project adopted.</p>
+
+  <p>One characteristic of commercial P2P platforms that doesn't translate well to a university
+  context is their geographic scope. Fat Lama and similar services operate in large cities where
+  strangers are unlikely to have any prior relationship. In a university, most users will know
+  each other or at least recognize each other, which changes the trust dynamic significantly. This
+  means a university rental platform can rely more on institutional identity (student ID
+  verification) and less on star ratings or elaborate reputation scores. The design of this system
+  reflects that — KYC is the primary trust gate, and ratings are a secondary feature rather than
+  the core mechanism.</p>
+
+  <h2>2.2 Escrow Systems in Digital Transactions</h2>
+
+  <p>An escrow system, in its basic form, is a financial arrangement where a neutral third party
+  holds money on behalf of two transacting parties until specific conditions are met. In traditional
+  real estate transactions, an escrow company holds the purchase price until title transfer is
+  complete. In digital platforms, the role of escrow agent is played by the platform itself.</p>
+
+  <p>Pavlou and Fygenson [4] studied trust mechanisms in e-commerce and identified the escrow model
+  as one of the most effective ways to reduce perceived transaction risk for both buyers and sellers.
+  The key insight is that escrow removes the need for either party to trust the other completely —
+  they only need to trust the platform, which is a lower bar, especially in a transaction involving
+  strangers.</p>
+
+  <p>For rental specifically, a deposit-based escrow model is standard in real-world property rental:
+  landlords routinely hold security deposits that are released minus deductions at the end of a
+  tenancy. Translating this to short-term equipment rental, the deposit serves the same purpose —
+  it provides the owner with financial recourse if the item is damaged, while the renter retains the
+  incentive to behave responsibly because the deposit is refundable on good behavior.</p>
+
+  <p>From a legal standpoint in Thailand, rental contracts (สัญญาเช่าทรัพย์) are governed by the
+  Civil and Commercial Code, Sections 537 through 571. Section 537 defines rental as an agreement
+  where one party agrees to give another the temporary use or enjoyment of a property in exchange
+  for remuneration. Section 549 establishes that the lessee (renter) must care for the property
+  and is liable for damage resulting from negligence. Section 562 deals with the return of property
+  in its original condition, accounting for fair wear and tear. These provisions give legal
+  grounding to the deposit and damage assessment system this platform implements [5].</p>
+
+  <p>One design decision in this project that's worth explaining is why the platform uses a
+  deposit-plus-rental-fee escrow model rather than a pure deposit model. The reason is that
+  collecting both amounts upfront protects the owner from non-payment scenarios — a renter
+  can't pick up an item and then claim they can't pay. The rental fee is held by the platform
+  and paid out to the owner only after return is confirmed, giving the owner an incentive to
+  participate in the return process properly too.</p>
+
+  <p>The escrow wallet in this system is implemented as a simple credit ledger: each user has a
+  wallet balance that can be topped up, and transactions are atomic database operations that
+  debit and credit the relevant accounts simultaneously. This is a simplified model — a
+  production system would integrate with a payment gateway and hold funds in a real escrow
+  bank account — but it is sufficient to demonstrate the correct business logic.</p>
+
+  <div class="page-num">9</div>
+</div>
+
+<div class="page">
+  <h2>2.3 University Marketplace Platforms</h2>
+
+  <p>Several universities have attempted to build or encourage student marketplace platforms.
+  MIT's SWAP (Student Wallet and Property) and Harvard's Dorm Room Fund have explored P2P exchange
+  in academic settings, though most of these focus on buying and selling rather than rental.
+  A more directly relevant example is the "UniShare" concept explored in several European
+  universities, where students rent textbooks, equipment, and study materials to each other through
+  a university-managed portal [6].</p>
+
+  <p>The consistent finding across these initiatives is that geographic concentration and identity
+  verification are significant advantages. When all users are on the same campus, meetups are
+  easy to arrange, the social cost of bad behavior is higher (reputation spreads quickly in a
+  closed community), and the university can serve as a credible identity guarantor. Dinev and
+  Hart [7] found that users are significantly more willing to share personal information and
+  engage in transactions on platforms that are affiliated with a trusted institution — in this
+  case, the university itself.</p>
+
+  <p>The main challenge with university platforms, as documented by Benkler [8] in the context
+  of peer production and resource sharing, is critical mass. A rental platform with five items
+  listed is useless. The initial seeding problem — getting enough listings to make the platform
+  useful before the platform is popular enough to attract listings — is a genuine business
+  challenge. For this project, the scope is limited to Phuket Campus specifically (around
+  5,000 students), which is small enough that even modest adoption (5-10% of students listing
+  items) would produce a meaningful catalog.</p>
+
+  <p>One design feature borrowed from successful university platforms is the campus location system.
+  Rather than requiring users to enter custom addresses, the system offers a set of well-known
+  campus meetup spots (the library, the main cafeteria, the engineering building entrance). This
+  reduces friction in the pickup scheduling step and keeps meetups on-campus, which adds a layer
+  of personal safety to transactions.</p>
+
+  <h2>2.4 Comparison of Existing Systems</h2>
+
+  <p>Table 2-1 summarizes how the proposed Equipment Rental System compares to existing approaches
+  that PSU students currently use or could use:</p>
+
+  <p class="bold">Table 2-1: Comparison of Rental Platform Approaches</p>
+  <table>
+    <tr>
+      <th>Feature</th>
+      <th>Facebook Groups / LINE</th>
+      <th>Fat Lama (Commercial)</th>
+      <th>This System</th>
+    </tr>
+    <tr>
+      <td>User Verification</td>
+      <td>None — anyone can join</td>
+      <td>Phone + payment card</td>
+      <td>PSU ID + selfie KYC</td>
+    </tr>
+    <tr>
+      <td>Deposit Mechanism</td>
+      <td>None or cash-based</td>
+      <td>Platform-held escrow</td>
+      <td>Platform-held escrow wallet</td>
+    </tr>
+    <tr>
+      <td>Condition Evidence</td>
+      <td>None — no record</td>
+      <td>Optional photo upload</td>
+      <td>Mandatory photo + signature both at pickup and return</td>
+    </tr>
+    <tr>
+      <td>Rental Agreement</td>
+      <td>None</td>
+      <td>Platform T&amp;C accepted at booking</td>
+      <td>Digital contract signed by renter at pickup; return receipt signed by owner</td>
+    </tr>
+    <tr>
+      <td>Dispute Resolution</td>
+      <td>None</td>
+      <td>Platform insurance claim</td>
+      <td>Admin reviews evidence vault (photos, signatures, timestamps, chat)</td>
+    </tr>
+    <tr>
+      <td>Geographic Scope</td>
+      <td>Anywhere (no restriction)</td>
+      <td>Major UK/EU cities</td>
+      <td>PSU community only</td>
+    </tr>
+    <tr>
+      <td>Cost</td>
+      <td>Free</td>
+      <td>Commission-based (15-25%)</td>
+      <td>5% platform fee on rental amount</td>
+    </tr>
+    <tr>
+      <td>Meetup Coordination</td>
+      <td>Manual via chat</td>
+      <td>Manual via messages</td>
+      <td>Campus location selector + scheduled time with confirmation</td>
+    </tr>
+    <tr>
+      <td>Late Fee Enforcement</td>
+      <td>None</td>
+      <td>Manual dispute</td>
+      <td>Automated overdue detection with configurable daily late fee</td>
+    </tr>
+  </table>
+
+  <p>The table shows the key differentiator is the combination of institutional identity
+  verification, mandatory evidence collection, and automated lifecycle management. Commercial
+  platforms like Fat Lama have better deposit handling and insurance products, but they're not
+  designed for a closed, trust-based community. Facebook groups are accessible but have essentially
+  zero accountability mechanisms. This project tries to sit between those two extremes — more
+  accountable than informal social media, but simpler and more community-oriented than commercial
+  platforms.</p>
+
+  <div class="page-num">14</div>
+</div>

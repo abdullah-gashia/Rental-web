@@ -36,6 +36,16 @@ interface EditableItem {
   color: string | null;
   category: { nameTh: string; nameEn: string; emoji: string | null };
   images: ExistingImage[];
+  // Rental fields
+  dailyRate?: number | null;
+  securityDeposit?: number | null;
+  minRentalDays?: number | null;
+  maxRentalDays?: number | null;
+  lateFeePerDay?: number | null;
+  isRenewable?: boolean;
+  maxRenewals?: number;
+  rentalTerms?: string | null;
+  rentalInstructions?: string | null;
 }
 
 // ─── Constants ────────────────────────────────────────
@@ -134,6 +144,17 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
   const [price, setPrice]             = useState(String(item.price));
   const [description, setDescription] = useState(item.description);
   const [formError, setFormError]     = useState("");
+
+  // Rental fields (only used when listingType === "RENT")
+  const [dailyRate,          setDailyRate]          = useState(String(item.dailyRate ?? ""));
+  const [securityDeposit,    setSecurityDeposit]    = useState(String(item.securityDeposit ?? ""));
+  const [minRentalDays,      setMinRentalDays]      = useState(String(item.minRentalDays ?? 1));
+  const [maxRentalDays,      setMaxRentalDays]      = useState(String(item.maxRentalDays ?? 30));
+  const [lateFeePerDay,      setLateFeePerDay]      = useState(String(item.lateFeePerDay ?? 0));
+  const [isRenewable,        setIsRenewable]        = useState(item.isRenewable ?? true);
+  const [maxRenewals,        setMaxRenewals]        = useState(String(item.maxRenewals ?? 1));
+  const [rentalTerms,        setRentalTerms]        = useState(item.rentalTerms ?? "");
+  const [rentalInstructions, setRentalInstructions] = useState(item.rentalInstructions ?? "");
 
   // Image state
   const [existingImages, setExistingImages] = useState<ExistingImage[]>(item.images);
@@ -255,6 +276,18 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
         description: description.trim(),
         keepImageIds,
         newImageUrls,
+        // Rental fields — only pass when item is RENT
+        ...(item.listingType === "RENT" ? {
+          dailyRate:          dailyRate          ? Number(dailyRate)          : null,
+          securityDeposit:    securityDeposit    ? Number(securityDeposit)    : null,
+          minRentalDays:      minRentalDays      ? Number(minRentalDays)      : 1,
+          maxRentalDays:      maxRentalDays      ? Number(maxRentalDays)      : 30,
+          lateFeePerDay:      lateFeePerDay      ? Number(lateFeePerDay)      : 0,
+          isRenewable,
+          maxRenewals:        maxRenewals        ? Number(maxRenewals)        : 1,
+          rentalTerms:        rentalTerms        || null,
+          rentalInstructions: rentalInstructions || null,
+        } : {}),
       });
 
       if (result.error) {
@@ -438,6 +471,71 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
             placeholder="อธิบายสินค้าของคุณ..."
           />
         </div>
+
+        {/* ── Rental fields (only for RENT items) ── */}
+        {item.listingType === "RENT" && (
+          <div className="border border-[#e5e3de] rounded-xl p-4 space-y-4 bg-[#faf9f7]">
+            <p className="text-sm font-bold text-[#111]">🔑 ตั้งค่าการเช่า</p>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-[#555] mb-1">ค่าเช่า/วัน (฿) *</label>
+                <input type="number" min={0} value={dailyRate}
+                  onChange={(e) => setDailyRate(e.target.value)}
+                  className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[#555] mb-1">เงินมัดจำ (฿) *</label>
+                <input type="number" min={0} value={securityDeposit}
+                  onChange={(e) => setSecurityDeposit(e.target.value)}
+                  className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[#555] mb-1">เช่าขั้นต่ำ (วัน)</label>
+                <input type="number" min={1} value={minRentalDays}
+                  onChange={(e) => setMinRentalDays(e.target.value)}
+                  className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[#555] mb-1">เช่าสูงสุด (วัน)</label>
+                <input type="number" min={1} value={maxRentalDays}
+                  onChange={(e) => setMaxRentalDays(e.target.value)}
+                  className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[#555] mb-1">ค่าปรับล่าช้า/วัน (฿)</label>
+                <input type="number" min={0} value={lateFeePerDay}
+                  onChange={(e) => setLateFeePerDay(e.target.value)}
+                  className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[#555] mb-1">ต่ออายุได้สูงสุด (ครั้ง)</label>
+                <input type="number" min={0} value={maxRenewals}
+                  onChange={(e) => setMaxRenewals(e.target.value)}
+                  className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+              </div>
+            </div>
+
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" checked={isRenewable} onChange={(e) => setIsRenewable(e.target.checked)}
+                className="w-4 h-4 accent-[#e8500a]" />
+              <span className="text-sm text-[#555]">อนุญาตให้ต่ออายุการเช่า</span>
+            </label>
+
+            <div>
+              <label className="block text-xs font-medium text-[#555] mb-1">เงื่อนไขเพิ่มเติม</label>
+              <textarea rows={2} value={rentalTerms} onChange={(e) => setRentalTerms(e.target.value)}
+                placeholder="เช่น ห้ามนำไปใช้กลางแจ้ง..."
+                className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-[#555] mb-1">คำแนะนำการใช้งาน</label>
+              <textarea rows={2} value={rentalInstructions} onChange={(e) => setRentalInstructions(e.target.value)}
+                placeholder="เช่น ชาร์จด้วย USB-C เท่านั้น..."
+                className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+            </div>
+          </div>
+        )}
 
         {/* Error */}
         {formError && (

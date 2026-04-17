@@ -263,29 +263,15 @@ export default function Navbar({ searchQuery, onSearchChange, activeCat, onCatCh
       {/* Category pills row */}
       <div className="max-w-7xl mx-auto px-5 pb-3 flex items-center justify-between gap-4">
         <nav className="flex gap-1.5 overflow-x-auto no-scrollbar">
-          {categories.map((cat) => {
-            // "rental" tab navigates to /lending instead of filtering marketplace
-            if (cat.key === "rental") {
-              return (
-                <a
-                  key={cat.key}
-                  href="/lending"
-                  className={`cat-pill ${activeCat === cat.key ? "active" : ""}`}
-                >
-                  {t(cat.i18nKey as any)}
-                </a>
-              );
-            }
-            return (
-              <span
-                key={cat.key}
-                className={`cat-pill ${activeCat === cat.key ? "active" : ""}`}
-                onClick={() => onCatChange(cat.key)}
-              >
-                {t(cat.i18nKey as any)}
-              </span>
-            );
-          })}
+          {categories.map((cat) => (
+            <span
+              key={cat.key}
+              className={`cat-pill ${activeCat === cat.key ? "active" : ""}`}
+              onClick={() => onCatChange(cat.key)}
+            >
+              {t(cat.i18nKey as any)}
+            </span>
+          ))}
         </nav>
         {/* Admins moderate — they don't post items */}
         {user?.role !== "ADMIN" && (

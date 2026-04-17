@@ -12,7 +12,10 @@ interface ImageGalleryProps {
   title?: string;
 }
 
-export default function ImageGallery({ images, emoji, color, title }: ImageGalleryProps) {
+export default function ImageGallery({ images: rawImages, emoji, color, title }: ImageGalleryProps) {
+  // Filter out broken relations: null entries or entries missing a url
+  const images = rawImages.filter((img): img is ItemImage => !!img?.url);
+
   const [active, setActive]         = useState<ItemImage | null>(images[0] ?? null);
   const [lightboxOpen, setLightbox] = useState(false);
 
@@ -59,7 +62,7 @@ export default function ImageGallery({ images, emoji, color, title }: ImageGalle
           aria-label="ดูรูปขยาย"
         >
           <img
-            src={active!.url}
+            src={active?.url ?? ""}
             alt={title ?? "สินค้า"}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
@@ -109,7 +112,7 @@ export default function ImageGallery({ images, emoji, color, title }: ImageGalle
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={active!.url}
+              src={active?.url ?? ""}
               alt={title ?? "สินค้า"}
               className="max-w-full max-h-[85vh] rounded-xl object-contain shadow-2xl"
             />

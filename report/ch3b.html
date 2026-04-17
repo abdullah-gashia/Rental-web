@@ -1,0 +1,303 @@
+<!-- CHAPTER 3 PART B: Implementation -->
+
+<div class="page">
+  <h2>3.4 System Implementation</h2>
+
+  <h3>3.4.1 Frontend Implementation</h3>
+
+  <p>For the frontend I went with Next.js 14 because it's what I'm most comfortable with, and the
+  App Router makes routing pretty straightforward once you understand the folder-based convention.
+  Every folder under <code>app/</code> becomes a route automatically, and you can co-locate
+  server components, client components, and even API routes in the same directory, which keeps
+  things organized.</p>
+
+  <p>The folder structure is organized roughly as follows:</p>
+  <ul>
+    <li><code>app/</code> — Pages using the App Router. Key routes include <code>/</code> (homepage marketplace), <code>/rental/orders/[id]</code> (order detail), <code>/dashboard/rentals</code> (user's rental dashboard), <code>/admin/*</code> (admin panel), and <code>/rental/orders/[id]/receipt</code> (printable PDF receipt).</li>
+    <li><code>components/</code> — Reusable React components, organized by category: <code>components/items/</code> for product cards and detail views, <code>components/rental-checkout/</code> for the checkout wizard, <code>components/rental/</code> for handshake components, <code>components/layout/</code> for navigation and layout.</li>
+    <li><code>lib/</code> — Server actions, Prisma client, type definitions, Zustand stores, hooks, and utility functions.</li>
+    <li><code>prisma/</code> — Prisma schema file and migration history.</li>
+  </ul>
+
+  <p>Tailwind CSS handles all the styling. I used a custom design system built around a warm
+  off-white background (<code>#faf9f7</code>), an orange primary action color (<code>#e8500a</code>),
+  and a near-black for text. The design is clean and minimal — this is an internal university tool,
+  not a consumer app that needs to be visually flashy.</p>
+
+  <p>Client-side state is managed through Zustand stores. There are separate stores for:
+  authentication state (current user, role, session), locale (Thai/English i18n), notifications,
+  wishlist count, and toast messages. Using Zustand rather than prop-drilling or React Context
+  everywhere keeps the components clean and makes it easy to access global state from anywhere
+  without wrapper hell.</p>
+
+  <p>Internationalization (i18n) is handled through a simple dictionary system in
+  <code>lib/i18n/</code>. The dictionaries define Thai and English translations for all UI strings,
+  and a locale store lets users toggle between languages. The platform defaults to Thai since
+  the target users are primarily Thai students.</p>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-6: Home Page — Equipment Browse<br>
+  Screenshot of the marketplace homepage showing the navbar with category pills, trending section, item grid cards with price/seller info, and the AI recommendations section below]</div>
+  <p class="fig-caption">Figure 3-6: Home Page — Equipment Browse</p>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-7: Login Page<br>
+  Screenshot of the login modal with email/password fields and the Google Sign-in option]</div>
+  <p class="fig-caption">Figure 3-7: Login Page</p>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-8: Register and KYC Submission Page<br>
+  Screenshot showing the KYC form where users upload their PSU student ID card and selfie photo for admin verification]</div>
+  <p class="fig-caption">Figure 3-8: Register and KYC Submission Page</p>
+
+  <div class="page-num">23</div>
+</div>
+
+<div class="page">
+  <h3>3.4.2 Backend Implementation</h3>
+
+  <p>The backend uses Next.js Server Actions almost exclusively for data mutations. Server actions
+  are async functions marked with <code>"use server"</code> that run on the server but can be called
+  directly from client components. This is actually a pretty clean pattern because it removes the
+  need to write separate REST endpoints for most operations — the function is the API.</p>
+
+  <p>For reads, most pages are server components that call database functions directly (since they
+  run on the server anyway), and for any reads that need to happen client-side after interaction,
+  the server actions return data directly.</p>
+
+  <p>The most complex part of the backend is the rental lifecycle state machine. A rental order goes
+  through many possible states, and each state transition has rules about who can trigger it and
+  what side effects it produces. Table 3-1 summarizes the main transitions:</p>
+
+  <p class="bold">Table 3-1: Rental Order Status Transitions</p>
+  <table style="font-size:11pt;">
+    <tr><th>From Status</th><th>To Status</th><th>Triggered By</th><th>Side Effect</th></tr>
+    <tr><td>—</td><td>REQUESTED</td><td>Renter (checkout)</td><td>Create order, lock dates</td></tr>
+    <tr><td>REQUESTED</td><td>APPROVED</td><td>Owner</td><td>Debit renter wallet (fee + deposit)</td></tr>
+    <tr><td>REQUESTED</td><td>REJECTED</td><td>Owner</td><td>Notify renter</td></tr>
+    <tr><td>REQUESTED</td><td>EXPIRED</td><td>Cron (24h timeout)</td><td>Release any holds</td></tr>
+    <tr><td>APPROVED</td><td>DEPOSIT_HELD</td><td>System (auto)</td><td>Record escrow snapshot</td></tr>
+    <tr><td>DEPOSIT_HELD</td><td>PICKUP_SCHEDULED</td><td>Either party schedules meetup</td><td>Notify both parties</td></tr>
+    <tr><td>PICKUP_SCHEDULED</td><td>HANDED_OVER</td><td>Both confirm pickup handshake</td><td>Record photos + signatures</td></tr>
+    <tr><td>HANDED_OVER</td><td>ACTIVE</td><td>System (auto on both confirm)</td><td>Start countdown timer</td></tr>
+    <tr><td>ACTIVE</td><td>OVERDUE</td><td>Cron (daily check)</td><td>Apply daily late fee, notify both</td></tr>
+    <tr><td>ACTIVE / OVERDUE</td><td>RETURN_SCHEDULED</td><td>Renter initiates return</td><td>Notify owner</td></tr>
+    <tr><td>RETURN_SCHEDULED</td><td>RETURNED</td><td>Both confirm return handshake</td><td>Record condition, photos, signature</td></tr>
+    <tr><td>RETURNED</td><td>COMPLETED</td><td>System (auto settlement)</td><td>Calculate payouts, credit wallets</td></tr>
+    <tr><td>RETURNED</td><td>COMPLETED_WITH_DEDUCTION</td><td>System (damage fee &gt; 0)</td><td>Deduct damage from deposit</td></tr>
+    <tr><td>Any active</td><td>DISPUTED</td><td>Either party</td><td>Freeze escrow, notify admin</td></tr>
+    <tr><td>Any active</td><td>CANCELLED</td><td>Renter (before ACTIVE)</td><td>Partial refund per policy</td></tr>
+    <tr><td>Any active</td><td>ITEM_LOST</td><td>Owner (at return)</td><td>Forfeit full deposit</td></tr>
+  </table>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-5: Rental Lifecycle State Machine<br><br>
+  State diagram showing all the statuses as bubbles connected by arrows labeled with the transition trigger. Main happy path is a straight line from REQUESTED → APPROVED → DEPOSIT_HELD → PICKUP_SCHEDULED → HANDED_OVER → ACTIVE → RETURN_SCHEDULED → RETURNED → COMPLETED. Branch paths show OVERDUE, DISPUTED, CANCELLED, EXPIRED, ITEM_LOST off the main path.]</div>
+  <p class="fig-caption">Figure 3-5: Rental Lifecycle State Machine</p>
+
+  <p>Each status transition is implemented as a server action in
+  <code>lib/actions/rental-transitions.ts</code>. These functions check the current status,
+  validate that the calling user has permission to trigger the transition, perform any wallet
+  operations inside a Prisma transaction, append to the status history JSON array, and
+  send notifications to the relevant parties.</p>
+
+  <div class="page-num">25</div>
+</div>
+
+<div class="page">
+  <h3>3.4.3 Authentication and Authorization</h3>
+
+  <p>Authentication is handled by NextAuth.js. Users can sign up with email and password, or
+  sign in with Google OAuth. NextAuth manages session tokens and provides the current user
+  object to both server and client code via the session callback.</p>
+
+  <p>Role-based access control has three levels: RENTER (default), OWNER (same user, gains owner
+  capabilities when they list an item), and ADMIN. In practice, RENTER and OWNER aren't separate
+  roles — the same user can do both. The distinction is just that certain actions (like approving
+  requests or signing return receipts as the owner) check whether you are the
+  <code>ownerId</code> on the specific order.</p>
+
+  <p>ADMIN is a hard role assigned in the database. Admin users see the admin panel link in
+  navigation and can access <code>/admin/*</code> routes. On the product detail page, admins
+  see a read-only "Admin View" badge instead of buy/rent buttons — this prevents admins from
+  accidentally creating orders while monitoring the platform.</p>
+
+  <p>Banned users (where <code>isBanned = true</code> in the database) are rejected at the
+  NextAuth <code>signIn</code> callback before the session is created, so they can't log in
+  at all. KYC verification is a gate specifically for listing items — an unverified user can
+  browse and view items, but the server action for creating a listing checks
+  <code>verificationStatus === "APPROVED"</code> and returns an error if not met.</p>
+
+  <h3>3.4.4 The Rental Flow (End-to-End)</h3>
+
+  <p>This section walks through the complete rental journey from the perspective of both parties,
+  explaining what happens in the UI and what happens in the backend at each step.</p>
+
+  <h4>A. Listing an Item</h4>
+
+  <p>An owner who wants to rent out their camera, for example, clicks the "ลงประกาศ" (Post Ad)
+  button in the navigation. A modal opens with a three-step form. In step one they fill in the
+  title, category, condition, and description. Step two handles photos — they can upload multiple
+  images and designate one as the main image. Step three is where the rental configuration
+  happens: they set the rental rate type (daily, monthly, or yearly), the rate amount, a security
+  deposit amount, minimum and maximum rental duration, late fee per day, and any specific rental
+  terms or instructions.</p>
+
+  <p>When they submit, a server action validates the data, checks that the user is KYC-verified,
+  creates the <code>Item</code> record with <code>status: "PENDING"</code>, saves the images to
+  storage, and creates <code>ItemImage</code> records. The item goes into an admin review queue
+  and doesn't appear on the marketplace until an admin approves it.</p>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-10: Post Ad Modal — Rental Setup<br>
+  Screenshot showing the Step 3 of the post ad modal with the rental rate type selector (daily/monthly/yearly buttons), rate amount field, security deposit field, min/max days grid, late fee input, and rental terms textarea]</div>
+  <p class="fig-caption">Figure 3-10: Post Ad Modal — Rental Setup</p>
+
+  <h4>B. Discovering and Requesting</h4>
+
+  <p>The renter browses the homepage, which shows approved items sorted by an AI recommendation
+  score (a weighted combination of category match, price range match, popularity, and freshness).
+  They can filter by category using the pill navigation at the top, or search by keyword.
+  Clicking an item opens the product detail modal, which shows the image gallery, description,
+  rental terms, deposit amount, and the "เช่าเลย" button.</p>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-11: Rental Checkout Wizard — Step 1 (Date Selection)<br>
+  Screenshot of the checkout wizard's first step showing the date range picker, calculated number of days, and price breakdown (daily rate × days + platform fee + security deposit = total)]</div>
+  <p class="fig-caption">Figure 3-11: Rental Checkout Wizard — Step 1 (Date Selection)</p>
+
+  <p>Clicking "เช่าเลย" opens the Rental Checkout Wizard. This is a four-step modal:</p>
+  <ul>
+    <li><span class="bold">Step 1 — Date Selection:</span> The renter picks start and end dates
+    from a date picker. The system checks that the duration is within the owner's min/max range and
+    shows a live price breakdown as the dates change.</li>
+    <li><span class="bold">Step 2 — Pickup Scheduling:</span> The renter selects a campus meetup
+    location from preset options (or enters a custom location) and picks a time on the rental start
+    date. The date is locked to the rental start date — only the time is selectable.</li>
+    <li><span class="bold">Step 3 — Payment Confirmation:</span> Shows the final price breakdown
+    and the renter's current wallet balance. If the balance is sufficient they can proceed;
+    otherwise they see a top-up prompt.</li>
+    <li><span class="bold">Step 4 — Agreement:</span> Displays the full rental agreement text
+    automatically generated from the booking details. The renter checks a confirmation box and
+    submits.</li>
+  </ul>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-12: Rental Checkout Wizard — Step 4 (Agreement)<br>
+  Screenshot of step 4 showing the auto-generated agreement text with item name, rental period, deposit amount, late fee clause, and the confirmation checkbox before final submit]</div>
+  <p class="fig-caption">Figure 3-12: Rental Checkout Wizard — Step 4 (Agreement)</p>
+
+  <div class="page-num">29</div>
+</div>
+
+<div class="page">
+  <h4>C. Owner Approval</h4>
+
+  <p>When the checkout is submitted, the system creates a <code>RentalOrder</code> record with
+  status <code>REQUESTED</code>, generates a unique reference code, stores the agreed rental terms
+  as a JSON text snapshot (so any future changes to the item don't affect the agreed terms), and
+  sends a notification to the owner.</p>
+
+  <p>The owner sees the request in their rental dashboard and on the order detail page. They have
+  24 hours to respond before the request automatically expires. If they approve, a Prisma
+  transaction debits the renter's wallet (rental fee + platform fee + security deposit), records
+  the wallet transaction, updates the order status to <code>APPROVED</code> (then immediately
+  auto-transitions to <code>DEPOSIT_HELD</code>), and notifies the renter.</p>
+
+  <h4>D. Handover — Digital Handshake #1</h4>
+
+  <p>Once the deposit is held, both parties can access the Digital Handshake panel on the order
+  detail page. The panel shows two status indicators: one for the renter's confirmation and one
+  for the owner's confirmation. Both need to confirm for the handshake to complete.</p>
+
+  <p>Each party uploads photos of the item's current condition (this is mandatory — the upload
+  button is prominent and the confirm button stays disabled until at least one photo is uploaded).
+  The renter, specifically, also needs to complete a digital signature. The signature component
+  shows the full rental agreement text above a canvas element where they draw their signature
+  with a mouse or finger. When they confirm the signature, the canvas data URL is captured and
+  stored.</p>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-14: Digital Handshake — Signature Capture Canvas<br>
+  Screenshot of the SignatureCapture component showing the agreement text panel above, the canvas area below with "ลากเพื่อเซ็นชื่อ" placeholder text, and the Clear / Confirm buttons]</div>
+  <p class="fig-caption">Figure 3-14: Digital Handshake — Signature Capture Canvas</p>
+
+  <p>When both parties have confirmed, the system transitions the order to
+  <code>HANDED_OVER</code> and then immediately to <code>ACTIVE</code>, records the actual
+  pickup timestamp, and starts the rental countdown.</p>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-13: Rental Order Detail Page<br>
+  Screenshot of the rental order detail page showing the status badge, rental period card, financial summary card, parties section, and the Digital Handshake panel with upload and signature components]</div>
+  <p class="fig-caption">Figure 3-13: Rental Order Detail Page</p>
+
+  <h4>E. Active Rental Period</h4>
+
+  <p>During the <code>ACTIVE</code> state, the order detail page shows a countdown to the return
+  deadline. If the return date is within 24 hours, the banner turns amber. If it has passed, it
+  turns red with an overdue warning. The cron job runs once per day and checks all active orders.
+  Any order where <code>rentalEndDate &lt; now</code> is automatically transitioned to
+  <code>OVERDUE</code> status, and a late fee is added to the order daily.</p>
+
+  <p>If the item was listed as renewable (<code>isRenewable: true</code>), the renter can
+  request an extension from the order page. This sends a request to the owner, who approves
+  or rejects. If approved, the end date is extended and the additional fees are calculated
+  and charged.</p>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-9: Rental Dashboard — Renter View<br>
+  Screenshot of the /dashboard/rentals page showing the "รายการที่ฉันเช่า" tab with active rental cards showing item image, status badge, days remaining, and financial summary]</div>
+  <p class="fig-caption">Figure 3-9: Rental Dashboard — Renter View</p>
+
+  <div class="page-num">31</div>
+</div>
+
+<div class="page">
+  <h4>F. Return — Digital Handshake #2</h4>
+
+  <p>When the renter is ready to return the item, they click "นัดคืนของ" on the order page. This
+  schedules a return meetup (same campus location picker as pickup) and moves the order to
+  <code>RETURN_SCHEDULED</code>.</p>
+
+  <p>At the return meetup, the return handshake panel becomes active. This works differently from
+  the pickup handshake: both parties still upload photos, but this time it's the owner who
+  does the condition assessment. The owner sees a condition selector (Same / Minor Damage /
+  Major Damage / Lost) and if damage is found, an input for the damage fee amount. The owner
+  then signs a digital return receipt using the same signature canvas. Once both parties
+  confirm, the order moves to <code>RETURNED</code>.</p>
+
+  <h4>G. Settlement</h4>
+
+  <p>The settlement calculation runs automatically when the order reaches <code>RETURNED</code>
+  status. The logic is:</p>
+  <ul>
+    <li>Rental fee (already held in escrow) is released to the owner, minus the 5% platform fee.</li>
+    <li>Late fees (if any accumulated during OVERDUE periods) are added to the owner's payout.</li>
+    <li>Damage fee (if the owner set one at return) is deducted from the renter's deposit refund.</li>
+    <li>Remaining deposit is refunded to the renter's wallet.</li>
+    <li>If the condition is LOST, the full deposit is forfeited to the owner.</li>
+  </ul>
+  <p>The status moves to <code>COMPLETED</code> or <code>COMPLETED_WITH_DEDUCTION</code>
+  depending on whether any deductions were made. All wallet movements are recorded as
+  individual <code>WalletTransaction</code> entries with a descriptive type field.</p>
+
+  <h4>H. PDF Receipts</h4>
+
+  <p>After the order reaches <code>ACTIVE</code> status, both parties can access the rental
+  contract document at <code>/rental/orders/[id]/receipt?type=contract</code>. After
+  <code>COMPLETED</code>, the return receipt is also available at
+  <code>?type=return</code>. Both pages are print-optimized HTML with
+  <code>@media print</code> CSS that hides the browser navigation and the "Print / Save PDF"
+  button, producing a clean A4 document. The page auto-triggers <code>window.print()</code>
+  on load after a short delay to allow fonts and content to render.</p>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-15: Rental Contract PDF Preview<br>
+  Screenshot of the printed contract page showing PSU Store header, party names (owner and renter), item description, rental period dates, financial summary table, agreement terms, and signature line]</div>
+  <p class="fig-caption">Figure 3-15: Rental Contract PDF Preview</p>
+
+  <div class="fig-placeholder">[PLACEHOLDER FOR FIGURE 3-16: Return Receipt PDF Preview<br>
+  Screenshot of the return receipt showing the same layout as the contract but with return condition field, damage/refund amounts, and the return date + owner signature line]</div>
+  <p class="fig-caption">Figure 3-16: Return Receipt PDF Preview</p>
+
+  <h4>I. Dispute Flow</h4>
+
+  <p>Either party can open a dispute from the order page if they disagree with the other party's
+  assessment. Opening a dispute freezes the escrow and notifies the admin. The admin can then
+  access a full evidence review page showing all photos from both handshakes, the signatures,
+  the status history timeline, and any messages. Based on this, the admin makes a ruling and
+  manually triggers the appropriate settlement calculation. The dispute mechanism is designed
+  to be a last resort — the Digital Handshake evidence usually makes disputes straightforward
+  to resolve.</p>
+
+  <div class="page-num">33</div>
+</div>

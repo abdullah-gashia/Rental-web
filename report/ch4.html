@@ -1,0 +1,340 @@
+<!-- CHAPTER 4: Results and Conclusion -->
+
+<div class="page">
+  <h1>Chapter 4: Results and Conclusion</h1>
+
+  <h2>4.1 Results</h2>
+
+  <p>By the end of Project I, the Equipment Rental System prototype is working end-to-end on
+  a local development environment. This section goes through the main functional areas and
+  describes what's working, what still needs work, and what preliminary testing showed.</p>
+
+  <h3>User Registration and KYC</h3>
+
+  <p>User registration works with email/password. The KYC flow lets users upload their PSU
+  student ID card and a selfie, and admins can review and approve or reject submissions from
+  the admin panel. The approval system uses a status field on the User record
+  (<code>verificationStatus</code>: PENDING / APPROVED / REJECTED) and sends the user a
+  notification when the decision is made. Users who haven't been KYC-approved can still
+  browse the marketplace, but the server action for creating a listing checks their status
+  and returns an "UNVERIFIED" error if they try to post before approval.</p>
+
+  <p>One thing I'm not fully satisfied with in Project I is that the KYC process is entirely
+  manual — an admin has to look at each submission individually. For Project II, I want to
+  add at least a basic automated check (like verifying that the student ID matches a PSU email
+  domain pattern) to reduce the admin workload.</p>
+
+  <h3>Role-Based Dashboards</h3>
+
+  <p>There are three distinct dashboard contexts. The renter dashboard
+  (<code>/dashboard/rentals</code>) shows all the rentals the user has made, organized by
+  status with tabs. The owner dashboard shows all the items they've listed and all incoming
+  rental requests. The admin panel (<code>/admin/*</code>) has separate pages for KYC review,
+  item moderation, rental order monitoring, and user management. The admin also has a dedicated
+  rental analytics page with seven KPI cards: total rental items, total orders, active orders,
+  overdue orders, pending approvals, total deposits held in escrow, and platform revenue.</p>
+
+  <h3>Listing and Browsing</h3>
+
+  <p>Equipment listing works with photo upload, flexible rate types (daily/monthly/yearly),
+  deposit configuration, and rental terms. The homepage shows a recommendation feed that
+  scores items based on the user's interaction history (category matches, price range
+  preferences) with a time-decay weighting so recent interactions matter more than old ones.
+  For new users with no history, it falls back to showing trending items (most-viewed in the
+  last 7 days). Category filtering and keyword search both work as expected.</p>
+
+  <p>One display bug that was present earlier and has been fixed: rental items were showing
+  ฿0/วัน on the item cards because the price field was set to 0 for RENT listings (the actual
+  rate is in <code>dailyRate</code> / <code>rentalRate</code>). The fix was updating the card
+  component to read <code>rentalRate ?? dailyRate</code> for RENT items and display the
+  correct rate suffix based on the <code>rentalRateType</code>.</p>
+
+  <h3>Rental Checkout Flow</h3>
+
+  <p>The four-step checkout wizard works end-to-end. The date selection step shows a live
+  price breakdown that updates as the user picks different dates. The meetup scheduling step
+  shows preset campus locations with descriptions, and the date for the meetup is
+  automatically locked to the rental start date — users only pick the time, which prevents
+  scheduling a pickup after the rental has already started. The payment step shows the wallet
+  balance and blocks submission if insufficient. The agreement step generates the contract
+  text automatically from the booking details.</p>
+
+  <h3>Escrow Deposit Handling</h3>
+
+  <p>The wallet system works correctly for the main flows. When an owner approves a request,
+  the system atomically debits the renter's wallet and creates a transaction record. When
+  the rental completes, the settlement calculation correctly distributes the rental fee to
+  the owner (minus platform fee), deducts any damage or late fees from the deposit, and
+  refunds the remainder to the renter. All amounts are visible on the order detail page and
+  in the wallet transaction history.</p>
+
+  <p>I tested a few edge cases: what happens if two renters request the same item at the same
+  time, and whether the wallet debit could overdraft. The concurrent request case is handled
+  by the owner needing to explicitly approve each request — only one can be approved while
+  the item is in a single rental period. The overdraft protection uses a Prisma transaction
+  that checks the current balance before decrementing, so it's safe against race conditions.</p>
+
+  <div class="page-num">41</div>
+</div>
+
+<div class="page">
+  <h3>Digital Handshake Implementation</h3>
+
+  <p>Both pickup and return handshakes work. The photo upload component lets users select
+  multiple images, uploads them via the <code>/api/upload</code> route handler, and shows
+  thumbnails immediately after upload. The signature canvas uses the browser's canvas API
+  with device pixel ratio scaling for retina displays. Mouse and touch events both work for
+  drawing, though the touch experience on mobile is a bit rough — I still need to add more
+  responsive sizing for smaller screens.</p>
+
+  <p>The signature captures as a base64 PNG data URL and is stored directly in the database.
+  The captured signature is displayed as a preview image after signing, with a "Change"
+  option to re-sign if needed. This whole flow took longer to get right than I expected,
+  especially the canvas scaling for retina displays — it took a while to figure out that
+  the canvas needs to be scaled by <code>devicePixelRatio</code> internally while the CSS
+  dimensions stay at display size.</p>
+
+  <h3>PDF Receipts</h3>
+
+  <p>Both the rental contract and the return receipt generate correctly. The print-optimized
+  HTML approach produces clean A4 documents with Thai text rendering perfectly (since it uses
+  the browser's native font stack). The document shows all the required information: parties,
+  item details, rental period, financial summary, terms, and signature blocks. The auto-print
+  trigger opens the print dialog on page load after 800ms, giving content time to render fully.</p>
+
+  <h3>Admin Tools</h3>
+
+  <p>The admin panel includes KYC review (approve/reject with optional note), item moderation
+  (approve/reject/remove with reason), rental order monitoring with status filters, and a
+  user management page with ban/unban capability. The admin rental management page shows
+  the seven KPI cards mentioned earlier, plus a table of the 20 most recent orders with
+  key details. The dispute review functionality is present but minimal at this stage —
+  admin can see the dispute status and evidence, but the resolution workflow is not yet
+  fully built out.</p>
+
+  <h3>Data Integrity</h3>
+
+  <p>All critical wallet operations use Prisma transactions to ensure atomicity. The status
+  history is append-only. Items have a soft-delete mechanism with a 24-hour grace period —
+  when a seller marks an item for deletion, it stays visible on the marketplace for 24 hours
+  with a warning banner (so active buyers aren't blindsided) and then disappears. Sellers
+  can cancel the deletion within the grace period.</p>
+
+  <h3>Performance</h3>
+
+  <p>On a local development machine, page loads are fast — the homepage typically renders
+  in under 500ms including the recommendation query. The recommendation algorithm runs a
+  few database queries sequentially and then does in-memory scoring, which is fine for the
+  expected scale. For a production deployment handling hundreds of simultaneous users,
+  the recommendation query would need caching, but there's already a 5-minute cached
+  wrapper in place for that.</p>
+
+  <div class="page-num">43</div>
+</div>
+
+<div class="page">
+  <h2>4.2 Conclusion</h2>
+
+  <p>This project went through five main phases, and each one taught me something different.</p>
+
+  <p><span class="bold">Phase 1: Requirement Analysis.</span> The survey of PSU students
+  confirmed the problem was real — most students had at some point needed equipment they
+  didn't own, and most had had a bad experience with informal borrowing. The most common
+  complaint was that borrowed items came back late (or not at all) with no recourse.
+  This shaped the emphasis on the deposit escrow and the Digital Handshake evidence system.
+  If I hadn't done the survey, I might have focused more on the discovery and listing
+  features and less on the accountability mechanisms.</p>
+
+  <p><span class="bold">Phase 2: System Design.</span> Designing the rental lifecycle state
+  machine was the most intellectually challenging part of this phase. There are a lot of
+  edge cases: what if the owner never responds? What if the item gets lost? What if one
+  party confirms the handshake and the other doesn't? Working through all these scenarios
+  before writing code saved a lot of debugging time later. I drew the state diagram probably
+  four or five times before I was happy with it.</p>
+
+  <p><span class="bold">Phase 3: UI/UX Design and Frontend.</span> I started with Figma
+  wireframes for the main flows and built the frontend from there. The checkout wizard
+  and the Digital Handshake screens were the most effort-intensive UI components. The
+  checkout wizard needed to feel like a smooth multi-step flow rather than four separate
+  pages, and the handshake needed to handle both photo upload and signature capture in one
+  coherent experience. The signature canvas component took about two full days to get right,
+  but I'm pretty happy with how it turned out.</p>
+
+  <p><span class="bold">Phase 4: Backend and Database.</span> The server actions architecture
+  of Next.js 14 made the backend cleaner than I expected. Writing the escrow settlement logic
+  was tricky because I had to think carefully about what happens when multiple things go wrong
+  at the same time — damage fees, late fees, and a potential dispute all in the same order.
+  Getting the database transactions right (to avoid race conditions in wallet operations)
+  was something I had to research and test carefully.</p>
+
+  <p><span class="bold">Phase 5: Testing and Iteration.</span> The user testing session
+  identified several UI issues I hadn't noticed during development, mostly around clarity
+  of the status terminology (Thai terms for the rental states needed to be clearer)
+  and the mobile experience for the signature canvas. Most of these were fixed before
+  the final report, but a few are noted as known issues for Project II.</p>
+
+  <p>Overall, I think Project I achieved its main goal: demonstrating that a peer-to-peer
+  rental system with proper accountability mechanisms is technically feasible within a
+  university context. The core rental lifecycle works, the escrow system protects both
+  parties, and the Digital Handshake creates the evidence record that makes dispute
+  resolution possible. What's left for Project II is mostly making it production-ready —
+  real payments, a mobile app, better performance, and proper deployment.</p>
+
+  <h2>4.3 Problems and Obstacles</h2>
+
+  <p>Honestly, there were quite a few moments where I got stuck. Here are the ones that
+  cost the most time:</p>
+
+  <p><span class="bold">Understanding Prisma relations and JSON fields.</span> Prisma is
+  mostly intuitive, but I ran into a specific problem with JSON fields: when I stored the
+  status history as a JSON-stringified array, Prisma returned it as a string, not a
+  parsed array. This caused a runtime crash ("statusHistory.map is not a function") that
+  took a while to track down. The fix was to always pass raw JavaScript arrays to Prisma
+  for JSON fields and add a safe parse utility function for reading legacy rows.</p>
+
+  <p><span class="bold">Race conditions in wallet operations.</span> Early on, I wrote
+  wallet debit/credit as two separate database operations. During testing, I simulated
+  two simultaneous approval actions and found that both could read the same wallet balance
+  and both succeed — resulting in an overdraft. Wrapping everything in
+  <code>prisma.$transaction</code> fixed it, but it required refactoring several server
+  actions.</p>
+
+  <p><span class="bold">Canvas scaling for retina displays.</span> The signature canvas
+  looked blurry on high-DPI screens. The fix (scaling the canvas internal resolution by
+  <code>devicePixelRatio</code> while keeping CSS dimensions at display size) is well
+  documented online, but figuring out that this was the problem took longer than it should
+  have because the blurriness was subtle on my development monitor.</p>
+
+  <p><span class="bold">PDF generation with Thai text.</span> As described in Section 3.4.6,
+  getting <code>@react-pdf/renderer</code> to handle Thai correctly in a Next.js server
+  environment was too difficult for the time available. Switching to the browser print approach
+  was the right call, but it cost about two days of experimentation first.</p>
+
+  <p><span class="bold">Zod v4 API changes.</span> The project uses Zod for validation, and
+  I upgraded to version 4 partway through development. Several API methods changed between v3
+  and v4 (notably <code>.errors</code> became <code>.issues</code> and the
+  <code>errorMap</code> parameter syntax changed). This caused TypeScript errors that weren't
+  immediately obvious because the types still seemed to match.</p>
+
+  <p><span class="bold">Time management.</span> Exam weeks in October and November compressed
+  the development schedule significantly. A few features that were planned for earlier ended
+  up being pushed to the last few weeks. In hindsight, I should have started the backend
+  work earlier and not assumed that the frontend would take as long as it did.</p>
+
+  <div class="page-num">48</div>
+</div>
+
+<div class="page">
+  <h2>4.4 User Testing and Case Study</h2>
+
+  <p>A small user test was conducted with five PSU students during the final weeks of the
+  semester. Three students acted as renters, and two acted as both owners (listing items)
+  and renters for the purpose of the test.</p>
+
+  <p class="bold">Table 4-1: User Testing Results Summary</p>
+  <table style="font-size:11.5pt;">
+    <tr><th>Task</th><th>Completion Rate</th><th>Average Time</th><th>Common Issues</th></tr>
+    <tr><td>Register and log in</td><td>5/5 (100%)</td><td>2 min</td><td>None significant</td></tr>
+    <tr><td>Submit KYC documents</td><td>5/5 (100%)</td><td>3 min</td><td>Camera permission on some browsers</td></tr>
+    <tr><td>List an item for rental</td><td>4/5 (80%)</td><td>5 min</td><td>One tester confused by "rate type" selector</td></tr>
+    <tr><td>Find and rent an item (4-step wizard)</td><td>5/5 (100%)</td><td>4 min</td><td>One tester didn't notice the meetup time was locked to start date</td></tr>
+    <tr><td>Complete pickup handshake (desktop)</td><td>5/5 (100%)</td><td>3 min</td><td>None</td></tr>
+    <tr><td>Complete pickup handshake (mobile)</td><td>3/5 (60%)</td><td>6 min</td><td>Signature canvas too small; drawing was difficult</td></tr>
+    <tr><td>Complete return handshake</td><td>5/5 (100%)</td><td>4 min</td><td>None significant</td></tr>
+    <tr><td>Download rental contract PDF</td><td>5/5 (100%)</td><td>1 min</td><td>One tester expected an automatic email rather than a download link</td></tr>
+  </table>
+
+  <p>Overall feedback was positive. All five testers said the escrow concept made them feel
+  more comfortable doing rentals with people they don't know well. The most common suggestion
+  was adding in-app chat between renter and owner — currently they need to coordinate via
+  LINE or WhatsApp outside the platform, which undermines the evidence record.</p>
+
+  <h3>Case Study: DSLR Camera Weekend Rental</h3>
+
+  <p>Student A (Media Studies, Year 3) needed a DSLR camera for a weekend photography
+  assignment. She found a Canon EOS 250D listed by Student B (Engineering, Year 4) on
+  the platform at ฿200/วัน with a ฿1,500 deposit and a maximum rental of 7 days.
+  She went through the checkout wizard and selected Friday to Sunday (3 days, so
+  ฿600 rental fee + ฿30 platform fee + ฿1,500 deposit = ฿2,130 total). She had
+  enough wallet balance from a previous top-up, so she submitted the request.</p>
+
+  <p>Student B got a notification on his phone, reviewed the request on Friday morning,
+  and approved it. The ฿2,130 was immediately debited from Student A's wallet. They
+  agreed to meet at the campus library at 10:00 AM. At the meetup, both students opened
+  the order detail page on their phones. Student B took photos of the camera from multiple
+  angles showing it was in good condition. Student A also took photos. Student A then
+  opened the signature panel, read through the rental agreement, and signed her name on
+  the canvas. Both clicked confirm and the order moved to ACTIVE.</p>
+
+  <p>Student A used the camera over the weekend. On Sunday evening she initiated the return
+  from the order page, and they agreed to meet again at the library on Monday morning.
+  Student B inspected the camera — no damage, same condition as at pickup. He selected
+  "สภาพเดิม" (Same Condition), signed the return receipt, and both confirmed the return.
+  The system automatically settled: ฿570 (rental fee minus 5% platform fee) was credited
+  to Student B's wallet, and ฿1,500 deposit was fully refunded to Student A. Both students
+  gave each other five-star ratings. Student A downloaded the rental contract and return
+  receipt PDFs for her own records.</p>
+
+  <p>This case worked exactly as designed. The process felt formal enough to be accountable
+  without being so bureaucratic that it was annoying. Both students said they'd use the
+  platform again.</p>
+
+  <div class="page-num">49</div>
+</div>
+
+<div class="page">
+  <h2>4.5 Recommendations and Future Work</h2>
+
+  <p>Project II will focus on making the system production-ready and adding the features that
+  Project I proved were needed but didn't have time for. Here's what's planned:</p>
+
+  <ol>
+    <li style="margin-bottom:8pt;">
+      <span class="bold">Real Payment Gateway Integration.</span> The current wallet system
+      uses mock top-ups. Project II will integrate PromptPay QR code generation and possibly
+      a credit/debit card option via Stripe or Omise. This is the most important missing piece
+      for a real deployment.
+    </li>
+    <li style="margin-bottom:8pt;">
+      <span class="bold">Native Mobile Application.</span> The signature canvas and photo
+      upload experiences are suboptimal on mobile browsers. A React Native app (sharing as
+      much logic as possible with the web app) would give much better touch handling and
+      access to the camera directly.
+    </li>
+    <li style="margin-bottom:8pt;">
+      <span class="bold">In-App Chat.</span> This was the most requested feature from user
+      testing. A real-time chat between renter and owner (with message history stored and
+      accessible to admins for disputes) would eliminate the need to coordinate outside the
+      platform.
+    </li>
+    <li style="margin-bottom:8pt;">
+      <span class="bold">AI-Powered Damage Detection.</span> Comparing the pickup photos and
+      return photos using an image similarity or damage detection model would give the admin
+      an objective starting point for disputes and could potentially automate damage fee
+      suggestions.
+    </li>
+    <li style="margin-bottom:8pt;">
+      <span class="bold">PSU SSO Integration.</span> Connecting to the official PSU
+      Single Sign-On would allow automatic KYC approval for current students and staff —
+      no manual admin review needed, and the institutional guarantee would be stronger.
+    </li>
+    <li style="margin-bottom:8pt;">
+      <span class="bold">Multi-Campus Expansion.</span> Once the system is stable at Phuket
+      Campus, it could be opened to Hat Yai, Surat Thani, and other PSU campuses. Each campus
+      would have its own meetup location presets and community but share the same platform.
+    </li>
+    <li style="margin-bottom:8pt;">
+      <span class="bold">Production Deployment with Monitoring.</span> Deploy to Vercel with
+      a production PostgreSQL database (Supabase or PlanetScale), error tracking (Sentry),
+      and logging. Set up proper environment variable management and automated database backups.
+    </li>
+    <li>
+      <span class="bold">Advanced Admin Analytics.</span> The current admin panel has basic
+      KPIs. A more detailed analytics dashboard — rental trends by category, seasonal
+      demand patterns, top-rated owners, dispute frequency — would help platform administrators
+      make better decisions.
+    </li>
+  </ol>
+
+  <div class="page-num">51</div>
+</div>

@@ -104,6 +104,13 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
   const [price,         setPrice]         = useState("");
   const [location,      setLocation]      = useState("");
   const [negotiable,    setNegotiable]    = useState(false);
+  // Rental-specific fields
+  const [rateType,        setRateType]        = useState<"DAILY" | "MONTHLY" | "YEARLY">("DAILY");
+  const [securityDeposit, setSecurityDeposit] = useState("");
+  const [lateFeePerDay,   setLateFeePerDay]   = useState("");
+  const [minRentalDays,   setMinRentalDays]   = useState("1");
+  const [maxRentalDays,   setMaxRentalDays]   = useState("30");
+  const [rentalTerms,     setRentalTerms]     = useState("");
   const [shippable,     setShippable]     = useState(false);
   const [allowShipping, setAllowShipping] = useState(true);
   const [allowMeetup,   setAllowMeetup]   = useState(true);
@@ -127,6 +134,9 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
     setAllowShipping(true); setAllowMeetup(true); setAllowCOD(true);
     setContact("");
     setLoading(false);
+    setRateType("DAILY");
+    setSecurityDeposit(""); setLateFeePerDay("");
+    setMinRentalDays("1"); setMaxRentalDays("30"); setRentalTerms("");
     setPendingImages((prev) => {
       prev.forEach((p) => URL.revokeObjectURL(p.previewUrl));
       return [];
@@ -193,8 +203,24 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
 
   const handleSubmit = async () => {
     if (!name.trim()) { showToast(t("post_error_name")); setStep(2); return; }
+
+    const isRent = adType === "rent";
+
+    // Validate price / dailyRate
     const parsedPrice = Number(price);
-    if (!price || isNaN(parsedPrice) || parsedPrice <= 0) { showToast(t("post_error_price")); return; }
+    if (!price || isNaN(parsedPrice) || parsedPrice <= 0) {
+      showToast(isRent ? "⚠️ กรุณาระบุค่าเช่าต่อวัน" : t("post_error_price"));
+      return;
+    }
+
+    // Rental-specific validation
+    if (isRent) {
+      const parsedDeposit = Number(securityDeposit);
+      if (!securityDeposit || isNaN(parsedDeposit) || parsedDeposit < 0) {
+        showToast("⚠️ กรุณาระบุเงินมัดจำ (0 ขึ้นไป)"); return;
+      }
+    }
+
     if (!allowShipping && !allowMeetup) { showToast("⚠️ กรุณาเลือกวิธีจัดส่งอย่างน้อย 1 วิธี"); return; }
 
     setLoading(true);
@@ -202,12 +228,28 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
 
     const result = await createItem({
       title: name.trim(), description: desc.trim() || "-",
-      price: parsedPrice, listingType: adType === "sell" ? "SELL" : "RENT",
+      price: isRent ? 0 : parsedPrice,
+      listingType: isRent ? "RENT" : "SELL",
       condition: condition as "LIKE_NEW" | "GOOD" | "FAIR" | "NEEDS_REPAIR",
       categorySlug: category, location: location || undefined,
-      negotiable, shippable,
+      negotiable: isRent ? false : negotiable,
+      shippable,
       allowShipping, allowMeetup, allowCOD: allowMeetup ? allowCOD : false,
       contact: contact || undefined, imageUrls,
+      // Rental fields (only when RENT)
+      ...(isRent ? {
+        rentalRateType:  rateType,
+        rentalRate:      parsedPrice,
+        // Compute daily equivalent for backend calculations
+        dailyRate: rateType === "DAILY"   ? parsedPrice
+                 : rateType === "MONTHLY" ? Math.round((parsedPrice / 30) * 100) / 100
+                 : Math.round((parsedPrice / 365) * 100) / 100,
+        securityDeposit: Number(securityDeposit) || 0,
+        lateFeePerDay:   Number(lateFeePerDay)   || 0,
+        minRentalDays:   Math.max(1, Number(minRentalDays) || 1),
+        maxRentalDays:   Math.max(1, Number(maxRentalDays) || 30),
+        rentalTerms:     rentalTerms.trim() || undefined,
+      } : {}),
     });
 
     setLoading(false);
@@ -455,25 +497,160 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
       {/* ── Step 3 ─────────────────────────────────────── */}
       {step === 3 && (
         <div className="fade-up">
-          <div className="space-y-3 mb-4">
-            <div>
-              <label className="block text-[11px] font-bold text-[#777] uppercase tracking-widest mb-1.5">{t("post_price_label")}</label>
-              <div className="relative">
-                <input
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  type="number" min="0"
-                  placeholder={t("post_price_placeholder")}
-                  className="w-full border border-[#e5e3de] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+
+          {/* ── SELL: price + negotiable ─── */}
+          {adType === "sell" && (
+            <div className="space-y-3 mb-4">
+              <div>
+                <label className="block text-[11px] font-bold text-[#777] uppercase tracking-widest mb-1.5">{t("post_price_label")}</label>
+                <div className="relative">
+                  <input
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    type="number" min="0"
+                    placeholder={t("post_price_placeholder")}
+                    className="w-full border border-[#e5e3de] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                  />
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[#9a9590]">฿</span>
+                </div>
+              </div>
+              <label className="flex items-center gap-2.5 cursor-pointer text-sm text-[#555] bg-[#faf9f7] border border-[#e5e3de] rounded-xl px-4 py-2.5 hover:bg-[#f0ede7] transition">
+                <input type="checkbox" checked={negotiable} onChange={(e) => setNegotiable(e.target.checked)} className="rounded w-4 h-4 accent-[#e8500a]" />
+                <span className="font-medium">{t("post_negotiable")}</span>
+              </label>
+            </div>
+          )}
+
+          {/* ── RENT: rental-specific fields ─── */}
+          {adType === "rent" && (
+            <div className="space-y-3 mb-4">
+              <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-2.5 mb-1">
+                <p className="text-[11px] font-bold text-blue-700 uppercase tracking-widest">ตั้งค่าการเช่า</p>
+              </div>
+
+              {/* Rate + rate type */}
+              <div>
+                <label className="block text-[11px] font-bold text-[#777] uppercase tracking-widest mb-1.5">
+                  ค่าเช่า <span className="text-red-500">*</span>
+                </label>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <input
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      type="number" min="1"
+                      placeholder={rateType === "DAILY" ? "เช่น 80" : rateType === "MONTHLY" ? "เช่น 500" : "เช่น 6000"}
+                      className="w-full border border-[#e5e3de] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                    />
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[#9a9590]">฿</span>
+                  </div>
+                  <div className="flex border border-[#e5e3de] rounded-xl overflow-hidden flex-shrink-0">
+                    {(["DAILY", "MONTHLY", "YEARLY"] as const).map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => setRateType(t)}
+                        className={`px-3 py-2.5 text-xs font-semibold transition ${
+                          rateType === t
+                            ? "bg-[#111] text-white"
+                            : "text-[#555] hover:bg-[#f0ede7]"
+                        }`}
+                      >
+                        {t === "DAILY" ? "/วัน" : t === "MONTHLY" ? "/เดือน" : "/ปี"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {/* Rate equivalents preview */}
+                {price && Number(price) > 0 && (() => {
+                  const n = Number(price);
+                  const perDay = rateType === "DAILY" ? n : rateType === "MONTHLY" ? n / 30 : n / 365;
+                  const perMonth = perDay * 30;
+                  const perYear = perDay * 365;
+                  return (
+                    <p className="text-[11px] text-blue-600 mt-1.5 bg-blue-50 rounded-lg px-2.5 py-1.5">
+                      💡 เทียบเท่า: ฿{perDay.toFixed(1)}/วัน · ฿{Math.round(perMonth)}/เดือน · ฿{Math.round(perYear)}/ปี
+                    </p>
+                  );
+                })()}
+              </div>
+
+              {/* Security deposit */}
+              <div>
+                <label className="block text-[11px] font-bold text-[#777] uppercase tracking-widest mb-1.5">
+                  เงินมัดจำ <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    value={securityDeposit}
+                    onChange={(e) => setSecurityDeposit(e.target.value)}
+                    type="number" min="0"
+                    placeholder="เช่น 500"
+                    className="w-full border border-[#e5e3de] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                  />
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[#9a9590]">฿</span>
+                </div>
+                <p className="text-[11px] text-[#aaa] mt-1">คืนให้ผู้เช่าหลังตรวจสอบสภาพสินค้า</p>
+              </div>
+
+              {/* Late fee */}
+              <div>
+                <label className="block text-[11px] font-bold text-[#777] uppercase tracking-widest mb-1.5">
+                  ค่าปรับคืนช้า (ต่อวัน)
+                </label>
+                <div className="relative">
+                  <input
+                    value={lateFeePerDay}
+                    onChange={(e) => setLateFeePerDay(e.target.value)}
+                    type="number" min="0"
+                    placeholder="0 = ไม่คิดค่าปรับ"
+                    className="w-full border border-[#e5e3de] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                  />
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[#9a9590]">฿</span>
+                </div>
+              </div>
+
+              {/* Min / Max rental days */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#777] uppercase tracking-widest mb-1.5">เช่าขั้นต่ำ</label>
+                  <div className="relative">
+                    <input
+                      value={minRentalDays}
+                      onChange={(e) => setMinRentalDays(e.target.value)}
+                      type="number" min="1" max="365"
+                      className="w-full border border-[#e5e3de] rounded-xl pl-4 pr-12 py-2.5 text-sm outline-none transition focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                    />
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[#9a9590]">วัน</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-[#777] uppercase tracking-widest mb-1.5">เช่าสูงสุด</label>
+                  <div className="relative">
+                    <input
+                      value={maxRentalDays}
+                      onChange={(e) => setMaxRentalDays(e.target.value)}
+                      type="number" min="1" max="365"
+                      className="w-full border border-[#e5e3de] rounded-xl pl-4 pr-12 py-2.5 text-sm outline-none transition focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                    />
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[#9a9590]">วัน</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Rental terms */}
+              <div>
+                <label className="block text-[11px] font-bold text-[#777] uppercase tracking-widest mb-1.5">เงื่อนไขการเช่า (ไม่บังคับ)</label>
+                <textarea
+                  value={rentalTerms}
+                  onChange={(e) => setRentalTerms(e.target.value)}
+                  rows={2}
+                  placeholder={'เช่น "ห้ามแกะชิ้นส่วน", "คืนพร้อมกล่องและอุปกรณ์ครบ"'}
+                  className="w-full border border-[#e5e3de] rounded-xl px-4 py-2.5 text-sm resize-none outline-none transition focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                 />
-                <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[#9a9590]">฿</span>
               </div>
             </div>
-            <label className="flex items-center gap-2.5 cursor-pointer text-sm text-[#555] bg-[#faf9f7] border border-[#e5e3de] rounded-xl px-4 py-2.5 hover:bg-[#f0ede7] transition">
-              <input type="checkbox" checked={negotiable} onChange={(e) => setNegotiable(e.target.checked)} className="rounded w-4 h-4 accent-[#e8500a]" />
-              <span className="font-medium">{t("post_negotiable")}</span>
-            </label>
-          </div>
+          )}
 
           <div className="space-y-3 mb-4">
             <div>
@@ -619,7 +796,9 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-[#111] truncate">{name}</p>
-                  <p className="text-base font-extrabold text-[#e8500a]">{price ? `฿${Number(price).toLocaleString()}` : "—"}</p>
+                  <p className="text-base font-extrabold text-[#e8500a]">
+                    {price ? `฿${Number(price).toLocaleString()}${adType === "rent" ? "/วัน" : ""}` : "—"}
+                  </p>
                   {location && <p className="text-xs text-[#9a9590]">📍 {location}</p>}
                 </div>
               </div>
