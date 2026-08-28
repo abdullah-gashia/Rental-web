@@ -6,22 +6,28 @@ interface StatsBarProps {
   totalItems: number;
 }
 
+/**
+ * Dense metadata strip — hairline-divided, not three floating cards.
+ * Numbers are monospace so they line up as data.
+ */
 export default function StatsBar({ totalItems }: StatsBarProps) {
   const t = useLocaleStore((s) => s.t);
 
+  const stats = [
+    { value: totalItems.toLocaleString(), label: t("stat_listings") },
+    { value: "347",                       label: t("stat_sellers")  },
+    { value: "98%",                       label: t("stat_sat")      },
+  ];
+
   return (
-    <div className="grid grid-cols-3 gap-3 mb-12">
-      <div className="bg-white border border-[#e5e3de] rounded-2xl p-4 text-center">
-        <p className="text-2xl font-bold">{totalItems.toLocaleString()}</p>
-        <p className="text-xs text-[#9a9590] mt-0.5">{t("stat_listings")}</p>
-      </div>
-      <div className="bg-white border border-[#e5e3de] rounded-2xl p-4 text-center">
-        <p className="text-2xl font-bold">347</p>
-        <p className="text-xs text-[#9a9590] mt-0.5">{t("stat_sellers")}</p>
-      </div>
-      <div className="bg-white border border-[#e5e3de] rounded-2xl p-4 text-center">
-        <p className="text-2xl font-bold text-[#e8500a]">98%</p>
-        <p className="text-xs text-[#9a9590] mt-0.5">{t("stat_sat")}</p>
+    <div className="border-y border-[var(--hp-border)] mb-12">
+      <div className="grid grid-cols-3 divide-x divide-[var(--hp-border)]">
+        {stats.map((s, i) => (
+          <div key={s.label} className={`hp-stat py-4 ${i === 0 ? "pr-5" : "px-5"}`}>
+            <p className="hp-stat-value">{s.value}</p>
+            <p className="hp-stat-label">{s.label}</p>
+          </div>
+        ))}
       </div>
     </div>
   );

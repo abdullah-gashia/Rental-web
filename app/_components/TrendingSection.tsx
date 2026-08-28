@@ -24,9 +24,9 @@ export default function TrendingSection({ items, onItemClick }: Props) {
       if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 4) {
         el.scrollTo({ left: 0, behavior: "smooth" });
       } else {
-        el.scrollBy({ left: 280, behavior: "smooth" });
+        el.scrollBy({ left: 220, behavior: "smooth" });
       }
-    }, 3000);
+    }, 4000);
   }, []);
 
   useEffect(() => {
@@ -36,68 +36,54 @@ export default function TrendingSection({ items, onItemClick }: Props) {
 
   if (items.length === 0) return null;
 
+  function scrollBy(delta: number) {
+    scrollRef.current?.scrollBy({ left: delta, behavior: "smooth" });
+  }
+
   return (
     <section className="mb-12">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold tracking-tight">กำลังมาแรงในขณะนี้</h2>
-        <span className="flex items-center gap-1.5 text-xs font-medium text-[#e8500a]">
-          <span className="w-2 h-2 bg-[#e8500a] rounded-full animate-pulse" />
-          Live
-        </span>
+      <div className="border-t border-[var(--hp-border)] pt-3.5 mb-4 flex items-end justify-between gap-4">
+        <div>
+          <p className="hp-eyebrow mb-1.5 flex items-center gap-1.5">
+            <span className="hp-live-dot" />
+            อัปเดตแบบเรียลไทม์
+          </p>
+          <h2 className="hp-sec-title">กำลังมาแรงในขณะนี้</h2>
+        </div>
+
+        {items.length > 3 && (
+          <div className="hidden sm:flex items-center gap-1.5">
+            <button className="pager-btn" onClick={() => scrollBy(-220)} aria-label="เลื่อนซ้าย">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button className="pager-btn" onClick={() => scrollBy(220)} aria-label="เลื่อนขวา">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Scroll container */}
+      {/* Rail */}
       <div
-        className="relative group/section"
+        ref={scrollRef}
+        className="hp-rail"
         onMouseEnter={() => { pausedRef.current = true; }}
         onMouseLeave={() => { pausedRef.current = false; }}
         onTouchStart={() => { pausedRef.current = true; }}
         onTouchEnd={() => { pausedRef.current = false; }}
       >
-        <div
-          ref={scrollRef}
-          className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide
-                     -mx-4 px-4 sm:-mx-6 sm:px-6"
-        >
-          {items.map((featured) => (
-            <TrendingCard
-              key={featured.id}
-              featured={featured}
-              onClick={() => onItemClick?.(featured.item.id)}
-            />
-          ))}
-        </div>
-
-        {/* Scroll arrows (desktop) */}
-        {items.length > 3 && (
-          <>
-            <button
-              onClick={() => scrollRef.current?.scrollBy({ left: -280, behavior: "smooth" })}
-              className="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2
-                         w-10 h-10 bg-white/90 border border-[#e5e3de] rounded-full
-                         items-center justify-center shadow-lg text-[#555] hover:text-[#111]
-                         opacity-0 group-hover/section:opacity-100 transition-opacity z-10"
-              aria-label="เลื่อนซ้าย"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button
-              onClick={() => scrollRef.current?.scrollBy({ left: 280, behavior: "smooth" })}
-              className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-2
-                         w-10 h-10 bg-white/90 border border-[#e5e3de] rounded-full
-                         items-center justify-center shadow-lg text-[#555] hover:text-[#111]
-                         opacity-0 group-hover/section:opacity-100 transition-opacity z-10"
-              aria-label="เลื่อนขวา"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </>
-        )}
+        {items.map((featured) => (
+          <TrendingCard
+            key={featured.id}
+            featured={featured}
+            onClick={() => onItemClick?.(featured.item.id)}
+          />
+        ))}
       </div>
     </section>
   );
@@ -116,59 +102,58 @@ function TrendingCard({
   const mainImage = item.images.find((i) => i.isMain) ?? item.images[0];
 
   return (
-    <button
-      onClick={onClick}
-      className="relative flex-shrink-0 w-[200px] sm:w-[240px] lg:w-[260px] h-[280px] sm:h-[320px] rounded-2xl overflow-hidden
-                 snap-start cursor-pointer group transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#e8500a]/40"
-    >
-      {/* Image */}
-      {mainImage ? (
-        <Image
-          src={mainImage.url}
-          alt={item.title}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
-          sizes="(max-width: 640px) 200px, (max-width: 1024px) 240px, 260px"
-        />
-      ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#f0ede7] to-[#e5e3de] flex items-center justify-center">
-          <span className="text-5xl">{item.category.emoji ?? "📦"}</span>
-        </div>
-      )}
-
-      {/* Badge — top left */}
-      <div className="absolute top-3 left-3 z-10">
-        <span className="inline-flex items-center gap-1 bg-[#e8500a] text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-lg">
-          🔥 {customLabel ?? "มาแรง"}
-        </span>
-      </div>
-
-      {/* View count — top right */}
-      <div className="absolute top-3 right-3 z-10">
-        <span className="inline-flex items-center gap-1 bg-black/50 backdrop-blur-sm text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
-          👁 {item.viewCount.toLocaleString()}
-        </span>
-      </div>
-
-      {/* Bottom gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-      {/* Content — bottom */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
-        <p className="text-white text-sm font-bold line-clamp-2 leading-tight mb-1">
-          {item.title}
-        </p>
-        <p className="text-white/90 text-base font-extrabold">
-          ฿{item.price.toLocaleString()}
-        </p>
-        {item.seller.name && (
-          <div className="flex items-center gap-1.5 mt-1.5">
-            {item.seller.verificationStatus === "APPROVED" && (
-              <span className="text-[10px]">✅</span>
-            )}
-            <p className="text-white/60 text-[11px] truncate">{item.seller.name}</p>
+    <button onClick={onClick} className="hp-trend group">
+      {/* Media */}
+      <div className="hp-trend-media">
+        {mainImage ? (
+          <Image
+            src={mainImage.url}
+            alt={item.title}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+            sizes="208px"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-3xl opacity-50">
+            {item.category.emoji ?? "📦"}
           </div>
         )}
+
+        {/* Label — top left */}
+        <div className="absolute top-2 left-2">
+          <span className="hp-chip hp-chip-solid">{customLabel ?? "มาแรง"}</span>
+        </div>
+
+        {/* View count — top right */}
+        <div className="absolute top-2 right-2">
+          <span className="hp-chip">
+            <svg className="w-3 h-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <span className="hp-num">{item.viewCount.toLocaleString()}</span>
+          </span>
+        </div>
+      </div>
+
+      {/* Meta */}
+      <div className="p-3 flex flex-col gap-1.5">
+        <p className="text-[13px] font-medium text-[var(--hp-ink)] line-clamp-1 leading-snug">
+          {item.title}
+        </p>
+        <div className="flex items-center justify-between gap-2">
+          <span className="hp-price">฿{item.price.toLocaleString()}</span>
+          {item.seller.name && (
+            <span className="text-[11.5px] text-[var(--hp-muted)] truncate max-w-[95px] flex items-center gap-1">
+              {item.seller.verificationStatus === "APPROVED" && (
+                <svg className="w-3 h-3 flex-shrink-0 text-[var(--psu-blue)]" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              )}
+              <span className="truncate">{item.seller.name}</span>
+            </span>
+          )}
+        </div>
       </div>
     </button>
   );

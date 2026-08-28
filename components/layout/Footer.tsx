@@ -5,31 +5,66 @@ import { useLocaleStore } from "@/lib/stores/locale-store";
 export default function Footer() {
   const t = useLocaleStore((s) => s.t);
 
+  const columns: { heading: string; links: { label: string; href: string }[] }[] = [
+    {
+      heading: "แพลตฟอร์ม",
+      links: [
+        { label: t("nav_about"),   href: "#" },
+        { label: t("nav_post"),    href: "#" },
+        { label: t("nav_support"), href: "/support" },
+      ],
+    },
+    {
+      heading: "ข้อกำหนด",
+      links: [
+        { label: "เงื่อนไขการใช้งาน", href: "#" },
+        { label: "นโยบายความเป็นส่วนตัว", href: "#" },
+      ],
+    },
+  ];
+
   return (
-    <footer className="border-t border-[#e5e3de] mt-8">
-      <div className="max-w-7xl mx-auto px-5 py-8 flex flex-col md:flex-row justify-between gap-6">
-        <div>
-          <span className="text-lg font-extrabold tracking-tighter">
-            PSU<span style={{ color: "var(--accent)" }}>.</span>STORE
-          </span>
-          <p className="text-sm text-[#9a9590] mt-1.5 max-w-xs">{t("footer_tagline")}</p>
+    <footer className="border-t border-[var(--hp-border)] mt-16">
+      <div className="max-w-[1240px] mx-auto px-5 py-10 flex flex-col md:flex-row justify-between gap-10">
+        <div className="max-w-xs">
+          <div className="flex items-center gap-2.5">
+            <span className="w-6 h-6 rounded bg-[var(--psu-navy)] text-white flex items-center justify-center text-[10px] font-bold">
+              ม.อ.
+            </span>
+            <span className="text-[14px] font-semibold tracking-tight text-[var(--psu-navy)]">
+              PSU Store
+            </span>
+          </div>
+          <p className="text-[13px] text-[var(--hp-muted)] mt-3 leading-relaxed">
+            {t("footer_tagline")}
+          </p>
         </div>
-        <div className="flex gap-10 text-sm text-[#9a9590]">
-          <div className="flex flex-col gap-2">
-            <span className="font-semibold text-[#111] text-xs tracking-wider uppercase">Platform</span>
-            <a href="#" className="hover:text-[#111] transition">{t("nav_about")}</a>
-            <a href="#" className="hover:text-[#111] transition">{t("nav_post")}</a>
-            <a href="#" className="hover:text-[#111] transition">{t("nav_support")}</a>
-          </div>
-          <div className="flex flex-col gap-2">
-            <span className="font-semibold text-[#111] text-xs tracking-wider uppercase">Legal</span>
-            <a href="#" className="hover:text-[#111] transition">Terms of Service</a>
-            <a href="#" className="hover:text-[#111] transition">Privacy Policy</a>
-          </div>
+
+        <div className="flex gap-14">
+          {columns.map((col) => (
+            <div key={col.heading} className="flex flex-col gap-2.5">
+              <span className="hp-eyebrow">{col.heading}</span>
+              {col.links.map((l) => (
+                <a
+                  key={l.label}
+                  href={l.href}
+                  className="text-[13px] text-[var(--hp-ink-2)] hover:text-[var(--psu-indigo)] transition-colors"
+                >
+                  {l.label}
+                </a>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
-      <div className="border-t border-[#e5e3de] py-4 px-5 max-w-7xl mx-auto text-xs text-[#b0ada6]">
-        {t("footer")}
+
+      <div className="border-t border-[var(--hp-border)]">
+        <div className="max-w-[1240px] mx-auto px-5 py-4 flex items-center justify-between gap-4">
+          <span className="text-[12px] text-[var(--hp-muted)]">{t("footer")}</span>
+          <span className="hp-eyebrow hidden sm:block">
+            Prince of Songkla University
+          </span>
+        </div>
       </div>
     </footer>
   );

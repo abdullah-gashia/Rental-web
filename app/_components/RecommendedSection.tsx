@@ -1,6 +1,7 @@
 "use client";
 
 import ProductCard from "@/components/items/ProductCard";
+import SectionHeader from "@/components/ui/SectionHeader";
 import type { RecommendedItem, RecommendationReason } from "@/lib/actions/recommendations";
 import type { ItemWithDetails } from "@/lib/types";
 
@@ -26,42 +27,27 @@ export default function RecommendedSection({ items, strategy, onItemClick }: Pro
   const isPersonalized = strategy === "personalized";
 
   return (
-    <section className="mt-10 mb-2">
-      {/* Section header */}
-      <div className="flex items-center gap-3 mb-5">
-        <div>
-          <h2 className="text-lg font-bold text-[#111]">
-            {isPersonalized ? "สินค้าที่คุณอาจสนใจ" : "กำลังมาแรงตอนนี้"}
-          </h2>
-          {isPersonalized && (
-            <p className="text-xs text-[#9a9590] mt-0.5 flex items-center gap-1">
-              <span className="text-[#e8500a]">✦</span>
-              แนะนำจากสิ่งที่คุณเคยดู
-            </p>
-          )}
-        </div>
-        <div className="ml-auto flex-shrink-0">
-          {isPersonalized ? (
-            <span className="text-[10px] font-semibold text-[#e8500a] bg-[#e8500a]/8 px-2.5 py-1 rounded-full border border-[#e8500a]/20">
-              ✦ เฉพาะคุณ
-            </span>
-          ) : (
-            <span className="text-[10px] font-semibold text-[#555] bg-[#f0ede7] px-2.5 py-1 rounded-full">
-              🔥 ยอดนิยม
-            </span>
-          )}
-        </div>
-      </div>
+    <section className="mb-12">
+      <SectionHeader
+        eyebrow={isPersonalized ? "สำหรับคุณ" : "ยอดนิยม"}
+        title={isPersonalized ? "สินค้าที่คุณอาจสนใจ" : "กำลังมาแรงตอนนี้"}
+        sub={isPersonalized ? "แนะนำจากสิ่งที่คุณเคยดู" : undefined}
+      />
 
       {/* Item grid — same responsive grid as ProductGrid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-5 gap-y-8">
         {items.map((item, idx) => {
           const badge = reasonBadge(item.reason);
           return (
             <div key={item.id} className="relative">
+              {/* Rent cards already show a chip top-left, so stack this one under it */}
               {badge && (
-                <div className="absolute top-2 left-2 z-10 pointer-events-none">
-                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#e8500a] text-white shadow-sm">
+                <div
+                  className={`absolute left-2 z-10 pointer-events-none ${
+                    item.listingType === "RENT" ? "top-[34px]" : "top-2"
+                  }`}
+                >
+                  <span className="hp-chip border-[var(--psu-sky-200)] bg-[var(--psu-sky)] text-[var(--psu-indigo)] font-semibold">
                     {badge}
                   </span>
                 </div>

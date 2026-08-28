@@ -183,7 +183,7 @@ export default function HomeClient({
   // ── Render ────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="hp-root min-h-screen pb-24">
       <Navbar
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -192,7 +192,18 @@ export default function HomeClient({
         onChatOpen={handleNavChatOpen}
       />
 
-      <main className="max-w-7xl mx-auto px-5 pt-8">
+      <main className="max-w-[1240px] mx-auto px-5 pt-9">
+        {/* ── Page header ─────────────────────────────────────────── */}
+        <header className="mb-9">
+          <h1 className="text-[26px] sm:text-[30px] font-semibold tracking-[-0.022em] text-[var(--psu-navy)] leading-tight">
+            ตลาดซื้อขายของนักศึกษา ม.อ.
+          </h1>
+          <p className="text-[14px] text-[var(--hp-muted)] mt-2 max-w-xl leading-relaxed">
+            ซื้อ ขาย และปล่อยเช่าสินค้ามือสองภายในรั้วมหาวิทยาลัย
+            ยืนยันตัวตนด้วยบัญชี PSU นัดรับได้ในพื้นที่จริง
+          </p>
+        </header>
+
         <TrendingSection items={trendingItems} onItemClick={(id) => {
           const item = items.find((i) => i.id === id);
           if (item) handleItemClick(item);
@@ -214,9 +225,10 @@ export default function HomeClient({
         {isSearchActive ? (
           items.length > 0 ? (
             <ProductGrid
+              eyebrow="ผลการค้นหา"
               title={
                 searchQuery.trim()
-                  ? `ผลการค้นหา "${searchQuery.trim()}"`
+                  ? `“${searchQuery.trim()}”`
                   : "สินค้าที่พบ"
               }
               items={items}
@@ -230,6 +242,7 @@ export default function HomeClient({
           <>
             {showSecondhand && (
               <ProductGrid
+                eyebrow="ซื้อขาย"
                 title="สินค้ามือสอง"
                 items={secondhandItems}
                 onItemClick={handleItemClick}
@@ -237,6 +250,7 @@ export default function HomeClient({
             )}
             {showRentals && (
               <ProductGrid
+                eyebrow="เช่า"
                 title="สินค้าปล่อยเช่า"
                 items={rentalItems}
                 onItemClick={handleItemClick}
@@ -244,6 +258,7 @@ export default function HomeClient({
             )}
             {showElectronics && (
               <ProductGrid
+                eyebrow="หมวดหมู่"
                 title="อิเล็กทรอนิกส์"
                 items={electronicsItems}
                 onItemClick={handleItemClick}
@@ -271,7 +286,7 @@ export default function HomeClient({
         <button
           onClick={() => open("postAd")}
           id="floatBtn"
-          className="fixed bottom-6 right-5 z-40 items-center gap-2 bg-[#e8500a] text-white font-semibold text-sm px-5 py-3.5 rounded-2xl shadow-xl hover:bg-[#c94208] transition"
+          className="fixed bottom-6 right-5 z-40 items-center gap-2 bg-[var(--psu-navy)] text-white font-semibold text-[13px] px-4 py-3 rounded-lg hover:bg-[var(--psu-navy-800)] transition-colors"
         >
           <svg className="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
@@ -329,18 +344,19 @@ function EmptyState({ query }: { query: string }) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center py-24 text-center">
-      <div className="text-6xl mb-4 select-none">🔍</div>
-      <h3 className="text-xl font-bold text-[#111] mb-2">
-        {query ? `ไม่พบสินค้าสำหรับ "${query}"` : "ไม่พบสินค้าที่ตรงกับตัวกรอง"}
+    <div className="border border-[var(--hp-border)] rounded-lg bg-[var(--hp-subtle)] py-16 px-6 flex flex-col items-center text-center">
+      <div className="w-10 h-10 rounded-lg bg-white border border-[var(--hp-border)] flex items-center justify-center mb-4">
+        <svg className="w-4 h-4 text-[var(--hp-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <h3 className="text-[15px] font-semibold text-[var(--hp-ink)] mb-1.5">
+        {query ? `ไม่พบสินค้าสำหรับ “${query}”` : "ไม่พบสินค้าที่ตรงกับตัวกรอง"}
       </h3>
-      <p className="text-sm text-[#777] max-w-xs mb-6">
+      <p className="text-[13px] text-[var(--hp-muted)] max-w-xs mb-5 leading-relaxed">
         ลองปรับคำค้นหาหรือตัวกรองให้กว้างขึ้น แล้วลองใหม่อีกครั้ง
       </p>
-      <button
-        onClick={clearAll}
-        className="text-sm font-semibold text-[#e8500a] bg-[#e8500a]/8 hover:bg-[#e8500a]/15 border border-[#e8500a]/20 px-5 py-2.5 rounded-xl transition"
-      >
+      <button onClick={clearAll} className="hp-btn hp-btn-ghost">
         ล้างการค้นหาทั้งหมด
       </button>
     </div>

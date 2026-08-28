@@ -15,6 +15,26 @@
   --accent-light: #fff5f0;
   --accent-dark:  #c94208;
 
+  /* ─── PSU brand scale (น้ำเงิน · คราม · ฟ้า) ───
+     Used by the homepage. Legacy tokens above are kept
+     so the not-yet-redesigned pages render unchanged. */
+  --psu-navy:     #0a2b5e;   /* น้ำเงิน — headings, primary surface */
+  --psu-navy-800: #0f3a7a;
+  --psu-indigo:   #1b3f8f;   /* คราม — primary action */
+  --psu-blue:     #2563eb;   /* ฟ้า — interactive, focus */
+  --psu-blue-700: #1d4ed8;
+  --psu-sky:      #eef4ff;   /* ฟ้าอ่อน — tint fill */
+  --psu-sky-200:  #cfe0ff;
+
+  /* Homepage neutrals — cool, not warm paper */
+  --hp-bg:         #ffffff;
+  --hp-subtle:     #f7f9fc;
+  --hp-border:     #e3e8f0;
+  --hp-border-str: #cdd6e3;
+  --hp-ink:        #0f1e35;
+  --hp-ink-2:      #3b4a61;
+  --hp-muted:      #64748b;   /* 4.76:1 on white — WCAG AA */
+
   /* Shadows */
   --shadow-xs:  0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
   --shadow-sm:  0 2px 8px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04);
@@ -53,6 +73,21 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
+/* Homepage overrides the ring to PSU blue */
+.hp-root input:focus-visible,
+.hp-root textarea:focus-visible,
+.hp-root select:focus-visible,
+.hp-root button:focus-visible {
+  outline: 2px solid var(--psu-blue);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.hp-root input:focus,
+.hp-root select:focus {
+  border-color: var(--psu-blue) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
+}
+
 /* Legacy focus for non-focus-visible browsers */
 input:focus, textarea:focus, select:focus {
   outline: none;
@@ -61,6 +96,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 /* ─── Card Lift ──────────────────────────────── */
+/* Legacy — still used by pages not yet redesigned */
 .card-lift {
   transition: transform 0.28s cubic-bezier(.22,.68,0,1.2),
               box-shadow 0.28s ease;
@@ -172,21 +208,24 @@ input:focus, textarea:focus, select:focus {
 .fade-in { animation: fadeIn 0.3s ease both; }
 
 /* ─── Category Pills ─────────────────────────── */
+/* Underline tabs — sits on the header's bottom hairline */
 .cat-pill {
-  padding: 6px 16px; border-radius: 99px;
-  font-size: 13px; font-weight: 500; cursor: pointer;
-  transition: all 0.16s ease;
-  border: 1.5px solid transparent;
+  position: relative;
+  padding: 0 1px 11px;
+  font-size: 13.5px; font-weight: 500; cursor: pointer;
+  color: var(--hp-muted);
+  border-bottom: 2px solid transparent;
+  transition: color 0.14s ease, border-color 0.14s ease;
   white-space: nowrap;
   user-select: none;
 }
 .cat-pill.active {
-  background: var(--ink); color: white;
-  box-shadow: var(--shadow-sm);
+  color: var(--psu-navy); font-weight: 600;
+  border-bottom-color: var(--psu-navy);
 }
 .cat-pill:not(.active):hover {
-  border-color: var(--ink);
-  background: white;
+  color: var(--hp-ink);
+  border-bottom-color: var(--hp-border-str);
 }
 
 /* ─── Search Bar ─────────────────────────────── */
@@ -194,8 +233,8 @@ input:focus, textarea:focus, select:focus {
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .search-bar:focus-within {
-  box-shadow: 0 0 0 2.5px var(--ink), var(--shadow-sm);
-  border-color: var(--ink) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+  border-color: var(--psu-blue) !important;
 }
 
 /* ─── Stars ──────────────────────────────────── */
@@ -225,21 +264,23 @@ input:focus, textarea:focus, select:focus {
 
 /* ─── Pager ──────────────────────────────────── */
 .pager-btn {
-  width: 34px; height: 34px; border-radius: 10px;
-  border: 1.5px solid var(--border);
+  width: 30px; height: 30px; border-radius: 6px;
+  border: 1px solid var(--hp-border);
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all 0.16s ease; background: white;
+  cursor: pointer; transition: background 0.14s ease, border-color 0.14s ease;
+  background: #fff; color: var(--hp-ink-2);
 }
 .pager-btn:hover:not(:disabled) {
-  background: var(--ink); border-color: var(--ink); color: white;
-  box-shadow: var(--shadow-sm);
+  background: var(--hp-subtle);
+  border-color: var(--hp-border-str);
+  color: var(--psu-navy);
 }
-.pager-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.pager-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 .pager-dot {
-  height: 6px; border-radius: 99px; background: #d1cec9;
-  transition: all 0.25s ease; cursor: pointer;
+  height: 4px; border-radius: 2px; background: var(--hp-border-str);
+  transition: all 0.22s ease; cursor: pointer;
 }
-.pager-dot.active { background: var(--ink); width: 20px !important; }
+.pager-dot.active { background: var(--psu-navy); width: 18px !important; }
 
 /* ─── Toast ──────────────────────────────────── */
 .toast-container {
@@ -262,20 +303,21 @@ input:focus, textarea:focus, select:focus {
 /* ─── Badges ─────────────────────────────────── */
 .badge {
   display: inline-flex; align-items: center; gap: 4px;
-  padding: 3px 9px; border-radius: 99px;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.025em;
+  padding: 2px 7px; border-radius: 5px;
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0;
+  line-height: 1.5;
 }
-.badge-sale { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-.badge-rent { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
-.badge-ship { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
-.badge-new  { background: #fce7f3; color: #9d174d; border: 1px solid #fbcfe8; }
+.badge-sale { background: #fff7e6; color: #92620e; border: 1px solid #f5e3b8; }
+.badge-rent { background: var(--psu-sky); color: var(--psu-indigo); border: 1px solid var(--psu-sky-200); }
+.badge-ship { background: #eef7f1; color: #1f6b45; border: 1px solid #cfe6d9; }
+.badge-new  { background: var(--hp-subtle); color: var(--hp-ink-2); border: 1px solid var(--hp-border); }
 
 /* ─── Mobile FAB ─────────────────────────────── */
 #floatBtn { display: none; }
 @media(max-width: 768px) {
   #floatBtn {
     display: flex;
-    box-shadow: 0 8px 32px rgba(232,80,10,0.35), var(--shadow-lg);
+    box-shadow: 0 6px 20px rgba(10, 43, 94, 0.28);
   }
 }
 
@@ -410,4 +452,194 @@ input:focus, textarea:focus, select:focus {
 }
 .meetup-card.selected .meetup-card-icon {
   background: #dbeafe;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   HOMEPAGE  ·  PSU navy / indigo / blue
+   Scoped under .hp-root so no other page is affected.
+   Flat surfaces, hairline borders, small radii, no gradients.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Cool white canvas instead of the warm paper body */
+html:has(.hp-root) body { background: var(--hp-bg); }
+
+.hp-root {
+  background: var(--hp-bg);
+  color: var(--hp-ink);
+}
+
+/* ─── Rules & section headers ─────────────────────── */
+.hp-rule { height: 1px; background: var(--hp-border); border: 0; }
+
+.hp-eyebrow {
+  font-size: 10.5px; font-weight: 700;
+  letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--hp-muted);
+}
+
+.hp-sec-title {
+  font-size: 16px; font-weight: 650;
+  letter-spacing: -0.011em; color: var(--hp-ink);
+}
+
+/* ─── Buttons ─────────────────────────────────────── */
+.hp-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  height: 34px; padding: 0 14px;
+  border-radius: 7px; border: 1px solid transparent;
+  font-size: 13px; font-weight: 600; line-height: 1;
+  cursor: pointer; white-space: nowrap;
+  transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+.hp-btn-primary {
+  background: var(--psu-navy); color: #fff;
+}
+.hp-btn-primary:hover { background: var(--psu-navy-800); }
+
+.hp-btn-ghost {
+  background: #fff; color: var(--hp-ink);
+  border-color: var(--hp-border);
+}
+.hp-btn-ghost:hover {
+  background: var(--hp-subtle);
+  border-color: var(--hp-border-str);
+}
+
+.hp-btn-quiet {
+  background: transparent; color: var(--hp-ink-2);
+  height: 30px; padding: 0 9px; font-weight: 500;
+}
+.hp-btn-quiet:hover { background: var(--hp-subtle); color: var(--psu-navy); }
+
+/* ─── Form controls (filter toolbar) ──────────────── */
+.hp-field {
+  height: 32px; padding: 0 10px;
+  border: 1px solid var(--hp-border); border-radius: 6px;
+  background: #fff; color: var(--hp-ink);
+  font-size: 13px; line-height: 1;
+  transition: border-color 0.14s ease, box-shadow 0.14s ease;
+}
+.hp-field::placeholder { color: var(--hp-muted); }
+.hp-select {
+  appearance: none;
+  padding-right: 26px; cursor: pointer;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+}
+
+/* ─── Product card ────────────────────────────────── */
+.hp-card {
+  display: flex; flex-direction: column;
+  cursor: pointer;
+  border-radius: 9px;
+  transition: none;
+}
+.hp-thumb {
+  position: relative; width: 100%; aspect-ratio: 1;
+  border: 1px solid var(--hp-border);
+  border-radius: 9px; overflow: hidden;
+  background: var(--hp-subtle);
+  margin-bottom: 10px;
+  transition: border-color 0.16s ease;
+}
+.hp-card:hover .hp-thumb { border-color: var(--hp-border-str); }
+.hp-thumb img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.35s cubic-bezier(.3,.7,.4,1);
+}
+.hp-card:hover .hp-thumb img { transform: scale(1.035); }
+.hp-thumb-fallback {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34px; opacity: 0.55;
+}
+.hp-card:hover .hp-title { color: var(--psu-indigo); }
+.hp-title { transition: color 0.14s ease; }
+
+/* Small overlay chips on the thumbnail */
+.hp-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 21px; padding: 0 7px;
+  border-radius: 5px;
+  background: rgba(255,255,255,0.94);
+  border: 1px solid rgba(15,30,53,0.07);
+  font-size: 11px; font-weight: 500; color: var(--hp-ink-2);
+  backdrop-filter: saturate(1.4) blur(3px);
+  max-width: 100%;
+}
+.hp-chip-solid {
+  background: var(--psu-navy);
+  border-color: var(--psu-navy);
+  color: #fff; font-weight: 600;
+}
+
+/* Price — tabular, monospace: reads as data, not decoration */
+.hp-price {
+  font-family: var(--font-dm-mono), ui-monospace, monospace;
+  font-size: 13.5px; font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--hp-ink);
+  font-variant-numeric: tabular-nums;
+}
+.hp-price-rent { color: var(--psu-indigo); }
+.hp-num {
+  font-family: var(--font-dm-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Trending rail ───────────────────────────────── */
+.hp-rail {
+  display: flex; gap: 12px;
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  padding-bottom: 2px;
+}
+.hp-rail::-webkit-scrollbar { height: 0; }
+.hp-rail { scrollbar-width: none; }
+
+.hp-trend {
+  position: relative; flex-shrink: 0;
+  width: 208px; scroll-snap-align: start;
+  border: 1px solid var(--hp-border);
+  border-radius: 9px; overflow: hidden;
+  background: #fff; text-align: left;
+  cursor: pointer;
+  transition: border-color 0.16s ease;
+}
+.hp-trend:hover { border-color: var(--psu-sky-200); }
+.hp-trend-media {
+  position: relative; width: 100%; aspect-ratio: 4 / 3;
+  background: var(--hp-subtle); overflow: hidden;
+}
+.hp-trend-media img { object-fit: cover; }
+
+/* ─── Live dot ────────────────────────────────────── */
+.hp-live-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--psu-blue);
+  box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5);
+  animation: hpPulse 2.4s ease-out infinite;
+}
+@keyframes hpPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.45); }
+  70%  { box-shadow: 0 0 0 6px rgba(37, 99, 235, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+}
+
+/* ─── Stat strip ──────────────────────────────────── */
+.hp-stat { padding: 2px 0; }
+.hp-stat-value {
+  font-family: var(--font-dm-mono), ui-monospace, monospace;
+  font-size: 21px; font-weight: 500;
+  letter-spacing: -0.02em; color: var(--psu-navy);
+  font-variant-numeric: tabular-nums;
+}
+.hp-stat-label {
+  font-size: 11.5px; color: var(--hp-muted); margin-top: 2px;
+}
+
+/* Respect reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .hp-card:hover .hp-thumb img { transform: none; }
+  .hp-live-dot { animation: none; }
 }

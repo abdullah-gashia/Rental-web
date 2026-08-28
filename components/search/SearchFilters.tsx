@@ -103,19 +103,20 @@ export default function SearchFilters({
 
   // ── Render ────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-wrap items-center gap-2.5 py-3 border-b border-[#e5e3de] mb-6">
+    <div className="flex flex-wrap items-center gap-2 py-3 mb-8">
       {/* Result count */}
-      <span className="text-sm text-[#777] mr-auto">
-        พบ <strong className="text-[#111] font-semibold">{totalCount}</strong> รายการ
+      <span className="text-[13px] text-[var(--hp-muted)] mr-auto">
+        <strong className="hp-num text-[var(--hp-ink)] font-medium">{totalCount}</strong> รายการ
       </span>
 
       {/* Sort */}
       <div className="flex items-center gap-1.5">
-        <label className="text-xs text-[#9a9590] hidden sm:block">เรียง:</label>
+        <label className="text-[12px] text-[var(--hp-muted)] hidden sm:block">เรียง</label>
         <select
           value={sort}
           onChange={(e) => applySort(e.target.value)}
-          className="text-sm border border-[#e5e3de] rounded-xl px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-[#e8500a]/20 focus:border-[#e8500a] transition cursor-pointer"
+          className="hp-field hp-select"
+          aria-label="เรียงลำดับ"
         >
           {Object.entries(SORT_LABELS).map(([k, v]) => (
             <option key={k} value={k}>{v}</option>
@@ -123,35 +124,12 @@ export default function SearchFilters({
         </select>
       </div>
 
-      {/* Price range */}
-      <div className="flex items-center gap-1.5">
-        <span className="text-xs text-[#9a9590] hidden sm:block">ราคา:</span>
-        <input
-          type="number"
-          min={0}
-          placeholder="ต่ำสุด"
-          value={minPrice}
-          onChange={(e) => setMinPrice(e.target.value)}
-          onKeyDown={handlePriceKeyDown}
-          className="w-24 text-sm border border-[#e5e3de] rounded-xl px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-[#e8500a]/20 focus:border-[#e8500a] transition"
-        />
-        <span className="text-[#bbb] text-sm">–</span>
-        <input
-          type="number"
-          min={0}
-          placeholder="สูงสุด"
-          value={maxPrice}
-          onChange={(e) => setMaxPrice(e.target.value)}
-          onKeyDown={handlePriceKeyDown}
-          className="w-24 text-sm border border-[#e5e3de] rounded-xl px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-[#e8500a]/20 focus:border-[#e8500a] transition"
-        />
-      </div>
-
       {/* Condition */}
       <select
         value={condition}
         onChange={(e) => applyCondition(e.target.value)}
-        className="text-sm border border-[#e5e3de] rounded-xl px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-[#e8500a]/20 focus:border-[#e8500a] transition cursor-pointer"
+        className="hp-field hp-select"
+        aria-label="สภาพสินค้า"
       >
         <option value="">สภาพทั้งหมด</option>
         {Object.entries(CONDITION_LABELS).map(([k, v]) => (
@@ -159,14 +137,37 @@ export default function SearchFilters({
         ))}
       </select>
 
+      {/* Price range — one grouped control, like a real filter bar */}
+      <div className="flex items-center h-8 rounded-md border border-[var(--hp-border)] bg-white overflow-hidden">
+        <span className="text-[12px] text-[var(--hp-muted)] pl-2.5 pr-1.5 hidden sm:block">฿</span>
+        <input
+          type="number"
+          min={0}
+          placeholder="ต่ำสุด"
+          value={minPrice}
+          onChange={(e) => setMinPrice(e.target.value)}
+          onKeyDown={handlePriceKeyDown}
+          aria-label="ราคาต่ำสุด"
+          className="hp-num w-[74px] h-full px-2 text-[13px] bg-transparent border-0 focus:outline-none placeholder:font-sans placeholder:text-[#64748b]"
+        />
+        <span className="w-px h-4 bg-[var(--hp-border)]" />
+        <input
+          type="number"
+          min={0}
+          placeholder="สูงสุด"
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(e.target.value)}
+          onKeyDown={handlePriceKeyDown}
+          aria-label="ราคาสูงสุด"
+          className="hp-num w-[74px] h-full px-2 text-[13px] bg-transparent border-0 focus:outline-none placeholder:font-sans placeholder:text-[#64748b]"
+        />
+      </div>
+
       {/* Clear */}
       {hasFilters && (
-        <button
-          onClick={clearAll}
-          className="flex items-center gap-1 text-xs font-semibold text-[#e8500a] bg-[#e8500a]/8 hover:bg-[#e8500a]/15 border border-[#e8500a]/20 px-3 py-1.5 rounded-xl transition"
-        >
+        <button onClick={clearAll} className="hp-btn hp-btn-ghost h-8 text-[12px]">
           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M6 18L18 6M6 6l12 12" />
           </svg>
           ล้างตัวกรอง
         </button>
