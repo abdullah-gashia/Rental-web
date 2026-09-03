@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { updateProfile } from "../actions";
+import ChangePasswordDialog from "./ChangePasswordDialog";
 
 // ─── Verification status labels ───────────────────────────────────────────────
 
@@ -29,6 +30,7 @@ export default function ProfileTab({ userData, showToast }: ProfileTabProps) {
   const [name, setName]   = useState(userData.name ?? "");
   const [phone, setPhone] = useState(userData.phone ?? "");
   const [bio, setBio]     = useState(userData.bio ?? "");
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [pending, startTransition] = useTransition();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -44,6 +46,7 @@ export default function ProfileTab({ userData, showToast }: ProfileTabProps) {
   };
 
   return (
+    <>
     <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-6">
       <h2 className="text-lg font-bold text-[#111] flex items-center gap-2">
         <span>👤</span> ข้อมูลส่วนตัว
@@ -107,6 +110,32 @@ export default function ProfileTab({ userData, showToast }: ProfileTabProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             อีเมลเชื่อมกับบัญชี PSU ของคุณ — ไม่สามารถเปลี่ยนได้
+          </p>
+        </div>
+
+        {/* Password */}
+        <div>
+          <label className="block text-sm font-medium text-[#333] mb-1">
+            รหัสผ่าน
+          </label>
+          <div className="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl border border-[#e5e3de] bg-[#faf9f7]">
+            <span className="text-sm text-[#999] tracking-[0.2em] select-none">••••••••</span>
+            <button
+              type="button"
+              onClick={() => setShowPasswordDialog(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#e5e3de] bg-white text-xs font-semibold text-[#333] hover:bg-[#f7f6f3] transition flex-shrink-0"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 11.001-.001M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3" />
+              </svg>
+              เปลี่ยนรหัสผ่าน
+            </button>
+          </div>
+          <p className="text-[11px] text-[#9a9590] mt-1 flex items-center gap-1">
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            ต้องยืนยันรหัสผ่านปัจจุบันก่อนตั้งรหัสใหม่
           </p>
         </div>
 
@@ -209,6 +238,16 @@ export default function ProfileTab({ userData, showToast }: ProfileTabProps) {
           บันทึกการเปลี่ยนแปลง
         </button>
       </div>
+
     </form>
+
+    {/* Outside the form on purpose — the dialog has its own <form>, and
+        nesting forms makes its submit button post the profile form. */}
+    <ChangePasswordDialog
+      open={showPasswordDialog}
+      onClose={() => setShowPasswordDialog(false)}
+      showToast={showToast}
+    />
+    </>
   );
 }

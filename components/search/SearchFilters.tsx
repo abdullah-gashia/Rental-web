@@ -103,7 +103,7 @@ export default function SearchFilters({
 
   // ── Render ────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-wrap items-center gap-2 py-3 mb-8">
+    <div className="flex flex-wrap items-center gap-2">
       {/* Result count */}
       <span className="text-[13px] text-[var(--hp-muted)] mr-auto">
         <strong className="hp-num text-[var(--hp-ink)] font-medium">{totalCount}</strong> รายการ

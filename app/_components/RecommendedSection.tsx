@@ -1,7 +1,8 @@
 "use client";
 
-import ProductCard from "@/components/items/ProductCard";
-import SectionHeader from "@/components/ui/SectionHeader";
+import { useState } from "react";
+import ProductRow from "@/components/items/ProductRow";
+import Panel from "@/components/ui/Panel";
 import type { RecommendedItem, RecommendationReason } from "@/lib/actions/recommendations";
 import type { ItemWithDetails } from "@/lib/types";
 
@@ -21,46 +22,42 @@ interface Props {
   onItemClick: (item: ItemWithDetails) => void;
 }
 
+const PER_PAGE = 6;
+
 export default function RecommendedSection({ items, strategy, onItemClick }: Props) {
+  const [page, setPage] = useState(0);
+
   if (items.length === 0) return null;
 
   const isPersonalized = strategy === "personalized";
+  const totalPages = Math.max(1, Math.ceil(items.length / PER_PAGE));
+  const safePage   = Math.min(page, totalPages - 1);
+  const visible    = items.slice(safePage * PER_PAGE, safePage * PER_PAGE + PER_PAGE);
 
   return (
-    <section className="mb-12">
-      <SectionHeader
-        eyebrow={isPersonalized ? "สำหรับคุณ" : "ยอดนิยม"}
-        title={isPersonalized ? "สินค้าที่คุณอาจสนใจ" : "กำลังมาแรงตอนนี้"}
-        sub={isPersonalized ? "แนะนำจากสิ่งที่คุณเคยดู" : undefined}
-      />
-
-      {/* Item grid — same responsive grid as ProductGrid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-5 gap-y-8">
-        {items.map((item, idx) => {
+    <Panel
+      title={isPersonalized ? "สินค้าที่คุณอาจสนใจ" : "กำลังมาแรงตอนนี้"}
+      sub={isPersonalized ? "แนะนำจากสิ่งที่คุณเคยดู" : undefined}
+      onPrev={() => setPage((p) => Math.max(0, p - 1))}
+      onNext={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+      prevDisabled={safePage === 0}
+      nextDisabled={safePage >= totalPages - 1}
+    >
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2 gap-x-5 gap-y-1 -mx-2">
+        {visible.map((item) => {
           const badge = reasonBadge(item.reason);
           return (
             <div key={item.id} className="relative">
-              {/* Rent cards already show a chip top-left, so stack this one under it */}
+              <ProductRow item={item} onClick={() => onItemClick(item)} />
               {badge && (
-                <div
-                  className={`absolute left-2 z-10 pointer-events-none ${
-                    item.listingType === "RENT" ? "top-[34px]" : "top-2"
-                  }`}
-                >
-                  <span className="hp-chip border-[var(--psu-sky-200)] bg-[var(--psu-sky)] text-[var(--psu-indigo)] font-semibold">
-                    {badge}
-                  </span>
-                </div>
+                <span className="absolute top-1 left-1 z-10 pointer-events-none hp-chip !h-[18px] !text-[10px] border-[var(--psu-sky-200)] bg-[var(--psu-sky)] text-[var(--psu-indigo)] font-semibold">
+                  {badge}
+                </span>
               )}
-              <ProductCard
-                item={item}
-                index={idx}
-                onClick={() => onItemClick(item)}
-              />
             </div>
           );
         })}
       </div>
-    </section>
+    </Panel>
   );
 }

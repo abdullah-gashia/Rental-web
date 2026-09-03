@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { updateTrackingPreference, clearViewHistory, exportMyData } from "../actions";
 import DeleteAccountDialog from "./DeleteAccountDialog";
+import ChangePasswordDialog from "./ChangePasswordDialog";
 
 interface Props {
   userData: {
@@ -25,6 +26,7 @@ function formatThaiDate(iso: string): string {
 export default function SecurityTab({ userData, showToast }: Props) {
   const [tracking, setTracking] = useState(userData.trackingEnabled);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [pending, startTransition] = useTransition();
 
   const handleToggleTracking = () => {
@@ -82,6 +84,23 @@ export default function SecurityTab({ userData, showToast }: Props) {
           <div className="flex items-center justify-between">
             <span className="text-sm text-[#555]">สมัครเมื่อ</span>
             <span className="text-sm font-medium text-[#333]">{formatThaiDate(userData.createdAt)}</span>
+          </div>
+
+          <div className="flex items-center justify-between border-t border-[#e5e3de] pt-3 mt-1">
+            <div>
+              <span className="text-sm text-[#555]">รหัสผ่าน</span>
+              <p className="text-[11px] text-[#9a9590]">ต้องยืนยันรหัสผ่านปัจจุบันก่อนตั้งรหัสใหม่</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowPasswordDialog(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#e5e3de] bg-white text-xs font-semibold text-[#333] hover:bg-[#f7f6f3] transition flex-shrink-0"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 11.001-.001M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3" />
+              </svg>
+              เปลี่ยนรหัสผ่าน
+            </button>
           </div>
         </div>
       </div>
@@ -174,6 +193,12 @@ export default function SecurityTab({ userData, showToast }: Props) {
           </button>
         </div>
       </div>
+
+      <ChangePasswordDialog
+        open={showPasswordDialog}
+        onClose={() => setShowPasswordDialog(false)}
+        showToast={showToast}
+      />
 
       {/* Delete account dialog */}
       <DeleteAccountDialog

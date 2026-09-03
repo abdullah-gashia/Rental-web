@@ -9,13 +9,14 @@ import { useToastStore } from "@/lib/stores/toast-store";
 import { getOrCreateConversation } from "@/lib/actions/chat-actions";
 
 import Navbar from "@/components/layout/Navbar";
+import SideRail from "@/components/layout/SideRail";
 import Footer from "@/components/layout/Footer";
-import TrendingSection from "@/app/_components/TrendingSection";
+import HeroMosaic from "@/app/_components/HeroMosaic";
 import StatsBar from "@/components/sections/StatsBar";
 import ProductGrid from "@/components/items/ProductGrid";
+import ProductPanel from "@/components/items/ProductPanel";
 import RecentlyAdded from "@/components/sections/RecentlyAdded";
 import SearchFilters from "@/components/search/SearchFilters";
-import { Suspense } from "react";
 import ProductDetail from "@/components/items/ProductDetail";
 import LoginModal from "@/components/forms/LoginModal";
 import PostAdModal from "@/components/forms/PostAdModal";
@@ -36,6 +37,8 @@ interface HomeClientProps {
   initialMaxPrice?:  string;
   initialCondition?: string;
   initialSort?:      string;
+  /** Error code handed back by Auth.js after a failed OAuth attempt */
+  authError?:        string;
 }
 
 export default function HomeClient({
@@ -49,12 +52,17 @@ export default function HomeClient({
   initialMaxPrice  = "",
   initialCondition = "",
   initialSort      = "newest",
+  authError,
 }: HomeClientProps) {
   const router    = useRouter();
   const urlParams = useSearchParams(); // always-current URL params
 
   // Prevent the search debounce from firing on initial mount
   const searchDidMount = useRef(false);
+
+  // An OAuth bounce-back only needs handling once per page load
+  const authErrorHandled = useRef(false);
+  const [loginError, setLoginError] = useState("");
 
   // ── Local state (initialized from server searchParams) ────────────────
   const [searchQuery, setSearchQuery] = useState(initialQ);
@@ -96,6 +104,32 @@ export default function HomeClient({
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
+
+  // ── OAuth error bounce-back ──────────────────────────────────────────
+  // Auth.js sends failures to "/" as ?error=<code> (pages.error in lib/auth.ts).
+  useEffect(() => {
+    if (!authError || authErrorHandled.current) return;
+    authErrorHandled.current = true;
+
+    const messages: Record<string, string> = {
+      // The e-mail already belongs to an account that signs in with a password
+      OAuthAccountNotLinked:
+        "อีเมลนี้มีบัญชีที่ใช้รหัสผ่านอยู่แล้ว กรุณาเข้าสู่ระบบด้วยอีเมลและรหัสผ่านด้านล่าง",
+      AccessDenied:  "บัญชีนี้ถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแลระบบ",
+      OAuthSignin:   "ไม่สามารถเริ่มการเข้าสู่ระบบด้วย Google ได้ กรุณาลองใหม่",
+      OAuthCallback: "การเชื่อมต่อกับ Google ล้มเหลว กรุณาลองใหม่",
+      Configuration: "ระบบเข้าสู่ระบบด้วย Google ยังไม่ได้ตั้งค่า กรุณาติดต่อผู้ดูแลระบบ",
+    };
+
+    setLoginError(messages[authError] ?? "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่");
+    open("login");
+
+    // Drop ?error= so a refresh doesn't replay the message
+    const params = new URLSearchParams(urlParams.toString());
+    params.delete("error");
+    router.replace(params.toString() ? `/?${params.toString()}` : "/", { scroll: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authError]);
 
   // Immediate category change → URL
   function handleCatChange(cat: CategorySlug) {
@@ -183,7 +217,7 @@ export default function HomeClient({
   // ── Render ────────────────────────────────────────────────────────────
 
   return (
-    <div className="hp-root min-h-screen pb-24">
+    <div className="hp-root min-h-screen">
       <Navbar
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -192,94 +226,95 @@ export default function HomeClient({
         onChatOpen={handleNavChatOpen}
       />
 
-      <main className="max-w-[1240px] mx-auto px-5 pt-9">
-        {/* ── Page header ─────────────────────────────────────────── */}
-        <header className="mb-9">
-          <h1 className="text-[26px] sm:text-[30px] font-semibold tracking-[-0.022em] text-[var(--psu-navy)] leading-tight">
-            ตลาดซื้อขายของนักศึกษา ม.อ.
-          </h1>
-          <p className="text-[14px] text-[var(--hp-muted)] mt-2 max-w-xl leading-relaxed">
-            ซื้อ ขาย และปล่อยเช่าสินค้ามือสองภายในรั้วมหาวิทยาลัย
-            ยืนยันตัวตนด้วยบัญชี PSU นัดรับได้ในพื้นที่จริง
-          </p>
-        </header>
+      <SideRail activeCat={activeCat} onCatChange={handleCatChange} />
 
-        <TrendingSection items={trendingItems} onItemClick={(id) => {
-          const item = items.find((i) => i.id === id);
-          if (item) handleItemClick(item);
-        }} />
-        <StatsBar totalItems={items.length} />
+      {/* Everything sits to the right of the rail on desktop */}
+      <div className="md:pl-[68px]">
+        <main className="max-w-[1760px] mx-auto px-3 sm:px-5 pt-2 pb-20">
+          {/* Spotlight + stats belong to the browse view only */}
+          {!isSearchActive && (
+            <>
+              <HeroMosaic items={trendingItems} onItemClick={(id) => {
+                const item = items.find((i) => i.id === id);
+                if (item) handleItemClick(item);
+              }} />
+              <StatsBar totalItems={items.length} />
+            </>
+          )}
 
-        {/* ── Advanced filter bar ──────────────────────────────────── */}
-        <Suspense fallback={null}>
-          <SearchFilters
-            totalCount={items.length}
-            initialMinPrice={initialMinPrice}
-            initialMaxPrice={initialMaxPrice}
-            initialCondition={initialCondition}
-            initialSort={initialSort}
-          />
-        </Suspense>
-
-        {/* ── Search results mode (flat grid) ─────────────────────── */}
-        {isSearchActive ? (
-          items.length > 0 ? (
-            <ProductGrid
-              eyebrow="ผลการค้นหา"
-              title={
-                searchQuery.trim()
-                  ? `“${searchQuery.trim()}”`
-                  : "สินค้าที่พบ"
-              }
-              items={items}
-              onItemClick={handleItemClick}
+          {/* ── Filter toolbar ─────────────────────────────────────── */}
+          {/* No Suspense boundary needed: page.tsx is force-dynamic, so
+              useSearchParams() never triggers a static-prerender bailout. */}
+          <div className="hp-panel !py-2 mb-5">
+            <SearchFilters
+              totalCount={items.length}
+              initialMinPrice={initialMinPrice}
+              initialMaxPrice={initialMaxPrice}
+              initialCondition={initialCondition}
+              initialSort={initialSort}
             />
+          </div>
+
+          {/* ── Search results mode ────────────────────────────────── */}
+          {isSearchActive ? (
+            items.length > 0 ? (
+              <ProductGrid
+                title={
+                  searchQuery.trim()
+                    ? `“${searchQuery.trim()}”`
+                    : "สินค้าที่พบ"
+                }
+                items={items}
+                onItemClick={handleItemClick}
+              />
+            ) : (
+              <EmptyState query={searchQuery.trim()} />
+            )
           ) : (
-            <EmptyState query={searchQuery.trim()} />
-          )
-        ) : (
-          /* ── Sectioned home view ─────────────────────────────────── */
-          <>
-            {showSecondhand && (
-              <ProductGrid
-                eyebrow="ซื้อขาย"
-                title="สินค้ามือสอง"
-                items={secondhandItems}
-                onItemClick={handleItemClick}
-              />
-            )}
-            {showRentals && (
-              <ProductGrid
-                eyebrow="เช่า"
-                title="สินค้าปล่อยเช่า"
-                items={rentalItems}
-                onItemClick={handleItemClick}
-              />
-            )}
-            {showElectronics && (
-              <ProductGrid
-                eyebrow="หมวดหมู่"
-                title="อิเล็กทรอนิกส์"
-                items={electronicsItems}
-                onItemClick={handleItemClick}
-              />
-            )}
+            /* ── Browse view — panelled sections ──────────────────── */
+            <>
+              <div className="grid grid-cols-1 xl:grid-cols-2 items-start gap-4 xl:gap-5 mb-5">
+                {showSecondhand && (
+                  <ProductPanel
+                    title="สินค้ามือสอง"
+                    items={secondhandItems}
+                    onTitleClick={() => handleCatChange("secondhand")}
+                    onItemClick={handleItemClick}
+                  />
+                )}
+                {showRentals && (
+                  <ProductPanel
+                    title="สินค้าปล่อยเช่า"
+                    items={rentalItems}
+                    onTitleClick={() => handleCatChange("rental")}
+                    onItemClick={handleItemClick}
+                  />
+                )}
+                {showElectronics && (
+                  <ProductPanel
+                    title="อิเล็กทรอนิกส์"
+                    items={electronicsItems}
+                    onTitleClick={() => handleCatChange("electronics")}
+                    onItemClick={handleItemClick}
+                  />
+                )}
 
-            {/* ── Personalized recommendations ─────────────────── */}
-            {recommendedItems.length > 0 && (
-              <RecommendedSection
-                items={recommendedItems}
-                strategy={recommendationStrategy}
-                onItemClick={handleItemClick}
-              />
-            )}
+                {recommendedItems.length > 0 && (
+                  <RecommendedSection
+                    items={recommendedItems}
+                    strategy={recommendationStrategy}
+                    onItemClick={handleItemClick}
+                  />
+                )}
+              </div>
 
-            <RecentlyAdded items={items} onItemClick={handleItemClick} />
-          </>
-        )}
-      </main>
+              <RecentlyAdded items={items} onItemClick={handleItemClick} />
+            </>
+          )}
+        </main>
 
-      <Footer />
+        <Footer />
+      </div>
 
       {/* Mobile FAB */}
       {user?.role !== "ADMIN" && (
@@ -302,7 +337,11 @@ export default function HomeClient({
         onClose={close}
         onChatClick={handleChatClick}
       />
-      <LoginModal    isOpen={activeModal === "login"}   onClose={close} />
+      <LoginModal
+        isOpen={activeModal === "login"}
+        onClose={() => { setLoginError(""); close(); }}
+        initialError={loginError}
+      />
       <PostAdModal   isOpen={activeModal === "postAd"}  onClose={close} />
       <WishlistModal
         isOpen={activeModal === "wishlist"}

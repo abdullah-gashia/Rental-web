@@ -13,22 +13,26 @@
     "seed": "npx tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.11.3",
     "@prisma/adapter-pg": "^7.6.0",
     "@prisma/client": "^7.6.0",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.3.1",
     "next": "^16.2.1",
     "next-auth": "^5.0.0-beta.30",
+    "nodemailer": "^7.0.13",
     "pg": "^8.20.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "recharts": "^3.8.1",
+    "server-only": "^0.0.1",
     "zod": "^4.3.6",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^25.5.0",
+    "@types/nodemailer": "^8.0.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.27",

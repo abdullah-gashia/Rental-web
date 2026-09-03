@@ -26,6 +26,7 @@ export default async function Home({
   const condition = typeof params.condition === "string" ? params.condition : undefined;
   const sort      = typeof params.sort      === "string" ? params.sort      : undefined;
   const cat       = typeof params.cat       === "string" ? params.cat       : "all";
+  const authError = typeof params.error     === "string" ? params.error     : undefined;
 
   // ── 2. Build WHERE clause ─────────────────────────────────────────────
   const graceCutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
@@ -128,6 +129,7 @@ export default async function Home({
       initialMaxPrice={maxStr  ?? ""}
       initialCondition={condition ?? ""}
       initialSort={sort ?? "newest"}
+      authError={authError}
     />
   );
 }

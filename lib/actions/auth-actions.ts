@@ -24,3 +24,20 @@ export async function logout() {
   await signOut({ redirect: false });
   return { success: true };
 }
+
+/**
+ * Google sign-in. Lands on the marketplace — a new account can browse and buy
+ * right away. Identity verification is only for sellers, and PostAdModal sends
+ * them to /profile/verify when they try to list something.
+ *
+ * Returns an error instead of redirecting when the provider is not configured —
+ * otherwise Auth.js sends the user to Google with client_id=undefined and they
+ * land on Google's own "OAuth client was not found" page.
+ */
+export async function loginWithGoogle(): Promise<{ error: string } | void> {
+  if (!process.env.AUTH_GOOGLE_ID || !process.env.AUTH_GOOGLE_SECRET) {
+    return { error: "ยังไม่ได้ตั้งค่าการเข้าสู่ระบบด้วย Google กรุณาติดต่อผู้ดูแลระบบ" };
+  }
+
+  await signIn("google", { redirectTo: "/" });
+}

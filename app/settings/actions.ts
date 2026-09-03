@@ -5,6 +5,8 @@ import { auth }           from "@/lib/auth";
 import { prisma }         from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { EscrowStatus }   from "@prisma/client";
+import bcryptjs          from "bcryptjs";
+import { GENERATED_PASSWORD_NOTICE } from "@/lib/auth";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -112,6 +114,83 @@ export async function updateProfile(input: {
     if (e instanceof z.ZodError) {
       return { success: false, error: e.issues[0].message };
     }
+    return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
+  }
+}
+
+// ─── changePassword ───────────────────────────────────────────────────────────
+
+/**
+ * Verifies the current password, then stores a new bcrypt hash.
+ *
+ * No length or complexity rule is enforced by request — the only constraints
+ * are the ones the feature cannot work without: the field must not be empty,
+ * the confirmation must match, and the new password must differ from the old.
+ */
+export async function changePassword(input: {
+  currentPassword: string;
+  newPassword:     string;
+  confirmPassword: string;
+}): Promise<ActionResult> {
+  try {
+    const sessionUser = await requireUser();
+
+    const { currentPassword, newPassword, confirmPassword } = input;
+
+    if (!currentPassword) {
+      return { success: false, error: "กรุณากรอกรหัสผ่านปัจจุบัน" };
+    }
+    if (!newPassword) {
+      return { success: false, error: "กรุณากรอกรหัสผ่านใหม่" };
+    }
+    if (newPassword !== confirmPassword) {
+      return { success: false, error: "รหัสผ่านใหม่และการยืนยันไม่ตรงกัน" };
+    }
+
+    const user = await prisma.user.findUnique({
+      where:  { id: sessionUser.id },
+      select: { password: true },
+    });
+
+    if (!user) {
+      return { success: false, error: "ไม่พบบัญชีผู้ใช้" };
+    }
+    // OAuth-only accounts have no hash to compare against
+    if (!user.password) {
+      return { success: false, error: "บัญชีนี้ไม่ได้ตั้งรหัสผ่านไว้ กรุณาติดต่อผู้ดูแลระบบ" };
+    }
+
+    const valid = await bcryptjs.compare(currentPassword, user.password);
+    if (!valid) {
+      return { success: false, error: "รหัสผ่านปัจจุบันไม่ถูกต้อง" };
+    }
+
+    // Re-using the same password is a no-op that looks like success — reject it
+    const same = await bcryptjs.compare(newPassword, user.password);
+    if (same) {
+      return { success: false, error: "รหัสผ่านใหม่ต้องไม่ซ้ำกับรหัสผ่านเดิม" };
+    }
+
+    const hash = await bcryptjs.hash(newPassword, 10);
+
+    await prisma.user.update({
+      where: { id: sessionUser.id },
+      data:  { password: hash },
+    });
+
+    // A Google sign-up gets its generated password delivered as a notification,
+    // which means that password sits in the database as plain text. Once the
+    // user has set their own, that notification has served its purpose — drop it.
+    await prisma.notification.deleteMany({
+      where: {
+        userId:  sessionUser.id,
+        message: { contains: GENERATED_PASSWORD_NOTICE },
+      },
+    });
+
+    revalidatePath("/settings");
+    return { success: true, message: "เปลี่ยนรหัสผ่านเรียบร้อยแล้ว" };
+  } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
   }
 }
