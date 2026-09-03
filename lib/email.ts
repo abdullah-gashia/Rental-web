@@ -26,6 +26,23 @@ function getTransporter() {
   return transporter;
 }
 
+/**
+ * Public base URL for links inside e-mails.
+ *
+ * NEXTAUTH_URL must not be set on Vercel (it would break the OAuth callback),
+ * so fall back to the stable production domain Vercel injects. Without this the
+ * "change password" button in a production e-mail points at localhost.
+ */
+function appUrl(): string {
+  const explicit = process.env.APP_URL;
+  if (explicit) return explicit.replace(/\/$/, "");
+
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (vercel) return `https://${vercel}`;
+
+  return (process.env.NEXTAUTH_URL ?? "http://localhost:3000").replace(/\/$/, "");
+}
+
 type SendResult =
   | { sent: true }
   | { sent: false; reason: string };
@@ -46,8 +63,7 @@ export async function sendGeneratedPasswordEmail(
     return { sent: false, reason: "GMAIL_USER / GMAIL_APP_PASSWORD not configured" };
   }
 
-  const settingsUrl =
-    (process.env.NEXTAUTH_URL ?? "http://localhost:3000") + "/settings?tab=profile";
+  const settingsUrl = `${appUrl()}/settings?tab=profile`;
 
   const text = [
     "ยินดีต้อนรับสู่ PSU Store",
