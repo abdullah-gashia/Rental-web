@@ -44,9 +44,19 @@ export async function submitReport(input: {
   }
 
   const reported = await prisma.user.findUnique({
-    where: { id: input.reportedId }, select: { id: true },
+    where: { id: input.reportedId }, select: { id: true, role: true },
   });
   if (!reported) return { success: false, error: "ไม่พบผู้ใช้ที่ต้องการรายงาน" };
+
+  // Reports are a tool for flagging bad trading behaviour between students.
+  // An office or an administrator is not a trader, and routing complaints
+  // about a service through the abuse queue only buries real reports.
+  if (reported.role !== "STUDENT") {
+    return {
+      success: false,
+      error: "บัญชีหน่วยงานและผู้ดูแลระบบรายงานผ่านช่องทางนี้ไม่ได้ — กรุณาติดต่อผู้ดูแลระบบโดยตรง",
+    };
+  }
 
   // One open report per reporter per user: repeat submissions would just bury
   // the queue without telling an admin anything new.

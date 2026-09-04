@@ -5,6 +5,11 @@ import {
   autoExpireRentalRequests,
   sendRentalReminders,
 } from "@/lib/cron/rental";
+import {
+  autoExpireBorrowRequests,
+  sendBorrowReminders,
+  processOverdueBorrows,
+} from "@/lib/cron/borrow";
 
 // Secured by CRON_SECRET — call this every hour via Vercel Cron or an external
 // scheduler. Prefer the header form:
@@ -41,18 +46,30 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const [overdue, expired, reminders] = await Promise.all([
-      processOverdueRentals(),
-      autoExpireRentalRequests(),
-      sendRentalReminders(),
-    ]);
+    const [overdue, expired, reminders, borrowExpired, borrowReminders, borrowOverdue] =
+      await Promise.all([
+        processOverdueRentals(),
+        autoExpireRentalRequests(),
+        sendRentalReminders(),
+        autoExpireBorrowRequests(),
+        sendBorrowReminders(),
+        processOverdueBorrows(),
+      ]);
 
     return NextResponse.json({
       ok: true,
-      overdueProcessed: overdue.processed,
-      requestsExpired:  expired.expired,
-      remindersSent:    reminders.sent,
-      timestamp:        new Date().toISOString(),
+      rentals: {
+        overdueProcessed: overdue.processed,
+        requestsExpired:  expired.expired,
+        remindersSent:    reminders.sent,
+      },
+      borrows: {
+        requestsExpired:  borrowExpired.expired,
+        remindersSent:    borrowReminders.sent,
+        overdueFlagged:   borrowOverdue.flagged,
+        borrowersSuspended: borrowOverdue.suspended,
+      },
+      timestamp: new Date().toISOString(),
     });
   } catch (err: unknown) {
     // The message can carry connection strings and row data — log it, don't

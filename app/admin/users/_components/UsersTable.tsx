@@ -22,7 +22,7 @@ export default function UsersTable({ rows }: Props) {
     kind:   DialogKind;
     userId: string;
     label:  string;
-    newRole?: "ADMIN" | "STUDENT";
+    newRole?: "ADMIN" | "STUDENT" | "PATTARA";
   } | null>(null);
 
   const [toast, setToast] = useState<{ ok: boolean; msg: string } | null>(null);
@@ -79,7 +79,10 @@ export default function UsersTable({ rows }: Props) {
             ? `${dialog.label} จะถูกแบนและไม่สามารถเข้าสู่ระบบได้`
             : dialog?.kind === "unban"
             ? `${dialog?.label} จะสามารถเข้าสู่ระบบได้อีกครั้ง`
-            : `เปลี่ยนบทบาทของ ${dialog?.label} เป็น ${dialog?.newRole === "ADMIN" ? "แอดมิน" : "นักศึกษา"}`
+            : `เปลี่ยนบทบาทของ ${dialog?.label} เป็น ${
+                dialog?.newRole === "ADMIN"   ? "แอดมิน"
+              : dialog?.newRole === "PATTARA" ? "บัญชีหน่วยงานงานภัทร — จะซื้อ ขาย หรือเช่าไม่ได้อีก"
+              : "นักศึกษา"}`
         }
         confirmLabel={dialog?.kind === "ban" ? "แบน" : "ยืนยัน"}
         danger={dialog?.kind === "ban"}
@@ -220,7 +223,7 @@ function ActionsDropdown({
   onEdit:  () => void;
   onBan:   () => void;
   onUnban: () => void;
-  onRole:  (r: "ADMIN" | "STUDENT") => void;
+  onRole:  (r: "ADMIN" | "STUDENT" | "PATTARA") => void;
 }) {
   const [open, setOpen] = useState(false);
   const [pos, setPos]   = useState<{ top: number; right: number } | null>(null);
@@ -306,6 +309,19 @@ function ActionsDropdown({
                   icon="👑"
                   onClick={() => { setOpen(false); onRole("ADMIN"); }}
                 />
+                {user.role === "PATTARA" ? (
+                  <MenuItem
+                    label="กลับเป็นนักศึกษา"
+                    icon="🎓"
+                    onClick={() => { setOpen(false); onRole("STUDENT"); }}
+                  />
+                ) : (
+                  <MenuItem
+                    label="ตั้งเป็นบัญชีงานภัทร"
+                    icon="💙"
+                    onClick={() => { setOpen(false); onRole("PATTARA"); }}
+                  />
+                )}
               </>
             )}
           </div>

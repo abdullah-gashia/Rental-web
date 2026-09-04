@@ -372,6 +372,13 @@ export async function getUserProfile(userId: string) {
         image:      true,
         trustScore: true,
         createdAt:  true,
+        // An office profile renders completely differently, so the page needs
+        // to know which kind of account this is before it draws anything.
+        role:              true,
+        officeName:        true,
+        officeDescription: true,
+        officeLocation:    true,
+        officeHours:       true,
         reviewsReceived: {
           orderBy: { createdAt: "desc" },
           take:    10,

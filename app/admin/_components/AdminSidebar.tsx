@@ -31,6 +31,7 @@ export default function AdminSidebar({ adminName, adminEmail, pendingVerificatio
     { href: "/admin/verifications", emoji: "🔍", label: "ยืนยันตัวตน KYC", badge: pendingVerificationCount },
     { href: "/admin/approvals",     emoji: "✅", label: "ตรวจสอบสินค้า"          },
     { href: "/admin/broadcast",     emoji: "📣", label: "ส่งอีเมลถึงทุกคน"        },
+    { href: "/admin/fund",          emoji: "💙", label: "กองทุนงานภัทร"          },
   ];
 
   function isActive(href: string) {

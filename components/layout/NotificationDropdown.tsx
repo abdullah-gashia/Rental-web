@@ -32,6 +32,7 @@ function typeIcon(type: string): string {
     case "MESSAGE": return "💬";
     case "ORDER": return "🛒";
     case "MODERATION": return "🛡️";
+    case "BORROW": return "🤝";
     default: return "🔔";
   }
 }

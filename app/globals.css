@@ -814,3 +814,170 @@ html:has(.hp-root) body { background: var(--hp-canvas); }
 @media (prefers-reduced-motion: reduce) {
   .hp-hero-card:hover img { transform: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   งานภัทร — borrowing surfaces
+   ═══════════════════════════════════════════════════════════════════════════
+   A quieter, bluer world than the marketplace. No orange, no price tags, no
+   shadows on everything: borrowing is a service, and the pages should feel
+   like a library counter rather than a shop window. Scoped under .bw-root so
+   nothing here can leak into the marketplace or the admin panel.
+*/
+
+/* Variables only — for borrow components rendered inside another shell
+   (the dashboard, the office panel) where a second full-page background
+   would fight the one already there. */
+.bw-root,
+.bw-scope {
+  --bw-ground:  #f4f7fc;
+  --bw-surface: #ffffff;
+  --bw-line:    #e1e8f2;
+  --bw-line-2:  #cdd9ea;
+  --bw-ink:     #0f1e35;
+  --bw-ink-2:   #465771;
+  --bw-muted:   #64748b;
+  --bw-accent:  var(--psu-blue);
+  --bw-deep:    var(--psu-navy);
+  --bw-tint:    #eef4ff;
+}
+
+.bw-root {
+  background: var(--bw-ground);
+  min-height: 100vh;
+  color: var(--bw-ink);
+}
+
+.bw-scope { color: var(--bw-ink); }
+
+.bw-panel {
+  background: var(--bw-surface);
+  border: 1px solid var(--bw-line);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* Section heading — a hairline rule, not a card */
+.bw-h {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--bw-deep);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--bw-line);
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+.bw-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--bw-muted);
+}
+
+/* Buttons — one filled, one outline, nothing else */
+.bw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 18px;
+  border-radius: 9px;
+  font-size: 13.5px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: background-color .14s, border-color .14s, color .14s;
+  white-space: nowrap;
+}
+.bw-btn-primary { background: var(--bw-accent); color: #fff; }
+.bw-btn-primary:hover:not(:disabled) { background: var(--psu-blue-700); }
+.bw-btn-ghost {
+  background: var(--bw-surface);
+  border-color: var(--bw-line-2);
+  color: var(--bw-ink);
+}
+.bw-btn-ghost:hover:not(:disabled) { background: var(--bw-tint); border-color: var(--bw-accent); }
+.bw-btn:disabled { opacity: .45; cursor: not-allowed; }
+
+/* Inputs */
+.bw-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--bw-line-2);
+  border-radius: 9px;
+  font-size: 13.5px;
+  background: var(--bw-surface);
+  color: var(--bw-ink);
+  transition: border-color .14s, box-shadow .14s;
+}
+textarea.bw-input { height: auto; padding: 10px 12px; line-height: 1.8; resize: vertical; }
+.bw-input:focus {
+  outline: none;
+  border-color: var(--bw-accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+}
+
+/* Status pills — colour carries meaning, so it is never decorative */
+.bw-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+.bw-pill-wait   { background: #fff8e6; color: #92620e; border-color: #f3e2b7; }
+.bw-pill-go     { background: var(--bw-tint); color: var(--psu-blue-700); border-color: var(--psu-sky-200); }
+.bw-pill-live   { background: #e8f5ee; color: #1f6b45; border-color: #c3e3d1; }
+.bw-pill-late   { background: #fdecea; color: #b3261e; border-color: #f6c9c4; }
+.bw-pill-done   { background: #f1f4f9; color: #4a5a72; border-color: #dde4ee; }
+.bw-pill-off    { background: #f7f8fa; color: #8b95a5; border-color: #e6e9ef; }
+
+/* Thumbnail — contain, never crop, same rule as the marketplace */
+.bw-thumb {
+  background: #f1f4f9;
+  border: 1px solid var(--bw-line);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bw-thumb img { width: 100%; height: 100%; object-fit: contain; }
+
+/* Step rail on an order page */
+.bw-steps { display: flex; flex-wrap: wrap; gap: 4px 0; }
+.bw-step { display: flex; align-items: center; gap: 6px; }
+.bw-step-dot {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  border: 1.5px solid var(--bw-line-2);
+  background: var(--bw-surface);
+  color: #a9b4c4;
+}
+.bw-step.done .bw-step-dot { border-color: #7fc4a5; background: #e8f5ee; color: #1f6b45; }
+.bw-step.now  .bw-step-dot { border-color: var(--bw-accent); background: var(--bw-accent); color: #fff; }
+.bw-step-bar { width: 22px; height: 1.5px; background: var(--bw-line-2); }
+.bw-step.done + .bw-step .bw-step-bar { background: #a9dcc4; }
+
+/* Office sidebar */
+.bw-nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px;
+  border-radius: 9px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--bw-ink-2);
+  transition: background-color .12s, color .12s;
+}
+.bw-nav-item:hover { background: var(--bw-tint); color: var(--bw-deep); }
+.bw-nav-item.active { background: var(--bw-tint); color: var(--psu-blue-700); font-weight: 600; }
+
+/* Figures line up in columns */
+.bw-num { font-variant-numeric: tabular-nums; }

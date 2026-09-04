@@ -30,6 +30,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
             >
               คำสั่งซื้อ
             </a>
+            <a
+              href="/dashboard/borrows"
+              className="px-3 py-1.5 rounded-lg text-sm text-[#555] hover:text-[#111] hover:bg-[#f7f6f3] transition font-medium"
+            >
+              ของที่ยืม
+            </a>
           </nav>
           <div className="flex items-center gap-3">
             <a

@@ -31,10 +31,14 @@ const AUTH_REQUIRED = [
   "/orders",
   "/rental",
   "/profile",
+  "/borrow/orders",
 ];
 
 /** ADMIN role required. */
 const ADMIN_ONLY = ["/admin"];
+
+/** The งานภัทร back office. Admins get in too, so they can stand in for staff. */
+const OFFICE_ONLY = ["/pattara"];
 
 function startsWithAny(pathname: string, prefixes: string[]) {
   return prefixes.some((p) => pathname === p || pathname.startsWith(p + "/"));
@@ -95,6 +99,15 @@ export async function middleware(request: NextRequest) {
     if (token?.role !== "ADMIN") {
       // 404 rather than 403 for signed-in non-admins: there is no reason to
       // confirm to a stranger that /admin/lending is a real page.
+      return isApi
+        ? NextResponse.json({ error: "Not found" }, { status: 404 })
+        : harden(NextResponse.redirect(new URL("/", request.url)));
+    }
+  }
+
+  // ── Office back office ────────────────────────────────────────────────────
+  if (startsWithAny(pathname, OFFICE_ONLY)) {
+    if (token?.role !== "PATTARA" && token?.role !== "ADMIN") {
       return isApi
         ? NextResponse.json({ error: "Not found" }, { status: 404 })
         : harden(NextResponse.redirect(new URL("/", request.url)));

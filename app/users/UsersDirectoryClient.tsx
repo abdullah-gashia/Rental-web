@@ -32,14 +32,22 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
   const th = locale !== "en";
 
   const [query, setQuery] = useState("");
+  const [kind, setKind]   = useState<"all" | "office" | "student">("all");
+
+  const officeCount  = users.filter((u) => u.isOffice).length;
+  const studentCount = users.length - officeCount;
 
   // The list is capped at 100 rows, so filtering in the browser keeps typing
   // instant instead of hitting the server on every keystroke.
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return users;
-    return users.filter((u) => (u.name ?? "").toLowerCase().includes(q));
-  }, [query, users]);
+    return users.filter((u) => {
+      if (kind === "office"  && !u.isOffice) return false;
+      if (kind === "student" &&  u.isOffice) return false;
+      if (!q) return true;
+      return (u.name ?? "").toLowerCase().includes(q);
+    });
+  }, [query, users, kind]);
 
   const goToCategory = (cat: string) => router.push(cat === "all" ? "/" : `/?cat=${cat}`);
 
@@ -65,10 +73,31 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
         </h1>
         <p className="text-[14px] text-[var(--hp-muted)] mt-1.5">
           {th
-            ? "ดูคะแนนความน่าเชื่อถือและรีวิวของผู้ขายก่อนตัดสินใจซื้อ"
-            : "Check a seller's trust score and reviews before you buy."}
+            ? "ดูคะแนนความน่าเชื่อถือและรีวิวของผู้ขายก่อนตัดสินใจซื้อ — และหาหน่วยงานที่ให้ยืมอุปกรณ์ฟรี"
+            : "Check a seller's trust score and reviews, and find offices that lend equipment for free."}
         </p>
       </header>
+
+      {/* Who to show */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {([
+          { k: "all",     label: th ? "ทั้งหมด"    : "Everyone", n: users.length },
+          { k: "office",  label: th ? "หน่วยงาน"   : "Offices",  n: officeCount  },
+          { k: "student", label: th ? "นักศึกษา"   : "Students", n: studentCount },
+        ] as const).map((t) => (
+          <button
+            key={t.k}
+            onClick={() => setKind(t.k)}
+            className={`text-[12px] font-semibold px-3.5 py-1.5 rounded-full border transition ${
+              kind === t.k
+                ? "bg-[var(--psu-navy)] border-[var(--psu-navy)] text-white"
+                : "bg-white border-[var(--hp-border)] text-[var(--hp-ink-2)] hover:border-[var(--hp-border-str)]"
+            }`}
+          >
+            {t.label} <span className="hp-num opacity-65">{t.n}</span>
+          </button>
+        ))}
+      </div>
 
       {/* Result count — the search itself lives in the top bar */}
       <p className="text-[12.5px] text-[var(--hp-muted)] mb-4">
@@ -88,6 +117,52 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {filtered.map((u) => {
             const tone = trustTone(u.trustScore);
+
+            // ── An office ────────────────────────────────────────────────
+            if (u.isOffice) {
+              return (
+                <button
+                  key={u.id}
+                  onClick={() => router.push(`/user/${u.id}`)}
+                  className="hp-panel !p-4 text-left transition-colors group border-[var(--psu-sky-200)] bg-[linear-gradient(180deg,#f7faff,#ffffff)] hover:border-[var(--psu-blue)]"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-[var(--psu-blue)] flex items-center justify-center text-white">
+                      {u.image
+                        ? <img src={u.image} alt="" className="w-full h-full object-cover" />
+                        : (
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
+                              d="M7 11V7a2 2 0 114 0v4m0 0V5.5a2 2 0 114 0V11m0 0V8.5a2 2 0 114 0V15a6 6 0 01-6 6h-2a6 6 0 01-6-6v-3.5a2 2 0 114 0V13" />
+                          </svg>
+                        )}
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[10px] font-bold tracking-[0.09em] uppercase text-[var(--psu-blue)]">
+                        {th ? "หน่วยงาน" : "Office"}
+                      </span>
+                      <p className="text-[14px] font-semibold text-[var(--hp-ink)] truncate group-hover:text-[var(--psu-indigo)]">
+                        {u.name ?? (th ? "งานภัทร" : "Office")}
+                      </p>
+                      <p className="text-[11.5px] text-[var(--hp-muted)] mt-0.5 truncate">
+                        {u.officeLocation ?? (th ? "ให้ยืมอุปกรณ์ฟรีสำหรับนักศึกษา" : "Free equipment lending")}
+                      </p>
+                      <div className="flex items-center gap-2 mt-2 flex-wrap">
+                        <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded-md border bg-[#eef4ff] text-[#1d4ed8] border-[#cfe0ff]">
+                          {th ? `อุปกรณ์ ${u.lendItemCount} ชิ้น` : `${u.lendItemCount} items`}
+                        </span>
+                        <span className="text-[11px] text-[var(--hp-muted)]">
+                          {th ? `ให้ยืมแล้ว ${u.lentOutCount} ครั้ง` : `${u.lentOutCount} loans`}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              );
+            }
+
+            // ── A person ─────────────────────────────────────────────────
             return (
               <button
                 key={u.id}

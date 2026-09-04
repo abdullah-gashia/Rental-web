@@ -24,6 +24,7 @@ import WishlistModal from "@/components/forms/WishlistModal";
 import ChatModal from "@/components/chat/ChatModal";
 import RecommendedSection from "@/app/_components/RecommendedSection";
 import type { RecommendedItem } from "@/lib/actions/recommendations";
+import BorrowPromo, { type BorrowPromoItem } from "@/app/_components/BorrowPromo";
 
 interface HomeClientProps {
   items: ItemWithDetails[];
@@ -42,6 +43,9 @@ interface HomeClientProps {
   verifiedSellers?:  number;
   avgRating?:        number;
   reviewCount?:      number;
+  /** งานภัทร lending shelf, shown above the marketplace grid */
+  borrowItems?:      BorrowPromoItem[];
+  borrowFund?:       { raised: number; itemsTotal: number; timesLent: number };
 }
 
 export default function HomeClient({
@@ -56,6 +60,8 @@ export default function HomeClient({
   initialCondition = "",
   initialSort      = "newest",
   authError,
+  borrowItems     = [],
+  borrowFund      = { raised: 0, itemsTotal: 0, timesLent: 0 },
   verifiedSellers = 0,
   avgRating       = 0,
   reviewCount     = 0,
@@ -251,6 +257,16 @@ export default function HomeClient({
                 reviewCount={reviewCount}
               />
             </>
+          )}
+
+          {/* ── งานภัทร lending shelf ──────────────────────────────── */}
+          {!isSearchActive && (
+            <BorrowPromo
+              items={borrowItems}
+              raised={borrowFund.raised}
+              itemsTotal={borrowFund.itemsTotal}
+              timesLent={borrowFund.timesLent}
+            />
           )}
 
           {/* ── Filter toolbar ─────────────────────────────────────── */}

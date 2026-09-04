@@ -28,7 +28,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
   // Form state
   const [name,   setName]   = useState("");
   const [phone,  setPhone]  = useState("");
-  const [role,   setRole]   = useState<"ADMIN" | "STUDENT">("STUDENT");
+  const [role,   setRole]   = useState<"ADMIN" | "STUDENT" | "PATTARA">("STUDENT");
   const [banned, setBanned] = useState(false);
   const [trust,  setTrust]  = useState(100);
   const [kyc,    setKyc]    = useState("UNVERIFIED");

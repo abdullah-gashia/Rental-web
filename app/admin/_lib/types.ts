@@ -34,7 +34,7 @@ export type UserRow = {
   id:         string;
   name:       string | null;
   email:      string;
-  role:       "ADMIN" | "STUDENT";
+  role:       "ADMIN" | "STUDENT" | "PATTARA";
   isBanned:   boolean;
   trustScore: number;
   itemCount:  number;
@@ -103,7 +103,7 @@ export type UserDetail = {
   image:              string | null;
   phone:              string | null;
   bio:                string | null;
-  role:               "ADMIN" | "STUDENT";
+  role:               "ADMIN" | "STUDENT" | "PATTARA";
   isBanned:           boolean;
   trustScore:         number;
   walletBalance:      number;

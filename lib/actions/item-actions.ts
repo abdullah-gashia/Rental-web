@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { tradingBlockReason, type AppRole } from "@/lib/permissions";
 import { moderateItem } from "@/lib/moderation";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
@@ -142,6 +143,11 @@ export async function createItem(data: CreateItemInput) {
   if (!session?.user?.id) {
     return { error: "Not authenticated" };
   }
+
+  // Institutional accounts do not trade. Hiding the button is not enough —
+  // this action is a public endpoint, so the rule has to live here.
+  const blocked = tradingBlockReason((session.user as { role?: AppRole }).role ?? "STUDENT");
+  if (blocked) return { error: blocked };
 
   // ── Verification gate ─────────────────────────────────────────────────────
   const seller = await prisma.user.findUnique({

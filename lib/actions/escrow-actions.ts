@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { tradingBlockReason, type AppRole } from "@/lib/permissions";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
@@ -30,6 +31,9 @@ function clamp(n: number) {
 export async function initiatePurchase(itemId: string) {
   const session = await auth();
   if (!session?.user?.id) return { error: "Not authenticated" };
+
+  const blocked = tradingBlockReason((session.user as { role?: AppRole }).role ?? "STUDENT");
+  if (blocked) return { error: blocked };
 
   const buyerId = session.user.id;
 

@@ -78,4 +78,4 @@ export type ItemCondition = "LIKE_NEW" | "GOOD" | "FAIR" | "NEEDS_REPAIR";
 export type CategorySlug = "all" | "secondhand" | "rental" | "electronics" | "vehicles" | "boardgames" | "books";
 
 /** What the left rail highlights: a product category, or a standalone page. */
-export type RailSelection = CategorySlug | "users";
+export type RailSelection = CategorySlug | "users" | "borrow";

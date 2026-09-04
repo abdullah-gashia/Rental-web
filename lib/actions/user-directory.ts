@@ -22,6 +22,12 @@ export interface DirectoryUser {
   soldCount: number;
   verified: boolean;
   memberSince: string;
+  /** True for a งานภัทร office account, which is listed and read differently. */
+  isOffice: boolean;
+  officeLocation: string | null;
+  /** Office only: equipment on the shelf, and how many times it has gone out. */
+  lendItemCount: number;
+  lentOutCount: number;
 }
 
 export async function getUserDirectory(search?: string): Promise<DirectoryUser[]> {
@@ -29,44 +35,72 @@ export async function getUserDirectory(search?: string): Promise<DirectoryUser[]
 
   const where: Record<string, unknown> = {
     isBanned: false,
-    // Admins moderate rather than trade, so they stay out of the directory
-    role: "STUDENT",
+    // Admins moderate rather than trade, so they stay out of the directory.
+    // งานภัทร accounts belong in it though — a student who cannot find the
+    // office cannot borrow anything from it.
+    role: { in: ["STUDENT", "PATTARA"] },
     ...(q ? { name: { contains: q, mode: "insensitive" } } : {}),
   };
 
   const users = await prisma.user.findMany({
     where: where as never,
-    orderBy: [{ trustScore: "desc" }, { createdAt: "asc" }],
+    // Offices first, then the most trusted people. A student looking for
+    // somewhere to borrow from should not have to scroll.
+    orderBy: [{ role: "desc" }, { trustScore: "desc" }, { createdAt: "asc" }],
     take: 100,
     select: {
       id: true, name: true, image: true, trustScore: true, createdAt: true,
-      verificationStatus: true,
+      verificationStatus: true, role: true,
+      officeName: true, officeLocation: true,
       reviewsReceived: { select: { rating: true } },
-      _count: { select: { items: true } },
+      _count: { select: { items: true, ownedLendingItems: true } },
     },
   });
 
-  const soldCounts = await prisma.escrowOrder.groupBy({
-    by: ["sellerId"],
-    where: { sellerId: { in: users.map((u) => u.id) }, status: "COMPLETED" },
-    _count: { _all: true },
-  });
-  const soldBySeller = new Map(soldCounts.map((r) => [r.sellerId, r._count._all]));
+  const ids = users.map((u) => u.id);
 
-  return users.map((u) => ({
-    id: u.id,
-    name: u.name,
-    image: u.image,
-    trustScore: u.trustScore,
-    avgRating: u.reviewsReceived.length > 0
-      ? u.reviewsReceived.reduce((s, r) => s + r.rating, 0) / u.reviewsReceived.length
-      : null,
-    reviewCount: u.reviewsReceived.length,
-    itemCount: u._count.items,
-    soldCount: soldBySeller.get(u.id) ?? 0,
-    verified: u.verificationStatus === "APPROVED",
-    memberSince: u.createdAt.toISOString(),
-  }));
+  const [soldCounts, lentCounts] = await Promise.all([
+    prisma.escrowOrder.groupBy({
+      by: ["sellerId"],
+      where: { sellerId: { in: ids }, status: "COMPLETED" },
+      _count: { _all: true },
+    }),
+    prisma.lendingOrder.groupBy({
+      by: ["lenderId"],
+      where: {
+        lenderId: { in: ids },
+        status: { in: ["COMPLETED", "COMPLETED_WITH_DEDUCTION"] },
+      },
+      _count: { _all: true },
+    }),
+  ]);
+
+  const soldBySeller = new Map(soldCounts.map((r) => [r.sellerId, r._count._all]));
+  const lentByOffice = new Map(lentCounts.map((r) => [r.lenderId, r._count._all]));
+
+  return users.map((u) => {
+    const isOffice = u.role === "PATTARA";
+    return {
+      id: u.id,
+      name: isOffice ? (u.officeName ?? u.name) : u.name,
+      image: u.image,
+      trustScore: u.trustScore,
+      // Stars and trust are about trading between people. They mean nothing
+      // for an office that lends equipment, so they are not published for one.
+      avgRating: isOffice || u.reviewsReceived.length === 0
+        ? null
+        : u.reviewsReceived.reduce((s, r) => s + r.rating, 0) / u.reviewsReceived.length,
+      reviewCount: isOffice ? 0 : u.reviewsReceived.length,
+      itemCount: u._count.items,
+      soldCount: soldBySeller.get(u.id) ?? 0,
+      verified: u.verificationStatus === "APPROVED",
+      memberSince: u.createdAt.toISOString(),
+      isOffice,
+      officeLocation: u.officeLocation,
+      lendItemCount: u._count.ownedLendingItems,
+      lentOutCount: lentByOffice.get(u.id) ?? 0,
+    };
+  });
 }
 
 /** The listings shown on a public profile. */

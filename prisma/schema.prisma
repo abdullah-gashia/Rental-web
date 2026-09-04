@@ -11,6 +11,7 @@ datasource db {
 enum Role {
   ADMIN
   STUDENT
+  PATTARA   // บัญชีหน่วยงาน "งานภัทร" — ลงอุปกรณ์ให้ยืมฟรี ไม่ซื้อ ไม่ขาย ไม่เช่า
 }
 
 enum VerificationStatus {
@@ -143,6 +144,20 @@ model User {
   // Rental system (marketplace RENT items)
   renterOrders        RentalOrder[]     @relation("RenterOrders")
   ownerRentalOrders   RentalOrder[]     @relation("OwnerRentalOrders")
+
+  // ── Office profile — only meaningful when role = PATTARA ──
+  officeName          String?
+  officeDescription   String?   @db.Text
+  officeLocation      String?           // where students collect and return
+  officeHours         String?           // e.g. "จ.–ศ. 08:30–16:30"
+
+  // ── Borrowing — only meaningful when role = STUDENT ──
+  // Set when someone is too far past a due date to be lent anything else.
+  // Null means no restriction; lendingTier carries the standing itself.
+  borrowSuspendedUntil DateTime?
+
+  fundEntries         FundEntry[]       @relation("FundEntriesRecorded")
+  approvedLendings    LendingOrder[]    @relation("LendingApprovedBy")
 }
 
 // ─── Notifications ───────────────────────────────────
@@ -152,6 +167,7 @@ enum NotificationType {
   SYSTEM
   ORDER
   MODERATION
+  BORROW
 }
 
 enum TransactionStatus {
@@ -661,12 +677,6 @@ enum LendingCategory {
   OTHER
 }
 
-enum RentalType {
-  FREE
-  DAILY_RATE
-  FLAT_FEE
-}
-
 enum LendingItemStatus {
   AVAILABLE
   LENT_OUT
@@ -718,11 +728,13 @@ model LendingItem {
   images          String[]
   tags            String[]
 
-  rentalType      RentalType        @default(DAILY_RATE)
-  dailyRate       Float?
-  flatFee         Float?
-  depositAmount   Float             @default(0)
-  lateFeePerDay   Float             @default(0)
+  // Borrowing here is free by design: no rate, no deposit, no late fee.
+  // Accountability comes from LendingTier, not from money.
+  assetTag        String?           @unique  // university asset number, e.g. "PSU-CAL-014"
+  purchasePrice   Float?                     // what the fund paid for it
+  purchasedAt     DateTime?
+  fundEntryId     String?                    // the purchase record that bought it
+  fundEntry       FundEntry?        @relation(fields: [fundEntryId], references: [id])
 
   status          LendingItemStatus @default(AVAILABLE)
   maxLendingDays  Int               @default(7)
@@ -761,18 +773,14 @@ model LendingOrder {
   lendingItemId   String
   lendingItem     LendingItem         @relation(fields: [lendingItemId], references: [id])
 
-  rentalType      RentalType
-  dailyRate       Float?
-  flatFee         Float?
-  depositAmount   Float
   requestedDays   Int
-  estimatedRentalFee Float
-  actualRentalFee Float?
-  lateFees        Float               @default(0)
-  damageFees      Float               @default(0)
-  platformFee     Float               @default(0)
-  totalPaidByBorrower Float
-  lenderPayout    Float?
+
+  // Why the student needs it. Private to the office and admins — never shown
+  // in the public directory or on a profile.
+  purposeNote     String?             @db.Text
+  staffNote       String?             @db.Text  // internal, the borrower never sees it
+  approvedById    String?
+  approvedBy      User?               @relation("LendingApprovedBy", fields: [approvedById], references: [id])
 
   requestedAt     DateTime            @default(now())
   approvedAt      DateTime?
@@ -801,7 +809,6 @@ model LendingOrder {
   returnLenderConfirm   Boolean       @default(false)
   returnNote      String?
   returnCondition ItemCondition?
-  damageFeeRequested Float?
 
   status          LendingOrderStatus
   statusHistory   Json                @default("[]")
@@ -934,6 +941,47 @@ model RentalOrder {
 }
 
 // ─── Featured Items (Admin-Curated Trending) ─────────
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Welfare fund
+//
+// Income is NOT stored here. It is derived by summing platformFee across
+// completed EscrowOrders and RentalOrders, which means the figure always
+// matches reality and no history had to be back-filled. This table records
+// what leaves the fund — equipment bought for students to borrow — plus the
+// occasional donation or correction.
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum FundEntryKind {
+  IN
+  OUT
+}
+
+enum FundSource {
+  PURCHASE     // OUT — equipment bought for the lending shelf
+  MAINTENANCE  // OUT — repair or replacement of something already owned
+  DONATION     // IN  — money given directly to the fund
+  ADJUSTMENT   // either — a correction, always with a note
+}
+
+model FundEntry {
+  id            String        @id @default(cuid())
+  kind          FundEntryKind
+  source        FundSource
+  amount        Float                    // always positive; kind carries direction
+  note          String
+  receiptUrl    String?
+  occurredAt    DateTime
+  recordedById  String
+  recordedBy    User          @relation("FundEntriesRecorded", fields: [recordedById], references: [id])
+  createdAt     DateTime      @default(now())
+
+  items         LendingItem[]
+
+  @@index([occurredAt])
+  @@index([kind, occurredAt])
+  @@map("fund_entries")
+}
 
 model FeaturedItem {
   id            String    @id @default(cuid())

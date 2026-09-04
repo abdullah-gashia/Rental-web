@@ -145,12 +145,12 @@ export async function unbanUser(userId: string): Promise<ActionResult> {
 
 const RoleSchema = z.object({
   userId:  z.string().min(1),
-  newRole: z.enum(["ADMIN", "STUDENT"]),
+  newRole: z.enum(["ADMIN", "STUDENT", "PATTARA"]),
 });
 
 export async function updateUserRole(
   userId: string,
-  newRole: "ADMIN" | "STUDENT"
+  newRole: "ADMIN" | "STUDENT" | "PATTARA"
 ): Promise<ActionResult> {
   try {
     const admin = await requireAdmin();
@@ -168,11 +168,53 @@ export async function updateUserRole(
     if (target.role === "ADMIN") {
       return { success: false, error: "ไม่สามารถลดสิทธิ์บัญชีผู้ดูแลระบบได้" };
     }
+
+    // Turning a shopper into an institution leaves their listings and orders
+    // stranded: a งานภัทร account cannot buy, sell or rent, so nobody would be
+    // able to finish what is already in flight. Refuse until it is settled.
+    if (parsed.newRole === "PATTARA") {
+      const [openOrders, liveItems] = await Promise.all([
+        prisma.escrowOrder.count({
+          where: {
+            OR: [{ buyerId: parsed.userId }, { sellerId: parsed.userId }],
+            status: { notIn: ["COMPLETED", "CANCELLED", "REFUNDED", "CANCELLED_BY_ADMIN",
+                              "MEETUP_CASH_COMPLETED", "COD_DELIVERED"] as EscrowStatus[] },
+          },
+        }),
+        prisma.item.count({
+          where: { sellerId: parsed.userId, status: { in: ["ACTIVE", "APPROVED", "PENDING"] as ItemStatus[] } },
+        }),
+      ]);
+
+      if (openOrders > 0) {
+        return {
+          success: false,
+          error: `บัญชีนี้มีคำสั่งซื้อค้างอยู่ ${openOrders} รายการ — ต้องจบให้เรียบร้อยก่อนเปลี่ยนเป็นบัญชีงานภัทร`,
+        };
+      }
+      if (liveItems > 0) {
+        return {
+          success: false,
+          error: `บัญชีนี้มีประกาศเปิดขายอยู่ ${liveItems} รายการ — ต้องลบหรือปิดก่อน (แนะนำให้สร้างบัญชีงานภัทรใหม่แทน)`,
+        };
+      }
+    }
     await prisma.user.update({
       where: { id: parsed.userId },
-      data:  { role: parsed.newRole },
+      data: {
+        role: parsed.newRole,
+        // Give a brand new office account something sensible to show, so the
+        // public profile is not blank the moment it is created.
+        ...(parsed.newRole === "PATTARA"
+          ? {
+              officeName:     undefined,
+              officeLocation: undefined,
+            }
+          : {}),
+      },
     });
     revalidatePath("/admin/users");
+    revalidatePath("/users");
     return { success: true, message: "เปลี่ยนบทบาทเรียบร้อยแล้ว" };
   } catch (e: unknown) {
     return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
@@ -353,7 +395,7 @@ const AdminEditUserSchema = z.object({
   userId:             z.string().min(1),
   name:               z.string().min(2, "ชื่อต้องมีอย่างน้อย 2 ตัวอักษร").max(50),
   phone:              z.string().regex(/^0\d{9}$/).nullable().optional(),
-  role:               z.enum(["ADMIN", "STUDENT"]),
+  role:               z.enum(["ADMIN", "STUDENT", "PATTARA"]),
   isBanned:           z.boolean(),
   trustScore:         z.number().min(0).max(200),
   verificationStatus: z.enum(["UNVERIFIED", "PENDING", "APPROVED", "REJECTED", "SUSPENDED"]),

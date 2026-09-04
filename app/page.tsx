@@ -5,6 +5,7 @@ import { auth }                     from "@/lib/auth";
 import { getCachedRecommendations } from "@/lib/actions/recommendations";
 import { getTrendingSection }       from "@/lib/actions/featured";
 import HomeClient from "./HomeClient";
+import { getPublicFundStats } from "@/lib/actions/fund";
 
 type SearchParamsRaw = { [key: string]: string | string[] | undefined };
 
@@ -92,7 +93,7 @@ export default async function Home({
   const session = await auth();
   const userId  = (session?.user as any)?.id ?? null;
 
-  const [items, recommendations, trendingItems, verifiedSellers, ratingAgg] = await Promise.all([
+  const [items, recommendations, trendingItems, verifiedSellers, ratingAgg, borrowItems, borrowFund] = await Promise.all([
     prisma.item.findMany({
       where,
       orderBy,
@@ -107,6 +108,14 @@ export default async function Home({
     // Headline figures, counted rather than hardcoded
     prisma.user.count({ where: { verificationStatus: "APPROVED" } }),
     prisma.review.aggregate({ _avg: { rating: true }, _count: { rating: true } }),
+    // The lending shelf — only what is actually free to take right now
+    prisma.lendingItem.findMany({
+      where: { status: "AVAILABLE" },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+      select: { id: true, title: true, category: true, images: true },
+    }),
+    getPublicFundStats(),
   ]);
 
   console.log("Items fetched:", items.length);
@@ -133,6 +142,10 @@ export default async function Home({
       initialCondition={condition ?? ""}
       initialSort={sort ?? "newest"}
       authError={authError}
+      borrowItems={borrowItems.map((i) => ({
+        id: i.id, title: i.title, category: i.category, image: i.images[0] ?? null,
+      }))}
+      borrowFund={borrowFund}
       verifiedSellers={verifiedSellers}
       avgRating={ratingAgg._avg.rating ?? 0}
       reviewCount={ratingAgg._count.rating}

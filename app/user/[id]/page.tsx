@@ -5,6 +5,7 @@ import ReportButton from "./ReportButton";
 import { getUserPublicItems } from "@/lib/actions/user-directory";
 import { hasOpenReport } from "@/lib/actions/report-actions";
 import ProfileReviewSection from "./ProfileReviewSection";
+import OfficeProfile from "./OfficeProfile";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -25,6 +26,14 @@ function Stars({ rating }: { rating: number }) {
 
 export default async function UserProfilePage({ params }: PageProps) {
   const { id } = await params;
+
+  // An office is a different kind of thing from a person, so it gets its own
+  // page rather than this one with half the sections switched off.
+  const early = await getUserProfile(id);
+  if (early.user && (early.user as { role?: string }).role === "PATTARA") {
+    return <OfficeProfile user={early.user} />;
+  }
+
   const [profileResult, pendingResult, publicItems, reportState] = await Promise.all([
     getUserProfile(id),
     getMyPendingTransaction(id),

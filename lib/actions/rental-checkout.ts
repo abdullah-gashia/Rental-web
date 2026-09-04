@@ -1,6 +1,7 @@
 "use server";
 
 import { z } from "zod";
+import { tradingBlockReason, type AppRole } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 import { RENTAL_REQUEST_TIMEOUT_MS } from "@/lib/rental-config";
 import { auth } from "@/lib/auth";
@@ -60,6 +61,9 @@ export async function createRentalOrder(input: CreateRentalInput): Promise<Renta
   const session = await auth();
   if (!session?.user?.id) return { success: false, error: "กรุณาเข้าสู่ระบบ" };
   const renterId = session.user.id;
+
+  const blocked = tradingBlockReason((session.user as { role?: AppRole }).role ?? "STUDENT");
+  if (blocked) return { success: false, error: blocked };
 
   // 2. Validate
   const parsed = CreateRentalSchema.safeParse(input);

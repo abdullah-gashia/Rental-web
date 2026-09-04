@@ -10,6 +10,7 @@ const USER_STATUS: Record<string, BadgeSpec> = {
 const ROLE: Record<string, BadgeSpec> = {
   ADMIN:   { label: "แอดมิน",    cls: "bg-purple-50 text-purple-700 border-purple-200" },
   STUDENT: { label: "นักศึกษา",  cls: "bg-gray-50   text-gray-600   border-gray-200"   },
+  PATTARA: { label: "งานภัทร",   cls: "bg-blue-50   text-blue-700   border-blue-200"   },
 };
 
 const ITEM_STATUS: Record<string, BadgeSpec> = {

@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { tradingBlockReason, type AppRole } from "@/lib/permissions";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { CreateOrderSchema, CheckoutError } from "@/lib/validations/checkout";
@@ -27,6 +28,9 @@ export async function createOrder(input: CreateOrderInput): Promise<OrderResult>
     return { success: false, error: "กรุณาเข้าสู่ระบบ" };
   }
   const buyerId = session.user.id;
+
+  const blocked = tradingBlockReason((session.user as { role?: AppRole }).role ?? "STUDENT");
+  if (blocked) return { success: false, error: blocked };
 
   // ──────────────────────────────────────
   // 2. VALIDATE INPUT

@@ -55,6 +55,7 @@ export default async function AdminUsersPage({ searchParams }: Props) {
               { value: "",        label: "ทุกบทบาท" },
               { value: "ADMIN",   label: "แอดมิน"   },
               { value: "STUDENT", label: "นักศึกษา" },
+              { value: "PATTARA", label: "งานภัทร"  },
             ]}
           />
         </Suspense>
