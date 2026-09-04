@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Modal from "@/components/ui/Modal";
 import { getMessages, sendMessage, markMessagesAsRead } from "@/lib/actions/chat-actions";
 import SystemMessage, { parseSystemMessage } from "@/components/chat/SystemMessage";
+import { prepareImageForUpload } from "@/lib/utils/image-upload";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -103,7 +104,7 @@ function ItemContextCard({
             <img
               src={context.imageUrl}
               alt={title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           ) : (
             <span className="text-6xl select-none">{emoji ?? "📦"}</span>
@@ -297,8 +298,9 @@ export default function ChatModal({
     setUploading(true);
 
     try {
+      const { file: prepared } = await prepareImageForUpload(file);
       const fd = new FormData();
-      fd.append("file", file);
+      fd.append("file", prepared);
       const res  = await fetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (data.url) {
@@ -442,7 +444,7 @@ export default function ChatModal({
                     <img
                       src={msg.imageUrl!}
                       alt="รูปภาพ"
-                      className={`max-w-full max-h-56 rounded-2xl object-cover cursor-zoom-in hover:opacity-90 transition border border-black/5 ${
+                      className={`max-w-full max-h-56 rounded-2xl object-contain cursor-zoom-in hover:opacity-90 transition border border-black/5 ${
                         isMine ? "rounded-br-md" : "rounded-bl-md"
                       }`}
                     />
@@ -476,7 +478,7 @@ export default function ChatModal({
       {imagePreview && (
         <div className="mx-1 mb-2 flex items-center gap-2 p-2 bg-[#f7f6f3] rounded-xl border border-[#e5e3de]">
           <div className="relative flex-shrink-0">
-            <img src={imagePreview} alt="preview" className="w-14 h-14 object-cover rounded-lg" />
+            <img src={imagePreview} alt="preview" className="w-14 h-14 object-contain rounded-lg" />
             {uploading && (
               <div className="absolute inset-0 bg-black/40 rounded-lg flex items-center justify-center">
                 <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -503,7 +505,7 @@ export default function ChatModal({
         <input
           ref={fileRef}
           type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif"
+          accept="image/*"
           className="hidden"
           onChange={handleFileChange}
         />

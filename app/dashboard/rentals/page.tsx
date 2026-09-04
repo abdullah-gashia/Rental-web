@@ -130,7 +130,7 @@ function OrderRow({ order, counterpartyLabel, counterparty }: { order: any; coun
       <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-[#f0ede7] flex items-center justify-center">
         {img ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={img} alt="" className="w-full h-full object-cover" />
+          <img src={img} alt="" className="w-full h-full object-contain" />
         ) : (
           <span className="text-xl">{order.item.emoji ?? "📦"}</span>
         )}

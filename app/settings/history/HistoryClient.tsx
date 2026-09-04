@@ -210,7 +210,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
                     {/* Thumbnail */}
                     <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#f0ede7] flex items-center justify-center">
                       {ix.item.thumbnailUrl ? (
-                        <img src={ix.item.thumbnailUrl} alt={ix.item.title} className="w-full h-full object-cover" />
+                        <img src={ix.item.thumbnailUrl} alt={ix.item.title} className="w-full h-full object-contain" />
                       ) : (
                         <span className="text-lg">{ix.item.emoji ?? "📦"}</span>
                       )}

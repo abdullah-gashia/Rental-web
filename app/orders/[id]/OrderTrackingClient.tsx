@@ -152,7 +152,7 @@ export default function OrderTrackingClient({
         <div className="flex items-start gap-4">
           <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#e8e5df] flex-shrink-0 flex items-center justify-center">
             {mainImage?.url ? (
-              <img src={mainImage.url} alt={order.item.title} className="w-full h-full object-cover" />
+              <img src={mainImage.url} alt={order.item.title} className="w-full h-full object-contain" />
             ) : (
               <span className="text-2xl">{order.item.emoji ?? "📦"}</span>
             )}

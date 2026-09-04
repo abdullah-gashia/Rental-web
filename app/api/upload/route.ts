@@ -4,15 +4,33 @@ import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { randomUUID } from "crypto";
 
-// Map MIME types to safe extensions — never trust the client filename
+// Map MIME types to safe extensions — never trust the client filename.
+//
+// Every raster format a browser or phone camera produces is accepted. SVG is
+// deliberately absent: these files are served from our own origin, and an SVG
+// can carry a <script>, which would run as first-party code.
 const MIME_TO_EXT: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/png":  "png",
-  "image/webp": "webp",
-  "image/gif":  "gif",
+  "image/jpeg":    "jpg",
+  "image/pjpeg":   "jpg",
+  "image/png":     "png",
+  "image/webp":    "webp",
+  "image/gif":     "gif",
+  "image/avif":    "avif",
+  "image/bmp":     "bmp",
+  "image/x-ms-bmp": "bmp",
+  "image/tiff":    "tiff",
+  "image/heic":    "heic",
+  "image/heif":    "heif",
+  "image/x-icon":  "ico",
 };
 
-const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
+// Pictures are downscaled in the browser before they get here (see
+// lib/utils/image-upload.ts), so this is a backstop against an oversized or
+// hand-crafted request rather than a limit users are meant to feel.
+//
+// Note for deployment: a serverless request body is capped at ~4.5 MB on
+// Vercel regardless of this number, which is exactly why the client compresses.
+const MAX_BYTES = 25 * 1024 * 1024; // 25 MB
 
 export async function POST(req: NextRequest) {
   // ── Auth guard ─────────────────────────────────────
@@ -35,10 +53,14 @@ export async function POST(req: NextRequest) {
   }
 
   // ── Validate MIME type ─────────────────────────────
-  const ext = MIME_TO_EXT[file.type];
+  const ext = MIME_TO_EXT[file.type.toLowerCase()];
   if (!ext) {
     return NextResponse.json(
-      { error: "ไฟล์ต้องเป็น JPG, PNG, WebP หรือ GIF เท่านั้น" },
+      {
+        error: file.type === "image/svg+xml"
+          ? "ไม่รองรับไฟล์ SVG ด้วยเหตุผลด้านความปลอดภัย กรุณาใช้ JPG, PNG หรือ WebP"
+          : "ไฟล์ที่อัปโหลดต้องเป็นรูปภาพ",
+      },
       { status: 400 }
     );
   }
@@ -46,7 +68,7 @@ export async function POST(req: NextRequest) {
   // ── Validate file size ─────────────────────────────
   if (file.size > MAX_BYTES) {
     return NextResponse.json(
-      { error: "ไฟล์ขนาดใหญ่เกิน 5 MB" },
+      { error: `ไฟล์ขนาดใหญ่เกิน ${Math.round(MAX_BYTES / 1024 / 1024)} MB` },
       { status: 400 }
     );
   }

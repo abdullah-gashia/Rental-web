@@ -546,7 +546,9 @@ html:has(.hp-root) body { background: var(--hp-canvas); }
 }
 .hp-card:hover .hp-thumb { border-color: var(--hp-border-str); }
 .hp-thumb img {
-  width: 100%; height: 100%; object-fit: cover;
+  /* contain, not cover: a tall or wide photo is shown whole rather than
+     cropped to the square. The tile background fills what is left over. */
+  width: 100%; height: 100%; object-fit: contain;
   transition: transform 0.35s cubic-bezier(.3,.7,.4,1);
 }
 .hp-card:hover .hp-thumb img { transform: scale(1.035); }
@@ -762,7 +764,7 @@ html:has(.hp-root) body { background: var(--hp-canvas); }
   border: 1px solid var(--hp-border);
   background: var(--hp-subtle);
 }
-.hp-row-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.hp-row-thumb img { width: 100%; height: 100%; object-fit: contain; }
 .hp-row-thumb .hp-thumb-fallback { font-size: 26px; }
 
 /* Small price tag pinned at the row's right edge */

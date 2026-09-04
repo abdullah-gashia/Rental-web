@@ -95,7 +95,7 @@ function RejectModal({
         <div className="bg-[#f7f6f3] rounded-xl p-3 mb-5 flex gap-3 items-center">
           <div className="w-12 h-12 rounded-xl overflow-hidden bg-white flex items-center justify-center flex-shrink-0 border border-[#e5e3de]">
             {item.images[0]?.url ? (
-              <img src={item.images[0].url} alt={item.title} className="w-full h-full object-cover" />
+              <img src={item.images[0].url} alt={item.title} className="w-full h-full object-contain" />
             ) : (
               <span className="text-xl">{item.emoji ?? item.category.emoji ?? "📦"}</span>
             )}
@@ -254,7 +254,7 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
                     {/* Image */}
                     <div className="flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden bg-[#f0ede7] flex items-center justify-center border border-[#e5e3de]">
                       {imgUrl ? (
-                        <img src={imgUrl} alt={item.title} className="w-full h-full object-cover" />
+                        <img src={imgUrl} alt={item.title} className="w-full h-full object-contain" />
                       ) : (
                         <span className="text-4xl">{item.emoji ?? item.category.emoji ?? "📦"}</span>
                       )}

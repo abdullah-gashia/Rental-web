@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { confirmRentalPickup, confirmRentalReturn } from "@/lib/actions/rental-transitions";
 import SignatureCapture from "@/components/rental/SignatureCapture";
+import { prepareImageForUpload } from "@/lib/utils/image-upload";
 
 interface Props {
   orderId:        string;
@@ -99,8 +100,9 @@ export default function RentalHandshake({
     setUploading(true);
     const uploaded: string[] = [];
     for (const file of Array.from(files)) {
+      const { file: prepared } = await prepareImageForUpload(file);
       const form = new FormData();
-      form.append("file", file);
+      form.append("file", prepared);
       try {
         const res  = await fetch("/api/upload", { method: "POST", body: form });
         const data = await res.json();
@@ -198,7 +200,7 @@ export default function RentalHandshake({
           <div className="flex gap-2 flex-wrap mt-2">
             {photos.map((url, i) => (
               // eslint-disable-next-line @next/next/no-img-element
-              <img key={i} src={url} alt="" className="w-16 h-16 rounded-lg object-cover border border-[#e5e3de]" />
+              <img key={i} src={url} alt="" className="w-16 h-16 rounded-lg object-contain border border-[#e5e3de]" />
             ))}
           </div>
         )}

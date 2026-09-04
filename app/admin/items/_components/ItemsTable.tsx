@@ -130,7 +130,7 @@ export default function ItemsTable({ rows }: Props) {
                           alt={item.title}
                           width={40}
                           height={40}
-                          className="object-cover w-full h-full"
+                          className="object-contain w-full h-full"
                         />
                       </div>
                     ) : (

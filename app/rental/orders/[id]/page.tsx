@@ -226,7 +226,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
                   {order.returnPhotos.map((url: string, i: number) => (
                     <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-[#e5e3de]">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={url} alt="" className="w-full h-full object-cover" />
+                      <img src={url} alt="" className="w-full h-full object-contain" />
                     </div>
                   ))}
                 </div>
@@ -269,7 +269,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
             <div className="bg-white rounded-2xl border border-[#e5e3de] p-4 flex items-center gap-3">
               <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-[#f0ede7]">
                 {img ? (
-                  <Image src={img} alt="" fill className="object-cover" sizes="64px" />
+                  <Image src={img} alt="" fill className="object-contain" sizes="64px" />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center text-2xl">
                     {item.emoji ?? "📦"}

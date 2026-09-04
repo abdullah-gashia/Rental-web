@@ -5,6 +5,7 @@ import { useLocaleStore } from "@/lib/stores/locale-store";
 import { useToastStore } from "@/lib/stores/toast-store";
 import Modal from "@/components/ui/Modal";
 import { createItem } from "@/lib/actions/item-actions";
+import { prepareImageForUpload } from "@/lib/utils/image-upload";
 
 interface PostAdModalProps {
   isOpen: boolean;
@@ -20,11 +21,11 @@ interface PendingImage {
 }
 
 const MAX_IMAGES = 5;
-const MAX_BYTES  = 5 * 1024 * 1024;
 
 async function uploadFile(file: File): Promise<string> {
+  const { file: prepared } = await prepareImageForUpload(file);
   const body = new FormData();
-  body.append("file", file);
+  body.append("file", prepared);
   const res  = await fetch("/api/upload", { method: "POST", body });
   const json = await res.json();
   if (!res.ok) throw new Error(json.error ?? "อัปโหลดไม่สำเร็จ");
@@ -39,7 +40,7 @@ function Thumb({
 }) {
   return (
     <div className="relative group w-[80px] h-[80px] rounded-xl overflow-hidden border border-[#e5e3de] bg-[#f0ede7] flex-shrink-0 shadow-[var(--shadow-xs)]">
-      <img src={src} alt="" className="w-full h-full object-cover" />
+      <img src={src} alt="" className="w-full h-full object-contain bg-[#f4f5f7]" />
 
       {uploading && (
         <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-1">
@@ -163,8 +164,12 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
       const available = MAX_IMAGES - totalImages;
       if (available <= 0) { showToast(`⚠️ สูงสุด ${MAX_IMAGES} รูปภาพต่อสินค้า`); return; }
 
-      const oversized = selected.filter((f) => f.size > MAX_BYTES);
-      if (oversized.length > 0) { showToast(`⚠️ ${oversized.map((f) => f.name).join(", ")} ขนาดเกิน 5 MB`); return; }
+      // No size gate: prepareImageForUpload() shrinks whatever the user picked
+      const notImages = selected.filter((f) => !f.type.startsWith("image/"));
+      if (notImages.length > 0) {
+        showToast(`⚠️ ${notImages.map((f) => f.name).join(", ")} ไม่ใช่ไฟล์รูปภาพ`);
+        return;
+      }
 
       const files = selected.slice(0, available);
       if (selected.length > available) showToast(`⚠️ เพิ่มได้อีก ${available} รูป (รับ ${files.length} รูปแรก)`);
@@ -432,8 +437,8 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                 </button>
               )}
             </div>
-            <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple className="hidden" onChange={handleFileChange} />
-            <p className="text-[11px] text-[#bbb] mt-1.5">JPG, PNG, WebP · สูงสุด 5 MB · รูปแรกเป็นรูปหลัก</p>
+            <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFileChange} />
+            <p className="text-[11px] text-[#bbb] mt-1.5">รูปภาพทุกชนิด ทุกขนาด · ระบบย่อขนาดให้อัตโนมัติ · รูปแรกเป็นรูปหลัก</p>
           </div>
 
           <div className="space-y-3 mb-3">
@@ -789,7 +794,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
               <div className="flex gap-3 items-center">
                 <div className="w-14 h-14 rounded-xl flex-shrink-0 overflow-hidden bg-[#e5e3de] flex items-center justify-center shadow-[var(--shadow-xs)]">
                   {pendingImages[0]?.previewUrl ? (
-                    <img src={pendingImages[0].previewUrl} alt="" className="w-full h-full object-cover" />
+                    <img src={pendingImages[0].previewUrl} alt="" className="w-full h-full object-contain" />
                   ) : (
                     <span className="text-2xl">📦</span>
                   )}

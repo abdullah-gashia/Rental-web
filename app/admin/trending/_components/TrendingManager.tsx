@@ -254,7 +254,7 @@ export default function TrendingManager({ initialItems }: Props) {
                     className="relative flex-shrink-0 w-[160px] h-[220px] rounded-xl overflow-hidden snap-start bg-[#f0ede7]"
                   >
                     {img ? (
-                      <Image src={img.url} alt={fi.item.title} fill className="object-cover" sizes="160px" />
+                      <Image src={img.url} alt={fi.item.title} fill className="object-contain" sizes="160px" />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center bg-[#f0ede7]">
                         <span className="text-3xl">📦</span>

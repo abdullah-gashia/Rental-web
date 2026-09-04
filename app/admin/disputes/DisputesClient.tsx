@@ -86,7 +86,7 @@ function EvidenceGallery({ images }: { images: string[] }) {
             onClick={() => setLightbox(url)}
             className="w-20 h-20 rounded-xl overflow-hidden border border-[#e5e3de] hover:ring-2 hover:ring-[#e8500a] transition flex-shrink-0"
           >
-            <img src={url} alt={`หลักฐาน ${i + 1}`} className="w-full h-full object-cover" />
+            <img src={url} alt={`หลักฐาน ${i + 1}`} className="w-full h-full object-contain" />
           </button>
         ))}
       </div>
@@ -260,7 +260,7 @@ function DisputeCard({
           {/* Item thumbnail */}
           <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#f0ede7] flex-shrink-0 flex items-center justify-center text-2xl border border-[#e5e3de]">
             {itemImg
-              ? <img src={itemImg} alt={order.item.title} className="w-full h-full object-cover" />
+              ? <img src={itemImg} alt={order.item.title} className="w-full h-full object-contain" />
               : <span>{order.item.emoji ?? "📦"}</span>
             }
           </div>

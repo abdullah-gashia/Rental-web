@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import FaceLivenessCapture, { type CapturedFrames } from "./FaceLivenessCapture";
 import { submitVerification } from "../actions";
 import { getIdValidationHint } from "@/lib/validations/kyc";
+import { prepareImageForUpload } from "@/lib/utils/image-upload";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -240,7 +241,6 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
 
   async function handleFile(file: File) {
     if (!file.type.startsWith("image/")) { setErr("กรุณาเลือกไฟล์รูปภาพ"); return; }
-    if (file.size > 5 * 1024 * 1024)    { setErr("ไฟล์ต้องมีขนาดไม่เกิน 5 MB"); return; }
 
     setUploading(true);
     setErr("");
@@ -256,8 +256,9 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
 
     // Upload to server and save the returned URL in parent state
     try {
+      const { file: prepared } = await prepareImageForUpload(file);
       const fd = new FormData();
-      fd.append("file", file);
+      fd.append("file", prepared);
       fd.append("folder", "kyc");
 
       const res  = await fetch("/api/upload", { method: "POST", body: fd });
@@ -315,7 +316,7 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
           <div className="space-y-2 text-[#9a9590]">
             <div className="text-4xl">🪪</div>
             <p className="text-sm font-semibold">คลิกเพื่อเลือกรูป หรือลากไฟล์มาวางที่นี่</p>
-            <p className="text-xs">JPG, PNG, WEBP • ไม่เกิน 5 MB</p>
+            <p className="text-xs">รูปภาพทุกชนิด ทุกขนาด • ระบบย่อขนาดให้อัตโนมัติ</p>
           </div>
         )}
         <input

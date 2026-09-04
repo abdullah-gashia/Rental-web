@@ -267,7 +267,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                 {/* Thumbnail */}
                 <div className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden flex items-center justify-center ${isScheduled ? "bg-[#f0ede7] opacity-70" : "bg-[#f0ede7]"}`}>
                   {imgUrl ? (
-                    <img src={imgUrl} alt={item.title} className="w-full h-full object-cover" />
+                    <img src={imgUrl} alt={item.title} className="w-full h-full object-contain" />
                   ) : (
                     <span className="text-3xl">{item.emoji ?? item.category.emoji ?? "📦"}</span>
                   )}

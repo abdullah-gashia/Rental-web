@@ -44,7 +44,7 @@ export default function WishlistModal({ isOpen, onClose, items, onItemClick }: W
                 style={{ background: item.color || "#f0ede7" }}
               >
                 {item.images.length > 0 ? (
-                  <img src={item.images[0].url} className="w-full h-full object-cover" alt="" />
+                  <img src={item.images[0].url} className="w-full h-full object-contain" alt="" />
                 ) : (
                   item.emoji || "📦"
                 )}

@@ -126,7 +126,7 @@ function ShippingCard({ data }: { data: ShippingPayload }) {
               <img
                 src={data.proofUrl}
                 alt="หลักฐานการจัดส่ง"
-                className="w-full max-h-48 object-cover rounded-xl border border-blue-100 hover:opacity-90 transition cursor-zoom-in"
+                className="w-full max-h-48 object-contain rounded-xl border border-blue-100 hover:opacity-90 transition cursor-zoom-in"
               />
             </a>
           </div>

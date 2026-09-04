@@ -219,7 +219,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
                   <img
                     src={data.shippingProofImage}
                     alt="หลักฐานจัดส่ง"
-                    className="w-full max-h-36 object-cover rounded-xl border border-blue-200 hover:opacity-90 transition cursor-zoom-in"
+                    className="w-full max-h-36 object-contain rounded-xl border border-blue-200 hover:opacity-90 transition cursor-zoom-in"
                   />
                 </a>
               )}

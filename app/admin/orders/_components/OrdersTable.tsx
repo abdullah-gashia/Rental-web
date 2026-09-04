@@ -146,7 +146,7 @@ export default function OrdersTable({ rows }: Props) {
                             alt={order.item.title}
                             width={32}
                             height={32}
-                            className="object-cover w-full h-full"
+                            className="object-contain w-full h-full"
                           />
                         </div>
                       ) : (

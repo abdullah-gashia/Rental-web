@@ -166,7 +166,7 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
           <div className="w-10 h-10 rounded-lg overflow-hidden bg-[#e5e3de] flex-shrink-0 flex items-center justify-center mt-3 mb-3">
             {img ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={img} alt="" className="w-full h-full object-cover" />
+              <img src={img} alt="" className="w-full h-full object-contain" />
             ) : (
               <span className="text-xl">{item.emoji ?? "📦"}</span>
             )}

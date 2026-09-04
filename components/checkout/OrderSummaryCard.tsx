@@ -20,7 +20,7 @@ export default function OrderSummaryCard({
       {/* Thumbnail */}
       <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#e8e5df] flex-shrink-0 flex items-center justify-center">
         {imageUrl ? (
-          <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+          <img src={imageUrl} alt={title} className="w-full h-full object-contain" />
         ) : (
           <span className="text-xl">{emoji ?? "📦"}</span>
         )}

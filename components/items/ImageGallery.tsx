@@ -68,13 +68,13 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
         <button
           type="button"
           onClick={() => setLightbox(true)}
-          className="relative w-full aspect-square rounded-xl overflow-hidden group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#e8500a]"
+          className="relative w-full aspect-square rounded-xl overflow-hidden group bg-[#f4f5f7] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#e8500a]"
           aria-label="ดูรูปขยาย"
         >
           <img
             src={active?.url ?? ""}
             alt={title ?? "สินค้า"}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
           />
 
           {/* Zoom hint overlay */}
@@ -102,7 +102,7 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
                       : "ring-1 ring-[#e5e3de] opacity-60 hover:opacity-100 hover:ring-[#ccc]"
                   }`}
                 >
-                  <img src={img.url} alt="" className="w-full h-full object-cover" />
+                  <img src={img.url} alt="" className="w-full h-full object-contain bg-[#f4f5f7]" />
                 </button>
               );
             })}

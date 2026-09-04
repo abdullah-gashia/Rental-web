@@ -2,6 +2,7 @@
 
 import { useState, useRef, useTransition } from "react";
 import { confirmShipment } from "@/lib/actions/escrow-actions";
+import { prepareImageForUpload } from "@/lib/utils/image-upload";
 
 interface Props {
   orderId:   string;
@@ -20,8 +21,9 @@ const METHODS = [
 ] as const;
 
 async function uploadFile(file: File): Promise<string> {
+  const { file: prepared } = await prepareImageForUpload(file);
   const fd = new FormData();
-  fd.append("file", file);
+  fd.append("file", prepared);
   const res  = await fetch("/api/upload", { method: "POST", body: fd });
   const data = await res.json();
   if (data.error) throw new Error(data.error);
@@ -176,11 +178,11 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
               รูปหลักฐานการจัดส่ง
               <span className="ml-1 text-xs font-normal text-[#9a9590]">(ไม่บังคับ แต่แนะนำ)</span>
             </label>
-            <p className="text-xs text-[#9a9590] mb-3">รูปใบเสร็จ / พัสดุก่อนส่ง JPG / PNG ≤ 5 MB</p>
+            <p className="text-xs text-[#9a9590] mb-3">รูปใบเสร็จ / พัสดุก่อนส่ง · รูปภาพทุกชนิด ทุกขนาด</p>
 
             {proofPreview ? (
               <div className="relative w-full h-40 rounded-xl overflow-hidden border border-[#e5e3de] bg-[#f0ede7]">
-                <img src={proofPreview} alt="" className="w-full h-full object-cover" />
+                <img src={proofPreview} alt="" className="w-full h-full object-contain" />
 
                 {proofUploading && (
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
@@ -219,7 +221,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
             <input
               ref={fileRef}
               type="file"
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/*"
               className="hidden"
               onChange={handleFileChange}
             />

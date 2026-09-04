@@ -2,6 +2,7 @@
 
 import { useState, useRef, useTransition } from "react";
 import { fileDispute } from "@/lib/actions/escrow-actions";
+import { prepareImageForUpload } from "@/lib/utils/image-upload";
 
 interface Props {
   orderId:   string;
@@ -21,8 +22,9 @@ interface PendingImage {
 const MAX_IMAGES = 5;
 
 async function uploadFile(file: File): Promise<string> {
+  const { file: prepared } = await prepareImageForUpload(file);
   const fd = new FormData();
-  fd.append("file", file);
+  fd.append("file", prepared);
   const res  = await fetch("/api/upload", { method: "POST", body: fd });
   const data = await res.json();
   if (data.error) throw new Error(data.error);
@@ -182,7 +184,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
               หลักฐาน (รูปภาพ) <span className="text-red-500">*</span>
             </label>
             <p className="text-xs text-[#9a9590] mb-3">
-              อย่างน้อย 1 ภาพ · สูงสุด {MAX_IMAGES} ภาพ · JPG / PNG / WebP ≤ 5 MB
+              อย่างน้อย 1 ภาพ · สูงสุด {MAX_IMAGES} ภาพ · รูปภาพทุกชนิด ทุกขนาด
             </p>
 
             <div className="flex flex-wrap gap-2">
@@ -192,7 +194,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
                   key={idx}
                   className="relative w-20 h-20 rounded-xl overflow-hidden bg-[#f0ede7] border border-[#e5e3de] flex-shrink-0"
                 >
-                  <img src={img.preview} alt="" className="w-full h-full object-cover" />
+                  <img src={img.preview} alt="" className="w-full h-full object-contain" />
 
                   {/* Uploading spinner overlay */}
                   {img.uploading && (
@@ -240,7 +242,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
+              accept="image/*"
               multiple
               className="hidden"
               onChange={handleFileChange}

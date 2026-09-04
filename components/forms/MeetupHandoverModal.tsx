@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import { confirmMeetupWithProof } from "@/lib/actions/order-transitions";
+import { prepareImageForUpload } from "@/lib/utils/image-upload";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -157,8 +158,9 @@ function PhotoUpload({
     if (!file) return;
     setUploading(true);
     try {
+      const { file: prepared } = await prepareImageForUpload(file);
       const fd = new FormData();
-      fd.append("file", file);
+      fd.append("file", prepared);
       const res  = await fetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (data.url) onUpload(data.url);
@@ -197,7 +199,7 @@ function PhotoUpload({
             <img
               src={photoUrl}
               alt="หลักฐาน"
-              className="w-full max-h-40 object-cover"
+              className="w-full max-h-40 object-contain"
             />
             <button
               type="button"

@@ -70,7 +70,7 @@ export default function ImageGallery({ images }: Props) {
                   src={img.url}
                   alt={`รูปที่ ${idx + 1}`}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   sizes="64px"
                 />
               </button>

@@ -134,7 +134,7 @@ function Thumb({ item }: { item: OrderItem }) {
   return (
     <div className="w-14 h-14 rounded-xl overflow-hidden bg-[#f0ede7] flex-shrink-0 flex items-center justify-center text-2xl">
       {src
-        ? <img src={src} alt={item.title} className="w-full h-full object-cover" />
+        ? <img src={src} alt={item.title} className="w-full h-full object-contain" />
         : <span>{item.emoji ?? "📦"}</span>
       }
     </div>
@@ -168,7 +168,7 @@ function ShippingDetails({ order }: { order: BaseOrder }) {
           <img
             src={order.shippingProofImage}
             alt="หลักฐานจัดส่ง"
-            className="w-full max-h-24 object-cover rounded-lg border border-blue-200 mt-1 hover:opacity-90 transition"
+            className="w-full max-h-24 object-contain rounded-lg border border-blue-200 mt-1 hover:opacity-90 transition"
           />
         </a>
       )}

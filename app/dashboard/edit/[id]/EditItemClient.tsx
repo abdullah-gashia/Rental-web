@@ -4,6 +4,7 @@ import { useState, useTransition, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { updateItem } from "@/lib/actions/moderation-actions";
 import { useToastStore } from "@/lib/stores/toast-store";
+import { prepareImageForUpload } from "@/lib/utils/image-upload";
 
 // ─── Types ────────────────────────────────────────────
 
@@ -66,8 +67,9 @@ const STATUS_COLORS: Record<string, string> = {
 // ─── Upload helper ────────────────────────────────────
 
 async function uploadFile(file: File): Promise<string> {
+  const { file: prepared } = await prepareImageForUpload(file);
   const body = new FormData();
-  body.append("file", file);
+  body.append("file", prepared);
   const res = await fetch("/api/upload", { method: "POST", body });
   const json = await res.json();
   if (!res.ok) throw new Error(json.error ?? "อัปโหลดไม่สำเร็จ");
@@ -91,7 +93,7 @@ function Thumb({
 }) {
   return (
     <div className="relative group w-[88px] h-[88px] rounded-xl overflow-hidden border border-[#e5e3de] bg-[#f0ede7] flex-shrink-0">
-      <img src={src} alt="" className="w-full h-full object-cover" />
+      <img src={src} alt="" className="w-full h-full object-contain bg-[#f4f5f7]" />
 
       {/* Uploading overlay */}
       {uploading && (
@@ -319,9 +321,9 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
       <div className="bg-white rounded-2xl border border-[#e5e3de] p-4 mb-6 flex gap-4 items-center">
         <div className="w-14 h-14 rounded-xl overflow-hidden bg-[#f0ede7] flex items-center justify-center flex-shrink-0">
           {existingImages[0] ? (
-            <img src={existingImages[0].url} alt={item.title} className="w-full h-full object-cover" />
+            <img src={existingImages[0].url} alt={item.title} className="w-full h-full object-contain" />
           ) : pendingImages[0]?.previewUrl ? (
-            <img src={pendingImages[0].previewUrl} alt={item.title} className="w-full h-full object-cover" />
+            <img src={pendingImages[0].previewUrl} alt={item.title} className="w-full h-full object-contain" />
           ) : (
             <span className="text-2xl">{item.emoji ?? item.category.emoji ?? "📦"}</span>
           )}
@@ -417,14 +419,14 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
+            accept="image/*"
             multiple
             className="hidden"
             onChange={handleFileChange}
           />
 
           <p className="text-[11px] text-[#aaa] mt-2">
-            JPG, PNG, WebP · สูงสุด 5 MB ต่อรูป · สูงสุด {MAX_IMAGES} รูป · รูปแรกจะเป็นรูปหลัก
+            รูปภาพทุกชนิด ทุกขนาด · ระบบย่อขนาดให้อัตโนมัติ · สูงสุด {MAX_IMAGES} รูป · รูปแรกจะเป็นรูปหลัก
           </p>
         </div>
 
