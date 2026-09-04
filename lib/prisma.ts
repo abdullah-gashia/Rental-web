@@ -11,11 +11,13 @@ type NotificationRow = {
   link?: string | null;
 };
 
-function createPrismaClient() {
+function createBaseClient() {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
   const adapter = new PrismaPg(pool);
-  const base = new PrismaClient({ adapter });
+  return new PrismaClient({ adapter });
+}
 
+function withNotificationMail(base: PrismaClient) {
   /**
    * Mirrors a stored notification to the user's e-mail.
    *
@@ -84,12 +86,27 @@ function createPrismaClient() {
   });
 }
 
-type ExtendedPrismaClient = ReturnType<typeof createPrismaClient>;
+type ExtendedPrismaClient = ReturnType<typeof withNotificationMail>;
 
 const globalForPrisma = globalThis as unknown as {
-  prisma: ExtendedPrismaClient | undefined;
+  prismaBase: PrismaClient | undefined;
+  prisma:     ExtendedPrismaClient | undefined;
 };
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+const base = globalForPrisma.prismaBase ?? createBaseClient();
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+/**
+ * The same database, without the notification → e-mail mirror.
+ *
+ * Only for code that has already sent the mail itself; writing a notification
+ * through the normal client would then deliver a second copy. Everything else
+ * should use `prisma`.
+ */
+export const prismaNoMail = base;
+
+export const prisma = globalForPrisma.prisma ?? withNotificationMail(base);
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prismaBase = base;
+  globalForPrisma.prisma     = prisma;
+}

@@ -923,7 +923,7 @@ model RentalOrder {
   // ── System ──
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  expiresAt   DateTime?     // auto-cancel if owner doesn't approve in 24h
+  expiresAt   DateTime?     // auto-cancel + refund if the owner never approves (see lib/rental-config.ts)
   completedAt DateTime?
 
   @@index([renterId, status])

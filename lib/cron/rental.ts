@@ -9,6 +9,7 @@
  */
 
 import { prisma } from "@/lib/prisma";
+import { RENTAL_REQUEST_TIMEOUT_DAYS } from "@/lib/rental-config";
 
 // ─── 1. Overdue Detection ─────────────────────────────────────────────────────
 
@@ -110,6 +111,8 @@ export async function autoExpireRentalRequests(): Promise<{ expired: number }> {
     include: { item: { select: { title: true } } },
   });
 
+  const window = `${RENTAL_REQUEST_TIMEOUT_DAYS} วัน`;
+
   let expired = 0;
   for (const order of expiredOrders) {
     const history = Array.isArray(order.statusHistory) ? order.statusHistory : [];
@@ -137,19 +140,33 @@ export async function autoExpireRentalRequests(): Promise<{ expired: number }> {
             {
               status:    "EXPIRED",
               changedAt: now.toISOString(),
-              note:      "เจ้าของไม่ตอบรับภายใน 24 ชั่วโมง — คืนเงินให้ผู้เช่าแล้ว",
+              note:      `เจ้าของไม่ตอบรับภายใน ${window} — ยกเลิกอัตโนมัติและคืนเงินให้ผู้เช่าแล้ว`,
             },
           ],
         },
       });
     });
 
-    // Notify renter
+    // Tell the renter. Writing the notification is also what sends the e-mail:
+    // lib/prisma.ts mirrors every notification to the user's inbox.
     await prisma.notification.create({
       data: {
         userId:  order.renterId,
         type:    "ORDER",
-        message: `คำขอเช่าหมดอายุ — "${order.item.title}" เจ้าของไม่ตอบรับภายใน 24 ชั่วโมง เงินถูกคืนแล้ว`,
+        message: `คำขอเช่าถูกยกเลิกอัตโนมัติ — "${order.item.title}" เจ้าของไม่ตอบรับภายใน ${window} ` +
+                 `ระบบได้คืนเงิน ฿${order.totalPaid.toLocaleString()} เข้ากระเป๋าเงินของคุณแล้ว`,
+        link:    "/dashboard/orders",
+      },
+    }).catch(() => {});
+
+    // And the owner, so a missed request is visible rather than silent.
+    await prisma.notification.create({
+      data: {
+        userId:  order.ownerId,
+        type:    "ORDER",
+        message: `คำขอเช่า "${order.item.title}" หมดอายุแล้ว เพราะไม่ได้ตอบรับภายใน ${window} ` +
+                 `สินค้าถูกนำกลับขึ้นตลาดให้อัตโนมัติ`,
+        link:    "/dashboard/orders",
       },
     }).catch(() => {});
 

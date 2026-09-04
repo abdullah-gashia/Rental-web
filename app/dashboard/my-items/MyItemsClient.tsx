@@ -59,7 +59,23 @@ const STATUS_CONFIG: Record<string, { label: string; bg: string; text: string; d
   UNAVAILABLE: { label: "ถูกลบ",       bg: "bg-gray-100",   text: "text-gray-500",   dot: "bg-gray-400"   },
   ACTIVE:      { label: "เผยแพร่",     bg: "bg-green-50",   text: "text-green-700",  dot: "bg-green-500"  },
   SOLD:        { label: "ขายแล้ว",     bg: "bg-blue-50",    text: "text-blue-700",   dot: "bg-blue-400"   },
+  RENTED:      { label: "ให้เช่าอยู่",  bg: "bg-purple-50",  text: "text-purple-700", dot: "bg-purple-400" },
+  EXPIRED:     { label: "หมดอายุ",     bg: "bg-gray-100",   text: "text-gray-500",   dot: "bg-gray-400"   },
 };
+
+// ─── Filters ──────────────────────────────────────────
+
+type FilterKey = "ALL" | "PENDING" | "APPROVED" | "REJECTED" | "SOLD" | "RENTED" | "DELETING";
+
+const FILTERS: { key: FilterKey; label: string }[] = [
+  { key: "ALL",      label: "ทั้งหมด"     },
+  { key: "PENDING",  label: "รอตรวจสอบ"   },
+  { key: "APPROVED", label: "อนุมัติแล้ว" },
+  { key: "RENTED",   label: "ให้เช่าอยู่"  },
+  { key: "SOLD",     label: "ขายแล้ว"     },
+  { key: "REJECTED", label: "ถูกปฏิเสธ"   },
+  { key: "DELETING", label: "รอลบ"        },
+];
 
 function StatusBadge({ status }: { status: ItemStatus }) {
   const cfg = STATUS_CONFIG[status] ?? {
@@ -132,6 +148,7 @@ function DeleteModal({
 
 export default function MyItemsClient({ items, userName, reputation }: Props) {
   const [deleteTarget, setDeleteTarget] = useState<MyItem | null>(null);
+  const [filter, setFilter]             = useState<FilterKey>("ALL");
   const [isPending, startTransition]    = useTransition();
   const showToast = useToastStore((s) => s.show);
   const router    = useRouter();
@@ -141,12 +158,30 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
     (i) => i.status !== "UNAVAILABLE" && i.status !== "REMOVED"
   );
 
-  const pendingCount  = activeItems.filter((i) => i.status === "PENDING").length;
-  const approvedCount = activeItems.filter((i) => i.status === "APPROVED").length;
-  const rejectedCount = activeItems.filter((i) => i.status === "REJECTED").length;
-  const deletingCount = activeItems.filter(
-    (i) => i.scheduledForDeletionAt && !isGraceExpired(i.scheduledForDeletionAt)
-  ).length;
+  /** "รอลบ" means scheduled and still inside the 24-h window it can be undone in. */
+  function isDeleting(i: MyItem) {
+    return !!i.scheduledForDeletionAt && !isGraceExpired(i.scheduledForDeletionAt);
+  }
+
+  function matches(i: MyItem, key: FilterKey) {
+    if (key === "ALL")      return true;
+    if (key === "DELETING") return isDeleting(i);
+    // A listing waiting to be deleted still carries its old status, so it would
+    // otherwise show up under "อนุมัติแล้ว" as though nothing were happening.
+    if (isDeleting(i)) return false;
+    return i.status === key;
+  }
+
+  const counts = Object.fromEntries(
+    FILTERS.map((f) => [f.key, activeItems.filter((i) => matches(i, f.key)).length]),
+  ) as Record<FilterKey, number>;
+
+  const visibleItems = activeItems.filter((i) => matches(i, filter));
+
+  const pendingCount  = counts.PENDING;
+  const approvedCount = counts.APPROVED;
+  const rejectedCount = counts.REJECTED;
+  const deletingCount = counts.DELETING;
 
   // ── Handlers ────────────────────────────────────────
 
@@ -196,16 +231,22 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-        {[
-          { label: "สินค้าทั้งหมด", count: activeItems.length,  color: "text-[#111]",      bg: "bg-white"       },
-          { label: "รอตรวจสอบ",    count: pendingCount,         color: "text-yellow-600",  bg: "bg-yellow-50"   },
-          { label: "อนุมัติแล้ว",  count: approvedCount,        color: "text-green-600",   bg: "bg-green-50"    },
-          { label: "ถูกปฏิเสธ",    count: rejectedCount,        color: "text-red-600",     bg: "bg-red-50"      },
-        ].map((s) => (
-          <div key={s.label} className={`${s.bg} rounded-2xl p-4 border border-[#e5e3de]`}>
+        {([
+          { key: "ALL"      as FilterKey, label: "สินค้าทั้งหมด", count: activeItems.length, color: "text-[#111]",     bg: "bg-white"     },
+          { key: "PENDING"  as FilterKey, label: "รอตรวจสอบ",    count: pendingCount,       color: "text-yellow-600", bg: "bg-yellow-50" },
+          { key: "APPROVED" as FilterKey, label: "อนุมัติแล้ว",  count: approvedCount,      color: "text-green-600",  bg: "bg-green-50"  },
+          { key: "REJECTED" as FilterKey, label: "ถูกปฏิเสธ",    count: rejectedCount,      color: "text-red-600",    bg: "bg-red-50"    },
+        ]).map((s) => (
+          <button
+            key={s.label}
+            onClick={() => setFilter(s.key)}
+            className={`${s.bg} rounded-2xl p-4 border text-left transition ${
+              filter === s.key ? "border-[#e8500a] ring-1 ring-[#e8500a]/30" : "border-[#e5e3de] hover:border-[#c9c5bd]"
+            }`}
+          >
             <p className={`text-2xl font-bold ${s.color}`}>{s.count}</p>
             <p className="text-xs text-[#777] mt-0.5">{s.label}</p>
-          </div>
+          </button>
         ))}
       </div>
 
@@ -221,9 +262,36 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
         </div>
       )}
 
+      {/* Filter chips */}
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar mb-4 pb-0.5">
+        {FILTERS.map((f) => (
+          <button
+            key={f.key}
+            onClick={() => setFilter(f.key)}
+            className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold border transition ${
+              filter === f.key
+                ? "bg-[#e8500a] border-[#e8500a] text-white"
+                : "bg-white border-[#e5e3de] text-[#555] hover:border-[#c9c5bd]"
+            }`}
+          >
+            {f.label}
+            <span className={`ml-1.5 ${filter === f.key ? "text-white/75" : "text-[#9a9590]"}`}>
+              {counts[f.key]}
+            </span>
+          </button>
+        ))}
+      </div>
+
       {/* Section header */}
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-base font-semibold text-[#111]">รายการสินค้า</h2>
+        <h2 className="text-base font-semibold text-[#111]">
+          รายการสินค้า
+          {filter !== "ALL" && (
+            <span className="ml-2 text-xs font-normal text-[#9a9590]">
+              · {FILTERS.find((f) => f.key === filter)?.label} {visibleItems.length} รายการ
+            </span>
+          )}
+        </h2>
         <a
           href="/"
           className="flex items-center gap-2 bg-[#e8500a] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-[#c94208] transition"
@@ -236,18 +304,34 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
       </div>
 
       {/* Empty state */}
-      {activeItems.length === 0 && (
+      {visibleItems.length === 0 && (
         <div className="bg-white rounded-2xl border border-[#e5e3de] p-16 text-center">
           <div className="text-5xl mb-4">📦</div>
-          <h3 className="text-lg font-semibold text-[#111] mb-2">ยังไม่มีสินค้า</h3>
-          <p className="text-sm text-[#777]">เริ่มลงประกาศสินค้าแรกของคุณเลย!</p>
+          {activeItems.length === 0 ? (
+            <>
+              <h3 className="text-lg font-semibold text-[#111] mb-2">ยังไม่มีสินค้า</h3>
+              <p className="text-sm text-[#777]">เริ่มลงประกาศสินค้าแรกของคุณเลย!</p>
+            </>
+          ) : (
+            <>
+              <h3 className="text-lg font-semibold text-[#111] mb-2">
+                ไม่มีสินค้าในหมวด &ldquo;{FILTERS.find((f) => f.key === filter)?.label}&rdquo;
+              </h3>
+              <button
+                onClick={() => setFilter("ALL")}
+                className="text-sm font-semibold text-[#e8500a] hover:underline"
+              >
+                ดูสินค้าทั้งหมด
+              </button>
+            </>
+          )}
         </div>
       )}
 
       {/* Items grid */}
-      {activeItems.length > 0 && (
+      {visibleItems.length > 0 && (
         <div className="grid gap-4">
-          {activeItems.map((item) => {
+          {visibleItems.map((item) => {
             const imgUrl = getItemImage(item);
 
             // ── Grace-period state ──────────────────────

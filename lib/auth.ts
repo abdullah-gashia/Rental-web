@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { authSecret } from "@/lib/auth-secret";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
@@ -172,5 +173,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     error:  "/",
   },
   session: { strategy: "jwt" },
-  secret: process.env.NEXTAUTH_SECRET || "dev-secret-change-in-production",
+  secret: authSecret(),
 });

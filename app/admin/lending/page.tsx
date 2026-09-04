@@ -2,53 +2,37 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { statusLabel, statusColor } from "./_lib/status";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "ระบบปล่อยเช่า | Admin" };
 
-const STATUS_LABEL: Record<string, string> = {
-  REQUESTED:                "รอตอบรับ",
-  APPROVED:                 "ตอบรับแล้ว",
-  DEPOSIT_HELD:             "กักเงินแล้ว",
-  REJECTED:                 "ถูกปฏิเสธ",
-  EXPIRED:                  "หมดอายุ",
-  CANCELLED:                "ยกเลิก",
-  PICKUP_SCHEDULED:         "นัดรับแล้ว",
-  HANDED_OVER:              "ส่งมอบแล้ว",
-  ACTIVE:                   "กำลังเช่า",
-  OVERDUE:                  "เกินกำหนด",
-  RENEWAL_REQUESTED:        "ขอต่ออายุ",
-  RETURN_SCHEDULED:         "นัดคืนแล้ว",
-  RETURNED:                 "คืนแล้ว",
-  COMPLETED:                "เสร็จสิ้น",
-  COMPLETED_WITH_DEDUCTION: "เสร็จ(หักค่าเสียหาย)",
-  DISPUTED:                 "มีข้อพิพาท",
-  ITEM_LOST:                "ของสูญหาย",
-};
+const FILTERS = [
+  { key: "all",       label: "ทั้งหมด",       statuses: null                                              },
+  { key: "waiting",   label: "รอตอบรับ",      statuses: ["REQUESTED"]                                     },
+  { key: "active",    label: "กำลังเช่า",      statuses: ["APPROVED", "DEPOSIT_HELD", "PICKUP_SCHEDULED",
+                                                          "HANDED_OVER", "ACTIVE", "RENEWAL_REQUESTED",
+                                                          "RETURN_SCHEDULED", "RETURNED"]                 },
+  { key: "overdue",   label: "เกินกำหนด",     statuses: ["OVERDUE", "ITEM_LOST"]                          },
+  { key: "disputed",  label: "มีข้อพิพาท",     statuses: ["DISPUTED"]                                      },
+  { key: "done",      label: "จบแล้ว",        statuses: ["COMPLETED", "COMPLETED_WITH_DEDUCTION",
+                                                          "CANCELLED", "REJECTED", "EXPIRED"]             },
+] as const;
 
-const STATUS_COLOR: Record<string, string> = {
-  REQUESTED:                "bg-yellow-50 text-yellow-700 border-yellow-200",
-  APPROVED:                 "bg-blue-50 text-blue-700 border-blue-200",
-  DEPOSIT_HELD:             "bg-blue-50 text-blue-700 border-blue-200",
-  REJECTED:                 "bg-gray-50 text-gray-600 border-gray-200",
-  EXPIRED:                  "bg-gray-50 text-gray-600 border-gray-200",
-  CANCELLED:                "bg-gray-50 text-gray-600 border-gray-200",
-  PICKUP_SCHEDULED:         "bg-purple-50 text-purple-700 border-purple-200",
-  HANDED_OVER:              "bg-purple-50 text-purple-700 border-purple-200",
-  ACTIVE:                   "bg-green-50 text-green-700 border-green-200",
-  OVERDUE:                  "bg-red-50 text-red-700 border-red-200",
-  RETURN_SCHEDULED:         "bg-orange-50 text-orange-700 border-orange-200",
-  RETURNED:                 "bg-teal-50 text-teal-700 border-teal-200",
-  COMPLETED:                "bg-green-50 text-green-700 border-green-200",
-  COMPLETED_WITH_DEDUCTION: "bg-amber-50 text-amber-700 border-amber-200",
-  DISPUTED:                 "bg-red-50 text-red-700 border-red-200",
-  ITEM_LOST:                "bg-red-100 text-red-800 border-red-300",
-};
-
-export default async function AdminLendingPage() {
+export default async function AdminLendingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ f?: string }>;
+}) {
   const session = await auth();
   const user = session?.user as any;
   if (!user || user.role !== "ADMIN") redirect("/");
+
+  const { f } = await searchParams;
+  const activeFilter = FILTERS.find((x) => x.key === f) ?? FILTERS[0];
+  const listWhere = activeFilter.statuses
+    ? { status: { in: [...activeFilter.statuses] as never } }
+    : {};
 
   const ACTIVE_STATUSES = ["REQUESTED", "APPROVED", "DEPOSIT_HELD", "PICKUP_SCHEDULED", "HANDED_OVER", "ACTIVE", "OVERDUE", "RENEWAL_REQUESTED", "RETURN_SCHEDULED"] as const;
 
@@ -82,9 +66,10 @@ export default async function AdminLendingPage() {
       where: { status: { in: [...ACTIVE_STATUSES] } },
       _sum: { securityDeposit: true },
     }),
-    // Recent 20 orders
+    // Recent orders for the selected filter
     prisma.rentalOrder.findMany({
-      take: 20,
+      where: listWhere,
+      take: 50,
       orderBy: { createdAt: "desc" },
       include: {
         item:   { select: { id: true, title: true, emoji: true } },
@@ -137,10 +122,29 @@ export default async function AdminLendingPage() {
 
       {/* Recent orders */}
       <div className="bg-white rounded-2xl border border-[#e5e3de] p-5">
-        <h2 className="text-sm font-bold text-[#333] mb-4">คำสั่งเช่าล่าสุด</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <h2 className="text-sm font-bold text-[#333]">คำสั่งเช่าล่าสุด</h2>
+          <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
+            {FILTERS.map((x) => (
+              <Link
+                key={x.key}
+                href={x.key === "all" ? "/admin/lending" : `/admin/lending?f=${x.key}`}
+                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition ${
+                  activeFilter.key === x.key
+                    ? "bg-[#e8500a] border-[#e8500a] text-white"
+                    : "bg-white border-[#e5e3de] text-[#555] hover:border-[#c9c5bd]"
+                }`}
+              >
+                {x.label}
+              </Link>
+            ))}
+          </div>
+        </div>
 
         {recentOrders.length === 0 ? (
-          <div className="py-10 text-center text-[#aaa] text-sm">ยังไม่มีคำสั่งเช่า</div>
+          <div className="py-10 text-center text-[#aaa] text-sm">
+            ไม่มีคำสั่งเช่าในหมวด &ldquo;{activeFilter.label}&rdquo;
+          </div>
         ) : (
           <div className="space-y-1">
             {recentOrders.map((order) => (
@@ -155,17 +159,14 @@ export default async function AdminLendingPage() {
                     {" · "}฿{order.dailyRate}/วัน × {order.rentalDays} วัน
                   </p>
                 </div>
-                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border flex-shrink-0 ${
-                  STATUS_COLOR[order.status] ?? "bg-gray-50 text-gray-600 border-gray-200"
-                }`}>
-                  {STATUS_LABEL[order.status] ?? order.status}
+                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border flex-shrink-0 ${statusColor(order.status)}`}>
+                  {statusLabel(order.status)}
                 </span>
                 <Link
-                  href={`/rental/orders/${order.id}`}
-                  className="text-xs text-[#e8500a] hover:underline flex-shrink-0"
-                  target="_blank"
+                  href={`/admin/lending/${order.id}`}
+                  className="text-xs font-semibold text-[#e8500a] hover:underline flex-shrink-0"
                 >
-                  ดู →
+                  ดูรายละเอียด →
                 </Link>
               </div>
             ))}

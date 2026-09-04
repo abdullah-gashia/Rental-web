@@ -41,7 +41,7 @@ export default function OwnerActions({ orderId, status }: Props) {
   return (
     <div className="bg-white rounded-2xl border border-[#e5e3de] p-5 space-y-4">
       <h3 className="text-sm font-bold text-[#111]">🔔 มีคำขอเช่าใหม่</h3>
-      <p className="text-xs text-[#777]">ผู้เช่าส่งคำขอมาแล้ว — กรุณาตอบรับหรือปฏิเสธภายใน 24 ชั่วโมง</p>
+      <p className="text-xs text-[#777]">ผู้เช่าส่งคำขอมาแล้ว — กรุณาตอบรับหรือปฏิเสธภายใน 7 วัน มิฉะนั้นระบบจะยกเลิกและคืนเงินให้ผู้เช่าอัตโนมัติ</p>
 
       {error && (
         <div className="bg-red-50 text-red-700 text-xs px-3 py-2 rounded-xl">{error}</div>

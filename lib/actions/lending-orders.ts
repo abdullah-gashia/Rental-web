@@ -470,7 +470,15 @@ export async function confirmReturn(
 
 // ─── Settlement (called internally after both return-confirmed) ───────────────
 
-export async function settleLendingOrder(orderId: string) {
+/**
+ * Pays the lender and refunds the deposit.
+ *
+ * Deliberately NOT exported. This file carries "use server", so an exported
+ * function is a public endpoint — and this one moves money without checking who
+ * is calling. It is only ever reached from confirmReturn above, which does
+ * verify the caller is a party to the order.
+ */
+async function settleLendingOrder(orderId: string) {
   const order = await prisma.lendingOrder.findUniqueOrThrow({
     where: { id: orderId },
     include: { lendingItem: { select: { id: true, title: true, lateFeePerDay: true } } },

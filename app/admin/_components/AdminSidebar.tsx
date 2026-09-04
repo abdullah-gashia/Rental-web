@@ -30,6 +30,7 @@ export default function AdminSidebar({ adminName, adminEmail, pendingVerificatio
     { href: "/admin/disputes",      emoji: "🚨", label: "ข้อพิพาท"               },
     { href: "/admin/verifications", emoji: "🔍", label: "ยืนยันตัวตน KYC", badge: pendingVerificationCount },
     { href: "/admin/approvals",     emoji: "✅", label: "ตรวจสอบสินค้า"          },
+    { href: "/admin/broadcast",     emoji: "📣", label: "ส่งอีเมลถึงทุกคน"        },
   ];
 
   function isActive(href: string) {

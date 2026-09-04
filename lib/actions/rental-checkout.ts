@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { RENTAL_REQUEST_TIMEOUT_MS } from "@/lib/rental-config";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
@@ -171,7 +172,7 @@ export async function createRentalOrder(input: CreateRentalInput): Promise<Renta
           agreementText:   generateAgreementText(
             item.title, rentalDays, securityDeposit, item.lateFeePerDay ?? 0
           ),
-          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          expiresAt: new Date(Date.now() + RENTAL_REQUEST_TIMEOUT_MS),
           statusHistory: [{
             status: "REQUESTED",
             changedAt: new Date().toISOString(),

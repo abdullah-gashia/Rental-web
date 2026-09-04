@@ -102,6 +102,17 @@ export async function banUser(userId: string): Promise<ActionResult> {
     const { userId: id } = BanSchema.parse({ userId });
     if (id === admin.id) return { success: false, error: "ไม่สามารถแบนตัวเองได้" };
 
+    // Administrator accounts are not bannable. A banned admin is locked out of
+    // the panel by the middleware, and if that was the last one nobody can
+    // unban them — the site would simply have no administrator any more.
+    const target = await prisma.user.findUnique({
+      where: { id }, select: { role: true },
+    });
+    if (!target) return { success: false, error: "ไม่พบผู้ใช้" };
+    if (target.role === "ADMIN") {
+      return { success: false, error: "ไม่สามารถแบนบัญชีผู้ดูแลระบบได้" };
+    }
+
     await prisma.user.update({
       where: { id },
       data:  { isBanned: true, bannedAt: new Date() },
@@ -146,6 +157,16 @@ export async function updateUserRole(
     const parsed = RoleSchema.parse({ userId, newRole });
     if (parsed.userId === admin.id) {
       return { success: false, error: "ไม่สามารถเปลี่ยนบทบาทของตัวเองได้" };
+    }
+
+    // Same reasoning as banUser: an admin cannot be stripped of the role from
+    // this panel, so the site can never be left without one.
+    const target = await prisma.user.findUnique({
+      where: { id: parsed.userId }, select: { role: true },
+    });
+    if (!target) return { success: false, error: "ไม่พบผู้ใช้" };
+    if (target.role === "ADMIN") {
+      return { success: false, error: "ไม่สามารถลดสิทธิ์บัญชีผู้ดูแลระบบได้" };
     }
     await prisma.user.update({
       where: { id: parsed.userId },
@@ -352,6 +373,16 @@ export async function adminEditUser(
     }
     if (parsed.userId === admin.id && parsed.isBanned) {
       return { success: false, error: "ไม่สามารถแบนตัวเองได้" };
+    }
+
+    // Editing somebody else's admin account is blocked outright — the form can
+    // ban, demote and rewrite the profile in one submit.
+    const target = await prisma.user.findUnique({
+      where: { id: parsed.userId }, select: { role: true },
+    });
+    if (!target) return { success: false, error: "ไม่พบผู้ใช้" };
+    if (target.role === "ADMIN" && parsed.userId !== admin.id) {
+      return { success: false, error: "ไม่สามารถแก้ไขบัญชีผู้ดูแลระบบอื่นได้" };
     }
 
     await prisma.user.update({

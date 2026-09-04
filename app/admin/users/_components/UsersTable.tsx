@@ -166,7 +166,7 @@ export default function UsersTable({ rows }: Props) {
 
                 {/* Open abuse reports */}
                 <td className="px-4 py-3 text-center">
-                  {u.openReportCount > 0 ? (
+                  {u.openReportCount > 0 && u.role !== "ADMIN" ? (
                     <button
                       onClick={() => setDetailUserId(u.id)}
                       title="เปิดดูรายงาน"
@@ -226,6 +226,13 @@ function ActionsDropdown({
   const [pos, setPos]   = useState<{ top: number; right: number } | null>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
 
+  // An admin account is off-limits from this menu. Banning, editing or
+  // demoting the person who runs the panel is how you end up with a site that
+  // has no administrator at all, and there is no way back in from that.
+  // The server actions refuse the same thing, so this is convenience, not the
+  // protection itself.
+  const isAdmin = user.role === "ADMIN";
+
   // The table sits inside overflow-x-auto, which clips an absolutely
   // positioned menu — the dropdown opened but was never visible. Render it in
   // a portal at fixed coordinates instead so nothing can crop it.
@@ -256,53 +263,50 @@ function ActionsDropdown({
             className="fixed z-[401] w-48 bg-white rounded-xl border border-[#e5e3de] shadow-lg py-1"
             style={{ top: pos.top, right: pos.right }}
           >
-            {/* NEW: View details */}
-            <MenuItem
-              label="ดูรายละเอียด"
-              icon="👁️"
-              onClick={() => { setOpen(false); onView(); }}
-            />
-            {/* NEW: Edit */}
-            <MenuItem
-              label="แก้ไขข้อมูล"
-              icon="✏️"
-              onClick={() => { setOpen(false); onEdit(); }}
-            />
-
-            <div className="my-1 border-t border-[#f0ede7]" />
-
-            {/* Ban / Unban */}
-            {user.isBanned ? (
-              <MenuItem
-                label="ปลดแบน"
-                icon="✅"
-                onClick={() => { setOpen(false); onUnban(); }}
-              />
+            {isAdmin ? (
+              <div className="px-3 py-2.5 text-xs text-[#9a9590] leading-relaxed">
+                🛡️ บัญชีผู้ดูแลระบบ<br />
+                <span className="text-[11px]">ไม่สามารถแก้ไข แบน หรือลดสิทธิ์ได้</span>
+              </div>
             ) : (
-              <MenuItem
-                label="แบนผู้ใช้"
-                icon="🚫"
-                danger
-                onClick={() => { setOpen(false); onBan(); }}
-              />
-            )}
+              <>
+                <MenuItem
+                  label="ดูรายละเอียด"
+                  icon="👁️"
+                  onClick={() => { setOpen(false); onView(); }}
+                />
+                <MenuItem
+                  label="แก้ไขข้อมูล"
+                  icon="✏️"
+                  onClick={() => { setOpen(false); onEdit(); }}
+                />
 
-            <div className="my-1 border-t border-[#f0ede7]" />
+                <div className="my-1 border-t border-[#f0ede7]" />
 
-            {/* Role change */}
-            {user.role !== "ADMIN" && (
-              <MenuItem
-                label="เลื่อนเป็นแอดมิน"
-                icon="👑"
-                onClick={() => { setOpen(false); onRole("ADMIN"); }}
-              />
-            )}
-            {user.role !== "STUDENT" && (
-              <MenuItem
-                label="ลดเป็นนักศึกษา"
-                icon="🎓"
-                onClick={() => { setOpen(false); onRole("STUDENT"); }}
-              />
+                {/* Ban / Unban */}
+                {user.isBanned ? (
+                  <MenuItem
+                    label="ปลดแบน"
+                    icon="✅"
+                    onClick={() => { setOpen(false); onUnban(); }}
+                  />
+                ) : (
+                  <MenuItem
+                    label="แบนผู้ใช้"
+                    icon="🚫"
+                    danger
+                    onClick={() => { setOpen(false); onBan(); }}
+                  />
+                )}
+
+                <div className="my-1 border-t border-[#f0ede7]" />
+
+                <MenuItem
+                  label="เลื่อนเป็นแอดมิน"
+                  icon="👑"
+                  onClick={() => { setOpen(false); onRole("ADMIN"); }}
+                />
+              </>
             )}
           </div>
         </>,
