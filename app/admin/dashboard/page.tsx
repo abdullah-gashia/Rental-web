@@ -7,6 +7,7 @@ import StatusPieChart     from "./_components/StatusPieChart";
 import RecentOrdersTable  from "./_components/RecentOrdersTable";
 import RefreshButton      from "./_components/RefreshButton";
 import RevenueChart       from "./_components/RevenueChart";
+import MoneyValue        from "./_components/MoneyValue";
 
 // KPI icon helpers — inline SVGs keep this file self-contained
 function UsersIcon()    { return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>; }
@@ -17,7 +18,6 @@ function TrendIcon()    { return <svg className="w-5 h-5" fill="none" stroke="cu
 function ClockIcon()    { return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>; }
 
 function fmt(n: number)      { return new Intl.NumberFormat("th-TH").format(n); }
-function baht(n: number)     { return new Intl.NumberFormat("th-TH", { style: "currency", currency: "THB", maximumFractionDigits: 0 }).format(n); }
 
 export default async function AdminDashboardPage() {
   const [stats, revenue] = await Promise.all([
@@ -63,7 +63,7 @@ export default async function AdminDashboardPage() {
         />
         <KpiCard
           label="รายได้รวม"
-          value={baht(stats.totalRevenue)}
+          value={<MoneyValue amount={stats.totalRevenue} />}
           sublabel="Escrow ที่โอนให้ผู้ขายแล้ว"
           accent="bg-purple-100 text-purple-600"
           icon={<BanknoteIcon />}
@@ -74,28 +74,28 @@ export default async function AdminDashboardPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
           label="รายได้รวมทั้งหมด"
-          value={baht(revenue.platformFeeTotal)}
+          value={<MoneyValue amount={revenue.platformFeeTotal} />}
           sublabel="ค่าธรรมเนียมที่เก็บได้ตั้งแต่เริ่ม"
           accent="bg-purple-100 text-purple-600"
           icon={<BanknoteIcon />}
         />
         <KpiCard
           label="รายได้เดือนนี้"
-          value={baht(revenue.platformFeeMonth)}
+          value={<MoneyValue amount={revenue.platformFeeMonth} />}
           sublabel="30 วันที่ผ่านมา"
           accent="bg-violet-100 text-violet-600"
           icon={<TrendIcon />}
         />
         <KpiCard
           label="รายได้สัปดาห์นี้"
-          value={baht(revenue.platformFeeWeek)}
+          value={<MoneyValue amount={revenue.platformFeeWeek} />}
           sublabel="7 วันที่ผ่านมา"
           accent="bg-indigo-100 text-indigo-600"
           icon={<TrendIcon />}
         />
         <KpiCard
           label="รายได้รอดำเนินการ"
-          value={baht(revenue.pendingPlatformFee)}
+          value={<MoneyValue amount={revenue.pendingPlatformFee} />}
           sublabel="คำสั่งซื้อที่ยังไม่เสร็จสิ้น"
           accent="bg-amber-100 text-amber-600"
           icon={<ClockIcon />}

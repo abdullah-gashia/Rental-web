@@ -173,23 +173,6 @@ export default async function AdminLendingPage() {
         )}
       </div>
 
-      {/* Quick links */}
-      <div className="flex gap-3">
-        <Link
-          href="/rental"
-          target="_blank"
-          className="px-4 py-2.5 border border-[#e5e3de] text-sm text-[#555] rounded-xl hover:bg-[#f0ede7] transition"
-        >
-          🔗 เปิดหน้าสินค้าเช่าสาธารณะ
-        </Link>
-        <Link
-          href="/dashboard/rentals"
-          target="_blank"
-          className="px-4 py-2.5 border border-[#e5e3de] text-sm text-[#555] rounded-xl hover:bg-[#f0ede7] transition"
-        >
-          📋 แดชบอร์ดการเช่า
-        </Link>
-      </div>
     </div>
   );
 }

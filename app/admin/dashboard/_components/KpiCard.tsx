@@ -1,8 +1,9 @@
-// Server Component — no interactivity needed; receives pre-formatted values.
+// Server Component. `value` accepts a node so an interactive figure (see
+// MoneyValue) can be dropped in without this card becoming a client one.
 
 interface KpiCardProps {
   label:    string;
-  value:    string;
+  value:    React.ReactNode;
   icon:     React.ReactNode;
   /** Tailwind bg + text classes for the icon badge, e.g. "bg-blue-100 text-blue-600" */
   accent:   string;

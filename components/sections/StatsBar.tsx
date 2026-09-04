@@ -4,16 +4,32 @@ import { useLocaleStore } from "@/lib/stores/locale-store";
 
 interface StatsBarProps {
   totalItems: number;
+  /** Users whose PSU identity has been approved */
+  verifiedSellers: number;
+  /** Mean of every review left on the platform, 0 when there are none */
+  avgRating: number;
+  reviewCount: number;
 }
 
-/** Slim panel of platform numbers, sitting between the mosaic and the sections. */
-export default function StatsBar({ totalItems }: StatsBarProps) {
+/**
+ * Slim panel of platform numbers.
+ *
+ * Every figure here is counted from the database. The seller count and the
+ * satisfaction score used to be hardcoded at 347 and 98%, which claimed a
+ * platform far larger and better rated than the real one.
+ */
+export default function StatsBar({ totalItems, verifiedSellers, avgRating, reviewCount }: StatsBarProps) {
   const t = useLocaleStore((s) => s.t);
 
   const stats = [
-    { value: totalItems.toLocaleString(), label: t("stat_listings") },
-    { value: "347",                       label: t("stat_sellers")  },
-    { value: "98%",                       label: t("stat_sat")      },
+    { value: totalItems.toLocaleString(),      label: t("stat_listings") },
+    { value: verifiedSellers.toLocaleString(), label: t("stat_sellers")  },
+    {
+      // A rating out of five read as a percentage. With no reviews there is
+      // nothing to report, so say so rather than invent a number.
+      value: reviewCount > 0 ? `${Math.round((avgRating / 5) * 100)}%` : "—",
+      label: t("stat_sat"),
+    },
   ];
 
   return (

@@ -92,7 +92,7 @@ export default async function Home({
   const session = await auth();
   const userId  = (session?.user as any)?.id ?? null;
 
-  const [items, recommendations, trendingItems] = await Promise.all([
+  const [items, recommendations, trendingItems, verifiedSellers, ratingAgg] = await Promise.all([
     prisma.item.findMany({
       where,
       orderBy,
@@ -104,6 +104,9 @@ export default async function Home({
     }),
     getCachedRecommendations(userId),
     getTrendingSection(),
+    // Headline figures, counted rather than hardcoded
+    prisma.user.count({ where: { verificationStatus: "APPROVED" } }),
+    prisma.review.aggregate({ _avg: { rating: true }, _count: { rating: true } }),
   ]);
 
   console.log("Items fetched:", items.length);
@@ -130,6 +133,9 @@ export default async function Home({
       initialCondition={condition ?? ""}
       initialSort={sort ?? "newest"}
       authError={authError}
+      verifiedSellers={verifiedSellers}
+      avgRating={ratingAgg._avg.rating ?? 0}
+      reviewCount={ratingAgg._count.rating}
     />
   );
 }

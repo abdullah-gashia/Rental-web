@@ -39,6 +39,9 @@ interface HomeClientProps {
   initialSort?:      string;
   /** Error code handed back by Auth.js after a failed OAuth attempt */
   authError?:        string;
+  verifiedSellers?:  number;
+  avgRating?:        number;
+  reviewCount?:      number;
 }
 
 export default function HomeClient({
@@ -53,6 +56,9 @@ export default function HomeClient({
   initialCondition = "",
   initialSort      = "newest",
   authError,
+  verifiedSellers = 0,
+  avgRating       = 0,
+  reviewCount     = 0,
 }: HomeClientProps) {
   const router    = useRouter();
   const urlParams = useSearchParams(); // always-current URL params
@@ -238,7 +244,12 @@ export default function HomeClient({
                 const item = items.find((i) => i.id === id);
                 if (item) handleItemClick(item);
               }} />
-              <StatsBar totalItems={items.length} />
+              <StatsBar
+                totalItems={items.length}
+                verifiedSellers={verifiedSellers}
+                avgRating={avgRating}
+                reviewCount={reviewCount}
+              />
             </>
           )}
 
