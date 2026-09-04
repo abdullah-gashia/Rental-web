@@ -1,6 +1,14 @@
 import { randomInt } from "crypto";
 
 /**
+ * Marker inside the notification that carries a freshly generated password.
+ *
+ * Lives here rather than in lib/auth.ts so lib/prisma.ts can match on it
+ * without importing auth, which would close an import cycle.
+ */
+export const GENERATED_PASSWORD_NOTICE = "รหัสผ่านที่ระบบสร้างให้";
+
+/**
  * Characters that can't be confused when read off a screen:
  * no 0/O, no 1/l/I. Keeps a hand-copied password from failing to log in.
  */

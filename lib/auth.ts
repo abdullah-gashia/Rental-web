@@ -4,11 +4,10 @@ import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcryptjs from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-import { generatePassword } from "@/lib/utils/generate-password";
+import { generatePassword, GENERATED_PASSWORD_NOTICE } from "@/lib/utils/generate-password";
 import { sendGeneratedPasswordEmail } from "@/lib/email";
 
-/** Marker so the notification carrying a generated password can be found again. */
-export const GENERATED_PASSWORD_NOTICE = "รหัสผ่านที่ระบบสร้างให้";
+export { GENERATED_PASSWORD_NOTICE };
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   // The adapter persists Google users into User/Account. Sessions stay JWT

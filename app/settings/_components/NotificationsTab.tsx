@@ -11,6 +11,7 @@ interface Props {
     notifyPromotions:     boolean;
     emailWeeklySummary:   boolean;
     emailRecommendations: boolean;
+    emailNotifications:   boolean;
   } | null;
   showToast: (ok: boolean, msg: string) => void;
 }
@@ -23,6 +24,7 @@ const DEFAULTS = {
   notifyPromotions:     false,
   emailWeeklySummary:   false,
   emailRecommendations: true,
+  emailNotifications:   true,
 };
 
 export default function NotificationsTab({ preferences, showToast }: Props) {
@@ -86,6 +88,12 @@ export default function NotificationsTab({ preferences, showToast }: Props) {
           การแจ้งเตือนทางอีเมล
         </h3>
         <div className="space-y-0.5">
+          <ToggleRow
+            label="ส่งการแจ้งเตือนทั้งหมดเข้าอีเมล"
+            description="ทุกครั้งที่มีแจ้งเตือนในแอป จะส่งสำเนาไปที่อีเมลของคุณด้วย"
+            checked={state.emailNotifications}
+            onChange={() => toggle("emailNotifications")}
+          />
           <ToggleRow
             label="สรุปรายสัปดาห์"
             description="ส่งสรุปยอดขาย สินค้าใหม่ และกิจกรรมทุกสัปดาห์"

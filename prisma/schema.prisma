@@ -617,6 +617,8 @@ model UserPreferences {
   notifyPromotions      Boolean @default(false)
   emailWeeklySummary    Boolean @default(false)
   emailRecommendations  Boolean @default(true)
+  // Mirror every in-app notification to the user's e-mail
+  emailNotifications    Boolean @default(true)
 
   // Display preferences
   language              String  @default("th")

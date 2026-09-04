@@ -127,3 +127,90 @@ export async function sendGeneratedPasswordEmail(
     return { sent: false, reason: e instanceof Error ? e.message : "unknown error" };
   }
 }
+
+// ─── Notification mirror ──────────────────────────────────────────────────────
+
+/** Heading shown above each notification type in the e-mail. */
+const TYPE_HEADING: Record<string, string> = {
+  ORDER:      "อัปเดตคำสั่งซื้อ",
+  MESSAGE:    "ข้อความใหม่",
+  MODERATION: "อัปเดตประกาศของคุณ",
+  SYSTEM:     "แจ้งเตือนจากระบบ",
+};
+
+/**
+ * Mirrors one in-app notification to e-mail.
+ *
+ * Same contract as the welcome mail: never throws, so a mail outage can't take
+ * down the action that produced the notification.
+ */
+export async function sendNotificationEmail(input: {
+  to: string;
+  type: string;
+  message: string;
+  link?: string | null;
+}): Promise<SendResult> {
+  const mailer = getTransporter();
+  if (!mailer) {
+    return { sent: false, reason: "GMAIL_USER / GMAIL_APP_PASSWORD not configured" };
+  }
+
+  const heading  = TYPE_HEADING[input.type] ?? "แจ้งเตือนจากระบบ";
+  const base     = appUrl();
+  const linkUrl  = input.link ? `${base}${input.link.startsWith("/") ? "" : "/"}${input.link}` : base;
+  const prefsUrl = `${base}/settings?tab=notifications`;
+
+  const text = [
+    `PSU Store — ${heading}`,
+    "",
+    input.message,
+    "",
+    `เปิดดูในเว็บไซต์: ${linkUrl}`,
+    "",
+    `ปิดการแจ้งเตือนทางอีเมลได้ที่: ${prefsUrl}`,
+    "— PSU Store",
+  ].join("\n");
+
+  const html = `
+<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;max-width:520px;margin:0 auto;padding:28px 24px;color:#0f1e35">
+  <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748b">PSU Store</p>
+  <h1 style="margin:0 0 18px;font-size:19px;font-weight:600;color:#0a2b5e">${heading}</h1>
+
+  <div style="border:1px solid #e3e8f0;border-left:3px solid #0a2b5e;border-radius:8px;padding:16px 18px;font-size:14px;line-height:1.75;background:#f7f9fc">
+    ${escapeHtml(input.message)}
+  </div>
+
+  <p style="margin:20px 0 0">
+    <a href="${linkUrl}" style="display:inline-block;background:#0a2b5e;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:10px 18px;border-radius:7px">
+      เปิดดูในเว็บไซต์
+    </a>
+  </p>
+
+  <p style="margin:26px 0 0;padding-top:16px;border-top:1px solid #e3e8f0;font-size:12px;color:#94a3b8">
+    ไม่ต้องการอีเมลแบบนี้? <a href="${prefsUrl}" style="color:#64748b">ปิดการแจ้งเตือนทางอีเมล</a>
+  </p>
+</div>`.trim();
+
+  try {
+    await mailer.sendMail({
+      from: `"PSU Store" <${GMAIL_USER}>`,
+      to: input.to,
+      subject: `[PSU Store] ${heading}`,
+      text,
+      html,
+    });
+    return { sent: true };
+  } catch (e) {
+    return { sent: false, reason: e instanceof Error ? e.message : "unknown error" };
+  }
+}
+
+/** Notification text is user-supplied in places (chat, disputes) — escape it. */
+function escapeHtml(v: string): string {
+  return v
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}

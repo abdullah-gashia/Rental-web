@@ -204,6 +204,7 @@ const PreferencesSchema = z.object({
   notifyPromotions:     z.boolean().optional(),
   emailWeeklySummary:   z.boolean().optional(),
   emailRecommendations: z.boolean().optional(),
+  emailNotifications:   z.boolean().optional(),
   language:             z.enum(["th", "en"]).optional(),
   theme:                z.enum(["light", "dark", "system"]).optional(),
   showProfilePublic:    z.boolean().optional(),
