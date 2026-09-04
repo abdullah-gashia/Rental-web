@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import { getUserProfile, getMyPendingTransaction } from "@/lib/actions/trust-actions";
 import TrustBadge from "@/components/ui/TrustBadge";
+import ReportButton from "./ReportButton";
+import { getUserPublicItems } from "@/lib/actions/user-directory";
+import { hasOpenReport } from "@/lib/actions/report-actions";
 import ProfileReviewSection from "./ProfileReviewSection";
 
 interface PageProps {
@@ -22,9 +25,11 @@ function Stars({ rating }: { rating: number }) {
 
 export default async function UserProfilePage({ params }: PageProps) {
   const { id } = await params;
-  const [profileResult, pendingResult] = await Promise.all([
+  const [profileResult, pendingResult, publicItems, reportState] = await Promise.all([
     getUserProfile(id),
     getMyPendingTransaction(id),
+    getUserPublicItems(id),
+    hasOpenReport(id),
   ]);
 
   if (profileResult.error || !profileResult.user) notFound();
@@ -121,9 +126,57 @@ export default async function UserProfilePage({ params }: PageProps) {
                   <span className="text-[#9a9590] text-xs">สมาชิกตั้งแต่</span>
                 </div>
               </div>
+
+              {/* Flag this seller — admins only ever see the result */}
+              <div className="pt-1">
+                <ReportButton
+                  reportedId={user.id}
+                  reportedName={user.name ?? "ผู้ใช้รายนี้"}
+                  signedIn={reportState.signedIn}
+                  isSelf={!!reportState.isSelf}
+                  alreadyReported={reportState.reported}
+                />
+              </div>
             </div>
           </div>
         </div>
+
+        {/* ── What this person has for sale ───────────────────────────────── */}
+        {publicItems.length > 0 && (
+          <section className="bg-white rounded-2xl border border-[#e5e3de] p-5 sm:p-6 mb-6">
+            <h2 className="text-base font-bold text-[#111] mb-4">
+              สินค้าของผู้ใช้รายนี้
+              <span className="ml-2 text-xs font-normal text-[#9a9590]">{publicItems.length} รายการ</span>
+            </h2>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {publicItems.map((it) => (
+                <a
+                  key={it.id}
+                  href={it.href}
+                  className="group block rounded-xl border border-[#e5e3de] overflow-hidden hover:border-[#c9c5bd] transition"
+                >
+                  <div className="aspect-square bg-[#f4f5f7] flex items-center justify-center overflow-hidden">
+                    {it.imageUrl
+                      ? <img src={it.imageUrl} alt={it.title} className="w-full h-full object-contain" />
+                      : <span className="text-3xl opacity-50">{it.emoji ?? "\ud83d\udce6"}</span>}
+                  </div>
+                  <div className="p-2.5">
+                    <p className="text-[12.5px] font-medium text-[#111] line-clamp-2 leading-snug group-hover:text-[#e8500a]">
+                      {it.title}
+                    </p>
+                    <p className={`text-[13px] font-bold mt-1 ${it.isRent ? "text-[#1d4ed8]" : "text-[#111]"}`}>
+                      {it.priceLabel}
+                    </p>
+                    <p className="text-[11px] text-[#9a9590] truncate mt-0.5">
+                      {it.categoryTh}{it.location ? ` \u00b7 ${it.location}` : ""}
+                    </p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* ── Leave a Review + Reviews List ───────────────────────────────── */}
         {/* ProfileReviewSection is a Client Component — it handles the review

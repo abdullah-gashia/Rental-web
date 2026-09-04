@@ -4,7 +4,7 @@ import { useLocaleStore } from "@/lib/stores/locale-store";
 import { useWishlistStore } from "@/lib/stores/wishlist-store";
 import { useModalStore } from "@/lib/stores/modal-store";
 import { useAuthStore } from "@/lib/stores/auth-store";
-import { type CategorySlug } from "@/lib/types";
+import { type CategorySlug, type RailSelection } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { getUnreadCounts } from "@/lib/actions/notification-actions";
 import UserDropdown from "./UserDropdown";
@@ -14,9 +14,13 @@ import ChatDropdown from "./ChatDropdown";
 interface NavbarProps {
   searchQuery: string;
   onSearchChange: (q: string) => void;
-  activeCat: CategorySlug;
+  activeCat: RailSelection;
   onCatChange: (cat: CategorySlug) => void;
   onChatOpen?: (itemId: string, sellerId: string, title: string, emoji: string | null, price: number) => void;
+  /** Overrides the search hint — the people directory searches people, not listings */
+  searchPlaceholder?: string;
+  /** Hides the category tab strip on pages that are not the marketplace */
+  hideCategories?: boolean;
 }
 
 const categories: { key: CategorySlug; i18nKey: string }[] = [
@@ -64,7 +68,10 @@ function IconButton({
   );
 }
 
-export default function Navbar({ searchQuery, onSearchChange, activeCat, onCatChange, onChatOpen }: NavbarProps) {
+export default function Navbar({
+  searchQuery, onSearchChange, activeCat, onCatChange, onChatOpen,
+  searchPlaceholder, hideCategories = false,
+}: NavbarProps) {
   const { t, locale, toggleLocale } = useLocaleStore();
   const wishlistCount = useWishlistStore((s) => s.count);
   const openModal = useModalStore((s) => s.open);
@@ -128,7 +135,7 @@ export default function Navbar({ searchQuery, onSearchChange, activeCat, onCatCh
                 type="text"
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                placeholder={t("search_placeholder")}
+                placeholder={searchPlaceholder ?? t("search_placeholder")}
                 className="bg-transparent text-[13px] w-full focus:outline-none text-[var(--hp-ink)] placeholder-[#64748b]"
               />
               <kbd className="hp-num hidden md:inline text-[9.5px] text-[var(--hp-muted)] bg-[var(--hp-subtle)] px-1.5 py-0.5 rounded border border-[var(--hp-border)]">
@@ -245,6 +252,7 @@ export default function Navbar({ searchQuery, onSearchChange, activeCat, onCatCh
       </header>
 
       {/* Mobile category strip — the rail is desktop-only */}
+      {!hideCategories && (
       <div className="md:hidden sticky top-12 z-40 bg-[var(--hp-canvas)] px-4 pb-1">
         <nav className="flex gap-5 overflow-x-auto no-scrollbar border-b border-[var(--hp-border)]" role="tablist">
           {categories.map((cat) => (
@@ -260,6 +268,7 @@ export default function Navbar({ searchQuery, onSearchChange, activeCat, onCatCh
           ))}
         </nav>
       </div>
+      )}
     </>
   );
 }

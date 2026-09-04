@@ -5,7 +5,9 @@ import type { UserDetail }                     from "../../_lib/types";
 import { formatThaiDate }                      from "../../_lib/utils";
 import StatusBadge                             from "../../_components/StatusBadge";
 import FinancialSummary                        from "./FinancialSummary";
-import { getUserDetail, adminEditUser }        from "../actions";
+import { REPORT_CATEGORY_LABEL as CATEGORY_LABEL } from "@/lib/report-categories";
+import { getUserDetail, adminEditUser, adjustTrustScore,
+         deleteUserReview, setReportStatus, sendUserEmail } from "../actions";
 
 interface Props {
   userId:    string;
@@ -32,6 +34,10 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
   const [kyc,    setKyc]    = useState("UNVERIFIED");
   const [note,   setNote]   = useState("");
 
+  // Email composer
+  const [mailSubject, setMailSubject] = useState("");
+  const [mailBody,    setMailBody]    = useState("");
+
   // Load data
   useEffect(() => {
     (async () => {
@@ -49,6 +55,31 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
       setLoading(false);
     })();
   }, [userId]);
+
+  /** Re-reads the record so the panel reflects what the action just changed. */
+  const refresh = async () => {
+    const detail = await getUserDetail(userId);
+    if (detail) {
+      setData(detail);
+      setTrust(detail.trustScore);
+    }
+  };
+
+  const run = (fn: () => Promise<{ success: boolean; message?: string; error?: string }>) => {
+    startTransition(async () => {
+      const res = await fn();
+      showToast(res.success, res.success ? (res.message ?? "") : (res.error ?? ""));
+      if (res.success) await refresh();
+    });
+  };
+
+  const handleSendEmail = () => {
+    run(async () => {
+      const res = await sendUserEmail(userId, mailSubject, mailBody);
+      if (res.success) { setMailSubject(""); setMailBody(""); }
+      return res;
+    });
+  };
 
   const handleSave = () => {
     startTransition(async () => {
@@ -262,6 +293,160 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
               </div>
             </div>
 
+            {/* -- Reputation ------------------------------------------- */}
+            <div className="bg-white border border-[#e5e3de] rounded-2xl p-4 space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <h4 className="text-sm font-bold text-[#333]">⭐ คะแนนและรีวิว</h4>
+                {data.reviewCount > 0 ? (
+                  <span className="text-sm">
+                    <PanelStars rating={data.avgRating ?? 0} />
+                    <span className="ml-1.5 font-bold text-[#111]">{(data.avgRating ?? 0).toFixed(1)}</span>
+                    <span className="ml-1 text-xs text-[#9a9590]">({data.reviewCount} รีวิว)</span>
+                  </span>
+                ) : (
+                  <span className="text-xs text-[#9a9590]">ยังไม่มีรีวิว</span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs text-[#777]">ปรับคะแนนความน่าเชื่อถือ:</span>
+                {[-10, -5, 5, 10].map((d) => (
+                  <button
+                    key={d}
+                    disabled={pending}
+                    onClick={() => run(() => adjustTrustScore(userId, d))}
+                    className={`px-2.5 py-1 rounded-lg border text-xs font-bold transition disabled:opacity-50 ${
+                      d < 0
+                        ? "border-red-200 text-red-700 hover:bg-red-50"
+                        : "border-green-200 text-green-700 hover:bg-green-50"
+                    }`}
+                  >
+                    {d > 0 ? `+${d}` : d}
+                  </button>
+                ))}
+                <span className="text-xs text-[#9a9590]">ปัจจุบัน {data.trustScore}</span>
+              </div>
+
+              {data.reviews.length > 0 && (
+                <div className="max-h-56 overflow-y-auto divide-y divide-[#f0ede7] border-t border-[#f0ede7] pt-1">
+                  {data.reviews.map((r) => (
+                    <div key={r.id} className="py-2 flex items-start gap-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <PanelStars rating={r.rating} />
+                          <span className="text-xs font-medium text-[#333]">{r.reviewer.name ?? "ผู้ใช้"}</span>
+                          <span className="text-[10px] text-[#b0ada6]">{formatShort(r.createdAt)}</span>
+                        </div>
+                        {r.itemTitle && <p className="text-[11px] text-[#9a9590] truncate">{r.itemTitle}</p>}
+                        {r.comment && <p className="text-xs text-[#555] mt-0.5">{r.comment}</p>}
+                      </div>
+                      <button
+                        disabled={pending}
+                        onClick={() => run(() => deleteUserReview(r.id))}
+                        title="ลบรีวิวนี้ (คะแนนดาวจะถูกคำนวณใหม่)"
+                        className="text-[11px] text-red-600 hover:bg-red-50 px-2 py-1 rounded-lg transition flex-shrink-0 disabled:opacity-50"
+                      >
+                        ลบ
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* -- Abuse reports (admin only) ---------------------------- */}
+            <div className="bg-white border border-[#e5e3de] rounded-2xl p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-bold text-[#333]">
+                  🚩 รายงานจากผู้ใช้
+                  {data.openReportCount > 0 && (
+                    <span className="ml-2 px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-[11px] font-bold">
+                      ใหม่ {data.openReportCount}
+                    </span>
+                  )}
+                </h4>
+                <span className="text-[10px] text-[#b0ada6]">ผู้ถูกรายงานไม่เห็นข้อมูลนี้</span>
+              </div>
+
+              {data.reports.length === 0 ? (
+                <p className="text-xs text-[#9a9590] py-3 text-center">ยังไม่มีรายงาน</p>
+              ) : (
+                <div className="max-h-64 overflow-y-auto space-y-2">
+                  {data.reports.map((rep) => (
+                    <div
+                      key={rep.id}
+                      className={`rounded-xl border p-3 ${
+                        rep.status === "OPEN" ? "border-red-200 bg-red-50/40" : "border-[#e5e3de] bg-[#faf9f7]"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <span className="text-xs font-bold text-[#333]">
+                          {CATEGORY_LABEL[rep.category ?? ""] ?? rep.category ?? "อื่นๆ"}
+                        </span>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                          rep.status === "OPEN"       ? "bg-red-100 text-red-700"
+                          : rep.status === "REVIEWED" ? "bg-green-100 text-green-700"
+                          :                             "bg-gray-200 text-gray-600"
+                        }`}>
+                          {rep.status === "OPEN" ? "รอตรวจสอบ" : rep.status === "REVIEWED" ? "ตรวจแล้ว" : "ยกเลิก"}
+                        </span>
+                      </div>
+                      <p className="text-xs text-[#555] mt-1.5 whitespace-pre-wrap">{rep.reason}</p>
+                      <p className="text-[10px] text-[#9a9590] mt-1.5">
+                        โดย {rep.reporter.name ?? rep.reporter.email} · {formatShort(rep.createdAt)}
+                      </p>
+                      {rep.status === "OPEN" && (
+                        <div className="flex gap-2 mt-2">
+                          <button
+                            disabled={pending}
+                            onClick={() => run(() => setReportStatus(rep.id, "REVIEWED"))}
+                            className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-green-600 text-white hover:bg-green-700 transition disabled:opacity-50"
+                          >
+                            ตรวจสอบแล้ว
+                          </button>
+                          <button
+                            disabled={pending}
+                            onClick={() => run(() => setReportStatus(rep.id, "DISMISSED"))}
+                            className="text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-[#e5e3de] text-[#555] hover:bg-[#f0ede7] transition disabled:opacity-50"
+                          >
+                            ไม่มีมูล
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* -- Send the user an e-mail ------------------------------- */}
+            <div className="bg-white border border-[#e5e3de] rounded-2xl p-4 space-y-2.5">
+              <h4 className="text-sm font-bold text-[#333]">✉️ ส่งอีเมลถึงผู้ใช้</h4>
+              <p className="text-[11px] text-[#9a9590]">ส่งไปที่ {data.email}</p>
+              <input
+                value={mailSubject}
+                onChange={(e) => setMailSubject(e.target.value.slice(0, 150))}
+                placeholder="หัวข้อ"
+                className="w-full px-3 py-2 rounded-lg border border-[#e5e3de] text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30 focus:border-[#e8500a] transition"
+              />
+              <textarea
+                value={mailBody}
+                onChange={(e) => setMailBody(e.target.value.slice(0, 3000))}
+                rows={4}
+                placeholder="ข้อความถึงผู้ใช้..."
+                className="w-full px-3 py-2 rounded-lg border border-[#e5e3de] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30 focus:border-[#e8500a] transition"
+              />
+              <div className="flex justify-end">
+                <button
+                  onClick={handleSendEmail}
+                  disabled={pending || !mailSubject.trim() || !mailBody.trim()}
+                  className="px-4 py-2 rounded-xl bg-[#e8500a] text-white text-sm font-bold hover:bg-[#c94208] transition disabled:opacity-40"
+                >
+                  {pending ? "กำลังส่ง…" : "ส่งอีเมล"}
+                </button>
+              </div>
+            </div>
+
             {/* ── Quick links ──────────────────────────────────────────── */}
             <div className="flex flex-wrap gap-2">
               <QuickLink href={`/admin/items?seller=${userId}`} label="ดูสินค้าของผู้ใช้" />
@@ -331,4 +516,20 @@ function QuickLink({ href, label }: { href: string; label: string }) {
       🔗 {label}
     </a>
   );
+}
+
+
+function PanelStars({ rating }: { rating: number }) {
+  const rounded = Math.round(rating);
+  return (
+    <span className="inline-flex text-[13px] leading-none align-middle">
+      {[1, 2, 3, 4, 5].map((s) => (
+        <span key={s} className={s <= rounded ? "text-amber-400" : "text-[#e5e3de]"}>★</span>
+      ))}
+    </span>
+  );
+}
+
+function formatShort(iso: string) {
+  return new Date(iso).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "2-digit" });
 }

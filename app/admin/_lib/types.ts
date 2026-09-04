@@ -40,6 +40,31 @@ export type UserRow = {
   itemCount:  number;
   orderCount: number;
   createdAt:  string;
+  /** Mean of every review this user received, null when they have none */
+  avgRating:  number | null;
+  reviewCount: number;
+  /** Reports filed against them that no admin has actioned yet */
+  openReportCount: number;
+};
+
+export type ReportRow = {
+  id:         string;
+  reason:     string;
+  category:   string | null;
+  status:     "OPEN" | "REVIEWED" | "DISMISSED";
+  adminNote:  string | null;
+  createdAt:  string;
+  reviewedAt: string | null;
+  reporter:   { id: string; name: string | null; email: string };
+};
+
+export type UserReviewRow = {
+  id:        string;
+  rating:    number;
+  comment:   string | null;
+  createdAt: string;
+  reviewer:  { id: string; name: string | null };
+  itemTitle: string | null;
 };
 
 export type ItemRow = {
@@ -107,6 +132,13 @@ export type UserDetail = {
   cancelledCount:     number;
   // Escrow orders
   escrowOrders:       EscrowOrderDetail[];
+  // Reputation
+  avgRating:          number | null;
+  reviewCount:        number;
+  reviews:            UserReviewRow[];
+  // Abuse reports filed against this user — admin eyes only
+  reports:            ReportRow[];
+  openReportCount:    number;
 };
 
 export type OrderRow = {

@@ -125,6 +125,10 @@ model User {
   // KYC relation
   verificationRequests VerificationRequest[]
 
+  // Abuse reports
+  reportsFiled    Report[] @relation("ReportsFiled")
+  reportsReceived Report[] @relation("ReportsReceived")
+
   // Preferences
   preferences         UserPreferences?
 
@@ -953,3 +957,33 @@ model FeaturedItem {
   @@map("featured_items")
 }
 
+// ─── Abuse reports ────────────────────────────────────
+//
+// A shopper flags a seller from their public profile. Only admins ever read
+// these: the reported user is never shown the report or the reporter.
+
+enum ReportStatus {
+  OPEN
+  REVIEWED
+  DISMISSED
+}
+
+model Report {
+  id        String       @id @default(cuid())
+  reason    String       @db.Text
+  category  String?
+  status    ReportStatus @default(OPEN)
+  adminNote String?      @db.Text
+  createdAt DateTime     @default(now())
+  reviewedAt DateTime?
+
+  reporterId String
+  reporter   User   @relation("ReportsFiled", fields: [reporterId], references: [id], onDelete: Cascade)
+
+  reportedId String
+  reported   User   @relation("ReportsReceived", fields: [reportedId], references: [id], onDelete: Cascade)
+
+  @@index([reportedId])
+  @@index([reporterId])
+  @@index([status])
+}

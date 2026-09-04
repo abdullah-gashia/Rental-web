@@ -56,10 +56,14 @@ export async function getUsers(
       skip,
       take: pageSize,
       include: {
+        // Ratings come back as raw rows and are averaged below: Prisma cannot
+        // aggregate a relation inside findMany, and the page size is 20.
+        reviewsReceived: { select: { rating: true } },
         _count: {
           select: {
             items:              true,
             escrowOrdersBuying: true,
+            reportsReceived:    { where: { status: "OPEN" } },
           },
         },
       },
@@ -78,6 +82,11 @@ export async function getUsers(
       itemCount:  u._count.items,
       orderCount: u._count.escrowOrdersBuying,
       createdAt:  u.createdAt.toISOString(),
+      avgRating:  u.reviewsReceived.length > 0
+        ? u.reviewsReceived.reduce((sum, r) => sum + r.rating, 0) / u.reviewsReceived.length
+        : null,
+      reviewCount:     u.reviewsReceived.length,
+      openReportCount: u._count.reportsReceived,
     })),
     meta: paginationMeta(totalCount, page, pageSize),
   };
@@ -153,6 +162,7 @@ export async function updateUserRole(
 
 import type { UserDetail } from "../_lib/types";
 import { EscrowStatus, ItemStatus } from "@prisma/client";
+import { sendAdminMessageEmail } from "@/lib/email";
 
 export async function getUserDetail(userId: string): Promise<UserDetail | null> {
   await requireAdmin();
@@ -242,10 +252,56 @@ export async function getUserDetail(userId: string): Promise<UserDetail | null> 
     take: 10,
   });
 
+  // ── Reputation and abuse reports ────────────────────────────────────────
+  const [ratingAgg, reviewRows, reportRows, openReportCount] = await Promise.all([
+    prisma.review.aggregate({
+      where: { revieweeId: userId },
+      _avg: { rating: true },
+      _count: { rating: true },
+    }),
+    prisma.review.findMany({
+      where: { revieweeId: userId },
+      orderBy: { createdAt: "desc" },
+      take: 20,
+      select: {
+        id: true, rating: true, comment: true, createdAt: true,
+        reviewer: { select: { id: true, name: true } },
+        order:    { select: { item: { select: { title: true } } } },
+      },
+    }),
+    prisma.report.findMany({
+      where: { reportedId: userId },
+      orderBy: { createdAt: "desc" },
+      take: 30,
+      select: {
+        id: true, reason: true, category: true, status: true,
+        adminNote: true, createdAt: true, reviewedAt: true,
+        reporter: { select: { id: true, name: true, email: true } },
+      },
+    }),
+    prisma.report.count({ where: { reportedId: userId, status: "OPEN" } }),
+  ]);
+
   return {
     ...user,
     createdAt: user.createdAt.toISOString(),
     verifiedAt: user.verifiedAt?.toISOString() ?? null,
+    avgRating:   ratingAgg._avg.rating ?? null,
+    reviewCount: ratingAgg._count.rating,
+    reviews: reviewRows.map((r) => ({
+      id: r.id, rating: r.rating, comment: r.comment,
+      createdAt: r.createdAt.toISOString(),
+      reviewer: r.reviewer,
+      itemTitle: r.order?.item.title ?? null,
+    })),
+    reports: reportRows.map((r) => ({
+      id: r.id, reason: r.reason, category: r.category,
+      status: r.status, adminNote: r.adminNote,
+      createdAt: r.createdAt.toISOString(),
+      reviewedAt: r.reviewedAt?.toISOString() ?? null,
+      reporter: r.reporter,
+    })),
+    openReportCount,
     buyerEscrowTotal:    buyerEscrow._sum.amount ?? 0,
     buyerEscrowCount:    buyerEscrow._count._all,
     sellerPayoutTotal:   sellerPayout._sum.amount ?? 0,
@@ -317,6 +373,133 @@ export async function adminEditUser(
     if (e instanceof z.ZodError) {
       return { success: false, error: e.issues[0].message };
     }
+    return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
+  }
+}
+
+// ─── adjustTrustScore ─────────────────────────────────────────────────────────
+
+/** Nudges a user's trust score by a delta, clamped to the 0–200 range. */
+export async function adjustTrustScore(userId: string, delta: number): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+    if (!Number.isFinite(delta) || delta === 0) {
+      return { success: false, error: "ค่าที่ปรับต้องไม่เป็นศูนย์" };
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId }, select: { trustScore: true },
+    });
+    if (!user) return { success: false, error: "ไม่พบผู้ใช้" };
+
+    const next = Math.max(0, Math.min(200, user.trustScore + Math.round(delta)));
+
+    await prisma.user.update({ where: { id: userId }, data: { trustScore: next } });
+
+    revalidatePath("/admin/users");
+    return { success: true, message: `ปรับคะแนนเป็น ${next} แล้ว` };
+  } catch (e) {
+    return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
+  }
+}
+
+// ─── deleteUserReview ─────────────────────────────────────────────────────────
+
+/**
+ * Removes one review.
+ *
+ * This is how an admin takes stars away: the displayed rating is the mean of
+ * real reviews, so deleting an unfair one changes it honestly. There is no
+ * separate "admin star adjustment" because a fabricated average would mislead
+ * every shopper who reads it.
+ */
+export async function deleteUserReview(reviewId: string): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+
+    const review = await prisma.review.findUnique({
+      where: { id: reviewId }, select: { revieweeId: true },
+    });
+    if (!review) return { success: false, error: "ไม่พบรีวิวนี้" };
+
+    await prisma.review.delete({ where: { id: reviewId } });
+
+    revalidatePath("/admin/users");
+    revalidatePath(`/user/${review.revieweeId}`);
+    return { success: true, message: "ลบรีวิวเรียบร้อยแล้ว" };
+  } catch (e) {
+    return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
+  }
+}
+
+// ─── setReportStatus ──────────────────────────────────────────────────────────
+
+export async function setReportStatus(
+  reportId: string,
+  status: "OPEN" | "REVIEWED" | "DISMISSED",
+  adminNote?: string,
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+
+    await prisma.report.update({
+      where: { id: reportId },
+      data: {
+        status,
+        adminNote:  adminNote?.trim() || null,
+        reviewedAt: status === "OPEN" ? null : new Date(),
+      },
+    });
+
+    revalidatePath("/admin/users");
+    return { success: true, message: "อัปเดตสถานะรายงานแล้ว" };
+  } catch (e) {
+    return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
+  }
+}
+
+// ─── sendUserEmail ────────────────────────────────────────────────────────────
+
+/** Sends an admin-written message to one user's registered e-mail address. */
+export async function sendUserEmail(
+  userId: string,
+  subject: string,
+  body: string,
+): Promise<ActionResult> {
+  try {
+    const admin = await requireAdmin();
+
+    if (!subject.trim()) return { success: false, error: "กรุณาใส่หัวข้ออีเมล" };
+    if (!body.trim())    return { success: false, error: "กรุณาใส่เนื้อหาอีเมล" };
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId }, select: { email: true, name: true },
+    });
+    if (!user?.email) return { success: false, error: "ผู้ใช้รายนี้ไม่มีอีเมล" };
+
+    const res = await sendAdminMessageEmail({
+      to:        user.email,
+      subject:   subject.trim(),
+      body:      body.trim(),
+      adminName: admin.name ?? "ผู้ดูแลระบบ",
+    });
+
+    if (!res.sent) {
+      return { success: false, error: `ส่งอีเมลไม่สำเร็จ: ${res.reason}` };
+    }
+
+    // Mirrored in-app so the user sees it even if the mail is filtered
+    await prisma.notification.create({
+      data: {
+        userId,
+        type:    "SYSTEM",
+        message: `ข้อความจากผู้ดูแลระบบ: ${subject.trim()}`,
+        link:    "/settings",
+      },
+    });
+
+    return { success: true, message: `ส่งอีเมลถึง ${user.email} แล้ว` };
+  } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
   }
 }

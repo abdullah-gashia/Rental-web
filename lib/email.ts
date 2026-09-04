@@ -214,3 +214,58 @@ function escapeHtml(v: string): string {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 }
+
+// ─── Admin → user message ─────────────────────────────────────────────────────
+
+/**
+ * A message an admin composes by hand and sends to one user.
+ *
+ * Kept plain on purpose: the admin's words are shown as written, with only the
+ * site's own framing around them. Same never-throws contract as the rest.
+ */
+export async function sendAdminMessageEmail(input: {
+  to: string;
+  subject: string;
+  body: string;
+  adminName?: string | null;
+}): Promise<SendResult> {
+  const mailer = getTransporter();
+  if (!mailer) {
+    return { sent: false, reason: "GMAIL_USER / GMAIL_APP_PASSWORD not configured" };
+  }
+
+  const from = input.adminName?.trim() || "ทีมงาน PSU Store";
+
+  const text = [
+    input.body,
+    "",
+    "—",
+    `ส่งจาก ${from} · PSU Store`,
+    appUrl(),
+  ].join("\n");
+
+  const html = `
+<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;max-width:560px;margin:0 auto;padding:28px 24px;color:#0f1e35">
+  <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748b">PSU Store</p>
+  <h1 style="margin:0 0 18px;font-size:19px;font-weight:600;color:#0a2b5e">${escapeHtml(input.subject)}</h1>
+
+  <div style="border:1px solid #e3e8f0;border-left:3px solid #0a2b5e;border-radius:8px;padding:16px 18px;font-size:14px;line-height:1.8;background:#f7f9fc;white-space:pre-wrap">${escapeHtml(input.body)}</div>
+
+  <p style="margin:22px 0 0;font-size:12px;color:#94a3b8">
+    ส่งจาก ${escapeHtml(from)} · <a href="${appUrl()}" style="color:#64748b">PSU Store</a>
+  </p>
+</div>`.trim();
+
+  try {
+    await mailer.sendMail({
+      from: `"PSU Store" <${GMAIL_USER}>`,
+      to: input.to,
+      subject: input.subject,
+      text,
+      html,
+    });
+    return { sent: true };
+  } catch (e) {
+    return { sent: false, reason: e instanceof Error ? e.message : "unknown error" };
+  }
+}

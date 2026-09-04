@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useRef, useTransition } from "react";
+import { createPortal } from "react-dom";
 import type { UserRow }             from "../../_lib/types";
 import { formatThaiDate }           from "../../_lib/utils";
 import StatusBadge                  from "../../_components/StatusBadge";
@@ -105,6 +106,8 @@ export default function UsersTable({ rows }: Props) {
               <th className="text-left px-4 py-3 font-semibold text-[#555]">บทบาท</th>
               <th className="text-left px-4 py-3 font-semibold text-[#555]">สถานะ</th>
               <th className="text-right px-4 py-3 font-semibold text-[#555]">คะแนน</th>
+              <th className="text-left  px-4 py-3 font-semibold text-[#555]">ดาว</th>
+              <th className="text-center px-4 py-3 font-semibold text-[#555]">รีพอร์ต</th>
               <th className="text-right px-4 py-3 font-semibold text-[#555]">สินค้า</th>
               <th className="text-right px-4 py-3 font-semibold text-[#555]">คำสั่งซื้อ</th>
               <th className="text-left px-4 py-3 font-semibold text-[#555]">สมัครเมื่อ</th>
@@ -144,6 +147,36 @@ export default function UsersTable({ rows }: Props) {
                   <span className={u.trustScore < 50 ? "text-red-600" : u.trustScore < 80 ? "text-yellow-600" : "text-green-700"}>
                     {u.trustScore}
                   </span>
+                </td>
+
+                {/* Star rating from reviews */}
+                <td className="px-4 py-3 whitespace-nowrap">
+                  {u.reviewCount > 0 ? (
+                    <span className="inline-flex items-center gap-1.5">
+                      <Stars rating={u.avgRating ?? 0} />
+                      <span className="text-xs font-semibold text-[#333]">
+                        {(u.avgRating ?? 0).toFixed(1)}
+                      </span>
+                      <span className="text-[11px] text-[#9a9590]">({u.reviewCount})</span>
+                    </span>
+                  ) : (
+                    <span className="text-xs text-[#c4c0b9]">ยังไม่มีรีวิว</span>
+                  )}
+                </td>
+
+                {/* Open abuse reports */}
+                <td className="px-4 py-3 text-center">
+                  {u.openReportCount > 0 ? (
+                    <button
+                      onClick={() => setDetailUserId(u.id)}
+                      title="เปิดดูรายงาน"
+                      className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-bold hover:bg-red-100 transition"
+                    >
+                      🚩 {u.openReportCount}
+                    </button>
+                  ) : (
+                    <span className="text-xs text-[#c4c0b9]">—</span>
+                  )}
                 </td>
 
                 {/* Item count */}
@@ -190,11 +223,24 @@ function ActionsDropdown({
   onRole:  (r: "ADMIN" | "STUDENT") => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [pos, setPos]   = useState<{ top: number; right: number } | null>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  // The table sits inside overflow-x-auto, which clips an absolutely
+  // positioned menu — the dropdown opened but was never visible. Render it in
+  // a portal at fixed coordinates instead so nothing can crop it.
+  function toggle() {
+    if (open) { setOpen(false); return; }
+    const r = btnRef.current?.getBoundingClientRect();
+    if (r) setPos({ top: r.bottom + 6, right: window.innerWidth - r.right });
+    setOpen(true);
+  }
 
   return (
     <div className="relative">
       <button
-        onClick={() => setOpen((o) => !o)}
+        ref={btnRef}
+        onClick={toggle}
         className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#f0ede7] transition text-[#555]"
         aria-label="เมนูการจัดการ"
       >
@@ -203,10 +249,13 @@ function ActionsDropdown({
         </svg>
       </button>
 
-      {open && (
+      {open && pos && createPortal(
         <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-9 z-50 w-48 bg-white rounded-xl border border-[#e5e3de] shadow-lg py-1">
+          <div className="fixed inset-0 z-[400]" onClick={() => setOpen(false)} />
+          <div
+            className="fixed z-[401] w-48 bg-white rounded-xl border border-[#e5e3de] shadow-lg py-1"
+            style={{ top: pos.top, right: pos.right }}
+          >
             {/* NEW: View details */}
             <MenuItem
               label="ดูรายละเอียด"
@@ -256,9 +305,24 @@ function ActionsDropdown({
               />
             )}
           </div>
-        </>
+        </>,
+        document.body,
       )}
     </div>
+  );
+}
+
+/** Five stars with the fractional part shown as a half-filled last star. */
+function Stars({ rating }: { rating: number }) {
+  const rounded = Math.round(rating * 2) / 2;
+  return (
+    <span className="inline-flex text-[13px] leading-none" aria-label={`${rating.toFixed(1)} ดาว`}>
+      {[1, 2, 3, 4, 5].map((s) => (
+        <span key={s} className={s <= rounded ? "text-amber-400" : "text-[#e5e3de]"}>
+          {s - 0.5 === rounded ? "⯨" : "★"}
+        </span>
+      ))}
+    </span>
   );
 }
 
