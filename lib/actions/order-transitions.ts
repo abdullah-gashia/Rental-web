@@ -525,7 +525,7 @@ export async function getOrderDetails(orderId: string) {
       },
       buyer: { select: { id: true, name: true, email: true, image: true } },
       seller: { select: { id: true, name: true, email: true, image: true } },
-      review: true,
+      reviews: true,
     },
   });
 

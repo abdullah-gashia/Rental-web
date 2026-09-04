@@ -4,14 +4,24 @@ import { useState, useTransition } from "react";
 import { submitOrderReview } from "@/lib/actions/escrow-actions";
 
 interface Props {
-  orderId:    string;
-  itemTitle:  string;
-  sellerName: string;
-  onClose:    () => void;   // "Skip" — dismisses without submitting
-  onSuccess:  () => void;   // called after successful submission
+  orderId:   string;
+  itemTitle: string;
+  /** Who is being rated — the modal reads from the reviewer's point of view */
+  counterpartyRole: "seller" | "buyer";
+  counterpartyName: string;
+  onClose:   () => void;   // "Skip" — dismisses without submitting
+  onSuccess: () => void;   // called after successful submission
 }
 
-export default function ReviewModal({ orderId, itemTitle, sellerName, onClose, onSuccess }: Props) {
+export default function ReviewModal({
+  orderId,
+  itemTitle,
+  counterpartyRole,
+  counterpartyName,
+  onClose,
+  onSuccess,
+}: Props) {
+  const roleLabel = counterpartyRole === "seller" ? "ผู้ขาย" : "ผู้ซื้อ";
   const [rating,    setRating]    = useState(0);
   const [hovered,   setHovered]   = useState(0);
   const [comment,   setComment]   = useState("");
@@ -43,14 +53,16 @@ export default function ReviewModal({ orderId, itemTitle, sellerName, onClose, o
         {/* Header */}
         <div className="bg-gradient-to-r from-amber-400 to-orange-400 px-6 py-5 text-center">
           <p className="text-3xl mb-1">⭐</p>
-          <h3 className="text-base font-extrabold text-white">ให้คะแนนสินค้าและผู้ขาย</h3>
+          <h3 className="text-base font-extrabold text-white">
+            {counterpartyRole === "seller" ? "ให้คะแนนสินค้าและผู้ขาย" : "ให้คะแนนผู้ซื้อ"}
+          </h3>
           <p className="text-amber-100 text-xs mt-0.5 truncate">"{itemTitle}"</p>
         </div>
 
         <div className="px-6 py-5 space-y-5">
           {/* Seller name */}
           <p className="text-center text-sm text-[#555]">
-            ผู้ขาย: <span className="font-semibold text-[#111]">{sellerName}</span>
+            {roleLabel}: <span className="font-semibold text-[#111]">{counterpartyName}</span>
           </p>
 
           {/* Star rating */}

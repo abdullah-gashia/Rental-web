@@ -359,43 +359,143 @@ export async function hasReviewedUser(revieweeId: string) {
 
 export async function getUserProfile(userId: string) {
   if (!userId) throw new Error("userId is required to fetch profile");
-  const user = await prisma.user.findUnique({
-    where:  { id: userId },
-    select: {
-      id:         true,
-      name:       true,
-      image:      true,
-      trustScore: true,
-      createdAt:  true,
-      reviewsReceived: {
-        orderBy: { createdAt: "desc" },
-        take:    10,
-        select: {
-          id:        true,
-          rating:    true,
-          comment:   true,
-          createdAt: true,
-          reviewer: { select: { id: true, name: true, image: true } },
+
+  // The rating summary is aggregated over every review. Reading it off the
+  // ten rows fetched for display would make the average drift as soon as a
+  // user passes ten reviews, and cap the count at ten.
+  const [user, ratingAgg, totalSold] = await Promise.all([
+    prisma.user.findUnique({
+      where:  { id: userId },
+      select: {
+        id:         true,
+        name:       true,
+        image:      true,
+        trustScore: true,
+        createdAt:  true,
+        reviewsReceived: {
+          orderBy: { createdAt: "desc" },
+          take:    10,
+          select: {
+            id:        true,
+            rating:    true,
+            comment:   true,
+            createdAt: true,
+            reviewer: { select: { id: true, name: true, image: true } },
+          },
         },
       },
-      sellerTransactions: {
-        where: { status: "COMPLETED" },
-        select: { id: true },
-      },
-    },
-  });
+    }),
+    prisma.review.aggregate({
+      where: { revieweeId: userId },
+      _avg:   { rating: true },
+      _count: { rating: true },
+    }),
+    // Sales live in EscrowOrder; the legacy Transaction table is no longer
+    // written to, so counting it reported zero for everyone.
+    prisma.escrowOrder.count({
+      where: { sellerId: userId, status: "COMPLETED" },
+    }),
+  ]);
 
   if (!user) return { error: "User not found" };
 
   return {
     user: {
       ...user,
-      createdAt:        user.createdAt.toISOString(),
-      totalSold:        user.sellerTransactions.length,
-      reviewsReceived:  user.reviewsReceived.map((r) => ({
+      createdAt:   user.createdAt.toISOString(),
+      totalSold,
+      avgRating:   ratingAgg._avg.rating ?? 0,
+      reviewCount: ratingAgg._count.rating,
+      reviewsReceived: user.reviewsReceived.map((r) => ({
         ...r,
         createdAt: r.createdAt.toISOString(),
       })),
+    },
+  };
+}
+
+// ─── My own reputation (dashboard) ───────────────────────────────────────────
+//
+// The public profile at /user/[id] is the only place a user could see their own
+// rating, and only by finding one of their own listings first. This returns the
+// same figures for the signed-in user, with reviews split by where they came
+// from: left on the profile directly, or tied to a completed order.
+
+export async function getMyReputation() {
+  const session = await auth();
+  if (!session?.user?.id) return { error: "Not authenticated" as const };
+
+  const userId = session.user.id;
+
+  const [user, ratingAgg, totalSold, totalBought, rows] = await Promise.all([
+    prisma.user.findUnique({
+      where:  { id: userId },
+      select: { id: true, name: true, image: true, trustScore: true, createdAt: true },
+    }),
+    prisma.review.aggregate({
+      where:  { revieweeId: userId },
+      _avg:   { rating: true },
+      _count: { rating: true },
+    }),
+    prisma.escrowOrder.count({ where: { sellerId: userId, status: "COMPLETED" } }),
+    prisma.escrowOrder.count({ where: { buyerId:  userId, status: "COMPLETED" } }),
+    prisma.review.findMany({
+      where:   { revieweeId: userId },
+      orderBy: { createdAt: "desc" },
+      take:    50,
+      select: {
+        id:        true,
+        rating:    true,
+        comment:   true,
+        createdAt: true,
+        reviewer:  { select: { id: true, name: true, image: true } },
+        order: {
+          select: {
+            id:       true,
+            sellerId: true,
+            item:     { select: { title: true } },
+          },
+        },
+      },
+    }),
+  ]);
+
+  if (!user) return { error: "User not found" as const };
+
+  const mapped = rows.map((r) => ({
+    id:        r.id,
+    rating:    r.rating,
+    comment:   r.comment,
+    createdAt: r.createdAt.toISOString(),
+    reviewer:  r.reviewer,
+    itemTitle: r.order?.item.title ?? null,
+    /** Which side the user was on for the order this review belongs to */
+    role: r.order ? (r.order.sellerId === userId ? ("seller" as const) : ("buyer" as const)) : null,
+  }));
+
+  // A rating breakdown makes a low average readable — one angry 1-star among
+  // twenty 5-stars reads very differently from a spread.
+  const breakdown = [5, 4, 3, 2, 1].map((stars) => ({
+    stars,
+    count: rows.filter((r) => r.rating === stars).length,
+  }));
+
+  return {
+    profile: {
+      id:          user.id,
+      name:        user.name,
+      image:       user.image,
+      trustScore:  user.trustScore,
+      memberSince: user.createdAt.toISOString(),
+      avgRating:   ratingAgg._avg.rating ?? 0,
+      reviewCount: ratingAgg._count.rating,
+      totalSold,
+      totalBought,
+      breakdown,
+      /** Reviews left straight on the profile, not tied to a purchase */
+      profileReviews: mapped.filter((r) => r.itemTitle === null),
+      /** Reviews attached to a completed order */
+      orderReviews:   mapped.filter((r) => r.itemTitle !== null),
     },
   };
 }

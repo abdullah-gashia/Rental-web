@@ -32,12 +32,11 @@ export default async function UserProfilePage({ params }: PageProps) {
   const { user } = profileResult;
   const pendingTransactionId = pendingResult.transaction?.id ?? null;
 
-  // Compute average rating from received reviews
-  const reviews = user.reviewsReceived;
-  const avgRating =
-    reviews.length > 0
-      ? reviews.reduce((sum: number, r: { rating: number }) => sum + r.rating, 0) / reviews.length
-      : 0;
+  // Summary comes from the server, aggregated over every review — not just
+  // the ten most recent rows fetched for the list below.
+  const reviews    = user.reviewsReceived;
+  const avgRating  = user.avgRating;
+  const reviewCount = user.reviewCount;
 
   const memberSince = new Date(user.createdAt).toLocaleDateString("th-TH", {
     year: "numeric", month: "long",
@@ -97,7 +96,7 @@ export default async function UserProfilePage({ params }: PageProps) {
                       {avgRating.toFixed(1)}
                     </span>
                     <span className="text-sm text-[#9a9590]">
-                      ({reviews.length} รีวิว)
+                      ({reviewCount} รีวิว)
                     </span>
                   </>
                 ) : (

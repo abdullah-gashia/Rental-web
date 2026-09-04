@@ -62,7 +62,8 @@ interface BaseOrder {
   handoverSignature:    string | null;   // base64 PNG
   handoverPhotoUrl:     string | null;
   handoverConfirmedAt:  string | null;   // ISO
-  review: { id: string; rating: number } | null;
+  /** The review the signed-in user wrote for this order, if any */
+  myReview: { id: string; rating: number } | null;
   item: OrderItem;
 }
 
@@ -290,7 +291,8 @@ function OrderCard({
   const sellerMeetupWaiting = isSeller && isMeetupStatus && !meetupCutoffPassed;
 
   const isCompleted = order.status === "COMPLETED";
-  const canReview   = role === "buyer" && isCompleted && !order.review;
+  // Both sides rate each other once the order is complete
+  const canReview   = isCompleted && !order.myReview;
   const isTerminal  = ["COMPLETED", "REFUNDED", "CANCELLED_BY_ADMIN", "CANCELLED"].includes(order.status);
 
   const showShipping = ["SHIPPED", "COD_SHIPPED", "COMPLETED"].includes(order.status) && !!order.shippingMethod;
@@ -427,12 +429,12 @@ function OrderCard({
                   onClick={() => onReview(order)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition"
                 >
-                  ⭐ ให้คะแนนผู้ขาย
+                  ⭐ {isSeller ? "ให้คะแนนผู้ซื้อ" : "ให้คะแนนผู้ขาย"}
                 </button>
               )}
-              {role === "buyer" && isCompleted && order.review && (
+              {isCompleted && order.myReview && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#f7f6f3] text-[#9a9590] border border-[#e5e3de]">
-                  {"⭐".repeat(order.review.rating)} รีวิวแล้ว
+                  {"⭐".repeat(order.myReview.rating)} รีวิวแล้ว
                 </span>
               )}
             </div>
@@ -676,7 +678,12 @@ export default function OrdersClient({ buying, selling, walletBalance, escrowBal
         <ReviewModal
           orderId={reviewTarget.id}
           itemTitle={reviewTarget.item.title}
-          sellerName={reviewTarget.seller?.name ?? "ผู้ขาย"}
+          counterpartyRole={reviewTarget.seller?.id === currentUserId ? "buyer" : "seller"}
+          counterpartyName={
+            reviewTarget.seller?.id === currentUserId
+              ? (reviewTarget.buyer?.name  ?? "ผู้ซื้อ")
+              : (reviewTarget.seller?.name ?? "ผู้ขาย")
+          }
           onClose={() => { setReviewTarget(null); router.refresh(); }}
           onSuccess={() => { setReviewTarget(null); router.refresh(); }}
         />

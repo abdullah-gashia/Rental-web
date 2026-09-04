@@ -284,9 +284,6 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
                           <SafetyBadge score={item.safetyScore} />
                           <p className="text-[11px] text-[#777] leading-relaxed flex-1 min-w-0">
                             {item.moderationReason ?? "—"}
-                            <span className="block text-[10px] text-[#b0ada6] mt-0.5">
-                              ระบบตรวจเฉพาะข้อความ ไม่ได้ตรวจรูปภาพ
-                            </span>
                           </p>
                         </div>
                       )}

@@ -19,6 +19,16 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
   const [active, setActive]         = useState<ItemImage | null>(images[0] ?? null);
   const [lightboxOpen, setLightbox] = useState(false);
 
+  // The gallery lives inside a modal that stays mounted while the item behind
+  // it changes, so the initial useState value would keep showing the previously
+  // opened item's photo. Reset whenever the image set itself changes.
+  const imageKey = images.map((i) => i.id).join(",");
+  useEffect(() => {
+    setActive(images[0] ?? null);
+    setLightbox(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageKey]);
+
   // Close lightbox on Escape
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") setLightbox(false);

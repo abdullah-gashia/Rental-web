@@ -402,7 +402,8 @@ model Review {
   transactionId String?      @unique   // one review per legacy Transaction
   transaction   Transaction? @relation(fields: [transactionId], references: [id])
 
-  orderId String?      @unique   // one review per EscrowOrder
+  // One review per person per order, so buyer and seller can each rate the other
+  orderId String?
   order   EscrowOrder? @relation(fields: [orderId], references: [id])
 
   reviewerId String
@@ -410,6 +411,7 @@ model Review {
   revieweeId String
   reviewee   User   @relation("ReviewsReceived", fields: [revieweeId], references: [id])
 
+  @@unique([orderId, reviewerId])
   @@index([revieweeId])
   @@index([reviewerId])
 }
@@ -501,7 +503,7 @@ model EscrowOrder {
   seller   User   @relation("EscrowSeller", fields: [sellerId], references: [id])
 
   dispute  Dispute?
-  review   Review?
+  reviews  Review[]
 
   @@index([buyerId])
   @@index([sellerId])

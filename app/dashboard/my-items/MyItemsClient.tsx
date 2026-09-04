@@ -5,6 +5,7 @@ import { deleteItem, cancelDeletion } from "@/lib/actions/item-actions";
 import { useToastStore } from "@/lib/stores/toast-store";
 import { useRouter } from "next/navigation";
 import CountdownTimer from "@/components/ui/CountdownTimer";
+import ReputationPanel, { type Reputation } from "./ReputationPanel";
 
 // ─── Types ────────────────────────────────────────────
 
@@ -32,6 +33,7 @@ interface MyItem {
 interface Props {
   items: MyItem[];
   userName: string;
+  reputation: Reputation | null;
 }
 
 // ─── Helpers ──────────────────────────────────────────
@@ -128,7 +130,7 @@ function DeleteModal({
 
 // ─── Main component ───────────────────────────────────
 
-export default function MyItemsClient({ items, userName }: Props) {
+export default function MyItemsClient({ items, userName, reputation }: Props) {
   const [deleteTarget, setDeleteTarget] = useState<MyItem | null>(null);
   const [isPending, startTransition]    = useTransition();
   const showToast = useToastStore((s) => s.show);
@@ -187,6 +189,10 @@ export default function MyItemsClient({ items, userName }: Props) {
         <h1 className="text-2xl font-bold text-[#111] mb-1">สินค้าของฉัน</h1>
         <p className="text-sm text-[#777]">สวัสดี, {userName} · จัดการรายการสินค้าของคุณ</p>
       </div>
+
+      {/* Own rating and reviews — previously only reachable through the public
+          profile at /user/[id] */}
+      {reputation && <ReputationPanel reputation={reputation} />}
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">

@@ -924,7 +924,7 @@ export async function getMyOrders() {
         },
         seller: { select: { id: true, name: true, image: true } },
         buyer:  { select: { id: true, name: true, image: true } },
-        review: { select: { id: true, rating: true } },
+        reviews: { where: { reviewerId: userId }, select: { id: true, rating: true } },
       },
     }),
     prisma.escrowOrder.findMany({
@@ -944,7 +944,7 @@ export async function getMyOrders() {
         },
         buyer:  { select: { id: true, name: true, image: true } },
         seller: { select: { id: true, name: true, image: true } },
-        review: { select: { id: true, rating: true } },
+        reviews: { where: { reviewerId: userId }, select: { id: true, rating: true } },
       },
     }),
     prisma.user.findUniqueOrThrow({
@@ -956,6 +956,8 @@ export async function getMyOrders() {
   // Serialize dates for client components
   const serialize = (o: typeof buying[number] | typeof selling[number]) => ({
     ...o,
+    // Each order carries at most one review by the current user
+    myReview: o.reviews[0] ?? null,
     createdAt:             o.createdAt.toISOString(),
     updatedAt:             o.updatedAt.toISOString(),
     shippedAt:             (o as { shippedAt?: Date | null }).shippedAt
@@ -999,32 +1001,39 @@ export async function submitOrderReview(
     return { error: "Rating must be an integer between 1 and 5" };
   }
 
-  const buyerId = session.user.id;
+  const reviewerId = session.user.id;
 
   const order = await prisma.escrowOrder.findUnique({
     where:  { id: orderId },
     select: {
       id: true, status: true, buyerId: true, sellerId: true,
-      review: { select: { id: true } },
-      item:   { select: { title: true } },
+      reviews: { where: { reviewerId }, select: { id: true } },
+      item:    { select: { title: true } },
     },
   });
 
-  if (!order)                        return { error: "Order not found" };
-  if (order.buyerId !== buyerId)     return { error: "Only the buyer can leave a review" };
-  if (order.status !== "COMPLETED")  return { error: "Order is not completed yet" };
-  if (order.review)                  return { error: "You have already reviewed this order" };
+  if (!order) return { error: "Order not found" };
+
+  // Either side may review the other once the deal is done
+  const isBuyer  = order.buyerId  === reviewerId;
+  const isSeller = order.sellerId === reviewerId;
+  if (!isBuyer && !isSeller)        return { error: "Only the buyer or seller can leave a review" };
+  if (order.status !== "COMPLETED") return { error: "Order is not completed yet" };
+  if (order.reviews.length > 0)     return { error: "You have already reviewed this order" };
+
+  const revieweeId = isBuyer ? order.sellerId : order.buyerId;
+  const roleLabel  = isBuyer ? "ผู้ซื้อ" : "ผู้ขาย";
 
   const delta = REVIEW_TRUST_DELTA[rating] ?? 0;
 
   try {
     await prisma.$transaction(async (tx) => {
-      const seller = await tx.user.findUniqueOrThrow({
-        where:  { id: order.sellerId },
+      const reviewee = await tx.user.findUniqueOrThrow({
+        where:  { id: revieweeId },
         select: { trustScore: true },
       });
 
-      const newScore = Math.max(0, Math.min(200, seller.trustScore + delta));
+      const newScore = Math.max(0, Math.min(200, reviewee.trustScore + delta));
 
       await Promise.all([
         tx.review.create({
@@ -1032,27 +1041,27 @@ export async function submitOrderReview(
             orderId,
             rating,
             comment:    comment?.trim() || null,
-            reviewerId: buyerId,
-            revieweeId: order.sellerId,
+            reviewerId,
+            revieweeId,
           },
         }),
         tx.user.update({
-          where: { id: order.sellerId },
+          where: { id: revieweeId },
           data:  { trustScore: newScore },
         }),
         tx.notification.create({
           data: {
-            userId:  order.sellerId,
+            userId:  revieweeId,
             type:    "ORDER",
-            message: `${"⭐".repeat(rating)} ผู้ซื้อให้คะแนน ${rating}/5 สำหรับ "${order.item.title}"${comment?.trim() ? ` — "${comment.trim()}"` : ""}`,
-            link:    `/user/${order.sellerId}`,
+            message: `${"⭐".repeat(rating)} ${roleLabel}ให้คะแนน ${rating}/5 สำหรับ "${order.item.title}"${comment?.trim() ? ` — "${comment.trim()}"` : ""}`,
+            link:    `/user/${revieweeId}`,
           },
         }),
       ]);
     });
 
     revalidatePath("/dashboard/orders");
-    revalidatePath(`/user/${order.sellerId}`);
+    revalidatePath(`/user/${revieweeId}`);
     return { success: true };
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Failed to submit review";
