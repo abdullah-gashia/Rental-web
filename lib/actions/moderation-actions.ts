@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { moderateItem } from "@/lib/moderation";
 
 // ─── Get My Items (Seller) ───────────────────────────
 
@@ -216,6 +217,15 @@ export async function updateItem(
       data: { isMain: true },
     });
   }
+
+  // An edit sends the listing back through moderation with its new wording.
+  await moderateItem(itemId, {
+    title:       data.title,
+    description: data.description,
+    contact:     item.contact,
+    location:    item.location,
+    imageCount:  allImages.length,
+  });
 
   revalidatePath("/dashboard/my-items");
   revalidatePath("/admin/approvals");

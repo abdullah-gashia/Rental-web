@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { moderateItem } from "@/lib/moderation";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
@@ -205,10 +206,27 @@ export async function createItem(data: CreateItemInput) {
     });
   }
 
+  // Automatic moderation decides whether this goes live, waits for an admin,
+  // or is rejected. The item already exists, so a failure here just leaves it
+  // PENDING for a human — nothing is lost.
+  const verdict = await moderateItem(item.id, {
+    title:       data.title,
+    description: data.description,
+    contact:     data.contact ?? null,
+    location:    data.location ?? null,
+    imageCount:  data.imageUrls?.length ?? 0,
+  });
+
   revalidatePath("/");
   revalidatePath("/dashboard/my-items");
   revalidatePath("/admin/approvals");
-  return { success: true, itemId: item.id };
+  return {
+    success: true,
+    itemId: item.id,
+    moderation: verdict
+      ? { verdict: verdict.verdict, score: verdict.score, reasons: verdict.reasons }
+      : null,
+  };
 }
 
 // ─── Toggle Wishlist ─────────────────────────────────

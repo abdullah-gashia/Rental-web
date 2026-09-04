@@ -257,6 +257,12 @@ model Item {
   condition   ItemCondition @default(GOOD)
   status      ItemStatus    @default(PENDING)
   rejectReason String?      @db.Text
+
+  // Automatic moderation — see lib/moderation/
+  safetyScore       Int?      // 0-100, null until scored
+  moderationVerdict String?   // AUTO_APPROVE | PENDING_REVIEW | AUTO_REJECT
+  moderationReason  String?   @db.Text
+  moderatedAt       DateTime?
   negotiable  Boolean       @default(false)
   shippable   Boolean       @default(false)
   location    String?

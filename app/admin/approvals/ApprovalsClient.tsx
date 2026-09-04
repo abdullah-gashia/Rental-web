@@ -13,6 +13,8 @@ interface PendingItem {
   listingType: "SELL" | "RENT";
   condition: string;
   createdAt: string;
+  safetyScore: number | null;
+  moderationReason: string | null;
   emoji: string | null;
   color: string | null;
   seller: { id: string; name: string | null; email: string; image: string | null };
@@ -26,6 +28,26 @@ const CONDITION_LABELS: Record<string, string> = {
   FAIR:         "พอใช้",
   NEEDS_REPAIR: "ต้องซ่อม",
 };
+
+// ─── Safety score badge ──────────────────────────────
+
+/** Colour tracks the band the score falls in, not the raw number. */
+function SafetyBadge({ score }: { score: number }) {
+  const tone =
+    score >= 95 ? { bg: "#e8f5ee", fg: "#1f6b45", br: "#c3e3d1" } :
+    score >= 50 ? { bg: "#fff7e6", fg: "#92620e", br: "#f5e3b8" } :
+                  { bg: "#fdecec", fg: "#b3261e", br: "#f5c7c4" };
+
+  return (
+    <span
+      title="คะแนนความปลอดภัยจากการตรวจข้อความอัตโนมัติ"
+      className="flex-shrink-0 inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-[11px] font-bold font-mono"
+      style={{ background: tone.bg, color: tone.fg, borderColor: tone.br }}
+    >
+      {score}%
+    </span>
+  );
+}
 
 // ─── Reject Modal ────────────────────────────────────
 
@@ -255,6 +277,19 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
                           <p className="text-xs text-[#999]">{CONDITION_LABELS[item.condition] ?? item.condition}</p>
                         </div>
                       </div>
+
+                      {/* Automatic screening result */}
+                      {item.safetyScore !== null && (
+                        <div className="mt-2.5 flex items-start gap-2 rounded-xl border border-[#e5e3de] bg-[#faf9f7] px-3 py-2">
+                          <SafetyBadge score={item.safetyScore} />
+                          <p className="text-[11px] text-[#777] leading-relaxed flex-1 min-w-0">
+                            {item.moderationReason ?? "—"}
+                            <span className="block text-[10px] text-[#b0ada6] mt-0.5">
+                              ระบบตรวจเฉพาะข้อความ ไม่ได้ตรวจรูปภาพ
+                            </span>
+                          </p>
+                        </div>
+                      )}
 
                       {/* Description */}
                       <p className="text-sm text-[#555] mt-2 line-clamp-2">{item.description}</p>
