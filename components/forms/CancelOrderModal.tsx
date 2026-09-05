@@ -165,7 +165,7 @@ export default function CancelOrderModal({
                     onChange={() => { setSelected(r); setFormError(null); }}
                     className="accent-red-500"
                   />
-                  <span className="text-sm text-[var(--c-ink-1)]">{r}</span>
+                  <span className="text-sm text-[var(--c-ink-1)]">{tr(r)}</span>
                 </label>
               ))}
             </div>

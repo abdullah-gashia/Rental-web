@@ -164,8 +164,8 @@ export default function FaceLivenessCapture({ onComplete }: Props) {
       {/* Instruction */}
       <div className="text-center space-y-1">
         <p className="text-2xl">{meta.icon}</p>
-        <p className="font-semibold text-[var(--c-ink)]">{meta.text}</p>
-        <p className="text-sm text-[var(--c-muted)]">{meta.sub}</p>
+        <p className="font-semibold text-[var(--c-ink)]">{tr(meta.text)}</p>
+        <p className="text-sm text-[var(--c-muted)]">{tr(meta.sub)}</p>
       </div>
 
       {/* Camera error */}

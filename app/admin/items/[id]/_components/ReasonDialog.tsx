@@ -83,7 +83,7 @@ export default function ReasonDialog({
                     : "bg-[var(--c-subtle)] text-[var(--c-ink-2)] border-[var(--c-line)] hover:border-[#c5c2bc]"
                 }`}
               >
-                {r}
+                {tr(r)}
               </button>
             ))}
           </div>

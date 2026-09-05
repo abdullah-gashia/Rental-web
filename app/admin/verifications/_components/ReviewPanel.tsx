@@ -119,7 +119,7 @@ export default function ReviewPanel({ request }: Props) {
                   onChange={() => setRejection(r)}
                   className="accent-red-500"
                 />
-                <span className="text-sm text-[var(--c-ink-1)]">{r}</span>
+                <span className="text-sm text-[var(--c-ink-1)]">{tr(r)}</span>
               </label>
             ))}
           </div>
