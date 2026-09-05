@@ -1,6 +1,7 @@
 "use client";
 
 import type { TrFn } from "@/lib/i18n/phrases";
+import { rentalUnit } from "@/lib/rental-unit";
 import { useState, useRef, useCallback } from "react";
 import { useT, useTr } from "@/lib/i18n/LocaleProvider";
 import { useToastStore } from "@/lib/stores/toast-store";
@@ -552,7 +553,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                             : "text-[var(--c-ink-2)] hover:bg-[var(--c-line-soft)]"
                         }`}
                       >
-                        {t === "DAILY" ? tr("/วัน") : t === "MONTHLY" ? tr("/เดือน") : tr("/ปี")}
+                        {tr(rentalUnit(t))}
                       </button>
                     ))}
                   </div>
@@ -788,7 +789,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-[var(--c-ink)] truncate">{name}</p>
                   <p className="text-base font-extrabold text-[var(--c-accent)]">
-                    {price ? `฿${Number(price).toLocaleString()}${adType === "rent" ? tr("/วัน") : ""}` : "—"}
+                    {price ? `฿${Number(price).toLocaleString()}${adType === "rent" ? tr(rentalUnit(rateType)) : ""}` : "—"}
                   </p>
                   {location && <p className="text-xs text-[var(--c-muted)]">📍 {location}</p>}
                 </div>

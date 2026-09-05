@@ -1,6 +1,7 @@
 "use client";
 
 import { useTr } from "@/lib/i18n/LocaleProvider";
+import { rentalUnit } from "@/lib/rental-unit";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -13,6 +14,7 @@ interface PendingItem {
   description: string;
   price: number;
   listingType: "SELL" | "RENT";
+  rentalRateType?: string | null;
   condition: string;
   createdAt: string;
   safetyScore: number | null;
@@ -270,7 +272,7 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
                         <div className="flex-shrink-0 text-right">
                           <p className="text-lg font-bold text-[var(--c-accent)]">
                             ฿{item.price.toLocaleString()}
-                            {item.listingType === "RENT" && <span className="text-xs font-normal text-[var(--c-ink-3)]">{tr("/เดือน")}</span>}
+                            {item.listingType === "RENT" && <span className="text-xs font-normal text-[var(--c-ink-3)]">{tr(rentalUnit(item.rentalRateType))}</span>}
                           </p>
                           <p className="text-xs text-[var(--c-faint)]">{tr(CONDITION_LABELS[item.condition] ?? item.condition)}</p>
                         </div>

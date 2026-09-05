@@ -6,6 +6,7 @@ import { useTr } from "@/lib/i18n/LocaleProvider";
 import { useState, useTransition, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { updateItem } from "@/lib/actions/moderation-actions";
+import { rentalUnit } from "@/lib/rental-unit";
 import { useToastStore } from "@/lib/stores/toast-store";
 import { prepareImageForUpload } from "@/lib/utils/image-upload";
 
@@ -35,6 +36,7 @@ interface EditableItem {
   status: ItemStatus;
   rejectReason: string | null;
   listingType: "SELL" | "RENT";
+  rentalRateType?: string | null;
   condition: string;
   emoji: string | null;
   color: string | null;
@@ -473,7 +475,7 @@ export default function EditItemClient({
         {/* Price */}
         <div>
           <label className="block text-sm font-medium text-[var(--c-ink-1)] mb-1.5">
-            ราคา (฿){item.listingType === "RENT" && <span className="text-[var(--c-faint)] font-normal">{tr("/ เดือน")}</span>}
+            {tr("ราคา (฿)")}{item.listingType === "RENT" && <span className="text-[var(--c-faint)] font-normal">{tr(rentalUnit(item.rentalRateType))}</span>}
           </label>
           <input
             type="number"

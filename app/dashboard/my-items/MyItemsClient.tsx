@@ -5,6 +5,7 @@ import { useTr } from "@/lib/i18n/LocaleProvider";
 import { useState, useTransition } from "react";
 import { deleteItem, cancelDeletion } from "@/lib/actions/item-actions";
 import { getItemForEdit } from "@/lib/actions/moderation-actions";
+import { rentalUnit } from "@/lib/rental-unit";
 import EditItemClient from "@/app/dashboard/edit/[id]/EditItemClient";
 import { useToastStore } from "@/lib/stores/toast-store";
 import { useRouter } from "next/navigation";
@@ -26,6 +27,7 @@ interface MyItem {
   rejectReason: string | null;
   scheduledForDeletionAt: string | null; // ISO string; null = not scheduled
   listingType: "SELL" | "RENT";
+  rentalRateType?: string | null;
   condition: string;
   createdAt: string;
   emoji: string | null;
@@ -349,7 +351,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                   {/* Price */}
                   <p className={`text-base font-bold mt-2 ${isScheduled ? "text-[var(--c-faint)] line-through" : "text-[var(--c-accent)]"}`}>
                     ฿{item.price.toLocaleString()}
-                    {item.listingType === "RENT" && <span className="text-xs font-normal">{tr("/เดือน")}</span>}
+                    {item.listingType === "RENT" && <span className="text-xs font-normal">{tr(rentalUnit(item.rentalRateType))}</span>}
                   </p>
 
                   {/* ── Countdown banner (grace period active) ── */}
