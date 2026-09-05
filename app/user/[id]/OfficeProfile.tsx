@@ -97,7 +97,7 @@ export default async function OfficeProfile({ user }: { user: any }) {
             {[
               { k: tr("อุปกรณ์ทั้งหมด"), v: items.length >= 12 ? "12+" : String(items.length) },
               { k: tr("ว่างให้ยืมตอนนี้"), v: String(activeCount) },
-              { k: tr("ให้ยืมไปแล้ว"),   v: `${lentCount} ครั้ง` },
+              { k: tr("ให้ยืมไปแล้ว"),   v: tr("{0} ครั้ง", [lentCount]) },
             ].map((s) => (
               <div key={s.k} className="px-4 py-4 text-center">
                 <p className="bw-num text-[22px] font-semibold text-[var(--psu-navy)] leading-none">{s.v}</p>
@@ -133,10 +133,10 @@ export default async function OfficeProfile({ user }: { user: any }) {
                     </p>
                     <div className="flex items-center justify-between gap-2 mt-2">
                       <span className="text-[11px] text-[var(--bw-muted)]">
-                        {BORROW_CATEGORY_LABEL[i.category] ?? i.category}
+                        {tr(BORROW_CATEGORY_LABEL[i.category] ?? i.category)}
                       </span>
                       <span className={`bw-pill ${i.status === "AVAILABLE" ? "bw-pill-live" : "bw-pill-off"}`}>
-                        {ITEM_STATUS_LABEL[i.status] ?? i.status}
+                        {tr(ITEM_STATUS_LABEL[i.status] ?? i.status)}
                       </span>
                     </div>
                   </div>

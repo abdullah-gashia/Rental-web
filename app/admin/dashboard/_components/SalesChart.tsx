@@ -47,6 +47,7 @@ function CustomTooltip({
   payload?: { name: string; value: number; color: string }[];
   label?: string;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-xl shadow-lg px-4 py-3 text-sm">
@@ -56,7 +57,7 @@ function CustomTooltip({
           <span className="font-medium">
             {p.name === "sales" ? "จำนวนขาย:" : "รายได้:"}
           </span>{" "}
-          {p.name === "sales" ? `${p.value} รายการ` : formatBaht(p.value)}
+          {p.name === "sales" ? tr("{0} รายการ", [p.value]) : formatBaht(p.value)}
         </p>
       ))}
     </div>

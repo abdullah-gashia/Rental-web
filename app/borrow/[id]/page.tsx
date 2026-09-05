@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const tr = await getTr();
   const { id } = await params;
   const item = await getBorrowItem(id);
-  return { title: item ? `${item.title} | ยืมของ` : tr("ไม่พบอุปกรณ์") };
+  return { title: item ? tr("{0} | ยืมของ", [item.title]) : tr("ไม่พบอุปกรณ์") };
 }
 
 export default async function BorrowItemPage({

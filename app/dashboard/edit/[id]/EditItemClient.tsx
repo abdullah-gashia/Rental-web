@@ -197,13 +197,13 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
 
       const available = MAX_IMAGES - totalImages;
       if (available <= 0) {
-        showToast(`⚠️ สูงสุด ${MAX_IMAGES} รูปภาพต่อสินค้า`);
+        showToast(tr("⚠️ สูงสุด {0} รูปภาพต่อสินค้า", [MAX_IMAGES]));
         return;
       }
 
       const files = selected.slice(0, available);
       if (selected.length > available) {
-        showToast(`⚠️ เพิ่มได้อีก ${available} รูป (รับ ${files.length} รูปแรก)`);
+        showToast(tr("⚠️ เพิ่มได้อีก {0} รูป (รับ {1} รูปแรก)", [available, files.length]));
       }
 
       // Build pending entries with instant blob previews
@@ -265,7 +265,7 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
     // Surface any individual upload errors
     const failed = pendingImages.filter((p) => p.uploadError);
     if (failed.length > 0) {
-      setFormError(`รูปภาพบางรูปอัปโหลดไม่สำเร็จ กรุณาลบออกแล้วลองใหม่`);
+      setFormError(tr("รูปภาพบางรูปอัปโหลดไม่สำเร็จ กรุณาลบออกแล้วลองใหม่"));
       return;
     }
 
@@ -333,7 +333,7 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
           <p className="text-xs text-[var(--c-ink-3)] mb-0.5">{item.category.nameTh}</p>
           <p className="text-sm font-semibold text-[var(--c-ink)] truncate">{item.title}</p>
           <span className={`inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-xs font-semibold border ${STATUS_COLORS[item.status] ?? "bg-[var(--c-subtle)] text-[var(--c-ink-3)] border-[var(--c-line)]"}`}>
-            {STATUS_LABELS[item.status] ?? item.status}
+            {tr(STATUS_LABELS[item.status] ?? item.status)}
           </span>
         </div>
       </div>

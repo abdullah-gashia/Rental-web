@@ -278,7 +278,7 @@ export default async function AdminLendingDetailPage({
 
         {/* ── Money ────────────────────────────────────────────────────── */}
         <Card title={tr("การเงิน")}>
-          <Row label={tr("ค่าเช่า")}                value={`${baht(order.dailyRate)}/วัน × ${order.rentalDays} วัน = ${baht(order.rentalFee)}`} />
+          <Row label={tr("ค่าเช่า")}                value={tr("{0}/วัน × {1} วัน = {2}", [baht(order.dailyRate), order.rentalDays, baht(order.rentalFee)])} />
           <Row label={tr("ค่าธรรมเนียมแพลตฟอร์ม")} value={baht(order.platformFee)} />
           <Row label={tr("เงินมัดจำ")}              value={baht(order.securityDeposit)} />
           <Row label={tr("ยอดชำระรวม")}            value={baht(order.totalPaid)} strong />
@@ -295,7 +295,7 @@ export default async function AdminLendingDetailPage({
           <Row label={tr("เริ่มเช่า")}        value={day(order.rentalStartDate)} />
           <Row label={tr("ครบกำหนดคืน")}     value={day(order.rentalEndDate)} strong />
           <Row label={tr("คืนจริงเมื่อ")}     value={dt(order.actualReturnDate)} />
-          <Row label={tr("ต่ออายุแล้ว")}      value={`${order.renewalCount} ครั้ง`} />
+          <Row label={tr("ต่ออายุแล้ว")}      value={tr("{0} ครั้ง", [order.renewalCount])} />
           <Row label={tr("ยอมรับข้อตกลง")}   value={dt(order.agreementAcceptedAt)} />
           {order.cancelledAt && <Row label={tr("ยกเลิกเมื่อ")} value={dt(order.cancelledAt)} />}
           {order.cancelReason && <Row label={tr("เหตุผลที่ยกเลิก")} value={order.cancelReason} />}
@@ -339,7 +339,7 @@ export default async function AdminLendingDetailPage({
       </div>
 
       {/* ── Timeline ───────────────────────────────────────────────────── */}
-      <Card title={`ประวัติสถานะทั้งหมด (${history.length})`}>
+      <Card title={tr("ประวัติสถานะทั้งหมด ({0})", [history.length])}>
         {history.length === 0 ? (
           <p className="text-xs text-[var(--c-faint)] py-4 text-center">{tr("ยังไม่มีประวัติ")}</p>
         ) : (

@@ -84,7 +84,7 @@ function ItemContextCard({
   }
 
   const priceLabel = listingType === "RENT"
-    ? `฿${price.toLocaleString()} / วัน`
+    ? tr("฿{0} / วัน", [price.toLocaleString()])
     : `฿${price.toLocaleString()}`;
 
   return (
@@ -123,7 +123,7 @@ function ItemContextCard({
           {/* Condition */}
           {context.condition && (
             <span className="inline-flex items-center gap-1 bg-[var(--c-line-soft)] text-[var(--c-ink-3)] text-xs font-medium px-2.5 py-1 rounded-full">
-              ✨ สภาพ: {CONDITION_LABEL[context.condition] ?? context.condition}
+              ✨ สภาพ: {tr(CONDITION_LABEL[context.condition] ?? context.condition)}
             </span>
           )}
 

@@ -80,10 +80,10 @@ export default function ItemsTable({ rows }: Props) {
         }
         description={
           dialog?.kind === "approve"
-            ? `"${dialog?.label}" จะเปลี่ยนสถานะเป็น อนุมัติแล้ว`
+            ? tr("\"{0}\" จะเปลี่ยนสถานะเป็น อนุมัติแล้ว", [dialog?.label])
             : dialog?.kind === "reject"
-            ? `"${dialog?.label}" จะถูกปฏิเสธ กรุณาระบุเหตุผล`
-            : `"${dialog?.label}" จะถูกลบออกจากระบบ`
+            ? tr("\"{0}\" จะถูกปฏิเสธ กรุณาระบุเหตุผล", [dialog?.label])
+            : tr("\"{0}\" จะถูกลบออกจากระบบ", [dialog?.label])
         }
         confirmLabel={
           dialog?.kind === "approve" ? tr("อนุมัติ") :

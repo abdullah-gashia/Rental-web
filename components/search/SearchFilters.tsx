@@ -141,7 +141,7 @@ export default function SearchFilters({
 
       {/* Price range — one grouped control, like a real filter bar */}
       <div className="flex items-center h-8 rounded-md border border-[var(--hp-border)] bg-[var(--c-surface)] overflow-hidden">
-        <span className="text-[12px] text-[var(--hp-muted)] pl-2.5 pr-1.5 hidden sm:block">{tr("฿")}</span>
+        <span className="text-[12px] text-[var(--hp-muted)] pl-2.5 pr-1.5 hidden sm:block">{`฿`}</span>
         <input
           type="number"
           min={0}

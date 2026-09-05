@@ -169,7 +169,7 @@ export default function OrderTrackingClient({
             </p>
             <div className={`inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full text-xs font-bold border ${st.color}`}>
               <span>{st.emoji}</span>
-              <span>{st.label}</span>
+              <span>{tr(st.label)}</span>
             </div>
           </div>
         </div>

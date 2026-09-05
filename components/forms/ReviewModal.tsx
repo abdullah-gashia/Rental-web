@@ -81,7 +81,7 @@ export default function ReviewModal({
                   onClick={() => { setRating(star); setError(null); }}
                   className="text-4xl transition-transform hover:scale-110 focus:outline-none"
                   style={{ color: star <= displayRating ? "#f59e0b" : "#e5e7eb" }}
-                  aria-label={`${star} ดาว`}
+                  aria-label={tr("{0} ดาว", [star])}
                 >
                   ★
                 </button>
@@ -90,7 +90,7 @@ export default function ReviewModal({
             <p className={`text-sm font-semibold h-5 transition-colors ${
               displayRating ? "text-[var(--c-warn)]" : "text-[var(--c-line-str)]"
             }`}>
-              {displayRating ? STAR_LABELS[displayRating] : tr("เลือกคะแนน")}
+              {displayRating ? tr(STAR_LABELS[displayRating]) : tr("เลือกคะแนน")}
             </p>
           </div>
 

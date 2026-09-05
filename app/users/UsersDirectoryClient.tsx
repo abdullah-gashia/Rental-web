@@ -10,9 +10,10 @@ import type { DirectoryUser } from "@/lib/actions/user-directory";
 
 /** Five stars, the last one half-lit when the average lands between two. */
 function Stars({ rating, className = "" }: { rating: number; className?: string }) {
+  const tr = useLocaleStore((s) => s.tr);
   const rounded = Math.round(rating);
   return (
-    <span className={`inline-flex ${className}`} aria-label={`${rating.toFixed(1)} ดาว`}>
+    <span className={`inline-flex ${className}`} aria-label={tr("{0} ดาว", [rating.toFixed(1)])}>
       {[1, 2, 3, 4, 5].map((s) => (
         <span key={s} className={s <= rounded ? "text-amber-400" : "text-[var(--hp-border-str)]"}>★</span>
       ))}
@@ -103,8 +104,8 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
       {/* Result count — the search itself lives in the top bar */}
       <p className="text-[12.5px] text-[var(--hp-muted)] mb-4">
         {query.trim()
-          ? (th ? `พบ ${filtered.length} คนจากคำค้น “${query.trim()}”` : `${filtered.length} match “${query.trim()}”`)
-          : (th ? `ทั้งหมด ${filtered.length} คน` : `${filtered.length} people`)}
+          ? (th ? tr("พบ {0} คนจากคำค้น “{1}”", [filtered.length, query.trim()]) : `${filtered.length} match “${query.trim()}”`)
+          : (th ? tr("ทั้งหมด {0} คน", [filtered.length]) : `${filtered.length} people`)}
       </p>
 
       {/* Directory */}
@@ -151,10 +152,10 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
                       </p>
                       <div className="flex items-center gap-2 mt-2 flex-wrap">
                         <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded-md border bg-[var(--c-accent-soft)] text-[var(--c-accent-str)] border-[#cfe0ff]">
-                          {th ? `อุปกรณ์ ${u.lendItemCount} ชิ้น` : `${u.lendItemCount} items`}
+                          {th ? tr("อุปกรณ์ {0} ชิ้น", [u.lendItemCount]) : `${u.lendItemCount} items`}
                         </span>
                         <span className="text-[11px] text-[var(--hp-muted)]">
-                          {th ? `ให้ยืมแล้ว ${u.lentOutCount} ครั้ง` : `${u.lentOutCount} loans`}
+                          {th ? tr("ให้ยืมแล้ว {0} ครั้ง", [u.lentOutCount]) : `${u.lentOutCount} loans`}
                         </span>
                       </div>
                     </div>
@@ -213,7 +214,7 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
                         {th ? tone.label : `Trust ${u.trustScore}`} · {u.trustScore}
                       </span>
                       <span className="text-[11px] text-[var(--hp-muted)]">
-                        {th ? `ประกาศ ${u.itemCount} · ขายสำเร็จ ${u.soldCount}` : `${u.itemCount} listings · ${u.soldCount} sold`}
+                        {th ? tr("ประกาศ {0} · ขายสำเร็จ {1}", [u.itemCount, u.soldCount]) : `${u.itemCount} listings · ${u.soldCount} sold`}
                       </span>
                     </div>
                   </div>

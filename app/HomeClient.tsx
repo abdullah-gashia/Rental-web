@@ -419,7 +419,7 @@ function EmptyState({ query }: { query: string }) {
         </svg>
       </div>
       <h3 className="text-[15px] font-semibold text-[var(--hp-ink)] mb-1.5">
-        {query ? `ไม่พบสินค้าสำหรับ “${query}”` : tr("ไม่พบสินค้าที่ตรงกับตัวกรอง")}
+        {query ? tr("ไม่พบสินค้าสำหรับ “{0}”", [query]) : tr("ไม่พบสินค้าที่ตรงกับตัวกรอง")}
       </h3>
       <p className="text-[13px] text-[var(--hp-muted)] max-w-xs mb-5 leading-relaxed">{tr("ลองปรับคำค้นหาหรือตัวกรองให้กว้างขึ้น แล้วลองใหม่อีกครั้ง")}</p>
       <button onClick={clearAll} className="hp-btn hp-btn-ghost">{tr("ล้างการค้นหาทั้งหมด")}</button>

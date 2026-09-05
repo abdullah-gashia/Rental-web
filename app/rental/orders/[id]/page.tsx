@@ -105,7 +105,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
           <span className={`text-xs font-semibold px-3 py-1.5 rounded-full border ${
             STATUS_COLOR[order.status] ?? "bg-[var(--c-subtle)] text-[var(--c-ink-3)] border-[var(--c-line)]"
           }`}>
-            {STATUS_LABEL[order.status] ?? order.status}
+            {tr(STATUS_LABEL[order.status] ?? order.status)}
           </span>
         </div>
 
@@ -122,10 +122,10 @@ export default async function RentalOrderDetailPage({ params }: Props) {
                 "bg-[var(--c-ok-soft)] border-[var(--c-ok-line)] text-[var(--c-ok)]"
               }`}>
                 <p className="font-semibold text-sm">
-                  {daysLeft < 0 ? `⚠️ เกินกำหนดคืน ${Math.abs(daysLeft)} วัน!` :
+                  {daysLeft < 0 ? tr("⚠️ เกินกำหนดคืน {0} วัน!", [Math.abs(daysLeft)]) :
                    daysLeft === 0 ? tr("⏰ วันนี้ครบกำหนดคืน!") :
                    daysLeft === 1 ? tr("⏰ พรุ่งนี้ครบกำหนดคืน!") :
-                   `📅 กำหนดคืนอีก ${daysLeft} วัน`}
+                   tr("📅 กำหนดคืนอีก {0} วัน", [daysLeft])}
                 </p>
                 <p className="text-xs mt-0.5 opacity-80">
                   วันคืน: {fmtDate(order.rentalEndDate)}
@@ -250,7 +250,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
                       }`} />
                       <div>
                         <p className="font-semibold text-[var(--c-ink)]">
-                          {STATUS_LABEL[h.status] ?? h.status}
+                          {tr(STATUS_LABEL[h.status] ?? h.status)}
                         </p>
                         {h.note && <p className="text-[var(--c-ink-3)]">{h.note}</p>}
                         <p className="text-[var(--c-faint)]">
@@ -292,7 +292,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
               <div className="space-y-1.5 text-sm">
                 <Row label={tr("วันเริ่มเช่า")}  value={fmtDate(order.rentalStartDate)} />
                 <Row label={tr("วันสิ้นสุดเช่า")} value={fmtDate(order.rentalEndDate)} />
-                <Row label={tr("จำนวนวัน")}      value={`${order.rentalDays} วัน`} />
+                <Row label={tr("จำนวนวัน")}      value={tr("{0} วัน", [order.rentalDays])} />
                 {order.actualPickupAt && <Row label={tr("รับของจริง")}    value={fmt(order.actualPickupAt)} />}
                 {order.actualReturnDate && <Row label={tr("คืนของจริง")} value={fmt(order.actualReturnDate)} />}
               </div>
@@ -302,7 +302,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
             <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
               <h3 className="text-xs font-bold text-[var(--c-faint)] uppercase tracking-wide mb-3">{tr("สรุปการเงิน")}</h3>
               <div className="space-y-1.5 text-sm">
-                <Row label={`ค่าเช่า (฿${order.dailyRate}/วัน × ${order.rentalDays})`} value={`฿${order.rentalFee.toLocaleString()}`} />
+                <Row label={tr("ค่าเช่า (฿{0}/วัน × {1})", [order.dailyRate, order.rentalDays])} value={`฿${order.rentalFee.toLocaleString()}`} />
                 <Row label={tr("ค่าธรรมเนียม (5%)")}  value={`฿${order.platformFee.toLocaleString()}`} />
                 <Row label={tr("เงินมัดจำ")}           value={`฿${order.securityDeposit.toLocaleString()}`} />
                 <div className="border-t border-[var(--c-line-soft)] pt-1.5 flex justify-between font-bold text-[var(--c-ink)]">

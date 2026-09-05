@@ -76,8 +76,8 @@ export default function OrdersTable({ rows }: Props) {
         title={dialog?.kind === "complete" ? tr("บังคับให้คำสั่งซื้อสำเร็จ?") : tr("ยกเลิกคำสั่งซื้อ?")}
         description={
           dialog?.kind === "complete"
-            ? `คำสั่งซื้อ ${dialog?.ref} จะถูกทำเครื่องหมายว่าสำเร็จ และเงินจะถูกปล่อยให้ผู้ขาย`
-            : `คำสั่งซื้อ ${dialog?.ref} จะถูกยกเลิก และเงินจะถูกคืนให้ผู้ซื้อ กรุณาระบุเหตุผล`
+            ? tr("คำสั่งซื้อ {0} จะถูกทำเครื่องหมายว่าสำเร็จ และเงินจะถูกปล่อยให้ผู้ขาย", [dialog?.ref])
+            : tr("คำสั่งซื้อ {0} จะถูกยกเลิก และเงินจะถูกคืนให้ผู้ซื้อ กรุณาระบุเหตุผล", [dialog?.ref])
         }
         confirmLabel={dialog?.kind === "complete" ? tr("บังคับสำเร็จ") : "ยกเลิก"}
         danger={dialog?.kind === "cancel"}

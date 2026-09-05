@@ -45,10 +45,10 @@ export async function getI18n(): Promise<{ locale: Locale; t: TFunction }> {
   return { locale, t: (key, params) => translate(locale, key, params) };
 }
 
-export type TrFunction = (source: string) => string;
+export type TrFunction = (source: string, params?: readonly (string | number | null | undefined)[]) => string;
 
 /** Translate by Thai source text, for server components. Falls back to Thai. */
 export async function getTr(): Promise<TrFunction> {
   const locale = await getLocale();
-  return (source) => translatePhrase(locale, source);
+  return (source, params) => translatePhrase(locale, source, params);
 }

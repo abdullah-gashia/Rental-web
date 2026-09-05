@@ -176,10 +176,10 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
     startTransition(async () => {
       const result = await approveItem(item.id);
       if (result.error) {
-        showToast(`เกิดข้อผิดพลาด: ${result.error}`);
+        showToast(tr("เกิดข้อผิดพลาด: {0}", [result.error]));
       } else {
         removeItem(item.id);
-        showToast(`✅ อนุมัติ "${item.title}" เรียบร้อยแล้ว`);
+        showToast(tr("✅ อนุมัติ \"{0}\" เรียบร้อยแล้ว", [item.title]));
       }
       setProcessingId(null);
     });
@@ -191,10 +191,10 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
     startTransition(async () => {
       const result = await rejectItem(target.id, reason);
       if (result.error) {
-        showToast(`เกิดข้อผิดพลาด: ${result.error}`);
+        showToast(tr("เกิดข้อผิดพลาด: {0}", [result.error]));
       } else {
         removeItem(target.id);
-        showToast(`สินค้า "${target.title}" ถูกปฏิเสธแล้ว`);
+        showToast(tr("สินค้า \"{0}\" ถูกปฏิเสธแล้ว", [target.title]));
         setRejectTarget(null);
       }
     });
@@ -273,7 +273,7 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
                             ฿{item.price.toLocaleString()}
                             {item.listingType === "RENT" && <span className="text-xs font-normal text-[var(--c-ink-3)]">{tr("/เดือน")}</span>}
                           </p>
-                          <p className="text-xs text-[var(--c-faint)]">{CONDITION_LABELS[item.condition] ?? item.condition}</p>
+                          <p className="text-xs text-[var(--c-faint)]">{tr(CONDITION_LABELS[item.condition] ?? item.condition)}</p>
                         </div>
                       </div>
 

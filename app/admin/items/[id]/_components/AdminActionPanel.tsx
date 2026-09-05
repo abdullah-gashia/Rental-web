@@ -244,7 +244,7 @@ export default function AdminActionPanel({ item }: Props) {
 
       <ReasonDialog
         open={rejectOpen}
-        title={`❌ ปฏิเสธสินค้า "${item.title}"`}
+        title={tr("❌ ปฏิเสธสินค้า \"{0}\"", [item.title])}
         confirmLabel={tr("ยืนยันปฏิเสธ")}
         danger
         loading={pending}
@@ -254,7 +254,7 @@ export default function AdminActionPanel({ item }: Props) {
 
       <ReasonDialog
         open={suspendOpen}
-        title={`⚠️ ระงับสินค้า "${item.title}"`}
+        title={tr("⚠️ ระงับสินค้า \"{0}\"", [item.title])}
         confirmLabel={tr("ยืนยันระงับ")}
         loading={pending}
         onConfirm={handleSuspend}

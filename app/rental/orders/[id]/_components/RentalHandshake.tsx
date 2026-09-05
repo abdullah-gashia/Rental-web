@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocaleStore } from "@/lib/stores/locale-store";
+import type { TrFn } from "@/lib/i18n/phrases";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -29,21 +30,21 @@ const CONDITIONS = [
   { value: "LOST",         label: "สูญหาย ❌",          color: "bg-[var(--c-danger-soft)] border-red-500 text-[var(--c-danger)]" },
 ];
 
-function buildPickupAgreement(itemTitle: string, rentalDays: number, deposit: number, lateFee: number) {
+function buildPickupAgreement(itemTitle: string, rentalDays: number, deposit: number, lateFee: number, tr: TrFn) {
   return [
-    `ยอมรับว่าได้รับสินค้า "${itemTitle}" เรียบร้อยแล้ว ในสภาพที่ตรงตามรูปถ่ายหลักฐาน`,
+    tr("ยอมรับว่าได้รับสินค้า \"{0}\" เรียบร้อยแล้ว ในสภาพที่ตรงตามรูปถ่ายหลักฐาน", [itemTitle]),
     ``,
-    `ข้าพเจ้าตกลงดังนี้:`,
-    `• เช่าเป็นระยะเวลา ${rentalDays} วัน`,
-    `• วางมัดจำ ฿${deposit.toLocaleString()} ไว้ในระบบ Escrow`,
-    `• หากสินค้าชำรุดหรือเสียหาย ยินยอมให้หักค่าเสียหายจากเงินมัดจำ`,
-    `• หากสินค้าสูญหาย ยินยอมให้ริบเงินมัดจำทั้งจำนวน`,
-    lateFee > 0 ? `• หากคืนล่าช้า จะถูกคิดค่าปรับ ฿${lateFee.toLocaleString()}/วัน` : `• ไม่มีค่าปรับคืนล่าช้า`,
-    `• ข้อตกลงนี้มีผลผูกพันตามประมวลกฎหมายแพ่งและพาณิชย์ ว่าด้วยการเช่าทรัพย์ มาตรา 537–571`,
+    tr("ข้าพเจ้าตกลงดังนี้:"),
+    tr("• เช่าเป็นระยะเวลา {0} วัน", [rentalDays]),
+    tr("• วางมัดจำ ฿{0} ไว้ในระบบ Escrow", [deposit.toLocaleString()]),
+    tr("• หากสินค้าชำรุดหรือเสียหาย ยินยอมให้หักค่าเสียหายจากเงินมัดจำ"),
+    tr("• หากสินค้าสูญหาย ยินยอมให้ริบเงินมัดจำทั้งจำนวน"),
+    lateFee > 0 ? tr("• หากคืนล่าช้า จะถูกคิดค่าปรับ ฿{0}/วัน", [lateFee.toLocaleString()]) : tr("• ไม่มีค่าปรับคืนล่าช้า"),
+    tr("• ข้อตกลงนี้มีผลผูกพันตามประมวลกฎหมายแพ่งและพาณิชย์ ว่าด้วยการเช่าทรัพย์ มาตรา 537–571"),
   ].join("\n");
 }
 
-function buildReturnAgreement(itemTitle: string, condition: string, damageFee: number) {
+function buildReturnAgreement(itemTitle: string, condition: string, damageFee: number, tr: TrFn) {
   const conditionLabel: Record<string, string> = {
     SAME: "สภาพเดิม — ไม่มีความเสียหาย",
     MINOR_DAMAGE: "เสียหายเล็กน้อย",
@@ -51,15 +52,15 @@ function buildReturnAgreement(itemTitle: string, condition: string, damageFee: n
     LOST: "สูญหาย",
   };
   return [
-    `ยอมรับว่าได้รับสินค้า "${itemTitle}" คืนเรียบร้อยแล้ว`,
+    tr("ยอมรับว่าได้รับสินค้า \"{0}\" คืนเรียบร้อยแล้ว", [itemTitle]),
     ``,
-    `สภาพสินค้า: ${conditionLabel[condition] ?? condition}`,
+    tr("สภาพสินค้า: {0}", [conditionLabel[condition] ?? condition]),
     damageFee > 0
-      ? `ค่าเสียหาย: ฿${damageFee.toLocaleString()} (จะถูกหักจากเงินมัดจำ)`
-      : `ไม่มีค่าเสียหาย (มัดจำคืนเต็มจำนวน)`,
+      ? tr("ค่าเสียหาย: ฿{0} (จะถูกหักจากเงินมัดจำ)", [damageFee.toLocaleString()])
+      : tr("ไม่มีค่าเสียหาย (มัดจำคืนเต็มจำนวน)"),
     ``,
-    `ข้าพเจ้ายืนยันว่าได้ตรวจสอบสภาพสินค้าแล้ว และยอมรับการประเมินข้างต้น`,
-    `การชำระเงินจะดำเนินการโดยอัตโนมัติหลังจากทั้งสองฝ่ายยืนยัน`,
+    tr("ข้าพเจ้ายืนยันว่าได้ตรวจสอบสภาพสินค้าแล้ว และยอมรับการประเมินข้างต้น"),
+    tr("การชำระเงินจะดำเนินการโดยอัตโนมัติหลังจากทั้งสองฝ่ายยืนยัน"),
   ].join("\n");
 }
 
@@ -90,8 +91,8 @@ export default function RentalHandshake({
   const signerRole: "ผู้เช่า" | "เจ้าของ" = isRenter ? "ผู้เช่า" : "เจ้าของ";
 
   const agreementText = type === "pickup"
-    ? buildPickupAgreement(itemTitle, rentalDays, securityDeposit, lateFeePerDay)
-    : buildReturnAgreement(itemTitle, condition, damageFee);
+    ? buildPickupAgreement(itemTitle, rentalDays, securityDeposit, lateFeePerDay, tr)
+    : buildReturnAgreement(itemTitle, condition, damageFee, tr);
 
   const title     = type === "pickup" ? tr("📦 ยืนยันการรับของ (Digital Handshake #1)") : tr("🔄 ยืนยันการคืนของ (Digital Handshake #2)");
   const meLabel   = isRenter ? "ผู้เช่า" : "เจ้าของ";
@@ -140,7 +141,7 @@ export default function RentalHandshake({
         <h3 className="text-sm font-bold text-[var(--c-ink)] mb-2">{title}</h3>
         <div className="flex items-center gap-2 text-sm text-[var(--c-ok)] bg-[var(--c-ok-soft)] rounded-xl px-3 py-2.5">
           <span>✅</span>
-          <span>คุณยืนยันแล้ว{otherConfirmed ? "" : ` — รอ${otherLabel}ยืนยัน`}</span>
+          <span>คุณยืนยันแล้ว{otherConfirmed ? "" : tr(" — รอ{0}ยืนยัน", [otherLabel])}</span>
         </div>
         {!otherConfirmed && (
           <p className="text-xs text-[var(--c-faint)] mt-2">เมื่อ{otherLabel}ยืนยันด้วย สถานะจะเปลี่ยนอัตโนมัติ</p>
@@ -301,7 +302,7 @@ export default function RentalHandshake({
         className="w-full py-3 bg-[var(--c-accent)] text-white text-sm font-bold rounded-xl
                    hover:bg-[var(--c-accent-str)] transition disabled:opacity-50"
       >
-        {isPending ? tr("กำลังยืนยัน...") : `✅ ยืนยัน${type === "pickup" ? tr("การรับของ") : tr("การคืนของ")}`}
+        {isPending ? tr("กำลังยืนยัน...") : tr("✅ ยืนยัน{0}", [type === "pickup" ? tr("การรับของ") : tr("การคืนของ")])}
       </button>
     </div>
   );

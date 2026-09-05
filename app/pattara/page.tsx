@@ -75,7 +75,7 @@ export default async function PattaraOverview() {
             [tr("ค่าธรรมเนียมที่ได้"), baht(fund.incomeTotal + fund.otherIn)],
             [tr("ใช้ไปแล้ว"),         baht(fund.spentTotal)],
             [tr("คงเหลือ"),           baht(fund.balance)],
-            [tr("ซื้ออุปกรณ์แล้ว"),     `${fund.itemsBought} ชิ้น`],
+            [tr("ซื้ออุปกรณ์แล้ว"),     tr("{0} ชิ้น", [fund.itemsBought])],
           ].map(([k, v]) => (
             <div key={k}>
               <p className="bw-label">{k}</p>
@@ -118,11 +118,11 @@ export default async function PattaraOverview() {
                   <p className="text-[13.5px] font-medium truncate">{o.item.title}</p>
                   <p className="text-[11.5px] text-[var(--bw-muted)] truncate">
                     {o.borrower?.name ?? "—"}
-                    {o.dueDate ? ` · คืน ${new Date(o.dueDate).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}` : ""}
+                    {o.dueDate ? tr(" · คืน {0}", [new Date(o.dueDate).toLocaleDateString("th-TH", { day: "numeric", month: "short" })]) : ""}
                   </p>
                 </div>
                 <span className={`bw-pill ${PILL[o.status] ?? "bw-pill-off"} flex-shrink-0`}>
-                  {BORROW_STATUS_LABEL[o.status] ?? o.status}
+                  {tr(BORROW_STATUS_LABEL[o.status] ?? o.status)}
                 </span>
               </a>
             ))}

@@ -195,13 +195,13 @@ export default function ProfileTab({ userData, showToast }: ProfileTabProps) {
             <p className={`text-sm font-medium mt-0.5 ${
               VERIFICATION_LABELS[userData.verificationStatus]?.cls ?? "text-[var(--c-muted)]"
             }`}>
-              {VERIFICATION_LABELS[userData.verificationStatus]?.label ?? userData.verificationStatus}
+              {tr(VERIFICATION_LABELS[userData.verificationStatus]?.label ?? userData.verificationStatus)}
             </p>
           </div>
           <div>
             <span className="text-[11px] text-[var(--c-muted)] uppercase tracking-wider">{tr("ประเภท")}</span>
             <p className="text-sm font-medium text-[var(--c-ink-1)] mt-0.5">
-              {userData.psuIdType ? PSU_TYPE_LABELS[userData.psuIdType] ?? userData.psuIdType : "—"}
+              {userData.psuIdType ? tr(PSU_TYPE_LABELS[userData.psuIdType] ?? userData.psuIdType) : "—"}
             </p>
           </div>
           <div>

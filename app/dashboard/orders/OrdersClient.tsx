@@ -148,7 +148,7 @@ function Thumb({ item }: { item: OrderItem }) {
 function ShippingDetails({ order }: { order: BaseOrder }) {
   const tr = useLocaleStore((s) => s.tr);
   if (!order.shippingMethod) return null;
-  const methodName = METHOD_LABELS[order.shippingMethod] ?? order.shippingMethod;
+  const methodName = tr(METHOD_LABELS[order.shippingMethod] ?? order.shippingMethod);
   return (
     <div className="mt-2 bg-[var(--c-accent-soft)] border border-blue-100 rounded-xl px-3 py-2 space-y-1.5 text-xs">
       <div className="flex items-center gap-1.5 text-[var(--c-accent-str)] font-semibold">
@@ -551,7 +551,7 @@ export default function OrdersClient({
           <p className="ui-stat-v !text-[var(--c-warn)]">฿{escrowBalance.toLocaleString()}</p>
           <p className="ui-stat-sub">
             {activeEscrowOrderCount > 0
-              ? `${activeEscrowOrderCount} คำสั่งซื้อที่ถือเงินอยู่`
+              ? tr("{0} คำสั่งซื้อที่ถือเงินอยู่", [activeEscrowOrderCount])
               : tr("รอการยืนยัน")}
           </p>
 

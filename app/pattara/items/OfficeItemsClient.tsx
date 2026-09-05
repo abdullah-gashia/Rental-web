@@ -137,7 +137,7 @@ export default function OfficeItemsClient({
             onClick={() => setFilter(s)}
             className={`bw-pill !text-[12px] !px-3 !py-1.5 ${filter === s ? "bw-pill-go" : "bw-pill-done"}`}
           >
-            {s === "all" ? "ทั้งหมด" : ITEM_STATUS_LABEL[s]} <span className="bw-num opacity-60">{counts[s] ?? 0}</span>
+            {s === "all" ? "ทั้งหมด" : tr(ITEM_STATUS_LABEL[s])} <span className="bw-num opacity-60">{counts[s] ?? 0}</span>
           </button>
         ))}
         <input
@@ -179,17 +179,17 @@ export default function OfficeItemsClient({
                       <div className="min-w-0">
                         <p className="font-medium truncate max-w-[220px]">{i.title}</p>
                         <p className="text-[11px] text-[var(--bw-muted)]">
-                          {i.assetTag ?? tr("ไม่มีรหัส")} · {CONDITION_LABEL[i.condition] ?? i.condition}
+                          {i.assetTag ?? tr("ไม่มีรหัส")} · {tr(CONDITION_LABEL[i.condition] ?? i.condition)}
                         </p>
                       </div>
                     </div>
                   </td>
                   <td className="px-4 py-3 text-[12px] text-[var(--bw-ink-2)]">
-                    {BORROW_CATEGORY_LABEL[i.category] ?? i.category}
+                    {tr(BORROW_CATEGORY_LABEL[i.category] ?? i.category)}
                   </td>
                   <td className="px-4 py-3">
                     <span className={`bw-pill ${STATUS_PILL[i.status] ?? "bw-pill-off"}`}>
-                      {ITEM_STATUS_LABEL[i.status] ?? i.status}
+                      {tr(ITEM_STATUS_LABEL[i.status] ?? i.status)}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-[12px]">
@@ -262,7 +262,7 @@ export default function OfficeItemsClient({
                   <label className="bw-label block mb-1.5">{tr("หมวดหมู่")}</label>
                   <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="bw-input">
                     {BORROW_CATEGORIES.map((c) => (
-                      <option key={c} value={c}>{BORROW_CATEGORY_LABEL[c]}</option>
+                      <option key={c} value={c}>{tr(BORROW_CATEGORY_LABEL[c])}</option>
                     ))}
                   </select>
                 </div>

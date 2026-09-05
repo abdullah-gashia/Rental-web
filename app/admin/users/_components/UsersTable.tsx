@@ -79,13 +79,12 @@ export default function UsersTable({ rows }: Props) {
         }
         description={
           dialog?.kind === "ban"
-            ? `${dialog.label} จะถูกแบนและไม่สามารถเข้าสู่ระบบได้`
+            ? tr("{0} จะถูกแบนและไม่สามารถเข้าสู่ระบบได้", [dialog.label])
             : dialog?.kind === "unban"
-            ? `${dialog?.label} จะสามารถเข้าสู่ระบบได้อีกครั้ง`
-            : `เปลี่ยนบทบาทของ ${dialog?.label} เป็น ${
-                dialog?.newRole === "ADMIN"   ? "แอดมิน"
+            ? tr("{0} จะสามารถเข้าสู่ระบบได้อีกครั้ง", [dialog?.label])
+            : tr("เปลี่ยนบทบาทของ {0} เป็น {1}", [dialog?.label, dialog?.newRole === "ADMIN"   ? "แอดมิน"
               : dialog?.newRole === "PATTARA" ? tr("บัญชีหน่วยงานงานภัทร — จะซื้อ ขาย หรือเช่าไม่ได้อีก")
-              : "นักศึกษา"}`
+              : "นักศึกษา"])
         }
         confirmLabel={dialog?.kind === "ban" ? tr("แบน") : tr("ยืนยัน")}
         danger={dialog?.kind === "ban"}
@@ -337,9 +336,10 @@ function ActionsDropdown({
 
 /** Five stars with the fractional part shown as a half-filled last star. */
 function Stars({ rating }: { rating: number }) {
+  const tr = useLocaleStore((s) => s.tr);
   const rounded = Math.round(rating * 2) / 2;
   return (
-    <span className="inline-flex text-[13px] leading-none" aria-label={`${rating.toFixed(1)} ดาว`}>
+    <span className="inline-flex text-[13px] leading-none" aria-label={tr("{0} ดาว", [rating.toFixed(1)])}>
       {[1, 2, 3, 4, 5].map((s) => (
         <span key={s} className={s <= rounded ? "text-amber-400" : "text-[var(--c-line)]"}>
           {s - 0.5 === rounded ? "⯨" : "★"}

@@ -171,7 +171,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
             {/* ── Status badges row ────────────────────────────────────── */}
             <div className="grid grid-cols-4 gap-2">
               <StatCard label={tr("สถานะ")} val={data.isBanned ? "ถูกแบน" : "ปกติ"} color={data.isBanned ? "red" : "green"} />
-              <StatCard label={tr("ยืนยัน")} val={VERIFICATION_LABELS[data.verificationStatus] ?? data.verificationStatus} color={data.verificationStatus === "APPROVED" ? "green" : "yellow"} />
+              <StatCard label={tr("ยืนยัน")} val={tr(VERIFICATION_LABELS[data.verificationStatus] ?? data.verificationStatus)} color={data.verificationStatus === "APPROVED" ? "green" : "yellow"} />
               <StatCard label="Trust" val={String(data.trustScore)} color={data.trustScore >= 80 ? "green" : data.trustScore >= 50 ? "yellow" : "red"} />
               <StatCard label={tr("บทบาท")} val={data.role === "ADMIN" ? "แอดมิน" : "นักศึกษา"} color={data.role === "ADMIN" ? "purple" : "gray"} />
             </div>
@@ -377,7 +377,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                     >
                       <div className="flex items-center justify-between gap-2 flex-wrap">
                         <span className="text-xs font-bold text-[var(--c-ink-1)]">
-                          {CATEGORY_LABEL[rep.category ?? ""] ?? rep.category ?? "อื่นๆ"}
+                          {tr(CATEGORY_LABEL[rep.category ?? ""] ?? rep.category) ?? "อื่นๆ"}
                         </span>
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                           rep.status === "OPEN"       ? "bg-[var(--c-danger-soft)] text-[var(--c-danger)]"

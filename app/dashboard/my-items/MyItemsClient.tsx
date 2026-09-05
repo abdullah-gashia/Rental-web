@@ -187,9 +187,9 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
     startTransition(async () => {
       const result = await deleteItem(deleteTarget.id);
       if (result.error) {
-        showToast(`เกิดข้อผิดพลาด: ${result.error}`);
+        showToast(tr("เกิดข้อผิดพลาด: {0}", [result.error]));
       } else {
-        showToast(`⏳ "${deleteTarget.title}" จะถูกลบภายใน 24 ชั่วโมง`);
+        showToast(tr("⏳ \"{0}\" จะถูกลบภายใน 24 ชั่วโมง", [deleteTarget.title]));
         setDeleteTarget(null);
         router.refresh();
       }
@@ -200,9 +200,9 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
     startTransition(async () => {
       const result = await cancelDeletion(item.id);
       if (result.error) {
-        showToast(`เกิดข้อผิดพลาด: ${result.error}`);
+        showToast(tr("เกิดข้อผิดพลาด: {0}", [result.error]));
       } else {
-        showToast(`✅ ยกเลิกการลบ "${item.title}" เรียบร้อยแล้ว`);
+        showToast(tr("✅ ยกเลิกการลบ \"{0}\" เรียบร้อยแล้ว", [item.title]));
         router.refresh();
       }
     });
@@ -224,7 +224,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
           <p>
             {activeItems.length === 0
               ? tr("ยังไม่มีประกาศ — ลงชิ้นแรกได้จากหน้าร้าน")
-              : `${activeItems.length} ประกาศ · เผยแพร่อยู่ ${approvedCount} · รอตรวจสอบ ${pendingCount}`}
+              : tr("{0} ประกาศ · เผยแพร่อยู่ {1} · รอตรวจสอบ {2}", [activeItems.length, approvedCount, pendingCount])}
           </p>
         </div>
         <a href="/" className="ui-btn ui-btn-primary">{tr("ลงประกาศใหม่")}</a>

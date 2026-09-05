@@ -89,7 +89,7 @@ function EvidenceGallery({ images }: { images: string[] }) {
             onClick={() => setLightbox(url)}
             className="w-20 h-20 rounded-xl overflow-hidden border border-[var(--c-line)] hover:ring-2 hover:ring-[var(--c-accent)] transition flex-shrink-0"
           >
-            <img src={url} alt={`หลักฐาน ${i + 1}`} className="w-full h-full object-contain" />
+            <img src={url} alt={tr("หลักฐาน {0}", [i + 1])} className="w-full h-full object-contain" />
           </button>
         ))}
       </div>
@@ -412,12 +412,12 @@ export default function DisputesClient({ orders: initialOrders }: Props) {
     start(async () => {
       const res = await checkAndAutoReleaseEscrows();
       if ("error" in res) {
-        setAutoMsg(`เกิดข้อผิดพลาด: ${res.error}`);
+        setAutoMsg(tr("เกิดข้อผิดพลาด: {0}", [res.error]));
       } else {
         setAutoMsg(
           res.released === 0
             ? tr("ไม่มีรายการที่ต้องปลดล็อคอัตโนมัติ")
-            : `✅ ปลดล็อคอัตโนมัติ ${res.released} รายการเรียบร้อยแล้ว`
+            : tr("✅ ปลดล็อคอัตโนมัติ {0} รายการเรียบร้อยแล้ว", [res.released])
         );
         router.refresh();
       }
@@ -442,7 +442,7 @@ export default function DisputesClient({ orders: initialOrders }: Props) {
               : "bg-[var(--c-ok-soft)] border-[var(--c-ok-line)] text-[var(--c-ok)]"
           }`}>
             <span className={`w-2 h-2 rounded-full ${orders.length > 0 ? "bg-red-500 animate-pulse" : "bg-emerald-500"}`} />
-            {orders.length > 0 ? `${orders.length} คดีเปิดอยู่` : tr("ไม่มีข้อพิพาทที่รอ")}
+            {orders.length > 0 ? tr("{0} คดีเปิดอยู่", [orders.length]) : tr("ไม่มีข้อพิพาทที่รอ")}
           </div>
 
           {/* Auto-release trigger */}

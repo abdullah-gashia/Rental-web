@@ -94,8 +94,8 @@ export default function DateSelectionStep({ state, item, onChange }: Props) {
         {daysError && (
           <p className="text-xs text-[var(--c-danger)] mt-1">
             {rentalDays < item.minRentalDays
-              ? `ต้องเช่าขั้นต่ำ ${item.minRentalDays} วัน`
-              : `เช่าได้สูงสุด ${item.maxRentalDays} วัน`}
+              ? tr("ต้องเช่าขั้นต่ำ {0} วัน", [item.minRentalDays])
+              : tr("เช่าได้สูงสุด {0} วัน", [item.maxRentalDays])}
           </p>
         )}
       </div>

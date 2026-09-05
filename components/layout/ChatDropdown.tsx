@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocaleStore } from "@/lib/stores/locale-store";
+import type { TrFn } from "@/lib/i18n/phrases";
 
 import { useState, useRef, useEffect } from "react";
 import { getUserConversations } from "@/lib/actions/chat-actions";
@@ -25,15 +26,15 @@ interface ChatDropdownProps {
   onOpenChat?: (itemId: string, sellerId: string, itemTitle: string, itemEmoji: string | null, itemPrice: number) => void;
 }
 
-function timeAgo(dateStr: string): string {
+function timeAgo(dateStr: string, tr: TrFn): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
   if (mins < 1) return "ตอนนี้";
-  if (mins < 60) return `${mins} นาที`;
+  if (mins < 60) return tr("{0} นาที", [mins]);
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs} ชม.`;
+  if (hrs < 24) return tr("{0} ชม.", [hrs]);
   const days = Math.floor(hrs / 24);
-  return `${days} วัน`;
+  return tr("{0} วัน", [days]);
 }
 
 export default function ChatDropdown({ onClose, onOpenChat }: ChatDropdownProps) {
@@ -142,7 +143,7 @@ export default function ChatDropdown({ onClose, onOpenChat }: ChatDropdownProps)
                   <div className="flex items-center justify-between">
                     <p className="text-[13px] font-semibold text-[var(--c-ink)] truncate">{other?.name || "ผู้ใช้"}</p>
                     <span className="text-[10px] text-[var(--c-muted)] flex-shrink-0 ml-2">
-                      {lastMsg ? timeAgo(lastMsg.createdAt) : ""}
+                      {lastMsg ? timeAgo(lastMsg.createdAt, tr) : ""}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5 mt-0.5">

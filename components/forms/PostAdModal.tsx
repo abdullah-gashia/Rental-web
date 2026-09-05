@@ -162,17 +162,17 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
       if (!selected.length) return;
 
       const available = MAX_IMAGES - totalImages;
-      if (available <= 0) { showToast(`⚠️ สูงสุด ${MAX_IMAGES} รูปภาพต่อสินค้า`); return; }
+      if (available <= 0) { showToast(tr("⚠️ สูงสุด {0} รูปภาพต่อสินค้า", [MAX_IMAGES])); return; }
 
       // No size gate: prepareImageForUpload() shrinks whatever the user picked
       const notImages = selected.filter((f) => !f.type.startsWith("image/"));
       if (notImages.length > 0) {
-        showToast(`⚠️ ${notImages.map((f) => f.name).join(", ")} ไม่ใช่ไฟล์รูปภาพ`);
+        showToast(tr("⚠️ {0} ไม่ใช่ไฟล์รูปภาพ", [notImages.map((f) => f.name).join(", ")]));
         return;
       }
 
       const files = selected.slice(0, available);
-      if (selected.length > available) showToast(`⚠️ เพิ่มได้อีก ${available} รูป (รับ ${files.length} รูปแรก)`);
+      if (selected.length > available) showToast(tr("⚠️ เพิ่มได้อีก {0} รูป (รับ {1} รูปแรก)", [available, files.length]));
 
       const entries: PendingImage[] = files.map((file) => ({
         localId:     `${Date.now()}-${Math.random().toString(36).slice(2)}`,
@@ -514,7 +514,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                     placeholder={t("post_price_placeholder")}
                     className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">{tr("฿")}</span>
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">{`฿`}</span>
                 </div>
               </div>
               <label className="flex items-center gap-2.5 cursor-pointer text-sm text-[var(--c-ink-2)] bg-[var(--c-subtle)] border border-[var(--c-line)] rounded-xl px-4 py-2.5 hover:bg-[var(--c-line-soft)] transition">
@@ -544,7 +544,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                       placeholder={rateType === "DAILY" ? tr("เช่น 80") : rateType === "MONTHLY" ? tr("เช่น 500") : tr("เช่น 6000")}
                       className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                     />
-                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">{tr("฿")}</span>
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">{`฿`}</span>
                   </div>
                   <div className="flex border border-[var(--c-line)] rounded-xl overflow-hidden flex-shrink-0">
                     {(["DAILY", "MONTHLY", "YEARLY"] as const).map((t) => (
@@ -589,7 +589,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                     placeholder={tr("เช่น 500")}
                     className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">{tr("฿")}</span>
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">{`฿`}</span>
                 </div>
                 <p className="text-[11px] text-[var(--c-faint)] mt-1">{tr("คืนให้ผู้เช่าหลังตรวจสอบสภาพสินค้า")}</p>
               </div>
@@ -605,7 +605,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                     placeholder={tr("0 = ไม่คิดค่าปรับ")}
                     className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">{tr("฿")}</span>
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">{`฿`}</span>
                 </div>
               </div>
 

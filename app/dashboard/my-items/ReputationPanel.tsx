@@ -30,8 +30,9 @@ export interface Reputation {
 }
 
 function Stars({ rating, className = "" }: { rating: number; className?: string }) {
+  const tr = useLocaleStore((s) => s.tr);
   return (
-    <span className={`inline-flex ${className}`} aria-label={`${rating} ดาว`}>
+    <span className={`inline-flex ${className}`} aria-label={tr("{0} ดาว", [rating])}>
       {[1, 2, 3, 4, 5].map((s) => (
         <span key={s} className={s <= rating ? "text-amber-400" : "text-[var(--c-line)]"}>★</span>
       ))}

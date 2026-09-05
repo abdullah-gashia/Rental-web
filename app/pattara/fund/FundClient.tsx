@@ -82,9 +82,9 @@ export default function FundClient({ summary, entries }: { summary: any; entries
       <div className="bw-panel !p-0 overflow-hidden">
         <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-[var(--bw-line)]">
           {[
-            { k: tr("รายรับจากค่าธรรมเนียม"), v: baht(summary.incomeTotal), sub: `ขาย ${baht(summary.incomeFromSales)} · เช่า ${baht(summary.incomeFromRentals)}` },
+            { k: tr("รายรับจากค่าธรรมเนียม"), v: baht(summary.incomeTotal), sub: tr("ขาย {0} · เช่า {1}", [baht(summary.incomeFromSales), baht(summary.incomeFromRentals)]) },
             { k: tr("เงินบริจาค / ปรับยอด"),  v: baht(summary.otherIn),     sub: tr("บันทึกด้วยมือ") },
-            { k: tr("ใช้ไปแล้ว"),             v: baht(summary.spentTotal),  sub: `ซื้ออุปกรณ์ ${summary.itemsBought} ชิ้น` },
+            { k: tr("ใช้ไปแล้ว"),             v: baht(summary.spentTotal),  sub: tr("ซื้ออุปกรณ์ {0} ชิ้น", [summary.itemsBought]) },
             { k: tr("คงเหลือ"),               v: baht(summary.balance),     sub: tr("พร้อมใช้ซื้อของ"), hi: true },
           ].map((s) => (
             <div key={s.k} className="px-5 py-4">
@@ -129,14 +129,14 @@ export default function FundClient({ summary, entries }: { summary: any; entries
                       <p className="truncate max-w-[300px]">{e.note}</p>
                       <p className="text-[11px] text-[var(--bw-muted)]">
                         บันทึกโดย {e.recordedBy ?? "—"}
-                        {e.items.length > 0 && ` · ผูกกับ ${e.items.length} ชิ้น`}
+                        {e.items.length > 0 && tr(" · ผูกกับ {0} ชิ้น", [e.items.length])}
                         {e.receiptUrl && (
                           <> · <a href={e.receiptUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--psu-blue)] hover:underline">{tr("ดูใบเสร็จ")}</a></>
                         )}
                       </p>
                     </td>
                     <td className="px-4 py-3 text-[12px] text-[var(--bw-ink-2)]">
-                      {SOURCE_LABEL[e.source] ?? e.source}
+                      {tr(SOURCE_LABEL[e.source] ?? e.source)}
                     </td>
                     <td className={`px-4 py-3 text-right bw-num font-semibold whitespace-nowrap ${
                       e.kind === "OUT" ? "text-[var(--c-danger)]" : "text-[var(--c-ok)]"
@@ -188,7 +188,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
                   <label className="bw-label block mb-1.5">{tr("ประเภท")}</label>
                   <select value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value as FundEntryInput["source"] })} className="bw-input">
                     {(form.kind === "OUT" ? ["PURCHASE", "MAINTENANCE", "ADJUSTMENT"] : ["DONATION", "ADJUSTMENT"]).map((s) => (
-                      <option key={s} value={s}>{SOURCE_LABEL[s]}</option>
+                      <option key={s} value={s}>{tr(SOURCE_LABEL[s])}</option>
                     ))}
                   </select>
                 </div>

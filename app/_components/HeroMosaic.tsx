@@ -111,7 +111,7 @@ export default function HeroMosaic({ items, onItemClick }: Props) {
               key={f.id}
               className={`hp-dot ${i === index ? "active" : ""}`}
               onClick={() => go(i)}
-              aria-label={`สไลด์ที่ ${i + 1}`}
+              aria-label={tr("สไลด์ที่ {0}", [i + 1])}
               aria-current={i === index}
             />
           ))}

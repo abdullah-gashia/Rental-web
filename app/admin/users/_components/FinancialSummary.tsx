@@ -35,25 +35,25 @@ export default function FinancialSummary({ data }: Props) {
         <FinRow
           label={tr("Escrow คงค้าง (ผู้ซื้อ)")}
           amount={data.buyerEscrowTotal}
-          badge={`${data.buyerEscrowCount} รายการ`}
+          badge={tr("{0} รายการ", [data.buyerEscrowCount])}
           badgeColor={data.buyerEscrowCount > 0 ? "yellow" : "gray"}
         />
         <FinRow
           label={tr("รอจ่ายออก (ผู้ขาย)")}
           amount={data.sellerPayoutTotal}
-          badge={`${data.sellerPayoutCount} รายการ`}
+          badge={tr("{0} รายการ", [data.sellerPayoutCount])}
           badgeColor={data.sellerPayoutCount > 0 ? "blue" : "gray"}
         />
         <FinRow
           label={tr("ยอดขายทั้งหมด")}
           amount={data.totalSalesAmount}
-          badge={`${data.totalSalesCount} ออเดอร์`}
+          badge={tr("{0} ออเดอร์", [data.totalSalesCount])}
           badgeColor="gray"
         />
         <FinRow
           label={tr("ยอดซื้อทั้งหมด")}
           amount={data.totalPurchaseAmount}
-          badge={`${data.totalPurchaseCount} ออเดอร์`}
+          badge={tr("{0} ออเดอร์", [data.totalPurchaseCount])}
           badgeColor="gray"
         />
       </div>

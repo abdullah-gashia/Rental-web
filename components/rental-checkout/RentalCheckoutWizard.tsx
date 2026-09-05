@@ -274,7 +274,7 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
               >
                 {isPending
                   ? tr("กำลังส่งคำขอ...")
-                  : `🔑 ยืนยันการเช่า ฿${pricing.totalPaid.toLocaleString()}`}
+                  : tr("🔑 ยืนยันการเช่า ฿{0}", [pricing.totalPaid.toLocaleString()])}
               </button>
             )}
           </div>

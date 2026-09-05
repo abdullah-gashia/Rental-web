@@ -56,14 +56,14 @@ export default function ReviewFormClient({
               onMouseEnter={() => setHovered(star)}
               onClick={() => setSelected(star)}
               className="text-[42px] leading-none transition-transform duration-100 hover:scale-110 focus:outline-none"
-              aria-label={`${star} ดาว`}
+              aria-label={tr("{0} ดาว", [star])}
             >
               <span className={star <= display ? "text-amber-400" : "text-[#e0ddd8]"}>★</span>
             </button>
           ))}
         </div>
         <p className={`text-sm font-semibold h-5 text-[var(--c-ink-2)] transition-opacity ${display ? "opacity-100" : "opacity-0"}`}>
-          {STAR_LABELS[display]}
+          {tr(STAR_LABELS[display])}
         </p>
       </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocaleStore } from "@/lib/stores/locale-store";
+import type { TrFn } from "@/lib/i18n/phrases";
 
 import { useState, useTransition } from "react";
 import { deleteInteraction, clearAllHistory, toggleTracking, getUserHistory } from "./actions";
@@ -32,16 +33,16 @@ interface Props {
   trackingEnabled: boolean;
 }
 
-function relativeTime(iso: string): string {
+function relativeTime(iso: string, tr: TrFn): string {
   const diff  = Date.now() - new Date(iso).getTime();
   const mins  = Math.floor(diff / 60_000);
   if (mins < 1)  return "เมื่อกี้";
-  if (mins < 60) return `${mins} นาทีที่แล้ว`;
+  if (mins < 60) return tr("{0} นาทีที่แล้ว", [mins]);
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24)  return `${hrs} ชม. ที่แล้ว`;
+  if (hrs < 24)  return tr("{0} ชม. ที่แล้ว", [hrs]);
   const days = Math.floor(hrs / 24);
   if (days === 1) return "เมื่อวาน";
-  return `${days} วันที่แล้ว`;
+  return tr("{0} วันที่แล้ว", [days]);
 }
 
 export default function HistoryClient({ initialHistory, trackingEnabled: initialTracking }: Props) {
@@ -220,7 +221,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-[var(--c-ink)] truncate">{ix.item.title}</p>
                       <p className="text-xs text-[var(--c-muted)]">
-                        {ix.item.categoryTh} · {relativeTime(ix.createdAt)}
+                        {ix.item.categoryTh} · {relativeTime(ix.createdAt, tr)}
                       </p>
                     </div>
 

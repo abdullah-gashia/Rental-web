@@ -32,7 +32,7 @@ interface LocaleState {
   setLocale: (locale: Locale) => void;
   toggleLocale: () => void;
   t: (key: DictionaryKey, params?: Record<string, string | number>) => string;
-  tr: (source: string) => string;
+  tr: (source: string, params?: readonly (string | number | null | undefined)[]) => string;
 }
 
 export const useLocaleStore = create<LocaleState>((set, get) => ({
@@ -51,5 +51,5 @@ export const useLocaleStore = create<LocaleState>((set, get) => ({
 
   t: (key, params) => translate(get().locale, key, params),
 
-  tr: (source) => translatePhrase(get().locale, source),
+  tr: (source, params) => translatePhrase(get().locale, source, params),
 }));

@@ -71,7 +71,7 @@ export default function SystemMetadataCard({ item }: Props) {
         {/* Divider */}
         <div className="border-t border-[var(--c-line-soft)] pt-3">
           <div className="grid grid-cols-2 gap-3">
-            <StatBox icon="👁" label={tr("เข้าชม")} value={`${formatNumber(item.viewCount)} ครั้ง`} />
+            <StatBox icon="👁" label={tr("เข้าชม")} value={tr("{0} ครั้ง", [formatNumber(item.viewCount)])} />
             <StatBox icon="❤️" label="Wishlist" value={`${formatNumber(item.wishlistCount)}`} />
             <StatBox icon="📊" label="Interactions" value={`${formatNumber(item.interactionCount)}`} />
             <StatBox

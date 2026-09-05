@@ -114,7 +114,7 @@ function PsuIdStep({ form, onChange, onNext }: {
       const MAX_YEAR         = CURRENT_YEAR_BE % 100;
       const yearPrefix       = parseInt(n.substring(0, 2), 10);
       if (yearPrefix < 56 || yearPrefix > MAX_YEAR) {
-        setErr(`รหัสนักศึกษาไม่ถูกต้อง (ต้องขึ้นต้นด้วย 56–${MAX_YEAR})`);
+        setErr(tr("รหัสนักศึกษาไม่ถูกต้อง (ต้องขึ้นต้นด้วย 56–{0})", [MAX_YEAR]));
         return false;
       }
     }

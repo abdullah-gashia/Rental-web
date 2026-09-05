@@ -76,7 +76,7 @@ export default function BorrowPromo({ items, raised, itemsTotal, timesLent }: Pr
                       {i.title}
                     </p>
                     <p className="text-[10.5px] text-[var(--hp-muted)] mt-1">
-                      {BORROW_CATEGORY_LABEL[i.category] ?? i.category}
+                      {tr(BORROW_CATEGORY_LABEL[i.category] ?? i.category)}
                     </p>
                   </div>
                 </a>

@@ -96,7 +96,7 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
                   key={img.id}
                   type="button"
                   onClick={() => setActive(img)}
-                  aria-label={`รูปที่ ${idx + 1}`}
+                  aria-label={tr("รูปที่ {0}", [idx + 1])}
                   className={`w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 transition-all duration-150 focus:outline-none ${
                     isActive
                       ? "ring-2 ring-[var(--c-accent)] ring-offset-1 opacity-100"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocaleStore } from "@/lib/stores/locale-store";
+import type { TrFn } from "@/lib/i18n/phrases";
 
 import { useState, useRef, useEffect } from "react";
 import { getNotifications, markNotificationsRead } from "@/lib/actions/notification-actions";
@@ -18,15 +19,15 @@ interface NotificationDropdownProps {
   onClose: () => void;
 }
 
-function timeAgo(dateStr: string): string {
+function timeAgo(dateStr: string, tr: TrFn): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
   if (mins < 1) return "ตอนนี้";
-  if (mins < 60) return `${mins} นาที`;
+  if (mins < 60) return tr("{0} นาที", [mins]);
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs} ชม.`;
+  if (hrs < 24) return tr("{0} ชม.", [hrs]);
   const days = Math.floor(hrs / 24);
-  return `${days} วัน`;
+  return tr("{0} วัน", [days]);
 }
 
 function typeIcon(type: string): string {
@@ -115,7 +116,7 @@ export default function NotificationDropdown({ onClose }: NotificationDropdownPr
                   {notif.message}
                 </p>
                 <p className={`text-[11px] mt-0.5 ${!notif.isRead ? "text-[var(--c-accent)] font-medium" : "text-[var(--c-muted)]"}`}>
-                  {timeAgo(notif.createdAt)}
+                  {timeAgo(notif.createdAt, tr)}
                 </p>
               </div>
               {!notif.isRead && (

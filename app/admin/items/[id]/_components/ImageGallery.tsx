@@ -67,7 +67,7 @@ export default function ImageGallery({ images }: Props) {
               >
                 <Image
                   src={img.url}
-                  alt={`รูปที่ ${idx + 1}`}
+                  alt={tr("รูปที่ {0}", [idx + 1])}
                   fill
                   className="object-contain"
                   sizes="64px"

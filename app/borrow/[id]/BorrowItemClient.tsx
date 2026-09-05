@@ -80,7 +80,7 @@ export default function BorrowItemClient({ item }: { item: any }) {
                       key={src}
                       onClick={() => setShot(i)}
                       className={`bw-thumb w-16 h-16 ${i === shot ? "!border-[var(--psu-blue)] ring-2 ring-[var(--psu-blue)]/20" : ""}`}
-                      aria-label={`รูปที่ ${i + 1}`}
+                      aria-label={tr("รูปที่ {0}", [i + 1])}
                     >
                       <img src={src} alt="" />
                     </button>
@@ -91,13 +91,13 @@ export default function BorrowItemClient({ item }: { item: any }) {
               <div>
                 <div className="flex items-start justify-between gap-3 flex-wrap">
                   <div>
-                    <p className="bw-label">{BORROW_CATEGORY_LABEL[item.category] ?? item.category}</p>
+                    <p className="bw-label">{tr(BORROW_CATEGORY_LABEL[item.category] ?? item.category)}</p>
                     <h1 className="text-[24px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] leading-tight mt-1">
                       {item.title}
                     </h1>
                   </div>
                   <span className={`bw-pill ${available ? "bw-pill-live" : "bw-pill-off"} !text-[12px] !px-3 !py-1.5`}>
-                    {ITEM_STATUS_LABEL[item.status] ?? item.status}
+                    {tr(ITEM_STATUS_LABEL[item.status] ?? item.status)}
                   </span>
                 </div>
 
@@ -112,12 +112,12 @@ export default function BorrowItemClient({ item }: { item: any }) {
                 <h2 className="bw-h">{tr("รายละเอียด")}</h2>
                 <dl className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-4">
                   {[
-                    [tr("สภาพ"),          CONDITION_LABEL[item.condition] ?? item.condition],
-                    [tr("ยืมได้นานสุด"),   `${item.maxLendingDays} วัน`],
-                    [tr("ยืมขั้นต่ำ"),     `${item.minLendingDays} วัน`],
-                    [tr("ต่ออายุ"),        item.isRenewable ? `ได้ ${item.maxRenewals} ครั้ง` : tr("ไม่ได้")],
+                    [tr("สภาพ"),          tr(CONDITION_LABEL[item.condition] ?? item.condition)],
+                    [tr("ยืมได้นานสุด"),   tr("{0} วัน", [item.maxLendingDays])],
+                    [tr("ยืมขั้นต่ำ"),     tr("{0} วัน", [item.minLendingDays])],
+                    [tr("ต่ออายุ"),        item.isRenewable ? tr("ได้ {0} ครั้ง", [item.maxRenewals]) : tr("ไม่ได้")],
                     [tr("รหัสครุภัณฑ์"),   item.assetTag ?? "—"],
-                    [tr("ให้ยืมมาแล้ว"),   `${item.totalLentCount} ครั้ง`],
+                    [tr("ให้ยืมมาแล้ว"),   tr("{0} ครั้ง", [item.totalLentCount])],
                   ].map(([k, v]) => (
                     <div key={k as string}>
                       <dt className="bw-label">{k}</dt>

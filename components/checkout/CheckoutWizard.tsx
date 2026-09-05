@@ -284,7 +284,7 @@ export default function CheckoutWizard({
                       กำลังดำเนินการ…
                     </>
                   ) : (
-                    `ยืนยันการซื้อ ฿${breakdown.totalAmount.toLocaleString()}`
+                    tr("ยืนยันการซื้อ ฿{0}", [breakdown.totalAmount.toLocaleString()])
                   )}
                 </button>
               )}

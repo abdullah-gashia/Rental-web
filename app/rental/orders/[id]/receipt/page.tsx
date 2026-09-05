@@ -49,7 +49,7 @@ export default async function RentalReceiptPage({ params, searchParams }: Props)
       `}</style>
 
       {/* Print action bar — hidden when printing */}
-      <PrintBar title={`${isReturn ? tr("ใบเสร็จคืนสินค้า") : tr("สัญญาเช่า")} — ${order.item.title}`} />
+      <PrintBar title={tr("{0} — {1}", [isReturn ? tr("ใบเสร็จคืนสินค้า") : tr("สัญญาเช่า"), order.item.title])} />
 
       {/* Document */}
       <div className="min-h-screen bg-[var(--c-surface)] pt-16 print:pt-0">
@@ -112,7 +112,7 @@ export default async function RentalReceiptPage({ params, searchParams }: Props)
               <tbody>
                 <DocRow label={tr("วันเริ่มเช่า")}   value={fmtDate(order.rentalStartDate)} />
                 <DocRow label={tr("วันสิ้นสุดเช่า")} value={fmtDate(order.rentalEndDate)} />
-                <DocRow label={tr("จำนวนวัน")}        value={`${order.rentalDays} วัน`} />
+                <DocRow label={tr("จำนวนวัน")}        value={tr("{0} วัน", [order.rentalDays])} />
                 {order.actualPickupAt && (
                   <DocRow label={tr("รับของจริง")} value={fmtDate(order.actualPickupAt)} />
                 )}
@@ -129,7 +129,7 @@ export default async function RentalReceiptPage({ params, searchParams }: Props)
             <div className="border border-[var(--c-line)] rounded-xl overflow-hidden">
               <table className="w-full text-sm">
                 <tbody>
-                  <FinRow label={`ค่าเช่า (฿${order.dailyRate}/วัน × ${order.rentalDays} วัน)`}
+                  <FinRow label={tr("ค่าเช่า (฿{0}/วัน × {1} วัน)", [order.dailyRate, order.rentalDays])}
                            value={`฿${order.rentalFee.toLocaleString()}`} />
                   <FinRow label={tr("ค่าธรรมเนียมแพลตฟอร์ม (5%)")}
                            value={`฿${order.platformFee.toLocaleString()}`} />
@@ -168,7 +168,7 @@ export default async function RentalReceiptPage({ params, searchParams }: Props)
               <h2 className="text-xs font-bold text-[var(--c-faint)] uppercase tracking-widest mb-3">{tr("สภาพสินค้าเมื่อคืน")}</h2>
               <div className="bg-[var(--c-subtle)] rounded-xl p-4 text-sm">
                 <p className="font-semibold text-[var(--c-ink-1)]">
-                  {STATUS_LABEL[order.returnCondition ?? "SAME"] ?? order.returnCondition ?? "—"}
+                  {tr(STATUS_LABEL[order.returnCondition ?? "SAME"] ?? order.returnCondition) ?? "—"}
                 </p>
                 {order.returnConditionNote && (
                   <p className="text-[var(--c-ink-3)] mt-1 text-xs">หมายเหตุ: {order.returnConditionNote}</p>

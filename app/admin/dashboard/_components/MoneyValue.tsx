@@ -57,7 +57,7 @@ export default function MoneyValue({ amount }: { amount: number }) {
     <button
       type="button"
       onClick={() => setShowExact((v) => !v)}
-      title={showExact ? tr("ย่อตัวเลข") : `ยอดจริง: ${full}`}
+      title={showExact ? tr("ย่อตัวเลข") : tr("ยอดจริง: {0}", [full])}
       className="group inline-flex items-baseline gap-1.5 text-left hover:text-[var(--c-accent)] transition-colors"
     >
       <span className={`tabular-nums ${showExact ? "text-lg break-all" : ""}`}>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocaleStore } from "@/lib/stores/locale-store";
+import type { TrFn } from "@/lib/i18n/phrases";
 
 interface Order {
   id:        string;
@@ -30,15 +31,15 @@ function formatBaht(v: number): string {
   }).format(v);
 }
 
-function relativeTime(iso: string): string {
+function relativeTime(iso: string, tr: TrFn): string {
   const diff = Date.now() - new Date(iso).getTime();
   const mins  = Math.floor(diff / 60_000);
   if (mins < 1)   return "เมื่อกี้";
-  if (mins < 60)  return `${mins} นาทีที่แล้ว`;
+  if (mins < 60)  return tr("{0} นาทีที่แล้ว", [mins]);
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24)   return `${hrs} ชม. ที่แล้ว`;
+  if (hrs < 24)   return tr("{0} ชม. ที่แล้ว", [hrs]);
   const days = Math.floor(hrs / 24);
-  if (days < 30)  return `${days} วันที่แล้ว`;
+  if (days < 30)  return tr("{0} วันที่แล้ว", [days]);
   return new Intl.DateTimeFormat("th-TH", { dateStyle: "medium" }).format(new Date(iso));
 }
 
@@ -102,7 +103,7 @@ export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
                   </td>
 
                   <td className="px-5 py-3.5 text-right text-xs text-[var(--c-muted)] whitespace-nowrap">
-                    {relativeTime(order.createdAt)}
+                    {relativeTime(order.createdAt, tr)}
                   </td>
                 </tr>
               );

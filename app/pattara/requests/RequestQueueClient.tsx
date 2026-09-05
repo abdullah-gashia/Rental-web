@@ -45,7 +45,7 @@ export default function RequestQueueClient({
         <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)]">{tr("คำขอยืม")}</h1>
         <p className="text-[13px] text-[var(--bw-muted)] mt-1">
           {orders.length > 0
-            ? `${orders.length} คำขอรอการตัดสินใจ · ถ้าไม่ตอบภายใน 7 วัน ระบบจะยกเลิกให้เอง`
+            ? tr("{0} คำขอรอการตัดสินใจ · ถ้าไม่ตอบภายใน 7 วัน ระบบจะยกเลิกให้เอง", [orders.length])
             : tr("ไม่มีคำขอค้างอยู่")}
         </p>
       </header>
@@ -79,7 +79,7 @@ export default function RequestQueueClient({
                       <div className="min-w-0">
                         <p className="text-[14.5px] font-semibold truncate">{o.item.title}</p>
                         <p className="text-[11.5px] text-[var(--bw-muted)] mt-0.5">
-                          {BORROW_CATEGORY_LABEL[o.item.category] ?? o.item.category} · ขอยืม {o.requestedDays} วัน
+                          {tr(BORROW_CATEGORY_LABEL[o.item.category] ?? o.item.category)} · ขอยืม {o.requestedDays} วัน
                         </p>
                       </div>
                       <span className={`bw-pill ${waited >= 5 ? "bw-pill-late" : "bw-pill-wait"}`}>

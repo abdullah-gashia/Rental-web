@@ -39,7 +39,7 @@ export default async function AdminFundPage() {
           { label: tr("รายรับสะสม"), value: <MoneyValue amount={summary.incomeTotal + summary.otherIn} />, color: "text-[var(--c-accent)]" },
           { label: tr("ใช้ไปแล้ว"),  value: <MoneyValue amount={summary.spentTotal} />,                    color: "text-[var(--c-danger)]" },
           { label: tr("คงเหลือ"),    value: <MoneyValue amount={summary.balance} />,                       color: "text-[var(--c-ok)]" },
-          { label: tr("อุปกรณ์ในคลัง"), value: `${itemCount} ชิ้น`,                                        color: "text-[var(--c-ink)]" },
+          { label: tr("อุปกรณ์ในคลัง"), value: tr("{0} ชิ้น", [itemCount]),                                        color: "text-[var(--c-ink)]" },
         ].map((s) => (
           <div key={s.label} className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-4">
             <p className="text-xs text-[var(--c-muted)] mb-1">{s.label}</p>
@@ -107,7 +107,7 @@ export default async function AdminFundPage() {
                         </>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-xs text-[var(--c-ink-2)]">{SOURCE_LABEL[e.source] ?? e.source}</td>
+                    <td className="px-4 py-3 text-xs text-[var(--c-ink-2)]">{tr(SOURCE_LABEL[e.source] ?? e.source)}</td>
                     <td className="px-4 py-3 text-xs text-[var(--c-ink-3)]">{e.recordedBy ?? "—"}</td>
                     <td className={`px-4 py-3 text-right font-semibold whitespace-nowrap ${
                       e.kind === "OUT" ? "text-[var(--c-danger)]" : "text-[var(--c-ok)]"

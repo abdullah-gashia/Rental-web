@@ -46,7 +46,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
     OTHER:   "อื่นๆ",
   };
   const methodLabel = data.shippingMethod
-    ? (METHOD_LABELS[data.shippingMethod] ?? data.shippingMethod)
+    ? (tr(METHOD_LABELS[data.shippingMethod] ?? data.shippingMethod))
     : null;
 
   function handlePrint() {
@@ -90,48 +90,48 @@ export default function ReceiptModal({ data, onClose }: Props) {
 <body>
   <div class="header">
     <div class="logo">PSU<span>.</span>STORE</div>
-    <div class="badge">{tr("✅ ชำระเงินแล้ว (PAID via Escrow)")}</div>
-    <div class="title">{tr("ใบเสร็จรับเงิน")}</div>
+    <div class="badge">${tr("✅ ชำระเงินแล้ว (PAID via Escrow)")}</div>
+    <div class="title">${tr("ใบเสร็จรับเงิน")}</div>
     <div class="ref">หมายเลขอ้างอิง: #${shortId}</div>
   </div>
 
   <div class="section">
-    <div class="section-title">{tr("รายละเอียดธุรกรรม")}</div>
-    <div class="row"><span class="label">{tr("สินค้า")}</span><span class="value">${data.itemTitle}</span></div>
+    <div class="section-title">${tr("รายละเอียดธุรกรรม")}</div>
+    <div class="row"><span class="label">${tr("สินค้า")}</span><span class="value">${data.itemTitle}</span></div>
     <div class="row"><span class="label">ผู้ซื้อ</span><span class="value">${data.buyerName}</span></div>
     <div class="row"><span class="label">ผู้ขาย</span><span class="value">${data.sellerName}</span></div>
-    <div class="row"><span class="label">{tr("วันที่เสร็จสิ้น")}</span><span class="value">${completedDate}</span></div>
-    <div class="row"><span class="label">{tr("สถานะ")}</span><span class="value">✅ PAID via Escrow</span></div>
+    <div class="row"><span class="label">${tr("วันที่เสร็จสิ้น")}</span><span class="value">${completedDate}</span></div>
+    <div class="row"><span class="label">${tr("สถานะ")}</span><span class="value">✅ PAID via Escrow</span></div>
   </div>
 
   <div class="amount">฿${data.amount.toLocaleString("th-TH")}</div>
 
   ${methodLabel ? `
   <div class="section">
-    <div class="section-title">{tr("ข้อมูลการจัดส่ง")}</div>
-    <div class="row"><span class="label">{tr("วิธีจัดส่ง")}</span><span class="value">${methodLabel}</span></div>
-    ${data.trackingNumber ? `<div class="row"><span class="label">{tr("หมายเลขพัสดุ")}</span><span class="value">${data.trackingNumber}</span></div>` : ""}
-    ${data.shippingProofImage ? `<div class="proof"><img src="${data.shippingProofImage}" alt="หลักฐานจัดส่ง"/></div>` : ""}
+    <div class="section-title">${tr("ข้อมูลการจัดส่ง")}</div>
+    <div class="row"><span class="label">${tr("วิธีจัดส่ง")}</span><span class="value">${methodLabel}</span></div>
+    ${data.trackingNumber ? `<div class="row"><span class="label">${tr("หมายเลขพัสดุ")}</span><span class="value">${data.trackingNumber}</span></div>` : ""}
+    ${data.shippingProofImage ? tr("<div class=\"proof\"><img src=\"{0}\" alt=\"หลักฐานจัดส่ง\"/></div>", [data.shippingProofImage]) : ""}
   </div>` : ""}
 
   ${data.deliveryMethod === "MEETUP" && (data.handoverSignature || data.handoverPhotoUrl) ? `
   <div class="evidence">
-    <div class="evidence-title">{tr("🤝 หลักฐานการส่งมอบสินค้า (Proof of Delivery)")}</div>
+    <div class="evidence-title">${tr("🤝 หลักฐานการส่งมอบสินค้า (Proof of Delivery)")}</div>
     ${data.handoverSignature ? `
-    <div class="evidence-label">{tr("ลายมือชื่อผู้รับสินค้า")}</div>
+    <div class="evidence-label">${tr("ลายมือชื่อผู้รับสินค้า")}</div>
     <div class="sig-box">
-      <img src="${data.handoverSignature}" alt={tr("ลายมือชื่อผู้รับสินค้า")} />
+      <img src="${data.handoverSignature}" alt="${tr("ลายมือชื่อผู้รับสินค้า")}" />
     </div>` : ""}
     ${data.handoverPhotoUrl ? `
-    <div class="evidence-label">{tr("ภาพถ่ายหลักฐานการส่งมอบ")}</div>
+    <div class="evidence-label">${tr("ภาพถ่ายหลักฐานการส่งมอบ")}</div>
     <div class="photo-box">
-      <img src="${data.handoverPhotoUrl}" alt={tr("ภาพถ่ายหลักฐานการส่งมอบ")} />
+      <img src="${data.handoverPhotoUrl}" alt="${tr("ภาพถ่ายหลักฐานการส่งมอบ")}" />
     </div>
-    ${data.handoverConfirmedAt ? `<div class="timestamp">บันทึกเมื่อ: ${new Date(data.handoverConfirmedAt).toLocaleString("th-TH", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}</div>` : ""}` : ""}
+    ${data.handoverConfirmedAt ? tr("<div class=\"timestamp\">บันทึกเมื่อ: {0}</div>", [new Date(data.handoverConfirmedAt).toLocaleString("th-TH", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })]) : ""}` : ""}
   </div>` : ""}
 
   <div class="footer">
-    <p>{tr("เอกสารนี้ออกโดยระบบ PSU.STORE อัตโนมัติ • ไม่ต้องมีลายเซ็น")}</p>
+    <p>${tr("เอกสารนี้ออกโดยระบบ PSU.STORE อัตโนมัติ • ไม่ต้องมีลายเซ็น")}</p>
     <p>Order ID: ${data.orderId}</p>
   </div>
 </body>

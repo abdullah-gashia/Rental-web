@@ -140,14 +140,14 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
         <a href={backHref} className="text-[12.5px] text-[var(--bw-muted)] hover:text-[var(--psu-navy)] transition">{tr("← กลับ")}</a>
         <div className="flex items-start justify-between gap-3 flex-wrap mt-2">
           <div>
-            <p className="bw-label">{BORROW_CATEGORY_LABEL[order.item.category] ?? order.item.category}</p>
+            <p className="bw-label">{tr(BORROW_CATEGORY_LABEL[order.item.category] ?? order.item.category)}</p>
             <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] leading-tight mt-1">
               {order.item.title}
             </h1>
             <p className="text-[11.5px] text-[var(--bw-muted)] mt-1 font-mono">{order.refCode}</p>
           </div>
           <span className={`bw-pill ${PILL[st] ?? "bw-pill-off"} !text-[12.5px] !px-3.5 !py-2`}>
-            {BORROW_STATUS_LABEL[st] ?? st}
+            {tr(BORROW_STATUS_LABEL[st] ?? st)}
           </span>
         </div>
       </div>
@@ -175,7 +175,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
             <p className="text-[15px] font-semibold mt-0.5">{fmtDate(order.dueDate)}</p>
           </div>
           <p className={`text-[14px] font-semibold ${left !== null && left < 0 ? "text-[var(--c-danger)]" : "text-[var(--psu-blue)]"}`}>
-            {left === null ? "" : left < 0 ? `เลยกำหนดมา ${Math.abs(left)} วัน` : left === 0 ? "ครบกำหนดวันนี้" : `เหลืออีก ${left} วัน`}
+            {left === null ? "" : left < 0 ? tr("เลยกำหนดมา {0} วัน", [Math.abs(left)]) : left === 0 ? "ครบกำหนดวันนี้" : tr("เหลืออีก {0} วัน", [left])}
           </p>
         </div>
       )}
@@ -215,7 +215,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
         {/* ── Details ────────────────────────────────────────────────── */}
         <div className="bw-panel">
           <h2 className="bw-h">{tr("รายละเอียด")}</h2>
-          <Row k={tr("ระยะเวลาที่ขอ")} v={`${order.requestedDays} วัน`} />
+          <Row k={tr("ระยะเวลาที่ขอ")} v={tr("{0} วัน", [order.requestedDays])} />
           <Row k={tr("ส่งคำขอเมื่อ")}   v={fmtDT(order.requestedAt)} />
           <Row k={tr("อนุมัติเมื่อ")}    v={fmtDT(order.approvedAt)} />
           {order.approvedByName && <Row k={tr("อนุมัติโดย")} v={order.approvedByName} />}
@@ -224,9 +224,9 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
           <Row k={tr("นัดคืน")}        v={fmtDT(order.scheduledReturnAt)} />
           <Row k={tr("คืนจริง")}        v={fmtDT(order.actualReturnAt)} />
           <Row k={tr("จุดนัด")}         v={order.meetupLocation ?? "—"} />
-          <Row k={tr("ต่ออายุแล้ว")}    v={`${order.renewalCount} ครั้ง`} />
+          <Row k={tr("ต่ออายุแล้ว")}    v={tr("{0} ครั้ง", [order.renewalCount])} />
           {order.returnCondition && (
-            <Row k={tr("สภาพตอนคืน")} v={CONDITION_LABEL[order.returnCondition] ?? order.returnCondition} />
+            <Row k={tr("สภาพตอนคืน")} v={tr(CONDITION_LABEL[order.returnCondition] ?? order.returnCondition)} />
           )}
           {order.cancelReason && <Row k={tr("เหตุผล")} v={order.cancelReason} />}
         </div>
@@ -514,7 +514,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className={`bw-pill ${PILL[h.status] ?? "bw-pill-off"}`}>
-                      {BORROW_STATUS_LABEL[h.status] ?? h.status}
+                      {tr(BORROW_STATUS_LABEL[h.status] ?? h.status)}
                     </span>
                     <span className="text-[11px] text-[var(--bw-muted)]">{fmtDT(h.changedAt)}</span>
                     {h.by && <span className="text-[11px] text-[var(--bw-muted)]">· {h.by}</span>}

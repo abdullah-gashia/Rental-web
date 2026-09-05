@@ -115,7 +115,8 @@ export default async function RentalDashboardPage() {
   );
 }
 
-function OrderRow({ order, counterpartyLabel, counterparty }: { order: any; counterpartyLabel: string; counterparty: any }) {
+async function OrderRow({ order, counterpartyLabel, counterparty }: { order: any; counterpartyLabel: string; counterparty: any }) {
+  const tr = await getTr();
   const img    = order.item.images?.[0]?.url;
   const daysLeft = order.status === "ACTIVE" && order.rentalEndDate
     ? Math.ceil((new Date(order.rentalEndDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
@@ -146,16 +147,16 @@ function OrderRow({ order, counterpartyLabel, counterparty }: { order: any; coun
           <p className={`text-xs mt-0.5 font-medium ${
             daysLeft < 0 ? "text-[var(--c-danger)]" : daysLeft <= 1 ? "text-[var(--c-warn)]" : "text-[var(--c-ink-3)]"
           }`}>
-            {daysLeft < 0 ? `⚠️ เกิน ${Math.abs(daysLeft)} วัน` :
+            {daysLeft < 0 ? tr("⚠️ เกิน {0} วัน", [Math.abs(daysLeft)]) :
              daysLeft === 0 ? "⏰ ครบวันนี้!" :
-             `📅 คืนใน ${daysLeft} วัน`}
+             tr("📅 คืนใน {0} วัน", [daysLeft])}
           </p>
         )}
       </div>
       <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border flex-shrink-0 ${
         STATUS_COLOR[order.status] ?? "bg-[var(--c-subtle)] text-[var(--c-ink-3)] border-[var(--c-line)]"
       }`}>
-        {STATUS_LABEL[order.status] ?? order.status}
+        {tr(STATUS_LABEL[order.status] ?? order.status)}
       </span>
     </Link>
   );

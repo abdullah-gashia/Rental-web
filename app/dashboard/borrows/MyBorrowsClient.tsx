@@ -93,10 +93,10 @@ export default function MyBorrowsClient({
             <div className={`bw-panel mb-5 !py-3.5 ${soonest < 0 ? "!border-[var(--c-danger-line)] !bg-[var(--c-danger-soft)]" : "!border-[var(--c-warn-line)] !bg-[var(--c-warn-soft)]"}`}>
               <p className={`text-[13px] ${soonest < 0 ? "text-[var(--c-danger)]" : "text-[var(--c-warn)]"}`}>
                 {soonest < 0
-                  ? `⚠️ คุณมีของเลยกำหนดคืนมา ${Math.abs(soonest)} วันแล้ว`
+                  ? tr("⚠️ คุณมีของเลยกำหนดคืนมา {0} วันแล้ว", [Math.abs(soonest)])
                   : soonest === 0
                   ? tr("⏰ มีของครบกำหนดคืนวันนี้")
-                  : `⏰ มีของครบกำหนดคืนในอีก ${soonest} วัน`}
+                  : tr("⏰ มีของครบกำหนดคืนในอีก {0} วัน", [soonest])}
               </p>
             </div>
           )}
@@ -148,11 +148,11 @@ export default function MyBorrowsClient({
                           {o.item.title}
                         </p>
                         <span className={`bw-pill ${PILL[o.status] ?? "bw-pill-off"}`}>
-                          {BORROW_STATUS_LABEL[o.status] ?? o.status}
+                          {tr(BORROW_STATUS_LABEL[o.status] ?? o.status)}
                         </span>
                       </div>
                       <p className="text-[11.5px] text-[var(--bw-muted)] mt-1">
-                        {BORROW_CATEGORY_LABEL[o.item.category] ?? o.item.category}
+                        {tr(BORROW_CATEGORY_LABEL[o.item.category] ?? o.item.category)}
                         {" · "}ขอยืม {o.requestedDays} วัน
                         {o.office?.name ? ` · ${o.office.name}` : ""}
                       </p>
@@ -166,7 +166,7 @@ export default function MyBorrowsClient({
                             {new Date(o.dueDate).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}
                           </p>
                           <p className={`text-[11px] ${left !== null && left < 0 ? "text-[var(--c-danger)]" : "text-[var(--bw-muted)]"}`}>
-                            {left === null ? "" : left < 0 ? `เลย ${Math.abs(left)} วัน` : left === 0 ? "วันนี้" : `อีก ${left} วัน`}
+                            {left === null ? "" : left < 0 ? tr("เลย {0} วัน", [Math.abs(left)]) : left === 0 ? "วันนี้" : tr("อีก {0} วัน", [left])}
                           </p>
                         </>
                       ) : (
