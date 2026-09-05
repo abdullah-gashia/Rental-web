@@ -426,6 +426,8 @@
  "ค่าที่ปรับต้องไม่เป็นศูนย์": "The adjustment can't be zero",
  "ค่าธรรมเนียม": "Fee",
  "ค่าธรรมเนียม (5%)": "Fee (5%)",
+ "ค่าธรรมเนียม {0} ที่เก็บได้จากการซื้อขายในเว็บนี้ กลายเป็นอุปกรณ์ให้ยืมแล้ว {1} ชิ้น": "{0} in fees collected here has become {1} pieces of equipment to borrow",
+ "ค่าธรรมเนียม {0} ที่เก็บได้จากการซื้อขายในเว็บนี้ กลายเป็นอุปกรณ์ให้ยืมแล้ว {1} ชิ้น · ให้ยืมไปแล้ว {2} ครั้ง": "{0} in fees collected here has become {1} pieces of equipment to borrow · lent out {2} times",
  "ค่าธรรมเนียมการซื้อขาย": "Sales fees",
  "ค่าธรรมเนียมการเช่า": "Rental fees",
  "ค่าธรรมเนียมที่เก็บได้จากคำสั่งซื้อที่เสร็จสิ้น": "Fees collected on completed orders",

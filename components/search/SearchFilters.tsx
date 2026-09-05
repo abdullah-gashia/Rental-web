@@ -121,7 +121,7 @@ export default function SearchFilters({
           aria-label={tr("เรียงลำดับ")}
         >
           {Object.entries(SORT_LABELS).map(([k, v]) => (
-            <option key={k} value={k}>{v}</option>
+            <option key={k} value={k}>{tr(v)}</option>
           ))}
         </select>
       </div>
@@ -135,7 +135,7 @@ export default function SearchFilters({
       >
         <option value="">{tr("สภาพทั้งหมด")}</option>
         {Object.entries(CONDITION_LABELS).map(([k, v]) => (
-          <option key={k} value={k}>{v}</option>
+          <option key={k} value={k}>{tr(v)}</option>
         ))}
       </select>
 

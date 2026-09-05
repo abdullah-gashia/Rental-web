@@ -269,7 +269,7 @@ export default function OfficeItemsClient({
                 <div>
                   <label className="bw-label block mb-1.5">{tr("สภาพ")}</label>
                   <select value={form.condition} onChange={(e) => setForm({ ...form, condition: e.target.value as ItemInput["condition"] })} className="bw-input">
-                    {Object.entries(CONDITION_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                    {Object.entries(CONDITION_LABEL).map(([k, v]) => <option key={k} value={k}>{tr(v)}</option>)}
                   </select>
                 </div>
                 <div>

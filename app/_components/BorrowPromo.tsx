@@ -4,6 +4,24 @@ import { useLocaleStore } from "@/lib/stores/locale-store";
 
 import { BORROW_CATEGORY_LABEL } from "@/lib/borrow-config";
 
+/**
+ * Put the numbers back into a translated sentence, still in bold.
+ *
+ * The sentence is translated whole, because English does not put these three
+ * numbers where Thai puts them; the placeholders say where each one landed.
+ */
+function slot(template: string, values: string[]) {
+  return template.split(/(\{[0-9]\})/).map((piece, i) => {
+    const m = /^\{([0-9])\}$/.exec(piece);
+    if (!m) return piece;
+    return (
+      <strong key={i} className="text-[var(--hp-ink)] hp-num">
+        {values[Number(m[1])]}
+      </strong>
+    );
+  });
+}
+
 export interface BorrowPromoItem {
   id: string;
   title: string;
@@ -38,18 +56,19 @@ export default function BorrowPromo({ items, raised, itemsTotal, timesLent }: Pr
         <div className="px-5 pt-5 pb-4 flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-[var(--psu-blue)]">
-              งานภัทร
+              {tr("งานภัทร")}
             </p>
             <h2 className="text-[19px] font-semibold tracking-[-0.015em] text-[var(--psu-navy)] mt-1.5">{tr("ยืมอุปกรณ์ฟรี ไม่ต้องมัดจำ")}</h2>
             <p className="text-[13px] text-[var(--hp-muted)] mt-1.5 max-w-[54ch] leading-[1.85]">
-              ค่าธรรมเนียม{" "}
-              <strong className="text-[var(--hp-ink)] hp-num">
-                ฿{raised.toLocaleString("th-TH", { maximumFractionDigits: 2 })}
-              </strong>{" "}
-              ที่เก็บได้จากการซื้อขายในเว็บนี้ กลายเป็นอุปกรณ์ให้ยืมแล้ว{" "}
-              <strong className="text-[var(--hp-ink)] hp-num">{itemsTotal}</strong> ชิ้น
-              {timesLent > 0 && (
-                <>{tr("· ให้ยืมไปแล้ว")}<strong className="text-[var(--hp-ink)] hp-num">{timesLent}</strong>{tr("ครั้ง")}</>
+              {slot(
+                timesLent > 0
+                  ? tr("ค่าธรรมเนียม {0} ที่เก็บได้จากการซื้อขายในเว็บนี้ กลายเป็นอุปกรณ์ให้ยืมแล้ว {1} ชิ้น · ให้ยืมไปแล้ว {2} ครั้ง")
+                  : tr("ค่าธรรมเนียม {0} ที่เก็บได้จากการซื้อขายในเว็บนี้ กลายเป็นอุปกรณ์ให้ยืมแล้ว {1} ชิ้น"),
+                [
+                  `฿${raised.toLocaleString("th-TH", { maximumFractionDigits: 2 })}`,
+                  String(itemsTotal),
+                  String(timesLent),
+                ],
               )}
             </p>
           </div>

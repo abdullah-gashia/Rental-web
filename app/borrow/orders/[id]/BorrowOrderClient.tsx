@@ -430,7 +430,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
                   <label className="bw-label block mb-1.5">{tr("สภาพที่ได้รับคืน")}</label>
                   <select value={condition} onChange={(e) => setCond(e.target.value)} className="bw-input">
                     {Object.entries(CONDITION_LABEL).map(([k, v]) => (
-                      <option key={k} value={k}>{v}</option>
+                      <option key={k} value={k}>{tr(v)}</option>
                     ))}
                   </select>
                   <p className="text-[11.5px] text-[var(--bw-muted)] mt-1 leading-[1.7]">{tr("ถ้าเลือก “พอใช้” หรือ “ต้องซ่อม” ระบบจะบันทึกว่ามีความเสียหาย แต่ไม่มีการเรียกเก็บเงินใด ๆ")}</p>
