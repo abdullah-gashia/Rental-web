@@ -1,5 +1,6 @@
 // Server Component — no "use client" needed; purely static content
 import type { Metadata } from "next";
+import { getTr } from "@/lib/i18n/server";
 
 export const metadata: Metadata = {
   title: "ศูนย์ช่วยเหลือ | PSU.STORE",
@@ -43,7 +44,9 @@ const FAQS: { q: string; a: string; icon: string }[] = [
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function SupportPage() {
+export default async function SupportPage() {
+  const tr = await getTr();
+
   return (
     <div className="min-h-screen bg-[var(--c-canvas)]">
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 space-y-10">
@@ -55,33 +58,24 @@ export default function SupportPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h1 className="text-3xl font-extrabold text-[var(--c-ink)] tracking-tight">
-            ศูนย์ช่วยเหลือ
-            <span className="text-[var(--c-accent)]"> Help &amp; Support</span>
+          <h1 className="text-3xl font-extrabold text-[var(--c-ink)] tracking-tight">{tr("ศูนย์ช่วยเหลือ")}<span className="text-[var(--c-accent)]"> Help &amp; Support</span>
           </h1>
-          <p className="text-[var(--c-muted)] text-base max-w-lg mx-auto leading-relaxed">
-            มีอะไรให้เราช่วยเหลือหรือไม่? ค้นหาคำตอบจากคำถามที่พบบ่อย หรือติดต่อทีมงานได้โดยตรง
-          </p>
+          <p className="text-[var(--c-muted)] text-base max-w-lg mx-auto leading-relaxed">{tr("มีอะไรให้เราช่วยเหลือหรือไม่? ค้นหาคำตอบจากคำถามที่พบบ่อย หรือติดต่อทีมงานได้โดยตรง")}</p>
         </div>
 
         {/* ── Escrow trust banner ───────────────────────────────────────────── */}
         <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-2xl px-6 py-5 flex gap-4 items-start">
           <div className="text-2xl leading-none mt-0.5">🔒</div>
           <div>
-            <p className="text-sm font-bold text-amber-800 mb-1">ระบบ Escrow คุ้มครองทุกธุรกรรม</p>
-            <p className="text-sm text-[var(--c-warn)] leading-relaxed">
-              PSU.STORE ใช้ระบบ Escrow เพื่อให้มั่นใจว่าทั้งผู้ซื้อและผู้ขายได้รับความเป็นธรรม
-              เงินจะถูกเก็บไว้อย่างปลอดภัยจนกว่าการส่งมอบสินค้าจะสำเร็จ
-            </p>
+            <p className="text-sm font-bold text-amber-800 mb-1">{tr("ระบบ Escrow คุ้มครองทุกธุรกรรม")}</p>
+            <p className="text-sm text-[var(--c-warn)] leading-relaxed">{tr("PSU.STORE ใช้ระบบ Escrow เพื่อให้มั่นใจว่าทั้งผู้ซื้อและผู้ขายได้รับความเป็นธรรม เงินจะถูกเก็บไว้อย่างปลอดภัยจนกว่าการส่งมอบสินค้าจะสำเร็จ")}</p>
           </div>
         </div>
 
         {/* ── FAQ Section ─────────────────────────────────────────────────────── */}
         <section>
           <h2 className="text-lg font-extrabold text-[var(--c-ink)] mb-4 flex items-center gap-2">
-            <span className="w-1 h-5 rounded-full bg-[var(--c-accent)] inline-block" />
-            คำถามที่พบบ่อย (FAQ)
-          </h2>
+            <span className="w-1 h-5 rounded-full bg-[var(--c-accent)] inline-block" />{tr("คำถามที่พบบ่อย (FAQ)")}</h2>
 
           <div className="space-y-2">
             {FAQS.map(({ q, a, icon }) => (
@@ -94,7 +88,7 @@ export default function SupportPage() {
                   <span className="text-xl flex-shrink-0 w-8 text-center">{icon}</span>
 
                   {/* Question text */}
-                  <span className="flex-1 text-sm font-semibold text-[var(--c-ink)]">{q}</span>
+                  <span className="flex-1 text-sm font-semibold text-[var(--c-ink)]">{tr(q)}</span>
 
                   {/* Chevron — rotates when open */}
                   <svg
@@ -109,7 +103,7 @@ export default function SupportPage() {
 
                 {/* Answer */}
                 <div className="px-5 pb-5 pt-1 border-t border-[var(--c-line-soft)]">
-                  <p className="text-sm text-[var(--c-ink-2)] leading-relaxed pl-11">{a}</p>
+                  <p className="text-sm text-[var(--c-ink-2)] leading-relaxed pl-11">{tr(a)}</p>
                 </div>
               </details>
             ))}
@@ -119,16 +113,14 @@ export default function SupportPage() {
         {/* ── Escrow How-It-Works visual ────────────────────────────────────── */}
         <section>
           <h2 className="text-lg font-extrabold text-[var(--c-ink)] mb-4 flex items-center gap-2">
-            <span className="w-1 h-5 rounded-full bg-[var(--c-accent)] inline-block" />
-            ขั้นตอนระบบ Escrow
-          </h2>
+            <span className="w-1 h-5 rounded-full bg-[var(--c-accent)] inline-block" />{tr("ขั้นตอนระบบ Escrow")}</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
             {[
-              { step: "1", icon: "🛒", label: "ผู้ซื้อสั่งซื้อ", sub: "เงินถูกล็อคไว้ใน Escrow" },
-              { step: "2", icon: "📦", label: "ผู้ขายจัดส่ง", sub: "อัปโหลดหลักฐานการส่ง" },
-              { step: "3", icon: "✅", label: "ผู้ซื้อยืนยัน", sub: "กดรับสินค้าหรือเซ็นชื่อ" },
-              { step: "4", icon: "💸", label: "โอนเงินให้ผู้ขาย", sub: "Escrow ปลดล็อคเงินทันที" },
+              { step: "1", icon: "🛒", label: tr("ผู้ซื้อสั่งซื้อ"), sub: tr("เงินถูกล็อคไว้ใน Escrow") },
+              { step: "2", icon: "📦", label: tr("ผู้ขายจัดส่ง"), sub: tr("อัปโหลดหลักฐานการส่ง") },
+              { step: "3", icon: "✅", label: tr("ผู้ซื้อยืนยัน"), sub: tr("กดรับสินค้าหรือเซ็นชื่อ") },
+              { step: "4", icon: "💸", label: tr("โอนเงินให้ผู้ขาย"), sub: tr("Escrow ปลดล็อคเงินทันที") },
             ].map(({ step, icon, label, sub }) => (
               <div key={step} className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-2xl p-4 text-center space-y-2 relative">
                 <div className="absolute -top-2.5 left-4 bg-[var(--c-accent)] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
@@ -145,16 +137,12 @@ export default function SupportPage() {
         {/* ── Contact Card ─────────────────────────────────────────────────────── */}
         <section>
           <h2 className="text-lg font-extrabold text-[var(--c-ink)] mb-4 flex items-center gap-2">
-            <span className="w-1 h-5 rounded-full bg-[var(--c-accent)] inline-block" />
-            ติดต่อเรา
-          </h2>
+            <span className="w-1 h-5 rounded-full bg-[var(--c-accent)] inline-block" />{tr("ติดต่อเรา")}</h2>
 
           <div className="bg-[var(--c-surface)] rounded-2xl shadow-sm border border-[var(--c-line)] p-8 text-center space-y-5">
             <div>
-              <p className="text-base font-bold text-[var(--c-ink)]">ยังต้องการความช่วยเหลือ?</p>
-              <p className="text-sm text-[var(--c-muted)] mt-1">
-                ทีมดูแลระบบพร้อมช่วยเหลือคุณ จันทร์ – ศุกร์ เวลา 9:00 – 17:00 น.
-              </p>
+              <p className="text-base font-bold text-[var(--c-ink)]">{tr("ยังต้องการความช่วยเหลือ?")}</p>
+              <p className="text-sm text-[var(--c-muted)] mt-1">{tr("ทีมดูแลระบบพร้อมช่วยเหลือคุณ จันทร์ – ศุกร์ เวลา 9:00 – 17:00 น.")}</p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -190,9 +178,7 @@ export default function SupportPage() {
             </div>
 
             {/* Response time note */}
-            <p className="text-xs text-[var(--c-muted)]">
-              ⏱ เวลาตอบกลับเฉลี่ย: ภายใน 1 วันทำการ
-            </p>
+            <p className="text-xs text-[var(--c-muted)]">{tr("⏱ เวลาตอบกลับเฉลี่ย: ภายใน 1 วันทำการ")}</p>
           </div>
         </section>
 
@@ -204,9 +190,7 @@ export default function SupportPage() {
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            กลับหน้าหลัก
-          </a>
+            </svg>{tr("กลับหน้าหลัก")}</a>
         </div>
 
       </div>
