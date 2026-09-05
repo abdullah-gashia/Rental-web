@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
@@ -12,6 +14,7 @@ export default function SearchInput({
   placeholder = "ค้นหา...",
   paramKey    = "search",
 }: SearchInputProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const router   = useRouter();
   const sp       = useSearchParams();
   const pathname = usePathname();
@@ -51,7 +54,7 @@ export default function SearchInput({
         <button
           onClick={() => setValue("")}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--c-muted)] hover:text-[var(--c-ink-1)] transition"
-          aria-label="ล้างการค้นหา"
+          aria-label={tr("ล้างการค้นหา")}
         >
           ×
         </button>

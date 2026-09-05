@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import type { UserDetail } from "../../_lib/types";
 import StatusBadge          from "../../_components/StatusBadge";
 
@@ -15,42 +17,41 @@ function fmt(n: number): string {
 }
 
 export default function FinancialSummary({ data }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const hasEscrow = data.escrowOrders.length > 0;
 
   return (
     <div className="p-4 bg-[var(--c-subtle)] rounded-xl border border-[var(--c-line)] space-y-3">
-      <h3 className="text-xs font-semibold text-[var(--c-ink-2)] uppercase tracking-wider flex items-center gap-1.5">
-        💰 สรุปการเงิน
-      </h3>
+      <h3 className="text-xs font-semibold text-[var(--c-ink-2)] uppercase tracking-wider flex items-center gap-1.5">{tr("💰 สรุปการเงิน")}</h3>
 
       {/* Main stats grid */}
       <div className="grid grid-cols-2 gap-3">
         <FinRow
-          label="กระเป๋าเงิน"
+          label={tr("กระเป๋าเงิน")}
           amount={data.walletBalance}
-          badge="พร้อมใช้งาน"
+          badge={tr("พร้อมใช้งาน")}
           badgeColor="green"
         />
         <FinRow
-          label="Escrow คงค้าง (ผู้ซื้อ)"
+          label={tr("Escrow คงค้าง (ผู้ซื้อ)")}
           amount={data.buyerEscrowTotal}
           badge={`${data.buyerEscrowCount} รายการ`}
           badgeColor={data.buyerEscrowCount > 0 ? "yellow" : "gray"}
         />
         <FinRow
-          label="รอจ่ายออก (ผู้ขาย)"
+          label={tr("รอจ่ายออก (ผู้ขาย)")}
           amount={data.sellerPayoutTotal}
           badge={`${data.sellerPayoutCount} รายการ`}
           badgeColor={data.sellerPayoutCount > 0 ? "blue" : "gray"}
         />
         <FinRow
-          label="ยอดขายทั้งหมด"
+          label={tr("ยอดขายทั้งหมด")}
           amount={data.totalSalesAmount}
           badge={`${data.totalSalesCount} ออเดอร์`}
           badgeColor="gray"
         />
         <FinRow
-          label="ยอดซื้อทั้งหมด"
+          label={tr("ยอดซื้อทั้งหมด")}
           amount={data.totalPurchaseAmount}
           badge={`${data.totalPurchaseCount} ออเดอร์`}
           badgeColor="gray"
@@ -60,9 +61,7 @@ export default function FinancialSummary({ data }: Props) {
       {/* Escrow order details */}
       {hasEscrow && (
         <div className="border-t border-[var(--c-line)] pt-3">
-          <p className="text-xs font-medium text-[var(--c-ink-3)] mb-2 flex items-center gap-1">
-            ⚠️ รายการ Escrow ที่ยังดำเนินอยู่:
-          </p>
+          <p className="text-xs font-medium text-[var(--c-ink-3)] mb-2 flex items-center gap-1">{tr("⚠️ รายการ Escrow ที่ยังดำเนินอยู่:")}</p>
           <div className="space-y-0.5 max-h-[200px] overflow-y-auto">
             {data.escrowOrders.map((order) => {
               const isBuyer = order.buyerId === data.id;

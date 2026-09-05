@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useRef, useCallback, useEffect } from "react";
 
 /**
@@ -28,6 +30,7 @@ interface Props {
 }
 
 export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [img, setImg]       = useState<HTMLImageElement | null>(null);
   const [zoom, setZoom]     = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -81,6 +84,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
   );
 
   function pick(file: File | undefined) {
+  const tr = useLocaleStore((s) => s.tr);
     if (!file) return;
     setError(null);
 
@@ -100,7 +104,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
     const el = new window.Image();
     el.onload  = () => setImg(el);
     el.onerror = () => {
-      setError("เปิดไฟล์รูปนี้ไม่ได้ ลองไฟล์อื่นดูครับ");
+      setError(tr("เปิดไฟล์รูปนี้ไม่ได้ ลองไฟล์อื่นดูครับ"));
       releaseUrl();
       setImg(null);
       setFileName(null);
@@ -130,6 +134,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
 
   // ── Export ────────────────────────────────────────────────────────────────
   async function save() {
+  const tr = useLocaleStore((s) => s.tr);
     if (!img) return;
     setBusy(true);
     setError(null);
@@ -170,7 +175,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
       releaseUrl();
       onSaved(json.url);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "บันทึกรูปไม่สำเร็จ");
+      setError(e instanceof Error ? e.message : tr("บันทึกรูปไม่สำเร็จ"));
     } finally {
       setBusy(false);
     }
@@ -184,11 +189,8 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
       />
 
       <div className="relative w-full max-w-[420px] rounded-2xl bg-[var(--hp-bg)] border border-[var(--hp-border)] p-6">
-        <h2 className="text-[17px] font-semibold text-[var(--psu-navy)]">รูปโปรไฟล์</h2>
-        <p className="text-[12.5px] text-[var(--hp-muted)] mt-1 mb-5 leading-[1.8]">
-          เลือกรูปขนาดไหนก็ได้ แล้วลากกับซูมให้ได้มุมที่ต้องการ
-          ระบบจะบันทึกเฉพาะส่วนที่อยู่ในวงกลม
-        </p>
+        <h2 className="text-[17px] font-semibold text-[var(--psu-navy)]">{tr("รูปโปรไฟล์")}</h2>
+        <p className="text-[12.5px] text-[var(--hp-muted)] mt-1 mb-5 leading-[1.8]">{tr("เลือกรูปขนาดไหนก็ได้ แล้วลากกับซูมให้ได้มุมที่ต้องการ ระบบจะบันทึกเฉพาะส่วนที่อยู่ในวงกลม")}</p>
 
         {/* ── The frame ────────────────────────────────────────────────── */}
         <div className="flex justify-center">
@@ -216,9 +218,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
               // eslint-disable-next-line @next/next/no-img-element
               <img src={current} alt="" className="w-full h-full object-cover opacity-55" />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-[13px] text-[var(--hp-muted)]">
-                ยังไม่ได้เลือกรูป
-              </div>
+              <div className="w-full h-full flex items-center justify-center text-[13px] text-[var(--hp-muted)]">{tr("ยังไม่ได้เลือกรูป")}</div>
             )}
           </div>
         </div>
@@ -226,7 +226,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
         {/* ── Zoom ─────────────────────────────────────────────────────── */}
         {img && (
           <div className="mt-5">
-            <label htmlFor="avatar-zoom" className="ui-label">ซูม</label>
+            <label htmlFor="avatar-zoom" className="ui-label">{tr("ซูม")}</label>
             <input
               id="avatar-zoom"
               type="range"
@@ -237,7 +237,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
               onChange={(e) => changeZoom(Number(e.target.value))}
               className="w-full accent-[var(--psu-blue)]"
             />
-            <p className="ui-hint">ลากรูปในวงกลมเพื่อเลือกมุมที่จะแสดง</p>
+            <p className="ui-hint">{tr("ลากรูปในวงกลมเพื่อเลือกมุมที่จะแสดง")}</p>
           </div>
         )}
 
@@ -271,7 +271,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
             ยกเลิก
           </button>
           <button onClick={save} disabled={busy || !img} className="ui-btn ui-btn-primary flex-1">
-            {busy ? "กำลังบันทึก…" : "ใช้รูปนี้"}
+            {busy ? tr("กำลังบันทึก…") : "ใช้รูปนี้"}
           </button>
         </div>
       </div>

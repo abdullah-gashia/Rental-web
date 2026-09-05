@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState } from "react";
 import type { CheckoutState, CheckoutAction } from "./useCheckoutReducer";
 import type { ShippingAddress } from "@/lib/validations/checkout";
@@ -39,6 +41,7 @@ function ShippingAddressForm({
   dispatch: React.Dispatch<CheckoutAction>;
   savedAddresses: SavedAddr[];
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const addr = state.shippingAddress;
   const [provinceSearch, setProvinceSearch] = useState("");
   const [showProvinces, setShowProvinces] = useState(false);
@@ -76,7 +79,7 @@ function ShippingAddressForm({
       {/* Saved addresses */}
       {savedAddresses.length > 0 && (
         <div>
-          <p className="text-xs font-semibold text-[var(--c-muted)] mb-2">📍 เลือกที่อยู่ที่บันทึกไว้</p>
+          <p className="text-xs font-semibold text-[var(--c-muted)] mb-2">{tr("📍 เลือกที่อยู่ที่บันทึกไว้")}</p>
           <div className="space-y-2">
             {savedAddresses.map((sa) => (
               <button
@@ -100,7 +103,7 @@ function ShippingAddressForm({
       {/* Manual input fields */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="checkout-label">ชื่อผู้รับ *</label>
+          <label className="checkout-label">{tr("ชื่อผู้รับ *")}</label>
           <input
             type="text"
             value={addr?.recipientName ?? ""}
@@ -110,7 +113,7 @@ function ShippingAddressForm({
           />
         </div>
         <div>
-          <label className="checkout-label">เบอร์โทร *</label>
+          <label className="checkout-label">{tr("เบอร์โทร *")}</label>
           <input
             type="tel"
             value={addr?.phone ?? ""}
@@ -122,7 +125,7 @@ function ShippingAddressForm({
       </div>
 
       <div>
-        <label className="checkout-label">ที่อยู่ บรรทัด 1 *</label>
+        <label className="checkout-label">{tr("ที่อยู่ บรรทัด 1 *")}</label>
         <input
           type="text"
           value={addr?.addressLine1 ?? ""}
@@ -133,7 +136,7 @@ function ShippingAddressForm({
       </div>
 
       <div>
-        <label className="checkout-label">ที่อยู่ บรรทัด 2</label>
+        <label className="checkout-label">{tr("ที่อยู่ บรรทัด 2")}</label>
         <input
           type="text"
           value={addr?.addressLine2 ?? ""}
@@ -145,7 +148,7 @@ function ShippingAddressForm({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="checkout-label">อำเภอ/เขต *</label>
+          <label className="checkout-label">{tr("อำเภอ/เขต *")}</label>
           <input
             type="text"
             value={addr?.district ?? ""}
@@ -155,7 +158,7 @@ function ShippingAddressForm({
           />
         </div>
         <div className="relative">
-          <label className="checkout-label">จังหวัด *</label>
+          <label className="checkout-label">{tr("จังหวัด *")}</label>
           <input
             type="text"
             value={addr?.province ?? provinceSearch}
@@ -191,7 +194,7 @@ function ShippingAddressForm({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="checkout-label">รหัสไปรษณีย์ *</label>
+          <label className="checkout-label">{tr("รหัสไปรษณีย์ *")}</label>
           <input
             type="text"
             value={addr?.postalCode ?? ""}
@@ -202,7 +205,7 @@ function ShippingAddressForm({
           />
         </div>
         <div>
-          <label className="checkout-label">หมายเหตุ</label>
+          <label className="checkout-label">{tr("หมายเหตุ")}</label>
           <input
             type="text"
             value={addr?.note ?? ""}
@@ -220,9 +223,7 @@ function ShippingAddressForm({
           checked={state.saveAddressForLater}
           onChange={() => dispatch({ type: "TOGGLE_SAVE_ADDRESS" })}
           className="rounded"
-        />
-        บันทึกที่อยู่นี้สำหรับครั้งหน้า
-      </label>
+        />{tr("บันทึกที่อยู่นี้สำหรับครั้งหน้า")}</label>
     </div>
   );
 }
@@ -236,6 +237,7 @@ function MeetupForm({
   state: CheckoutState;
   dispatch: React.Dispatch<CheckoutAction>;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [useCustom, setUseCustom] = useState(false);
 
   // Min datetime: 1 hour from now
@@ -250,7 +252,7 @@ function MeetupForm({
 
   return (
     <div className="space-y-3 mt-4">
-      <p className="text-xs font-bold text-[var(--c-ink-2)] uppercase tracking-wide mb-3">📍 เลือกสถานที่นัดรับ</p>
+      <p className="text-xs font-bold text-[var(--c-ink-2)] uppercase tracking-wide mb-3">{tr("📍 เลือกสถานที่นัดรับ")}</p>
 
       <div className="grid grid-cols-2 gap-2.5">
         {CAMPUS_MEETUP_LOCATIONS.map((loc) => {
@@ -283,8 +285,8 @@ function MeetupForm({
         >
           <div className="meetup-card-icon">✏️</div>
           <div>
-            <p className="text-[12px] font-bold text-[var(--c-ink)]">ระบุเอง</p>
-            <p className="text-[10px] text-[var(--c-muted)] mt-0.5">กรอกสถานที่</p>
+            <p className="text-[12px] font-bold text-[var(--c-ink)]">{tr("ระบุเอง")}</p>
+            <p className="text-[10px] text-[var(--c-muted)] mt-0.5">{tr("กรอกสถานที่")}</p>
           </div>
         </button>
       </div>
@@ -292,7 +294,7 @@ function MeetupForm({
       {/* Custom location input */}
       {useCustom && (
         <div>
-          <label className="checkout-label">สถานที่ *</label>
+          <label className="checkout-label">{tr("สถานที่ *")}</label>
           <input
             type="text"
             value={state.meetupLocation ?? ""}
@@ -306,7 +308,7 @@ function MeetupForm({
       {/* Date & time */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="checkout-label">วันเวลานัดรับ *</label>
+          <label className="checkout-label">{tr("วันเวลานัดรับ *")}</label>
           <input
             type="datetime-local"
             value={state.meetupDateTime ?? ""}
@@ -317,7 +319,7 @@ function MeetupForm({
           />
         </div>
         <div>
-          <label className="checkout-label">หมายเหตุ</label>
+          <label className="checkout-label">{tr("หมายเหตุ")}</label>
           <input
             type="text"
             value={state.meetupNote ?? ""}
@@ -340,6 +342,7 @@ export default function DeliveryStep({
   allowShipping,
   allowMeetup,
 }: DeliveryStepProps) {
+  const tr = useLocaleStore((s) => s.tr);
   // Auto-select if only one method available
   const autoMethod = !allowShipping && allowMeetup
     ? "MEETUP"
@@ -356,7 +359,7 @@ export default function DeliveryStep({
 
   return (
     <div className="fade-up">
-      <h3 className="text-base font-bold text-[var(--c-ink)] mb-3">เลือกวิธีจัดส่ง</h3>
+      <h3 className="text-base font-bold text-[var(--c-ink)] mb-3">{tr("เลือกวิธีจัดส่ง")}</h3>
 
       {/* Method cards — hide if only one option */}
       {allowShipping && allowMeetup && (
@@ -366,18 +369,18 @@ export default function DeliveryStep({
             className={`checkout-card-radio ${currentMethod === "SHIPPING" ? "selected" : ""}`}
           >
             <span className="text-2xl">🚚</span>
-            <p className="text-sm font-bold mt-1">จัดส่งถึงที่อยู่</p>
-            <p className="text-xs text-[var(--c-muted)]">ค่าส่ง ฿50</p>
-            <p className="text-[10px] text-[var(--c-faint-2)]">2-5 วันทำการ</p>
+            <p className="text-sm font-bold mt-1">{tr("จัดส่งถึงที่อยู่")}</p>
+            <p className="text-xs text-[var(--c-muted)]">{tr("ค่าส่ง ฿50")}</p>
+            <p className="text-[10px] text-[var(--c-faint-2)]">{tr("2-5 วันทำการ")}</p>
           </button>
           <button
             onClick={() => dispatch({ type: "SET_DELIVERY_METHOD", payload: "MEETUP" })}
             className={`checkout-card-radio ${currentMethod === "MEETUP" ? "selected" : ""}`}
           >
             <span className="text-2xl">🤝</span>
-            <p className="text-sm font-bold mt-1">นัดรับสินค้า</p>
-            <p className="text-xs text-[var(--c-ok)] font-semibold">ฟรี!</p>
-            <p className="text-[10px] text-[var(--c-faint-2)]">นัดเวลาเอง</p>
+            <p className="text-sm font-bold mt-1">{tr("นัดรับสินค้า")}</p>
+            <p className="text-xs text-[var(--c-ok)] font-semibold">{tr("ฟรี!")}</p>
+            <p className="text-[10px] text-[var(--c-faint-2)]">{tr("นัดเวลาเอง")}</p>
           </button>
         </div>
       )}

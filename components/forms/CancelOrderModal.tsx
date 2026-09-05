@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { cancelOrderNew } from "@/lib/actions/order-transitions";
 
@@ -42,6 +44,7 @@ const SELLER_REASONS_MEETUP = [
 export default function CancelOrderModal({
   orderId, itemTitle, amount, role, paymentMethod, meetupDateTime, onClose, onSuccess,
 }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const isMeetupOrder = !!meetupDateTime;
   const reasons = role === "buyer"
     ? BUYER_REASONS
@@ -68,10 +71,11 @@ export default function CancelOrderModal({
   })();
 
   function handleSubmit(e: React.FormEvent) {
+  const tr = useLocaleStore((s) => s.tr);
     e.preventDefault();
     setFormError(null);
 
-    if (!selected)                               { setFormError("กรุณาเลือกเหตุผล"); return; }
+    if (!selected)                               { setFormError(tr("กรุณาเลือกเหตุผล")); return; }
     if (selected === "อื่นๆ" && !custom.trim()) { setFormError("กรุณาระบุเหตุผล"); return; }
 
     startTransition(async () => {
@@ -97,7 +101,7 @@ export default function CancelOrderModal({
         {/* Header */}
         <div className="sticky top-0 bg-[var(--c-surface)] border-b border-[var(--c-line)] px-6 py-4 flex items-start justify-between rounded-t-2xl z-10">
           <div>
-            <h3 className="text-lg font-bold text-[var(--c-ink)]">ยกเลิกคำสั่งซื้อ</h3>
+            <h3 className="text-lg font-bold text-[var(--c-ink)]">{tr("ยกเลิกคำสั่งซื้อ")}</h3>
             <p className="text-xs text-[var(--c-muted)] mt-0.5 truncate max-w-xs">{itemTitle}</p>
           </div>
           <button
@@ -117,11 +121,8 @@ export default function CancelOrderModal({
             <div className="flex items-start gap-3 bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-4 py-3">
               <span className="text-amber-500 text-lg leading-none mt-0.5">⏳</span>
               <div>
-                <p className="text-sm font-semibold text-amber-800">ยังไม่ถึงเวลายกเลิก</p>
-                <p className="text-xs text-[var(--c-warn)] mt-0.5 leading-relaxed">
-                  กรุณารอจนถึง <span className="font-bold">{sellerGraceHint} น.</span> (30 นาทีหลังเวลานัดรับ)
-                  เพื่อให้ผู้ซื้อมีเวลาเดินทาง
-                </p>
+                <p className="text-sm font-semibold text-amber-800">{tr("ยังไม่ถึงเวลายกเลิก")}</p>
+                <p className="text-xs text-[var(--c-warn)] mt-0.5 leading-relaxed">{tr("กรุณารอจนถึง")}<span className="font-bold">{sellerGraceHint} น.</span>{tr("(30 นาทีหลังเวลานัดรับ) เพื่อให้ผู้ซื้อมีเวลาเดินทาง")}</p>
               </div>
             </div>
           )}
@@ -131,21 +132,20 @@ export default function CancelOrderModal({
             <div className="flex items-center gap-3 bg-[var(--c-ok-soft)] border border-[var(--c-ok-line)] rounded-xl px-4 py-3">
               <span className="text-[var(--c-ok)] text-lg">💰</span>
               <div>
-                <p className="text-sm font-semibold text-emerald-800">คืนเงินอัตโนมัติ</p>
+                <p className="text-sm font-semibold text-emerald-800">{tr("คืนเงินอัตโนมัติ")}</p>
                 <p className="text-xs text-[var(--c-ok)]">฿{amount.toLocaleString()} จะคืนเข้ากระเป๋าผู้ซื้อทันที</p>
               </div>
             </div>
           ) : (
             <div className="flex items-center gap-3 bg-[var(--c-canvas)] border border-[var(--c-line)] rounded-xl px-4 py-3">
               <span className="text-[var(--c-muted)] text-lg">💵</span>
-              <p className="text-xs text-[var(--c-ink-3)]">คำสั่งซื้อ COD — ไม่มีการโอนเงินผ่านระบบ</p>
+              <p className="text-xs text-[var(--c-ink-3)]">{tr("คำสั่งซื้อ COD — ไม่มีการโอนเงินผ่านระบบ")}</p>
             </div>
           )}
 
           {/* Reason selector */}
           <div>
-            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-2">
-              เหตุผล <span className="text-[var(--c-danger)]">*</span>
+            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-2">{tr("เหตุผล")}<span className="text-[var(--c-danger)]">*</span>
             </label>
             <div className="space-y-2">
               {reasons.map((r) => (
@@ -175,7 +175,7 @@ export default function CancelOrderModal({
                 value={custom}
                 onChange={(e) => { setCustom(e.target.value); setFormError(null); }}
                 rows={3}
-                placeholder="โปรดระบุเหตุผล…"
+                placeholder={tr("โปรดระบุเหตุผล…")}
                 className="mt-3 w-full border border-[var(--c-line)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/30 focus:border-red-400 transition resize-none"
               />
             )}
@@ -183,10 +183,10 @@ export default function CancelOrderModal({
 
           {/* Warning note */}
           <div className="bg-[var(--c-canvas)] rounded-xl px-4 py-3 text-xs text-[var(--c-ink-3)] leading-relaxed">
-            <span className="font-semibold text-[var(--c-ink-2)]">หมายเหตุ:</span>{" "}
+            <span className="font-semibold text-[var(--c-ink-2)]">{tr("หมายเหตุ:")}</span>{" "}
             {role === "buyer"
-              ? "การยกเลิกจะคืนเงินเข้ากระเป๋าของคุณทันที และสินค้าจะกลับไปแสดงในตลาดใหม่"
-              : "การยกเลิกจะคืนเงินให้ผู้ซื้อทันที และสินค้าจะกลับไปแสดงในตลาดให้ผู้อื่นซื้อได้"}
+              ? tr("การยกเลิกจะคืนเงินเข้ากระเป๋าของคุณทันที และสินค้าจะกลับไปแสดงในตลาดใหม่")
+              : tr("การยกเลิกจะคืนเงินให้ผู้ซื้อทันที และสินค้าจะกลับไปแสดงในตลาดให้ผู้อื่นซื้อได้")}
           </div>
 
           {/* Error */}
@@ -204,16 +204,14 @@ export default function CancelOrderModal({
               onClick={onClose}
               disabled={isPending}
               className="flex-1 py-3 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
-            >
-              ไม่ยกเลิก
-            </button>
+            >{tr("ไม่ยกเลิก")}</button>
             <button
               type="submit"
               disabled={isPending}
               className="flex-1 py-3 rounded-xl bg-red-600 text-white text-sm font-bold hover:bg-red-700 transition disabled:opacity-40 flex items-center justify-center gap-2"
             >
               {isPending && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-              {isPending ? "กำลังดำเนินการ…" : "ยืนยันยกเลิก"}
+              {isPending ? "กำลังดำเนินการ…" : tr("ยืนยันยกเลิก")}
             </button>
           </div>
         </form>

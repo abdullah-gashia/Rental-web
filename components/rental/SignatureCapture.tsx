@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useRef, useState, useEffect, useCallback } from "react";
 
 interface Props {
@@ -11,6 +13,7 @@ interface Props {
 }
 
 export default function SignatureCapture({ onComplete, onCancel, agreementText, signerName, signerRole }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const [isDrawing,    setIsDrawing]    = useState(false);
   const [hasSignature, setHasSignature] = useState(false);
@@ -84,8 +87,7 @@ export default function SignatureCapture({ onComplete, onCancel, agreementText, 
     <div className="space-y-4">
       {/* Agreement text */}
       <div className="bg-[var(--c-subtle)] border border-[var(--c-line)] rounded-xl p-4 text-sm text-[var(--c-ink-1)] leading-relaxed max-h-48 overflow-y-auto">
-        <p className="font-semibold mb-2">
-          ข้าพเจ้า <span className="text-[var(--c-accent)]">{signerName}</span>{" "}
+        <p className="font-semibold mb-2">{tr("ข้าพเจ้า")}<span className="text-[var(--c-accent)]">{signerName}</span>{" "}
           ในฐานะ <span className="text-[var(--c-accent)]">{signerRole}</span>
         </p>
         <pre className="whitespace-pre-wrap font-sans text-xs text-[var(--c-ink-2)]">{agreementText}</pre>
@@ -96,7 +98,7 @@ export default function SignatureCapture({ onComplete, onCancel, agreementText, 
 
       {/* Canvas */}
       <div>
-        <p className="text-xs font-semibold text-[var(--c-ink-2)] mb-2">✍️ ลงลายเซ็นในกรอบด้านล่าง:</p>
+        <p className="text-xs font-semibold text-[var(--c-ink-2)] mb-2">{tr("✍️ ลงลายเซ็นในกรอบด้านล่าง:")}</p>
         <canvas
           ref={canvasRef}
           style={{ width: "100%", height: "160px", display: "block" }}
@@ -110,7 +112,7 @@ export default function SignatureCapture({ onComplete, onCancel, agreementText, 
           onTouchEnd={endDraw}
         />
         {!hasSignature && (
-          <p className="text-[11px] text-[var(--c-faint-2)] mt-1 text-center">ลากเพื่อเซ็นชื่อ</p>
+          <p className="text-[11px] text-[var(--c-faint-2)] mt-1 text-center">{tr("ลากเพื่อเซ็นชื่อ")}</p>
         )}
       </div>
 
@@ -129,18 +131,14 @@ export default function SignatureCapture({ onComplete, onCancel, agreementText, 
           type="button"
           onClick={clear}
           className="px-4 py-2.5 border border-[var(--c-line)] rounded-xl text-sm text-[var(--c-ink-2)] hover:bg-[var(--c-line-soft)] transition"
-        >
-          🗑️ ล้าง
-        </button>
+        >{tr("🗑️ ล้าง")}</button>
         <button
           type="button"
           onClick={confirm}
           disabled={!hasSignature}
           className="flex-1 py-2.5 bg-[var(--c-accent)] text-white text-sm font-bold rounded-xl
                      hover:bg-[var(--c-accent-str)] transition disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          ✅ ยืนยันลายเซ็น
-        </button>
+        >{tr("✅ ยืนยันลายเซ็น")}</button>
       </div>
     </div>
   );

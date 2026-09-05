@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useRef, useState, useCallback, useEffect } from "react";
 
 type LivenessStep = "front" | "left" | "right" | "up" | "complete";
@@ -26,6 +28,7 @@ interface Props {
 }
 
 export default function FaceLivenessCapture({ onComplete }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const videoRef  = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -50,7 +53,7 @@ export default function FaceLivenessCapture({ onComplete }: Props) {
         }
       })
       .catch(() => {
-        setError("ไม่สามารถเข้าถึงกล้องได้ กรุณาอนุญาตการใช้กล้องในเบราว์เซอร์");
+        setError(tr("ไม่สามารถเข้าถึงกล้องได้ กรุณาอนุญาตการใช้กล้องในเบราว์เซอร์"));
       });
 
     return () => { stream?.getTracks().forEach((t) => t.stop()); };
@@ -85,7 +88,7 @@ export default function FaceLivenessCapture({ onComplete }: Props) {
     setCountdown(null);
 
     const frame = captureFrame();
-    if (!frame) { setError("ไม่สามารถจับภาพได้ ลองใหม่อีกครั้ง"); setIsCapturing(false); return; }
+    if (!frame) { setError(tr("ไม่สามารถจับภาพได้ ลองใหม่อีกครั้ง")); setIsCapturing(false); return; }
 
     const updated = { ...frames, [step]: frame };
     setFrames(updated);
@@ -169,13 +172,11 @@ export default function FaceLivenessCapture({ onComplete }: Props) {
       {error && !cameraReady && (
         <div className="w-full max-w-xs bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-4 py-3 text-sm text-[var(--c-danger)] text-center space-y-2">
           <p>📷 {error}</p>
-          <p className="text-xs">คลิกที่ไอคอน 🔒 ในแถบที่อยู่ แล้วเลือก "อนุญาต" สำหรับกล้อง</p>
+          <p className="text-xs">{tr("คลิกที่ไอคอน 🔒 ในแถบที่อยู่ แล้วเลือก \"อนุญาต\" สำหรับกล้อง")}</p>
           <button
             onClick={() => window.location.reload()}
             className="text-xs font-semibold text-[var(--c-danger)] underline"
-          >
-            🔄 ลองใหม่
-          </button>
+          >{tr("🔄 ลองใหม่")}</button>
         </div>
       )}
 
@@ -186,22 +187,18 @@ export default function FaceLivenessCapture({ onComplete }: Props) {
           disabled={isCapturing || !cameraReady}
           className="px-8 py-3 bg-blue-600 text-white rounded-full font-semibold disabled:opacity-40 hover:bg-blue-700 active:scale-95 transition-all"
         >
-          {isCapturing ? "กำลังจับภาพ…" : "📷 ถ่ายภาพ"}
+          {isCapturing ? tr("กำลังจับภาพ…") : tr("📷 ถ่ายภาพ")}
         </button>
       ) : (
         <div className="flex gap-3">
           <button
             onClick={handleRetake}
             className="px-6 py-2.5 border border-[var(--c-line)] rounded-xl text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
-          >
-            ถ่ายใหม่
-          </button>
+          >{tr("ถ่ายใหม่")}</button>
           <button
             onClick={() => onComplete(frames)}
             className="px-6 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 transition"
-          >
-            ✅ ใช้ภาพนี้
-          </button>
+          >{tr("✅ ใช้ภาพนี้")}</button>
         </div>
       )}
 
@@ -214,7 +211,7 @@ export default function FaceLivenessCapture({ onComplete }: Props) {
             {frames[key]
               ? <img src={frames[key]!} alt={key} className="w-full h-full object-cover" />
               : <span className="text-[10px] text-[var(--c-muted)]">
-                  {key === "front" ? "หน้า" : key === "left" ? "ซ้าย" : key === "right" ? "ขวา" : "บน"}
+                  {key === "front" ? tr("หน้า") : key === "left" ? tr("ซ้าย") : key === "right" ? tr("ขวา") : tr("บน")}
                 </span>
             }
           </div>

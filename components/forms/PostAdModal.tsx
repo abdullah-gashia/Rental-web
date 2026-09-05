@@ -38,6 +38,7 @@ function Thumb({
   src: string; isMain?: boolean; uploading?: boolean;
   error?: string | null; onRemove: () => void;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   return (
     <div className="relative group w-[80px] h-[80px] rounded-xl overflow-hidden border border-[var(--c-line)] bg-[var(--c-line-soft)] flex-shrink-0 shadow-[var(--shadow-xs)]">
       <img src={src} alt="" className="w-full h-full object-contain bg-[var(--c-subtle-2)]" />
@@ -48,7 +49,7 @@ function Thumb({
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
-          <span className="text-[9px] text-white font-semibold">อัปโหลด</span>
+          <span className="text-[9px] text-white font-semibold">{tr("อัปโหลด")}</span>
         </div>
       )}
 
@@ -57,14 +58,12 @@ function Thumb({
           <svg className="w-4 h-4 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <span className="text-[9px] text-red-200 text-center leading-tight">ล้มเหลว</span>
+          <span className="text-[9px] text-red-200 text-center leading-tight">{tr("ล้มเหลว")}</span>
         </div>
       )}
 
       {isMain && !uploading && !error && (
-        <span className="absolute bottom-1 left-1 bg-[var(--c-accent)] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md leading-none">
-          หลัก
-        </span>
+        <span className="absolute bottom-1 left-1 bg-[var(--c-accent)] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md leading-none">{tr("หลัก")}</span>
       )}
 
       <button
@@ -91,6 +90,7 @@ function Spinner() {
 }
 
 export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const t         = useLocaleStore((s) => s.t);
   const showToast = useToastStore((s) => s.show);
 
@@ -195,18 +195,21 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
   );
 
   const handleNextFromStep1 = () => {
-    if (!category) { showToast("⚠️ กรุณาเลือกหมวดหมู่ก่อน"); return; }
+  const tr = useLocaleStore((s) => s.tr);
+    if (!category) { showToast(tr("⚠️ กรุณาเลือกหมวดหมู่ก่อน")); return; }
     setStep(2);
   };
 
   const handleNextFromStep2 = () => {
+  const tr = useLocaleStore((s) => s.tr);
     if (!name.trim()) { showToast(t("post_error_name")); return; }
-    if (pendingImages.some((p) => p.uploading)) { showToast("⚠️ กรุณารอให้รูปภาพอัปโหลดเสร็จก่อน"); return; }
-    if (pendingImages.some((p) => p.uploadError)) { showToast("⚠️ มีรูปภาพที่อัปโหลดไม่สำเร็จ กรุณาลบออกแล้วลองใหม่"); return; }
+    if (pendingImages.some((p) => p.uploading)) { showToast(tr("⚠️ กรุณารอให้รูปภาพอัปโหลดเสร็จก่อน")); return; }
+    if (pendingImages.some((p) => p.uploadError)) { showToast(tr("⚠️ มีรูปภาพที่อัปโหลดไม่สำเร็จ กรุณาลบออกแล้วลองใหม่")); return; }
     setStep(3);
   };
 
   const handleSubmit = async () => {
+  const tr = useLocaleStore((s) => s.tr);
     if (!name.trim()) { showToast(t("post_error_name")); setStep(2); return; }
 
     const isRent = adType === "rent";
@@ -214,7 +217,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
     // Validate price / dailyRate
     const parsedPrice = Number(price);
     if (!price || isNaN(parsedPrice) || parsedPrice <= 0) {
-      showToast(isRent ? "⚠️ กรุณาระบุค่าเช่าต่อวัน" : t("post_error_price"));
+      showToast(isRent ? tr("⚠️ กรุณาระบุค่าเช่าต่อวัน") : t("post_error_price"));
       return;
     }
 
@@ -222,11 +225,11 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
     if (isRent) {
       const parsedDeposit = Number(securityDeposit);
       if (!securityDeposit || isNaN(parsedDeposit) || parsedDeposit < 0) {
-        showToast("⚠️ กรุณาระบุเงินมัดจำ (0 ขึ้นไป)"); return;
+        showToast(tr("⚠️ กรุณาระบุเงินมัดจำ (0 ขึ้นไป)")); return;
       }
     }
 
-    if (!allowShipping && !allowMeetup) { showToast("⚠️ กรุณาเลือกวิธีจัดส่งอย่างน้อย 1 วิธี"); return; }
+    if (!allowShipping && !allowMeetup) { showToast(tr("⚠️ กรุณาเลือกวิธีจัดส่งอย่างน้อย 1 วิธี")); return; }
 
     setLoading(true);
     const imageUrls = pendingImages.filter((p) => p.uploadedUrl).map((p) => p.uploadedUrl!);
@@ -267,7 +270,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
 
   const handleClose = () => { resetForm(); onClose(); };
 
-  const stepLabels = ["ประเภท & หมวดหมู่", "รายละเอียดสินค้า", "ราคา & ที่ตั้ง"];
+  const stepLabels = [tr("ประเภท & หมวดหมู่"), tr("รายละเอียดสินค้า"), tr("ราคา & ที่ตั้ง")];
 
   // ── Verification gate overlay ─────────────────────────────────────────────
   if (showVerifyGate) {
@@ -276,14 +279,11 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
         <div className="flex flex-col items-center text-center gap-5 py-6 px-2">
           <div className="text-5xl">🔒</div>
           <div>
-            <h2 className="text-xl font-bold text-[var(--c-ink)]">ต้องยืนยันตัวตนก่อน</h2>
-            <p className="text-sm text-[var(--c-muted)] mt-2 leading-relaxed">
-              คุณต้องยืนยันตัวตน PSU ก่อนจึงจะลงขายสินค้าได้
-              <br />กระบวนการใช้เวลาประมาณ 2-3 นาที
-            </p>
+            <h2 className="text-xl font-bold text-[var(--c-ink)]">{tr("ต้องยืนยันตัวตนก่อน")}</h2>
+            <p className="text-sm text-[var(--c-muted)] mt-2 leading-relaxed">{tr("คุณต้องยืนยันตัวตน PSU ก่อนจึงจะลงขายสินค้าได้")}<br />{tr("กระบวนการใช้เวลาประมาณ 2-3 นาที")}</p>
           </div>
           <div className="bg-[var(--c-canvas)] rounded-2xl px-5 py-4 text-left text-sm space-y-2 w-full">
-            {["อัปโหลดรูปบัตรประจำตัว PSU", "ถ่ายรูปยืนยันใบหน้า (Face Liveness)", "รอแอดมินอนุมัติภายใน 24 ชั่วโมง"].map((step, i) => (
+            {[tr("อัปโหลดรูปบัตรประจำตัว PSU"), tr("ถ่ายรูปยืนยันใบหน้า (Face Liveness)"), tr("รอแอดมินอนุมัติภายใน 24 ชั่วโมง")].map((step, i) => (
               <div key={i} className="flex items-center gap-3">
                 <span className="w-5 h-5 rounded-full bg-[var(--c-accent)] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
                   {i + 1}
@@ -302,9 +302,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
             <a
               href="/profile/verify"
               className="flex-1 py-2.5 bg-[var(--c-accent)] text-white rounded-xl text-sm font-bold text-center hover:bg-[var(--c-accent-str)] transition"
-            >
-              ยืนยันตัวตน →
-            </a>
+            >{tr("ยืนยันตัวตน →")}</a>
           </div>
         </div>
       </Modal>
@@ -433,7 +431,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                   <svg className="w-5 h-5 text-[var(--c-line-str)] group-hover:text-[var(--c-accent)] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
                   </svg>
-                  <span className="text-[10px] text-[var(--c-faint-2)] group-hover:text-[var(--c-accent)] transition font-semibold">เพิ่มรูป</span>
+                  <span className="text-[10px] text-[var(--c-faint-2)] group-hover:text-[var(--c-accent)] transition font-semibold">{tr("เพิ่มรูป")}</span>
                 </button>
               )}
             </div>
@@ -516,7 +514,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                     placeholder={t("post_price_placeholder")}
                     className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">฿</span>
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">{tr("฿")}</span>
                 </div>
               </div>
               <label className="flex items-center gap-2.5 cursor-pointer text-sm text-[var(--c-ink-2)] bg-[var(--c-subtle)] border border-[var(--c-line)] rounded-xl px-4 py-2.5 hover:bg-[var(--c-line-soft)] transition">
@@ -530,13 +528,12 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
           {adType === "rent" && (
             <div className="space-y-3 mb-4">
               <div className="bg-[var(--c-accent-soft)] border border-blue-100 rounded-xl px-4 py-2.5 mb-1">
-                <p className="text-[11px] font-bold text-[var(--c-accent-str)] uppercase tracking-widest">ตั้งค่าการเช่า</p>
+                <p className="text-[11px] font-bold text-[var(--c-accent-str)] uppercase tracking-widest">{tr("ตั้งค่าการเช่า")}</p>
               </div>
 
               {/* Rate + rate type */}
               <div>
-                <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">
-                  ค่าเช่า <span className="text-[var(--c-danger)]">*</span>
+                <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">{tr("ค่าเช่า")}<span className="text-[var(--c-danger)]">*</span>
                 </label>
                 <div className="flex gap-2">
                   <div className="relative flex-1">
@@ -544,10 +541,10 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                       type="number" min="1"
-                      placeholder={rateType === "DAILY" ? "เช่น 80" : rateType === "MONTHLY" ? "เช่น 500" : "เช่น 6000"}
+                      placeholder={rateType === "DAILY" ? tr("เช่น 80") : rateType === "MONTHLY" ? tr("เช่น 500") : tr("เช่น 6000")}
                       className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                     />
-                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">฿</span>
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">{tr("฿")}</span>
                   </div>
                   <div className="flex border border-[var(--c-line)] rounded-xl overflow-hidden flex-shrink-0">
                     {(["DAILY", "MONTHLY", "YEARLY"] as const).map((t) => (
@@ -561,7 +558,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                             : "text-[var(--c-ink-2)] hover:bg-[var(--c-line-soft)]"
                         }`}
                       >
-                        {t === "DAILY" ? "/วัน" : t === "MONTHLY" ? "/เดือน" : "/ปี"}
+                        {t === "DAILY" ? tr("/วัน") : t === "MONTHLY" ? tr("/เดือน") : tr("/ปี")}
                       </button>
                     ))}
                   </div>
@@ -582,43 +579,40 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
 
               {/* Security deposit */}
               <div>
-                <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">
-                  เงินมัดจำ <span className="text-[var(--c-danger)]">*</span>
+                <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">{tr("เงินมัดจำ")}<span className="text-[var(--c-danger)]">*</span>
                 </label>
                 <div className="relative">
                   <input
                     value={securityDeposit}
                     onChange={(e) => setSecurityDeposit(e.target.value)}
                     type="number" min="0"
-                    placeholder="เช่น 500"
+                    placeholder={tr("เช่น 500")}
                     className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">฿</span>
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">{tr("฿")}</span>
                 </div>
-                <p className="text-[11px] text-[var(--c-faint)] mt-1">คืนให้ผู้เช่าหลังตรวจสอบสภาพสินค้า</p>
+                <p className="text-[11px] text-[var(--c-faint)] mt-1">{tr("คืนให้ผู้เช่าหลังตรวจสอบสภาพสินค้า")}</p>
               </div>
 
               {/* Late fee */}
               <div>
-                <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">
-                  ค่าปรับคืนช้า (ต่อวัน)
-                </label>
+                <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">{tr("ค่าปรับคืนช้า (ต่อวัน)")}</label>
                 <div className="relative">
                   <input
                     value={lateFeePerDay}
                     onChange={(e) => setLateFeePerDay(e.target.value)}
                     type="number" min="0"
-                    placeholder="0 = ไม่คิดค่าปรับ"
+                    placeholder={tr("0 = ไม่คิดค่าปรับ")}
                     className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">฿</span>
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">{tr("฿")}</span>
                 </div>
               </div>
 
               {/* Min / Max rental days */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">เช่าขั้นต่ำ</label>
+                  <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">{tr("เช่าขั้นต่ำ")}</label>
                   <div className="relative">
                     <input
                       value={minRentalDays}
@@ -626,11 +620,11 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                       type="number" min="1" max="365"
                       className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-12 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                     />
-                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--c-muted)]">วัน</span>
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--c-muted)]">{tr("วัน")}</span>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">เช่าสูงสุด</label>
+                  <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">{tr("เช่าสูงสุด")}</label>
                   <div className="relative">
                     <input
                       value={maxRentalDays}
@@ -638,19 +632,19 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                       type="number" min="1" max="365"
                       className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-12 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                     />
-                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--c-muted)]">วัน</span>
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--c-muted)]">{tr("วัน")}</span>
                   </div>
                 </div>
               </div>
 
               {/* Rental terms */}
               <div>
-                <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">เงื่อนไขการเช่า (ไม่บังคับ)</label>
+                <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">{tr("เงื่อนไขการเช่า (ไม่บังคับ)")}</label>
                 <textarea
                   value={rentalTerms}
                   onChange={(e) => setRentalTerms(e.target.value)}
                   rows={2}
-                  placeholder={'เช่น "ห้ามแกะชิ้นส่วน", "คืนพร้อมกล่องและอุปกรณ์ครบ"'}
+                  placeholder={'เช่น tr("ห้ามแกะชิ้นส่วน"), tr("คืนพร้อมกล่องและอุปกรณ์ครบ")'}
                   className="w-full border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm resize-none outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                 />
               </div>
@@ -667,11 +661,11 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                   className="w-full border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm bg-[var(--c-surface)] appearance-none pr-10 outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)] cursor-pointer"
                 >
                   <option value="">{t("post_location_placeholder")}</option>
-                  <option>หอพักนักศึกษา</option>
-                  <option>อาคาร CoC</option>
-                  <option>อาคาร SC</option>
-                  <option>โรงอาหาร</option>
-                  <option>หน้า 7-11</option>
+                  <option>{tr("หอพักนักศึกษา")}</option>
+                  <option>{tr("อาคาร CoC")}</option>
+                  <option>{tr("อาคาร SC")}</option>
+                  <option>{tr("โรงอาหาร")}</option>
+                  <option>{tr("หน้า 7-11")}</option>
                   <option>อื่นๆ</option>
                 </select>
                 <svg className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--c-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -684,12 +678,12 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
           {/* ── Delivery & Payment config ─────────────────── */}
           <div className="mb-4 rounded-2xl border border-[var(--c-line)] overflow-hidden">
             <div className="bg-[var(--c-subtle)] px-4 py-2.5 border-b border-[var(--c-line)]">
-              <p className="text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest">ตั้งค่าการจัดส่งและชำระเงิน</p>
+              <p className="text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest">{tr("ตั้งค่าการจัดส่งและชำระเงิน")}</p>
             </div>
 
             {/* Delivery */}
             <div className="px-4 pt-3 pb-1">
-              <p className="text-[10px] font-bold text-[var(--c-faint)] uppercase tracking-widest mb-2">วิธีจัดส่ง</p>
+              <p className="text-[10px] font-bold text-[var(--c-faint)] uppercase tracking-widest mb-2">{tr("วิธีจัดส่ง")}</p>
               <div className="space-y-2 mb-3">
                 <button
                   type="button"
@@ -700,8 +694,8 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                 >
                   <span className="text-lg">📦</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[var(--c-ink)]">จัดส่งทางไปรษณีย์</p>
-                    <p className="text-[11px] text-[var(--c-muted)]">ผู้ซื้อรับสินค้าทางไปรษณีย์</p>
+                    <p className="text-sm font-semibold text-[var(--c-ink)]">{tr("จัดส่งทางไปรษณีย์")}</p>
+                    <p className="text-[11px] text-[var(--c-muted)]">{tr("ผู้ซื้อรับสินค้าทางไปรษณีย์")}</p>
                   </div>
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition ${
                     allowShipping ? "border-[var(--c-ink)] bg-[var(--c-ink)]" : "border-[var(--c-line-str)]"
@@ -719,8 +713,8 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                 >
                   <span className="text-lg">🤝</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[var(--c-ink)]">นัดรับสินค้า</p>
-                    <p className="text-[11px] text-[var(--c-muted)]">ผู้ซื้อมารับด้วยตนเอง (ใน PSU)</p>
+                    <p className="text-sm font-semibold text-[var(--c-ink)]">{tr("นัดรับสินค้า")}</p>
+                    <p className="text-[11px] text-[var(--c-muted)]">{tr("ผู้ซื้อมารับด้วยตนเอง (ใน PSU)")}</p>
                   </div>
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition ${
                     allowMeetup ? "border-[var(--c-ink)] bg-[var(--c-ink)]" : "border-[var(--c-line-str)]"
@@ -730,22 +724,22 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                 </button>
               </div>
               {!allowShipping && !allowMeetup && (
-                <p className="text-[11px] text-[var(--c-danger)] font-medium mb-2">⚠️ ต้องเลือกอย่างน้อย 1 วิธี</p>
+                <p className="text-[11px] text-[var(--c-danger)] font-medium mb-2">{tr("⚠️ ต้องเลือกอย่างน้อย 1 วิธี")}</p>
               )}
             </div>
 
             {/* Payment */}
             <div className="px-4 pt-1 pb-3 border-t border-[var(--c-line-soft)]">
-              <p className="text-[10px] font-bold text-[var(--c-faint)] uppercase tracking-widest mb-2 mt-2">วิธีชำระเงิน</p>
+              <p className="text-[10px] font-bold text-[var(--c-faint)] uppercase tracking-widest mb-2 mt-2">{tr("วิธีชำระเงิน")}</p>
               <div className="space-y-2">
                 {/* Escrow — always enabled */}
                 <div className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl border-2 border-[#10b981]/40 bg-[#f0fdf4]">
                   <span className="text-lg">🔒</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[var(--c-ink)]">โอนผ่าน Escrow</p>
-                    <p className="text-[11px] text-[var(--c-muted)]">เงินโอนให้ผู้ขายหลังยืนยันรับสินค้า</p>
+                    <p className="text-sm font-semibold text-[var(--c-ink)]">{tr("โอนผ่าน Escrow")}</p>
+                    <p className="text-[11px] text-[var(--c-muted)]">{tr("เงินโอนให้ผู้ขายหลังยืนยันรับสินค้า")}</p>
                   </div>
-                  <span className="text-[10px] font-bold text-[#10b981] bg-[#dcfce7] px-2 py-0.5 rounded-full">บังคับใช้</span>
+                  <span className="text-[10px] font-bold text-[#10b981] bg-[#dcfce7] px-2 py-0.5 rounded-full">{tr("บังคับใช้")}</span>
                 </div>
 
                 {/* COD — only meaningful when meetup is on */}
@@ -763,8 +757,8 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                 >
                   <span className="text-lg">💵</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[var(--c-ink)]">เก็บเงินปลายทาง (COD)</p>
-                    <p className="text-[11px] text-[var(--c-muted)]">ชำระเงินสดตอนนัดรับ</p>
+                    <p className="text-sm font-semibold text-[var(--c-ink)]">{tr("เก็บเงินปลายทาง (COD)")}</p>
+                    <p className="text-[11px] text-[var(--c-muted)]">{tr("ชำระเงินสดตอนนัดรับ")}</p>
                   </div>
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition ${
                     allowMeetup && allowCOD ? "border-[var(--c-ink)] bg-[var(--c-ink)]" : "border-[var(--c-line-str)]"
@@ -802,7 +796,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-[var(--c-ink)] truncate">{name}</p>
                   <p className="text-base font-extrabold text-[var(--c-accent)]">
-                    {price ? `฿${Number(price).toLocaleString()}${adType === "rent" ? "/วัน" : ""}` : "—"}
+                    {price ? `฿${Number(price).toLocaleString()}${adType === "rent" ? tr("/วัน") : ""}` : "—"}
                   </p>
                   {location && <p className="text-xs text-[var(--c-muted)]">📍 {location}</p>}
                 </div>
@@ -823,7 +817,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
               disabled={loading}
               className="flex-1 bg-[var(--c-accent)] text-white font-bold py-3 rounded-2xl hover:bg-[var(--c-accent-str)] transition disabled:opacity-70 flex items-center justify-center gap-2 text-sm shadow-[0_4px_16px_rgba(232,80,10,0.28)]"
             >
-              {loading ? <><Spinner /> กำลังลงประกาศ...</> : <>{t("post_submit")} ✓</>}
+              {loading ? <><Spinner />{tr("กำลังลงประกาศ...")}</> : <>{t("post_submit")} ✓</>}
             </button>
           </div>
         </div>

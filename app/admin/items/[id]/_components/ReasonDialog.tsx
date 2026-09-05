@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState } from "react";
 
 const COMMON_REASONS = [
@@ -23,6 +25,7 @@ interface Props {
 export default function ReasonDialog({
   open, title, confirmLabel, danger = false, loading = false, onConfirm, onCancel,
 }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [reason, setReason] = useState("");
 
   if (!open) return null;
@@ -52,12 +55,11 @@ export default function ReasonDialog({
 
         {/* Reason textarea */}
         <div>
-          <label className="text-sm text-[var(--c-ink-2)] font-medium block mb-1.5">
-            เหตุผล <span className="text-[var(--c-danger)]">*</span>
+          <label className="text-sm text-[var(--c-ink-2)] font-medium block mb-1.5">{tr("เหตุผล")}<span className="text-[var(--c-danger)]">*</span>
           </label>
           <textarea
             className="w-full border border-[var(--c-line)] rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/20 focus:border-[var(--c-accent)] transition"
-            placeholder="ระบุเหตุผล..."
+            placeholder={tr("ระบุเหตุผล...")}
             rows={3}
             value={reason}
             onChange={(e) => setReason(e.target.value)}
@@ -68,7 +70,7 @@ export default function ReasonDialog({
 
         {/* Quick reason chips */}
         <div>
-          <p className="text-xs text-[var(--c-faint)] mb-2">เหตุผลที่พบบ่อย:</p>
+          <p className="text-xs text-[var(--c-faint)] mb-2">{tr("เหตุผลที่พบบ่อย:")}</p>
           <div className="flex flex-wrap gap-1.5">
             {COMMON_REASONS.map((r) => (
               <button
@@ -90,7 +92,7 @@ export default function ReasonDialog({
         {/* Warning */}
         <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-3 py-2 text-xs text-[var(--c-warn)] flex items-start gap-2">
           <span className="mt-0.5">⚠️</span>
-          <span>ผู้ขายจะได้รับแจ้งเตือนพร้อมเหตุผล</span>
+          <span>{tr("ผู้ขายจะได้รับแจ้งเตือนพร้อมเหตุผล")}</span>
         </div>
 
         {/* Buttons */}

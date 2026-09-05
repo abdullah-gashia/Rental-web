@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useEffect } from "react";
 
 /**
@@ -17,6 +19,7 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   useEffect(() => {
     // The message can carry query text and ids, so it goes to the console for
     // whoever is debugging — never onto the page.
@@ -33,13 +36,8 @@ export default function GlobalError({
           </svg>
         </div>
 
-        <h1 className="text-[20px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] mt-1">
-          หน้านี้โหลดไม่สำเร็จ
-        </h1>
-        <p className="text-[13.5px] text-[var(--hp-muted)] mt-2.5 leading-[1.9]">
-          เกิดข้อผิดพลาดระหว่างเตรียมข้อมูล ลองใหม่อีกครั้งได้เลย —
-          ถ้ายังเป็นเหมือนเดิม ช่วยแจ้งทีมงานพร้อมรหัสด้านล่าง
-        </p>
+        <h1 className="text-[20px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] mt-1">{tr("หน้านี้โหลดไม่สำเร็จ")}</h1>
+        <p className="text-[13.5px] text-[var(--hp-muted)] mt-2.5 leading-[1.9]">{tr("เกิดข้อผิดพลาดระหว่างเตรียมข้อมูล ลองใหม่อีกครั้งได้เลย — ถ้ายังเป็นเหมือนเดิม ช่วยแจ้งทีมงานพร้อมรหัสด้านล่าง")}</p>
 
         {error.digest && (
           <p className="ui-num text-[11.5px] text-[var(--hp-muted)] mt-3 font-mono">
@@ -48,8 +46,8 @@ export default function GlobalError({
         )}
 
         <div className="flex items-center justify-center gap-2.5 mt-6">
-          <button onClick={reset} className="ui-btn ui-btn-primary">ลองใหม่อีกครั้ง</button>
-          <a href="/" className="ui-btn ui-btn-ghost">กลับหน้าร้าน</a>
+          <button onClick={reset} className="ui-btn ui-btn-primary">{tr("ลองใหม่อีกครั้ง")}</button>
+          <a href="/" className="ui-btn ui-btn-ghost">{tr("กลับหน้าร้าน")}</a>
         </div>
       </div>
     </main>

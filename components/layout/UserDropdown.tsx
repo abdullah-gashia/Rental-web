@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useRef, useEffect } from "react";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { logout } from "@/lib/actions/auth-actions";
@@ -9,6 +11,7 @@ interface UserDropdownProps {
 }
 
 export default function UserDropdown({ onClose }: UserDropdownProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const { user, logout: clearAuth } = useAuthStore();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -63,8 +66,8 @@ export default function UserDropdown({ onClose }: UserDropdownProps) {
               </svg>
             </div>
             <div className="flex-1">
-              <p className="text-[13px] font-medium text-[var(--c-ink)]">แดชบอร์ดของฉัน</p>
-              <p className="text-[11px] text-[var(--c-muted)]">สินค้าและสถานะการอนุมัติ</p>
+              <p className="text-[13px] font-medium text-[var(--c-ink)]">{tr("แดชบอร์ดของฉัน")}</p>
+              <p className="text-[11px] text-[var(--c-muted)]">{tr("สินค้าและสถานะการอนุมัติ")}</p>
             </div>
             <svg className="w-4 h-4 text-[var(--c-faint)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -85,8 +88,8 @@ export default function UserDropdown({ onClose }: UserDropdownProps) {
               </svg>
             </div>
             <div className="flex-1">
-              <p className="text-[13px] font-medium text-[var(--c-accent)]">แผงควบคุมแอดมิน</p>
-              <p className="text-[11px] text-[var(--c-muted)]">ตรวจสอบและอนุมัติสินค้า</p>
+              <p className="text-[13px] font-medium text-[var(--c-accent)]">{tr("แผงควบคุมแอดมิน")}</p>
+              <p className="text-[11px] text-[var(--c-muted)]">{tr("ตรวจสอบและอนุมัติสินค้า")}</p>
             </div>
             <svg className="w-4 h-4 text-[var(--c-faint)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -107,8 +110,8 @@ export default function UserDropdown({ onClose }: UserDropdownProps) {
               </svg>
             </div>
             <div className="flex-1">
-              <p className="text-[13px] font-medium text-[var(--c-ink)]">ระบบปล่อยเช่า</p>
-              <p className="text-[11px] text-[var(--c-muted)]">การเช่าและให้เช่าของฉัน</p>
+              <p className="text-[13px] font-medium text-[var(--c-ink)]">{tr("ระบบปล่อยเช่า")}</p>
+              <p className="text-[11px] text-[var(--c-muted)]">{tr("การเช่าและให้เช่าของฉัน")}</p>
             </div>
             <svg className="w-4 h-4 text-[var(--c-faint)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -130,7 +133,7 @@ export default function UserDropdown({ onClose }: UserDropdownProps) {
               </svg>
             </div>
             <div className="flex-1 text-left">
-              <p className="text-[13px] font-medium text-[var(--c-ink)]">การตั้งค่าและความเป็นส่วนตัว</p>
+              <p className="text-[13px] font-medium text-[var(--c-ink)]">{tr("การตั้งค่าและความเป็นส่วนตัว")}</p>
             </div>
             <svg className="w-4 h-4 text-[var(--c-faint)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -150,7 +153,7 @@ export default function UserDropdown({ onClose }: UserDropdownProps) {
             </svg>
           </div>
           <div className="flex-1 text-left">
-            <p className="text-[13px] font-medium text-[var(--c-ink)]">ความช่วยเหลือและการสนับสนุน</p>
+            <p className="text-[13px] font-medium text-[var(--c-ink)]">{tr("ความช่วยเหลือและการสนับสนุน")}</p>
           </div>
           <svg className="w-4 h-4 text-[var(--c-faint)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -170,14 +173,14 @@ export default function UserDropdown({ onClose }: UserDropdownProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
           </div>
-          <p className="text-[13px] font-medium text-[var(--c-ink)] group-hover:text-[var(--c-danger)] transition">ออกจากระบบ</p>
+          <p className="text-[13px] font-medium text-[var(--c-ink)] group-hover:text-[var(--c-danger)] transition">{tr("ออกจากระบบ")}</p>
         </button>
       </div>
 
       {/* Footer */}
       <div className="px-4 py-3 border-t border-[var(--c-line)] bg-[#fafaf8]">
         <p className="text-[10px] text-[var(--c-faint)] text-center">
-          PSU Store © 2026 · <a href="#" className="hover:underline">ข้อกำหนด</a> · <a href="#" className="hover:underline">นโยบาย</a>
+          PSU Store © 2026 · <a href="#" className="hover:underline">{tr("ข้อกำหนด")}</a> · <a href="#" className="hover:underline">{tr("นโยบาย")}</a>
         </p>
       </div>
     </div>

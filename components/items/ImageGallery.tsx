@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useEffect, useCallback } from "react";
 import type { ItemImage } from "@/lib/types";
 
@@ -13,6 +15,7 @@ interface ImageGalleryProps {
 }
 
 export default function ImageGallery({ images: rawImages, emoji, color, title }: ImageGalleryProps) {
+  const tr = useLocaleStore((s) => s.tr);
   // Filter out broken relations: null entries or entries missing a url
   const images = rawImages.filter((img): img is ItemImage => !!img?.url);
 
@@ -69,19 +72,17 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
           type="button"
           onClick={() => setLightbox(true)}
           className="relative w-full aspect-square rounded-xl overflow-hidden group bg-[var(--c-subtle-2)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-accent)]"
-          aria-label="ดูรูปขยาย"
+          aria-label={tr("ดูรูปขยาย")}
         >
           <img
             src={active?.url ?? ""}
-            alt={title ?? "สินค้า"}
+            alt={title ?? tr("สินค้า")}
             className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
           />
 
           {/* Zoom hint overlay */}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-200 flex items-center justify-center">
-            <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/60 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-sm">
-              ขยายรูป
-            </span>
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/60 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-sm">{tr("ขยายรูป")}</span>
           </div>
         </button>
 
@@ -123,7 +124,7 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
           >
             <img
               src={active?.url ?? ""}
-              alt={title ?? "สินค้า"}
+              alt={title ?? tr("สินค้า")}
               className="max-w-full max-h-[85vh] rounded-xl object-contain shadow-2xl"
             />
 
@@ -148,7 +149,7 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
                     setActive(images[(idx - 1 + images.length) % images.length]);
                   }}
                   className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-[var(--c-surface)]/20 hover:bg-[var(--c-surface)]/40 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition"
-                  aria-label="รูปก่อนหน้า"
+                  aria-label={tr("รูปก่อนหน้า")}
                 >
                   ‹
                 </button>
@@ -160,7 +161,7 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
                     setActive(images[(idx + 1) % images.length]);
                   }}
                   className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-[var(--c-surface)]/20 hover:bg-[var(--c-surface)]/40 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition"
-                  aria-label="รูปถัดไป"
+                  aria-label={tr("รูปถัดไป")}
                 >
                   ›
                 </button>

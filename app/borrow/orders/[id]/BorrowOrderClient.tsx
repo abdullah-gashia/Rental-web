@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -46,6 +48,7 @@ function Row({ k, v }: { k: string; v: React.ReactNode }) {
 
 /** Photo picker that compresses in the browser before uploading. */
 function PhotoPicker({ photos, onChange }: { photos: string[]; onChange: (p: string[]) => void }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [busy, setBusy] = useState(false);
   const [err, setErr]   = useState<string | null>(null);
 
@@ -79,10 +82,8 @@ function PhotoPicker({ photos, onChange }: { photos: string[]; onChange: (p: str
             <button
               onClick={() => onChange(photos.filter((x) => x !== u))}
               className="absolute inset-0 bg-black/55 text-white text-[11px] opacity-0 group-hover:opacity-100 transition"
-              aria-label="ลบรูปนี้"
-            >
-              ลบ
-            </button>
+              aria-label={tr("ลบรูปนี้")}
+            >{tr("ลบ")}</button>
           </div>
         ))}
         <label className="bw-thumb w-16 h-16 cursor-pointer border-dashed hover:border-[var(--psu-blue)] transition">
@@ -98,6 +99,7 @@ function PhotoPicker({ photos, onChange }: { photos: string[]; onChange: (p: str
 }
 
 export default function BorrowOrderClient({ order, backHref }: { order: any; backHref: string }) {
+  const tr = useLocaleStore((s) => s.tr);
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [msg, setMsg]   = useState<{ ok: boolean; text: string } | null>(null);
@@ -135,9 +137,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
 
       {/* ── Header ───────────────────────────────────────────────────── */}
       <div>
-        <a href={backHref} className="text-[12.5px] text-[var(--bw-muted)] hover:text-[var(--psu-navy)] transition">
-          ← กลับ
-        </a>
+        <a href={backHref} className="text-[12.5px] text-[var(--bw-muted)] hover:text-[var(--psu-navy)] transition">{tr("← กลับ")}</a>
         <div className="flex items-start justify-between gap-3 flex-wrap mt-2">
           <div>
             <p className="bw-label">{BORROW_CATEGORY_LABEL[order.item.category] ?? order.item.category}</p>
@@ -171,7 +171,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
           left !== null && left < 0 ? "!border-[var(--c-danger-line)] !bg-[var(--c-danger-soft)]" : ""
         }`}>
           <div>
-            <p className="bw-label">กำหนดคืน</p>
+            <p className="bw-label">{tr("กำหนดคืน")}</p>
             <p className="text-[15px] font-semibold mt-0.5">{fmtDate(order.dueDate)}</p>
           </div>
           <p className={`text-[14px] font-semibold ${left !== null && left < 0 ? "text-[var(--c-danger)]" : "text-[var(--psu-blue)]"}`}>
@@ -183,7 +183,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
       {st === "OVERDUE" && (
         <div className="bw-panel !border-[var(--c-danger-line)] !bg-[var(--c-danger-soft)]">
           <p className="text-[13px] text-[var(--c-danger)] leading-[1.9]">
-            <strong>เลยกำหนดคืนแล้ว</strong> — ไม่มีค่าปรับเป็นเงิน แต่ถ้าเกิน {OVERDUE_GRACE_DAYS} วัน
+            <strong>{tr("เลยกำหนดคืนแล้ว")}</strong> — ไม่มีค่าปรับเป็นเงิน แต่ถ้าเกิน {OVERDUE_GRACE_DAYS} วัน
             สิทธิ์การยืมจะถูกระงับจนกว่าจะคืนของ กรุณาติดต่องานภัทรเพื่อนัดคืน
           </p>
         </div>
@@ -191,7 +191,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
 
       {/* ── Steps ────────────────────────────────────────────────────── */}
       <div className="bw-panel">
-        <h2 className="bw-h">ขั้นตอน</h2>
+        <h2 className="bw-h">{tr("ขั้นตอน")}</h2>
         <ol className="bw-steps">
           {BORROW_STEPS.map((step, i) => {
             const done = seen.has(step.key) || (step.key === "COMPLETED" && closed && st.startsWith("COMPLETED"));
@@ -214,50 +214,48 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* ── Details ────────────────────────────────────────────────── */}
         <div className="bw-panel">
-          <h2 className="bw-h">รายละเอียด</h2>
-          <Row k="ระยะเวลาที่ขอ" v={`${order.requestedDays} วัน`} />
-          <Row k="ส่งคำขอเมื่อ"   v={fmtDT(order.requestedAt)} />
-          <Row k="อนุมัติเมื่อ"    v={fmtDT(order.approvedAt)} />
-          {order.approvedByName && <Row k="อนุมัติโดย" v={order.approvedByName} />}
+          <h2 className="bw-h">{tr("รายละเอียด")}</h2>
+          <Row k={tr("ระยะเวลาที่ขอ")} v={`${order.requestedDays} วัน`} />
+          <Row k={tr("ส่งคำขอเมื่อ")}   v={fmtDT(order.requestedAt)} />
+          <Row k={tr("อนุมัติเมื่อ")}    v={fmtDT(order.approvedAt)} />
+          {order.approvedByName && <Row k={tr("อนุมัติโดย")} v={order.approvedByName} />}
           <Row k="นัดรับ"        v={fmtDT(order.scheduledPickupAt)} />
-          <Row k="รับของจริง"     v={fmtDT(order.actualPickupAt)} />
-          <Row k="นัดคืน"        v={fmtDT(order.scheduledReturnAt)} />
-          <Row k="คืนจริง"        v={fmtDT(order.actualReturnAt)} />
-          <Row k="จุดนัด"         v={order.meetupLocation ?? "—"} />
-          <Row k="ต่ออายุแล้ว"    v={`${order.renewalCount} ครั้ง`} />
+          <Row k={tr("รับของจริง")}     v={fmtDT(order.actualPickupAt)} />
+          <Row k={tr("นัดคืน")}        v={fmtDT(order.scheduledReturnAt)} />
+          <Row k={tr("คืนจริง")}        v={fmtDT(order.actualReturnAt)} />
+          <Row k={tr("จุดนัด")}         v={order.meetupLocation ?? "—"} />
+          <Row k={tr("ต่ออายุแล้ว")}    v={`${order.renewalCount} ครั้ง`} />
           {order.returnCondition && (
-            <Row k="สภาพตอนคืน" v={CONDITION_LABEL[order.returnCondition] ?? order.returnCondition} />
+            <Row k={tr("สภาพตอนคืน")} v={CONDITION_LABEL[order.returnCondition] ?? order.returnCondition} />
           )}
-          {order.cancelReason && <Row k="เหตุผล" v={order.cancelReason} />}
+          {order.cancelReason && <Row k={tr("เหตุผล")} v={order.cancelReason} />}
         </div>
 
         {/* ── Parties + private notes ────────────────────────────────── */}
         <div className="bw-panel">
-          <h2 className="bw-h">ผู้เกี่ยวข้อง</h2>
-          <Row k="ผู้ให้ยืม" v={order.office?.name ?? "งานภัทร"} />
+          <h2 className="bw-h">{tr("ผู้เกี่ยวข้อง")}</h2>
+          <Row k={tr("ผู้ให้ยืม")} v={order.office?.name ?? "งานภัทร"} />
           {isOffice && order.borrower && (
             <>
-              <Row k="ผู้ยืม" v={order.borrower.name ?? "—"} />
-              <Row k="อีเมล"  v={<span className="break-all">{order.borrower.email}</span>} />
-              <Row k="คะแนนความน่าเชื่อถือ" v={order.borrower.trustScore} />
+              <Row k={tr("ผู้ยืม")} v={order.borrower.name ?? "—"} />
+              <Row k={tr("อีเมล")}  v={<span className="break-all">{order.borrower.email}</span>} />
+              <Row k={tr("คะแนนความน่าเชื่อถือ")} v={order.borrower.trustScore} />
             </>
           )}
 
           {order.purposeNote && (
             <div className="mt-4 pt-4 border-t border-[var(--bw-line)]">
-              <p className="bw-label mb-1.5">เหตุผลที่ขอยืม</p>
+              <p className="bw-label mb-1.5">{tr("เหตุผลที่ขอยืม")}</p>
               <p className="text-[12.5px] leading-[1.9] text-[var(--bw-ink-2)] whitespace-pre-wrap">
                 {order.purposeNote}
               </p>
-              <p className="text-[10.5px] text-[var(--bw-muted)] mt-1.5">
-                เห็นได้เฉพาะผู้ยืมและเจ้าหน้าที่
-              </p>
+              <p className="text-[10.5px] text-[var(--bw-muted)] mt-1.5">{tr("เห็นได้เฉพาะผู้ยืมและเจ้าหน้าที่")}</p>
             </div>
           )}
 
           {isOffice && order.staffNote && (
             <div className="mt-4 pt-4 border-t border-[var(--bw-line)]">
-              <p className="bw-label mb-1.5">บันทึกภายใน</p>
+              <p className="bw-label mb-1.5">{tr("บันทึกภายใน")}</p>
               <p className="text-[12.5px] leading-[1.9] text-[var(--bw-ink-2)] whitespace-pre-wrap">
                 {order.staffNote}
               </p>
@@ -269,16 +267,16 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
       {/* ── Photos ───────────────────────────────────────────────────── */}
       {(order.pickupPhotos.length > 0 || order.returnPhotos.length > 0) && (
         <div className="bw-panel">
-          <h2 className="bw-h">รูปสภาพอุปกรณ์</h2>
+          <h2 className="bw-h">{tr("รูปสภาพอุปกรณ์")}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {[
-              { label: "ตอนส่งมอบ", list: order.pickupPhotos, note: order.pickupNote },
-              { label: "ตอนคืน",    list: order.returnPhotos, note: order.returnNote },
+              { label: tr("ตอนส่งมอบ"), list: order.pickupPhotos, note: order.pickupNote },
+              { label: tr("ตอนคืน"),    list: order.returnPhotos, note: order.returnNote },
             ].map((g) => (
               <div key={g.label}>
                 <p className="bw-label mb-2">{g.label} ({g.list.length})</p>
                 {g.list.length === 0 ? (
-                  <p className="text-[12px] text-[var(--bw-muted)]">ยังไม่มีรูป</p>
+                  <p className="text-[12px] text-[var(--bw-muted)]">{tr("ยังไม่มีรูป")}</p>
                 ) : (
                   <div className="flex gap-2 flex-wrap">
                     {g.list.map((u: string) => (
@@ -298,13 +296,13 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
       {/* ── What you can do now ──────────────────────────────────────── */}
       {!closed && (
         <div className="bw-panel">
-          <h2 className="bw-h">การดำเนินการ</h2>
+          <h2 className="bw-h">{tr("การดำเนินการ")}</h2>
 
           <div className="flex flex-wrap gap-2.5">
             {/* Schedule pickup */}
             {["APPROVED", "PICKUP_SCHEDULED"].includes(st) && (
               <button onClick={() => setPanel(panel === "pickup" ? null : "pickup")} className="bw-btn bw-btn-ghost">
-                📅 {order.scheduledPickupAt ? "แก้ไขนัดรับ" : "นัดวันรับของ"}
+                📅 {order.scheduledPickupAt ? tr("แก้ไขนัดรับ") : tr("นัดวันรับของ")}
               </button>
             )}
 
@@ -315,37 +313,29 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
                 disabled={isBorrower ? order.pickupBorrowerConfirm : order.pickupLenderConfirm}
                 className="bw-btn bw-btn-primary"
               >
-                ✓ ยืนยัน{isBorrower ? "รับของ" : "ส่งมอบ"}
+                ✓ ยืนยัน{isBorrower ? tr("รับของ") : tr("ส่งมอบ")}
               </button>
             )}
 
             {/* Renewal */}
             {isBorrower && ["ACTIVE", "RENEWED", "OVERDUE"].includes(st) && order.item.isRenewable &&
               order.renewalCount < order.item.maxRenewals && (
-              <button onClick={() => run(() => requestRenewal(order.id))} disabled={pending} className="bw-btn bw-btn-ghost">
-                ⏳ ขอต่ออายุ
-              </button>
+              <button onClick={() => run(() => requestRenewal(order.id))} disabled={pending} className="bw-btn bw-btn-ghost">{tr("⏳ ขอต่ออายุ")}</button>
             )}
             {isOffice && st === "RENEWAL_REQUESTED" && (
               <>
-                <button onClick={() => run(() => decideRenewal(order.id, true))} disabled={pending} className="bw-btn bw-btn-primary">
-                  อนุมัติต่ออายุ
-                </button>
-                <button onClick={() => run(() => decideRenewal(order.id, false))} disabled={pending} className="bw-btn bw-btn-ghost">
-                  ไม่อนุมัติ
-                </button>
+                <button onClick={() => run(() => decideRenewal(order.id, true))} disabled={pending} className="bw-btn bw-btn-primary">{tr("อนุมัติต่ออายุ")}</button>
+                <button onClick={() => run(() => decideRenewal(order.id, false))} disabled={pending} className="bw-btn bw-btn-ghost">{tr("ไม่อนุมัติ")}</button>
               </>
             )}
 
             {/* Return */}
             {isBorrower && ["ACTIVE", "RENEWED", "OVERDUE"].includes(st) && (
-              <button onClick={() => run(() => requestReturn(order.id))} disabled={pending} className="bw-btn bw-btn-ghost">
-                📦 แจ้งคืนของ
-              </button>
+              <button onClick={() => run(() => requestReturn(order.id))} disabled={pending} className="bw-btn bw-btn-ghost">{tr("📦 แจ้งคืนของ")}</button>
             )}
             {["RETURN_REQUESTED", "RETURN_SCHEDULED", "ACTIVE", "RENEWED", "OVERDUE"].includes(st) && (
               <button onClick={() => setPanel(panel === "retsched" ? null : "retsched")} className="bw-btn bw-btn-ghost">
-                📅 {order.scheduledReturnAt ? "แก้ไขนัดคืน" : "นัดวันคืน"}
+                📅 {order.scheduledReturnAt ? tr("แก้ไขนัดคืน") : tr("นัดวันคืน")}
               </button>
             )}
             {["RETURN_REQUESTED", "RETURN_SCHEDULED", "RETURNED", "ACTIVE", "RENEWED", "OVERDUE"].includes(st) && (
@@ -353,9 +343,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
                 onClick={() => setPanel(panel === "return" ? null : "return")}
                 disabled={isBorrower ? order.returnBorrowerConfirm : order.returnLenderConfirm}
                 className="bw-btn bw-btn-primary"
-              >
-                ✓ ยืนยันการคืน
-              </button>
+              >{tr("✓ ยืนยันการคืน")}</button>
             )}
 
             {/* Cancel */}
@@ -367,9 +355,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
 
             {/* Lost */}
             {isOffice && ["OVERDUE", "ACTIVE", "RENEWED"].includes(st) && (
-              <button onClick={() => setPanel(panel === "lost" ? null : "lost")} className="bw-btn bw-btn-ghost !text-[var(--c-danger)] !border-[var(--c-danger-line)]">
-                แจ้งสูญหาย
-              </button>
+              <button onClick={() => setPanel(panel === "lost" ? null : "lost")} className="bw-btn bw-btn-ghost !text-[var(--c-danger)] !border-[var(--c-danger-line)]">{tr("แจ้งสูญหาย")}</button>
             )}
           </div>
 
@@ -377,20 +363,18 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
           {panel === "pickup" && (
             <div className="mt-4 pt-4 border-t border-[var(--bw-line)] flex flex-col gap-3 max-w-lg">
               <div>
-                <label className="bw-label block mb-1.5">วันเวลานัดรับ</label>
+                <label className="bw-label block mb-1.5">{tr("วันเวลานัดรับ")}</label>
                 <input type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} className="bw-input" />
               </div>
               <div>
-                <label className="bw-label block mb-1.5">จุดนัดรับ</label>
-                <input value={where} onChange={(e) => setWhere(e.target.value)} placeholder="เช่น สำนักงานงานภัทร ชั้น 1" className="bw-input" />
+                <label className="bw-label block mb-1.5">{tr("จุดนัดรับ")}</label>
+                <input value={where} onChange={(e) => setWhere(e.target.value)} placeholder={tr("เช่น สำนักงานงานภัทร ชั้น 1")} className="bw-input" />
               </div>
               <button
                 onClick={() => run(() => scheduleBorrowPickup(order.id, when, where))}
                 disabled={pending || !when || !where.trim()}
                 className="bw-btn bw-btn-primary self-start"
-              >
-                บันทึกนัดรับ
-              </button>
+              >{tr("บันทึกนัดรับ")}</button>
             </div>
           )}
 
@@ -398,15 +382,13 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
             <div className="mt-4 pt-4 border-t border-[var(--bw-line)] flex flex-col gap-3 max-w-lg">
               <div>
                 <label className="bw-label block mb-1.5">
-                  รูปสภาพอุปกรณ์{!isBorrower && " (จำเป็น)"}
+                  รูปสภาพอุปกรณ์{!isBorrower && tr("(จำเป็น)")}
                 </label>
                 <PhotoPicker photos={photos} onChange={setPhotos} />
-                <p className="text-[11.5px] text-[var(--bw-muted)] mt-1 leading-[1.7]">
-                  รูปชุดนี้คือหลักฐานเดียวที่ใช้เทียบตอนคืน
-                </p>
+                <p className="text-[11.5px] text-[var(--bw-muted)] mt-1 leading-[1.7]">{tr("รูปชุดนี้คือหลักฐานเดียวที่ใช้เทียบตอนคืน")}</p>
               </div>
               <div>
-                <label className="bw-label block mb-1.5">หมายเหตุ</label>
+                <label className="bw-label block mb-1.5">{tr("หมายเหตุ")}</label>
                 <textarea rows={2} value={note} onChange={(e) => setNote(e.target.value)} className="bw-input" />
               </div>
               <button
@@ -414,7 +396,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
                 disabled={pending}
                 className="bw-btn bw-btn-primary self-start"
               >
-                ยืนยัน{isBorrower ? "รับของ" : "ส่งมอบ"}
+                ยืนยัน{isBorrower ? tr("รับของ") : tr("ส่งมอบ")}
               </button>
             </div>
           )}
@@ -422,20 +404,18 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
           {panel === "retsched" && (
             <div className="mt-4 pt-4 border-t border-[var(--bw-line)] flex flex-col gap-3 max-w-lg">
               <div>
-                <label className="bw-label block mb-1.5">วันเวลานัดคืน</label>
+                <label className="bw-label block mb-1.5">{tr("วันเวลานัดคืน")}</label>
                 <input type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} className="bw-input" />
               </div>
               <div>
-                <label className="bw-label block mb-1.5">จุดนัดคืน</label>
+                <label className="bw-label block mb-1.5">{tr("จุดนัดคืน")}</label>
                 <input value={where} onChange={(e) => setWhere(e.target.value)} className="bw-input" />
               </div>
               <button
                 onClick={() => run(() => scheduleReturn(order.id, when, where))}
                 disabled={pending || !when || !where.trim()}
                 className="bw-btn bw-btn-primary self-start"
-              >
-                บันทึกนัดคืน
-              </button>
+              >{tr("บันทึกนัดคืน")}</button>
             </div>
           )}
 
@@ -443,88 +423,76 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
             <div className="mt-4 pt-4 border-t border-[var(--bw-line)] flex flex-col gap-3 max-w-lg">
               <div>
                 <label className="bw-label block mb-1.5">
-                  รูปสภาพตอนคืน{!isBorrower && " (จำเป็น)"}
+                  รูปสภาพตอนคืน{!isBorrower && tr("(จำเป็น)")}
                 </label>
                 <PhotoPicker photos={photos} onChange={setPhotos} />
               </div>
               {isOffice && (
                 <div>
-                  <label className="bw-label block mb-1.5">สภาพที่ได้รับคืน</label>
+                  <label className="bw-label block mb-1.5">{tr("สภาพที่ได้รับคืน")}</label>
                   <select value={condition} onChange={(e) => setCond(e.target.value)} className="bw-input">
                     {Object.entries(CONDITION_LABEL).map(([k, v]) => (
                       <option key={k} value={k}>{v}</option>
                     ))}
                   </select>
-                  <p className="text-[11.5px] text-[var(--bw-muted)] mt-1 leading-[1.7]">
-                    ถ้าเลือก “พอใช้” หรือ “ต้องซ่อม” ระบบจะบันทึกว่ามีความเสียหาย
-                    แต่ไม่มีการเรียกเก็บเงินใด ๆ
-                  </p>
+                  <p className="text-[11.5px] text-[var(--bw-muted)] mt-1 leading-[1.7]">{tr("ถ้าเลือก “พอใช้” หรือ “ต้องซ่อม” ระบบจะบันทึกว่ามีความเสียหาย แต่ไม่มีการเรียกเก็บเงินใด ๆ")}</p>
                 </div>
               )}
               <div>
-                <label className="bw-label block mb-1.5">หมายเหตุ</label>
+                <label className="bw-label block mb-1.5">{tr("หมายเหตุ")}</label>
                 <textarea rows={2} value={note} onChange={(e) => setNote(e.target.value)} className="bw-input" />
               </div>
               <button
                 onClick={() => run(() => confirmReturn(order.id, { photos, condition: isOffice ? condition : undefined, note }))}
                 disabled={pending}
                 className="bw-btn bw-btn-primary self-start"
-              >
-                ยืนยันการคืน
-              </button>
+              >{tr("ยืนยันการคืน")}</button>
             </div>
           )}
 
           {panel === "cancel" && (
             <div className="mt-4 pt-4 border-t border-[var(--bw-line)] flex flex-col gap-3 max-w-lg">
               <div>
-                <label className="bw-label block mb-1.5">เหตุผลที่ยกเลิก</label>
+                <label className="bw-label block mb-1.5">{tr("เหตุผลที่ยกเลิก")}</label>
                 <input value={reason} onChange={(e) => setReason(e.target.value)} className="bw-input" />
               </div>
               <button
                 onClick={() => run(() => cancelBorrow(order.id, reason))}
                 disabled={pending}
                 className="bw-btn bw-btn-ghost !text-[var(--c-danger)] !border-[var(--c-danger-line)] self-start"
-              >
-                ยืนยันการยกเลิก
-              </button>
+              >{tr("ยืนยันการยกเลิก")}</button>
             </div>
           )}
 
           {panel === "lost" && (
             <div className="mt-4 pt-4 border-t border-[var(--bw-line)] flex flex-col gap-3 max-w-lg">
-              <p className="text-[12.5px] text-[var(--bw-ink-2)] leading-[1.9]">
-                บันทึกว่าอุปกรณ์สูญหาย ระบบจะระงับสิทธิ์การยืมของผู้ยืม
-                แต่จะ<strong>ไม่</strong>เรียกเก็บเงิน — การชดใช้เป็นเรื่องที่เจ้าหน้าที่ตกลงกับนักศึกษาเอง
-              </p>
+              <p className="text-[12.5px] text-[var(--bw-ink-2)] leading-[1.9]">{tr("บันทึกว่าอุปกรณ์สูญหาย ระบบจะระงับสิทธิ์การยืมของผู้ยืม แต่จะ")}<strong>{tr("ไม่")}</strong>{tr("เรียกเก็บเงิน — การชดใช้เป็นเรื่องที่เจ้าหน้าที่ตกลงกับนักศึกษาเอง")}</p>
               <textarea
                 rows={3}
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
-                placeholder="บันทึกรายละเอียด เช่น ติดต่อไม่ได้ตั้งแต่วันที่…"
+                placeholder={tr("บันทึกรายละเอียด เช่น ติดต่อไม่ได้ตั้งแต่วันที่…")}
                 className="bw-input"
               />
               <button
                 onClick={() => run(() => markBorrowLost(order.id, reason))}
                 disabled={pending || !reason.trim()}
                 className="bw-btn bw-btn-ghost !text-[var(--c-danger)] !border-[var(--c-danger-line)] self-start"
-              >
-                บันทึกว่าสูญหาย
-              </button>
+              >{tr("บันทึกว่าสูญหาย")}</button>
             </div>
           )}
 
           {/* Confirmation state, so nobody wonders who has done what */}
           {["APPROVED", "PICKUP_SCHEDULED", "ITEM_HANDED_OVER"].includes(st) && (
             <p className="text-[12px] text-[var(--bw-muted)] mt-4 pt-4 border-t border-[var(--bw-line)]">
-              การส่งมอบ: ผู้ยืม {order.pickupBorrowerConfirm ? "✓ ยืนยันแล้ว" : "○ ยังไม่ยืนยัน"} ·
-              เจ้าหน้าที่ {order.pickupLenderConfirm ? "✓ ยืนยันแล้ว" : "○ ยังไม่ยืนยัน"}
+              การส่งมอบ: ผู้ยืม {order.pickupBorrowerConfirm ? tr("✓ ยืนยันแล้ว") : tr("○ ยังไม่ยืนยัน")} ·
+              เจ้าหน้าที่ {order.pickupLenderConfirm ? tr("✓ ยืนยันแล้ว") : tr("○ ยังไม่ยืนยัน")}
             </p>
           )}
           {["RETURN_REQUESTED", "RETURN_SCHEDULED", "RETURNED"].includes(st) && (
             <p className="text-[12px] text-[var(--bw-muted)] mt-4 pt-4 border-t border-[var(--bw-line)]">
-              การคืน: ผู้ยืม {order.returnBorrowerConfirm ? "✓ ยืนยันแล้ว" : "○ ยังไม่ยืนยัน"} ·
-              เจ้าหน้าที่ {order.returnLenderConfirm ? "✓ ยืนยันแล้ว" : "○ ยังไม่ยืนยัน"}
+              การคืน: ผู้ยืม {order.returnBorrowerConfirm ? tr("✓ ยืนยันแล้ว") : tr("○ ยังไม่ยืนยัน")} ·
+              เจ้าหน้าที่ {order.returnLenderConfirm ? tr("✓ ยืนยันแล้ว") : tr("○ ยังไม่ยืนยัน")}
             </p>
           )}
         </div>
@@ -534,7 +502,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
       <div className="bw-panel">
         <h2 className="bw-h">ประวัติสถานะ ({order.statusHistory.length})</h2>
         {order.statusHistory.length === 0 ? (
-          <p className="text-[12.5px] text-[var(--bw-muted)]">ยังไม่มีประวัติ</p>
+          <p className="text-[12.5px] text-[var(--bw-muted)]">{tr("ยังไม่มีประวัติ")}</p>
         ) : (
           <ol className="flex flex-col">
             {[...order.statusHistory].reverse().map((h: any, i: number) => (

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition, useCallback } from "react";
 import Image from "next/image";
 import type { AdminFeaturedItem, ItemSearchResult } from "@/lib/actions/featured";
@@ -16,6 +18,7 @@ interface Props {
 }
 
 export default function TrendingManager({ initialItems }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [items, setItems]           = useState<AdminFeaturedItem[]>(initialItems);
   const [pending, startTransition]  = useTransition();
   const [toast, setToast]           = useState<{ ok: boolean; msg: string } | null>(null);
@@ -137,9 +140,7 @@ export default function TrendingManager({ initialItems }: Props) {
         <div className="space-y-4">
           <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-bold text-[var(--c-ink-1)] flex items-center gap-2">
-                📋 รายการมาแรงปัจจุบัน
-              </h2>
+              <h2 className="text-sm font-bold text-[var(--c-ink-1)] flex items-center gap-2">{tr("📋 รายการมาแรงปัจจุบัน")}</h2>
               <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                 items.length >= 10
                   ? "bg-[var(--c-danger-soft)] text-[var(--c-danger)]"
@@ -152,8 +153,8 @@ export default function TrendingManager({ initialItems }: Props) {
             {items.length === 0 ? (
               <div className="py-10 text-center text-[var(--c-faint)]">
                 <span className="text-3xl block mb-2">📭</span>
-                <p className="text-sm">ยังไม่มีสินค้ามาแรง</p>
-                <p className="text-xs text-[var(--c-faint-2)] mt-1">ค้นหาและเพิ่มสินค้าด้านล่าง</p>
+                <p className="text-sm">{tr("ยังไม่มีสินค้ามาแรง")}</p>
+                <p className="text-xs text-[var(--c-faint-2)] mt-1">{tr("ค้นหาและเพิ่มสินค้าด้านล่าง")}</p>
               </div>
             ) : (
               <div className="space-y-1">
@@ -177,9 +178,7 @@ export default function TrendingManager({ initialItems }: Props) {
 
           {/* ── Search & Add Items ─────────────────────────────────────── */}
           <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
-            <h2 className="text-sm font-bold text-[var(--c-ink-1)] flex items-center gap-2 mb-3">
-              ➕ เพิ่มสินค้าเข้ารายการมาแรง
-            </h2>
+            <h2 className="text-sm font-bold text-[var(--c-ink-1)] flex items-center gap-2 mb-3">{tr("➕ เพิ่มสินค้าเข้ารายการมาแรง")}</h2>
 
             <div className="relative mb-3">
               <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--c-faint)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,7 +188,7 @@ export default function TrendingManager({ initialItems }: Props) {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
-                placeholder="ค้นหาสินค้าเพื่อเพิ่ม..."
+                placeholder={tr("ค้นหาสินค้าเพื่อเพิ่ม...")}
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[var(--c-line)] text-sm
                            focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
               />
@@ -200,9 +199,7 @@ export default function TrendingManager({ initialItems }: Props) {
               )}
             </div>
 
-            <p className="text-[11px] text-[var(--c-faint)] mb-3">
-              แสดงเฉพาะสินค้าที่สถานะ "อนุมัติแล้ว" และยังไม่ได้อยู่ในรายการมาแรง
-            </p>
+            <p className="text-[11px] text-[var(--c-faint)] mb-3">{tr("แสดงเฉพาะสินค้าที่สถานะ \"อนุมัติแล้ว\" และยังไม่ได้อยู่ในรายการมาแรง")}</p>
 
             {searchResults.length > 0 && (
               <div className="space-y-1 max-h-[360px] overflow-y-auto">
@@ -218,22 +215,18 @@ export default function TrendingManager({ initialItems }: Props) {
             )}
 
             {searchQuery.trim().length > 0 && searchResults.length === 0 && !searching && (
-              <div className="py-6 text-center text-[var(--c-faint)] text-sm">
-                ไม่พบสินค้าที่ตรงกัน
-              </div>
+              <div className="py-6 text-center text-[var(--c-faint)] text-sm">{tr("ไม่พบสินค้าที่ตรงกัน")}</div>
             )}
           </div>
         </div>
 
         {/* ── Right: Live Preview ──────────────────────────────────────── */}
         <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
-          <h2 className="text-sm font-bold text-[var(--c-ink-1)] flex items-center gap-2 mb-4">
-            👁️ ตัวอย่างหน้าจริง
-          </h2>
+          <h2 className="text-sm font-bold text-[var(--c-ink-1)] flex items-center gap-2 mb-4">{tr("👁️ ตัวอย่างหน้าจริง")}</h2>
 
           {/* Preview header */}
           <div className="flex items-center justify-between mb-3 px-1">
-            <h3 className="text-base font-bold tracking-tight text-[var(--c-ink)]">กำลังมาแรงในขณะนี้</h3>
+            <h3 className="text-base font-bold tracking-tight text-[var(--c-ink)]">{tr("กำลังมาแรงในขณะนี้")}</h3>
             <span className="flex items-center gap-1.5 text-xs font-medium text-[var(--c-accent)]">
               <span className="w-2 h-2 bg-[var(--c-accent)] rounded-full animate-pulse" />
               Live
@@ -242,7 +235,7 @@ export default function TrendingManager({ initialItems }: Props) {
 
           {items.length === 0 ? (
             <div className="flex items-center justify-center h-48 bg-[var(--c-subtle)] rounded-xl border border-dashed border-[#d5d2cc]">
-              <p className="text-sm text-[var(--c-faint)]">เพิ่มสินค้าเพื่อดูตัวอย่าง</p>
+              <p className="text-sm text-[var(--c-faint)]">{tr("เพิ่มสินค้าเพื่อดูตัวอย่าง")}</p>
             </div>
           ) : (
             <div className="flex gap-3 overflow-x-auto pb-3 snap-x snap-mandatory">
@@ -264,7 +257,7 @@ export default function TrendingManager({ initialItems }: Props) {
                     {/* Badge */}
                     <div className="absolute top-2 left-2">
                       <span className="inline-flex items-center gap-0.5 bg-[var(--c-accent)] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
-                        🔥 {fi.customLabel ?? "มาแรง"}
+                        🔥 {fi.customLabel ?? tr("มาแรง")}
                       </span>
                     </div>
 
@@ -304,6 +297,7 @@ function FeaturedRow({
   isDragging:    boolean;
   pending:       boolean;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [editingLabel, setEditingLabel] = useState(false);
   const [labelVal, setLabelVal]         = useState(item.customLabel ?? "");
   const img = item.item.images[0];
@@ -357,7 +351,7 @@ function FeaturedRow({
             value={labelVal}
             onChange={(e) => setLabelVal(e.target.value.slice(0, 50))}
             className="w-24 px-2 py-1 text-xs border border-[var(--c-line)] rounded-lg focus:outline-none focus:ring-1 focus:ring-[var(--c-accent)]"
-            placeholder="เช่น ขายดีสุด"
+            placeholder={tr("เช่น ขายดีสุด")}
             autoFocus
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -378,9 +372,9 @@ function FeaturedRow({
         <button
           onClick={() => setEditingLabel(true)}
           className="text-[10px] text-[var(--c-faint)] hover:text-[var(--c-accent)] px-2 py-1 rounded-lg hover:bg-[var(--c-line-soft)] transition flex-shrink-0"
-          title="แก้ไข label"
+          title={tr("แก้ไข label")}
         >
-          🏷️ {item.customLabel ?? "ไม่มี label"}
+          🏷️ {item.customLabel ?? tr("ไม่มี label")}
         </button>
       )}
 
@@ -389,7 +383,7 @@ function FeaturedRow({
         onClick={onRemove}
         disabled={pending}
         className="text-xs text-[var(--c-danger)] hover:text-[var(--c-danger)] hover:bg-[var(--c-danger-soft)] px-2 py-1 rounded-lg transition flex-shrink-0 disabled:opacity-50"
-        title="ลบออกจากมาแรง"
+        title={tr("ลบออกจากมาแรง")}
       >
         🗑️
       </button>
@@ -406,6 +400,7 @@ function SearchResultRow({
   onAdd:    () => void;
   disabled: boolean;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const img = item.images[0];
 
   return (
@@ -432,9 +427,7 @@ function SearchResultRow({
         disabled={disabled}
         className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-white bg-[var(--c-accent)] rounded-lg
                    hover:bg-[var(--c-accent-str)] transition disabled:opacity-40"
-      >
-        + เพิ่ม
-      </button>
+      >{tr("+ เพิ่ม")}</button>
     </div>
   );
 }

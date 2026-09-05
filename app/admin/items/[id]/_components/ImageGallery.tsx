@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState } from "react";
 import Image from "next/image";
 
@@ -8,17 +10,18 @@ interface Props {
 }
 
 export default function ImageGallery({ images }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [activeIdx, setActiveIdx] = useState(0);
   const [lightbox, setLightbox] = useState(false);
 
   if (images.length === 0) {
     return (
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
-        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">รูปภาพ</h3>
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">{tr("รูปภาพ")}</h3>
         <div className="aspect-[4/3] rounded-xl bg-[var(--c-canvas)] flex items-center justify-center">
           <div className="text-center text-[var(--c-faint)]">
             <span className="text-4xl block mb-2">📷</span>
-            <span className="text-sm">ไม่มีรูปภาพ</span>
+            <span className="text-sm">{tr("ไม่มีรูปภาพ")}</span>
           </div>
         </div>
       </div>
@@ -30,9 +33,7 @@ export default function ImageGallery({ images }: Props) {
   return (
     <>
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
-        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">
-          รูปภาพ
-          <span className="text-[var(--c-faint)] font-normal ml-1">({images.length})</span>
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">{tr("รูปภาพ")}<span className="text-[var(--c-faint)] font-normal ml-1">({images.length})</span>
         </h3>
 
         {/* Main Image */}
@@ -42,15 +43,13 @@ export default function ImageGallery({ images }: Props) {
         >
           <Image
             src={activeImage.url}
-            alt="รูปสินค้า"
+            alt={tr("รูปสินค้า")}
             fill
             className="object-contain transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 60vw"
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
-          <div className="absolute bottom-3 right-3 bg-black/60 text-white rounded-lg px-2.5 py-1 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-            🔍 คลิกเพื่อขยาย
-          </div>
+          <div className="absolute bottom-3 right-3 bg-black/60 text-white rounded-lg px-2.5 py-1 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">{tr("🔍 คลิกเพื่อขยาย")}</div>
         </div>
 
         {/* Thumbnails */}
@@ -124,7 +123,7 @@ export default function ImageGallery({ images }: Props) {
           >
             <Image
               src={activeImage.url}
-              alt="รูปสินค้าขยาย"
+              alt={tr("รูปสินค้าขยาย")}
               fill
               className="object-contain"
               sizes="90vw"

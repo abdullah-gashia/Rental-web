@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState } from "react";
 
 interface Props {
@@ -7,13 +9,14 @@ interface Props {
 }
 
 export default function DescriptionSection({ description }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [expanded, setExpanded] = useState(false);
 
   if (!description) {
     return (
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
-        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">คำอธิบาย</h3>
-        <p className="text-sm text-[var(--c-faint)] italic">ไม่มีคำอธิบาย</p>
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">{tr("คำอธิบาย")}</h3>
+        <p className="text-sm text-[var(--c-faint)] italic">{tr("ไม่มีคำอธิบาย")}</p>
       </div>
     );
   }
@@ -23,7 +26,7 @@ export default function DescriptionSection({ description }: Props) {
 
   return (
     <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
-      <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">คำอธิบาย</h3>
+      <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">{tr("คำอธิบาย")}</h3>
       <div className="text-sm text-[#444] leading-relaxed whitespace-pre-wrap">
         {displayText}
       </div>
@@ -32,7 +35,7 @@ export default function DescriptionSection({ description }: Props) {
           onClick={() => setExpanded((e) => !e)}
           className="mt-2 text-sm text-[var(--c-accent)] hover:text-[var(--c-accent-str)] font-medium transition-colors"
         >
-          {expanded ? "ย่อ" : "อ่านเพิ่มเติม"}
+          {expanded ? tr("ย่อ") : tr("อ่านเพิ่มเติม")}
         </button>
       )}
     </div>

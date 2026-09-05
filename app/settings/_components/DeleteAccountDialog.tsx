@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { requestAccountDeletion } from "../actions";
 import { logout } from "@/lib/actions/auth-actions";
@@ -11,12 +13,13 @@ interface Props {
 }
 
 export default function DeleteAccountDialog({ open, onClose, showToast }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [confirmText, setConfirmText] = useState("");
   const [pending, startTransition] = useTransition();
 
   if (!open) return null;
 
-  const confirmed = confirmText === "ลบบัญชีของฉัน";
+  const confirmed = confirmText === tr("ลบบัญชีของฉัน");
 
   const handleDelete = () => {
     if (!confirmed) return;
@@ -49,24 +52,18 @@ export default function DeleteAccountDialog({ open, onClose, showToast }: Props)
 
       {/* Panel */}
       <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
-        <h3 className="text-base font-bold text-[var(--c-danger)] flex items-center gap-2">
-          ⚠️ ยืนยันการลบบัญชี
-        </h3>
+        <h3 className="text-base font-bold text-[var(--c-danger)] flex items-center gap-2">{tr("⚠️ ยืนยันการลบบัญชี")}</h3>
 
         <div className="text-sm text-[var(--c-ink-2)] space-y-2">
-          <p>
-            การดำเนินการนี้<strong>ไม่สามารถย้อนกลับได้</strong> ข้อมูลทั้งหมดจะถูกลบถาวรใน 30 วัน
-          </p>
-          <p>
-            พิมพ์ <span className="font-bold text-[var(--c-danger)]">ลบบัญชีของฉัน</span> เพื่อยืนยัน:
-          </p>
+          <p>{tr("การดำเนินการนี้")}<strong>{tr("ไม่สามารถย้อนกลับได้")}</strong>{tr("ข้อมูลทั้งหมดจะถูกลบถาวรใน 30 วัน")}</p>
+          <p>{tr("พิมพ์")}<span className="font-bold text-[var(--c-danger)]">{tr("ลบบัญชีของฉัน")}</span>{tr("เพื่อยืนยัน:")}</p>
         </div>
 
         <input
           type="text"
           value={confirmText}
           onChange={(e) => setConfirmText(e.target.value)}
-          placeholder="พิมพ์ข้อความยืนยัน..."
+          placeholder={tr("พิมพ์ข้อความยืนยัน...")}
           disabled={pending}
           className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--c-danger-line)] bg-[var(--c-danger-soft)]/30 text-sm text-[var(--c-ink)] focus:outline-none focus:ring-2 focus:ring-red-300 transition"
         />

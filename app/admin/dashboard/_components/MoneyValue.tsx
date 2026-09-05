@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState } from "react";
 
 /**
@@ -39,6 +41,7 @@ export function abbreviateBaht(n: number): string {
 }
 
 export default function MoneyValue({ amount }: { amount: number }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [showExact, setShowExact] = useState(false);
 
   const short = abbreviateBaht(amount);
@@ -54,14 +57,14 @@ export default function MoneyValue({ amount }: { amount: number }) {
     <button
       type="button"
       onClick={() => setShowExact((v) => !v)}
-      title={showExact ? "ย่อตัวเลข" : `ยอดจริง: ${full}`}
+      title={showExact ? tr("ย่อตัวเลข") : `ยอดจริง: ${full}`}
       className="group inline-flex items-baseline gap-1.5 text-left hover:text-[var(--c-accent)] transition-colors"
     >
       <span className={`tabular-nums ${showExact ? "text-lg break-all" : ""}`}>
         {showExact ? full : short}
       </span>
       <span className="text-[10px] font-semibold text-[var(--c-faint)] group-hover:text-[var(--c-accent)] whitespace-nowrap flex-shrink-0">
-        {showExact ? "ย่อ" : "ดูยอดจริง"}
+        {showExact ? tr("ย่อ") : tr("ดูยอดจริง")}
       </span>
     </button>
   );

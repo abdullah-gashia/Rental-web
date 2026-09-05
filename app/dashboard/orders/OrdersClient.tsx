@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { confirmReceipt } from "@/lib/actions/escrow-actions";
@@ -144,6 +146,7 @@ function Thumb({ item }: { item: OrderItem }) {
 // ─── Shipping Details ─────────────────────────────────────────────────────────
 
 function ShippingDetails({ order }: { order: BaseOrder }) {
+  const tr = useLocaleStore((s) => s.tr);
   if (!order.shippingMethod) return null;
   const methodName = METHOD_LABELS[order.shippingMethod] ?? order.shippingMethod;
   return (
@@ -153,14 +156,12 @@ function ShippingDetails({ order }: { order: BaseOrder }) {
       </div>
       {order.trackingNumber && (
         <div className="flex items-center gap-2">
-          <span className="text-[var(--c-muted)]">หมายเลขพัสดุ:</span>
+          <span className="text-[var(--c-muted)]">{tr("หมายเลขพัสดุ:")}</span>
           <span className="font-mono font-bold text-[var(--c-ink)]">{order.trackingNumber}</span>
           <button
             onClick={() => navigator.clipboard.writeText(order.trackingNumber!).catch(() => {})}
             className="px-2 py-0.5 rounded-md bg-[var(--c-accent-soft)] hover:bg-blue-200 text-[var(--c-accent-str)] font-bold transition text-[10px]"
-          >
-            คัดลอก
-          </button>
+          >{tr("คัดลอก")}</button>
         </div>
       )}
       {order.shippingProofImage && (
@@ -179,6 +180,7 @@ function ShippingDetails({ order }: { order: BaseOrder }) {
 // ─── Meetup Details ───────────────────────────────────────────────────────────
 
 function MeetupDetails({ order }: { order: BaseOrder }) {
+  const tr = useLocaleStore((s) => s.tr);
   if (!order.meetupLocation) return null;
   const dt = order.meetupDateTime
     ? new Date(order.meetupDateTime).toLocaleString("th-TH", {
@@ -189,7 +191,7 @@ function MeetupDetails({ order }: { order: BaseOrder }) {
   return (
     <div className="mt-2 bg-[var(--c-accent-soft)] border border-sky-100 rounded-xl px-3 py-2 space-y-1 text-xs">
       <div className="flex items-center gap-1.5 text-sky-700 font-semibold">
-        <span>🤝</span><span>นัดรับสินค้า</span>
+        <span>🤝</span><span>{tr("นัดรับสินค้า")}</span>
       </div>
       <div className="flex items-center gap-1.5 text-[var(--c-ink-2)]">
         <span>📍</span><span>{order.meetupLocation}</span>
@@ -235,6 +237,7 @@ function OrderCard({
   onReview:         (order: BuyOrder | SellOrder) => void;
   pending:          boolean;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const counterparty = role === "buyer"
     ? (order as BuyOrder).seller
     : (order as SellOrder).buyer;
@@ -317,7 +320,7 @@ function OrderCard({
             <span className="font-bold text-[var(--c-ink)] text-sm">฿{order.amount.toLocaleString()}</span>
             <span>·</span>
             <span>{role === "buyer" ? "ขายโดย" : "ซื้อโดย"} {counterparty?.name ?? "ไม่ระบุชื่อ"}</span>
-            {isMeetup && <span className="px-2 py-0.5 rounded-full bg-[var(--c-accent-soft)] text-sky-600 font-semibold">🤝 นัดพบ</span>}
+            {isMeetup && <span className="px-2 py-0.5 rounded-full bg-[var(--c-accent-soft)] text-sky-600 font-semibold">{tr("🤝 นัดพบ")}</span>}
             {isCOD    && <span className="px-2 py-0.5 rounded-full bg-[var(--c-warn-soft)] text-[var(--c-warn)] font-semibold">💵 COD</span>}
             <span>·</span>
             <span>{date}</span>
@@ -325,9 +328,7 @@ function OrderCard({
 
           {/* Disputed notice */}
           {order.status === "DISPUTED" && (
-            <p className="text-xs text-[var(--c-danger)] font-medium">
-              🔒 เงินถูกอายัด — รอผู้ดูแลระบบตัดสิน
-            </p>
+            <p className="text-xs text-[var(--c-danger)] font-medium">{tr("🔒 เงินถูกอายัด — รอผู้ดูแลระบบตัดสิน")}</p>
           )}
 
           {/* Actions */}
@@ -339,9 +340,7 @@ function OrderCard({
                   onClick={() => onShip(order)}
                   disabled={pending}
                   className="px-4 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 transition disabled:opacity-40"
-                >
-                  📦 ยืนยันจัดส่งแล้ว
-                </button>
+                >{tr("📦 ยืนยันจัดส่งแล้ว")}</button>
               )}
 
               {/* Meetup: seller opens POD modal */}
@@ -350,17 +349,13 @@ function OrderCard({
                   onClick={() => onMeetupHandover(order)}
                   disabled={pending}
                   className="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700 transition disabled:opacity-40"
-                >
-                  🤝 ยืนยันการส่งมอบ
-                </button>
+                >{tr("🤝 ยืนยันการส่งมอบ")}</button>
               )}
 
               {/* Meetup: buyer sees waiting badge */}
               {buyerWaitingMeetup && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--c-accent-soft)] border border-sky-200 text-xs font-semibold text-sky-700">
-                  <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
-                  รอผู้ขายส่งมอบ
-                </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />{tr("รอผู้ขายส่งมอบ")}</span>
               )}
 
               {/* Shipping flow — buyer confirms receipt */}
@@ -379,9 +374,7 @@ function OrderCard({
                   onClick={() => onDispute(order)}
                   disabled={pending}
                   className="px-4 py-2 rounded-xl text-xs font-bold bg-[var(--c-danger-soft)] text-[var(--c-danger)] border border-[var(--c-danger-line)] hover:bg-[var(--c-danger-soft)] transition disabled:opacity-40"
-                >
-                  ⚠️ แจ้งปัญหา
-                </button>
+                >{tr("⚠️ แจ้งปัญหา")}</button>
               )}
 
               {canCancel && (
@@ -405,9 +398,7 @@ function OrderCard({
               {/* Seller waiting notice — shipped, no actions for seller */}
               {isSeller && (order.status === "SHIPPED" || order.status === "COD_SHIPPED") && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] text-xs font-semibold text-[var(--c-warn)]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                  รอผู้ซื้อยืนยันรับสินค้า
-                </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />{tr("รอผู้ซื้อยืนยันรับสินค้า")}</span>
               )}
             </div>
           )}
@@ -421,9 +412,7 @@ function OrderCard({
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                ดาวน์โหลดใบเสร็จ
-              </button>
+                </svg>{tr("ดาวน์โหลดใบเสร็จ")}</button>
               {canReview && (
                 <button
                   onClick={() => onReview(order)}
@@ -454,9 +443,10 @@ function OrderCard({
 export default function OrdersClient({
   buying, selling, walletBalance, escrowBalance, currentUserId, initialTab = "buying",
 }: Props & { initialTab?: "buying" | "selling" }) {
+  const tr = useLocaleStore((s) => s.tr);
   const router = useRouter();
 
-  // The tab lives in the URL so the sidebar can link straight to "การขาย"
+  // The tab lives in the URL so the sidebar can link straight to tr("การขาย")
   // instead of always dropping the seller on the buying list first.
   const [tab, setTabState] = useState<"buying" | "selling">(initialTab);
   function setTab(next: "buying" | "selling") {
@@ -525,12 +515,12 @@ export default function OrdersClient({
       {/* Heading */}
       <header className="ui-head">
         <div>
-          <p className="ui-eyebrow mb-1.5">{tab === "buying" ? "การซื้อ" : "การขาย"}</p>
-          <h1>{tab === "buying" ? "คำสั่งซื้อของฉัน" : "รายการที่ฉันขาย"}</h1>
+          <p className="ui-eyebrow mb-1.5">{tab === "buying" ? tr("การซื้อ") : tr("การขาย")}</p>
+          <h1>{tab === "buying" ? tr("คำสั่งซื้อของฉัน") : tr("รายการที่ฉันขาย")}</h1>
           <p>
             {tab === "buying"
-              ? "เงินจะถูกพักไว้จนกว่าคุณจะยืนยันว่าได้รับสินค้าแล้ว"
-              : "ยืนยันการส่งมอบเพื่อให้ระบบปล่อยเงินเข้ากระเป๋าของคุณ"}
+              ? tr("เงินจะถูกพักไว้จนกว่าคุณจะยืนยันว่าได้รับสินค้าแล้ว")
+              : tr("ยืนยันการส่งมอบเพื่อให้ระบบปล่อยเงินเข้ากระเป๋าของคุณ")}
           </p>
         </div>
       </header>
@@ -538,14 +528,14 @@ export default function OrdersClient({
       {/* Wallet cards */}
       <div className="grid grid-cols-2 gap-4">
         <div className="ui-stat">
-          <p className="ui-stat-k">กระเป๋าเงิน</p>
+          <p className="ui-stat-k">{tr("กระเป๋าเงิน")}</p>
           <p className="ui-stat-v">฿{walletBalance.toLocaleString()}</p>
-          <p className="ui-stat-sub">พร้อมใช้งาน</p>
+          <p className="ui-stat-sub">{tr("พร้อมใช้งาน")}</p>
         </div>
         <div className="ui-stat relative">
           {/* Label row with info icon */}
           <div className="flex items-center gap-1 mb-1">
-            <p className="ui-stat-k">เงิน Escrow</p>
+            <p className="ui-stat-k">{tr("เงิน Escrow")}</p>
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); toggleEscrowTooltip(); }}
@@ -562,7 +552,7 @@ export default function OrdersClient({
           <p className="ui-stat-sub">
             {activeEscrowOrderCount > 0
               ? `${activeEscrowOrderCount} คำสั่งซื้อที่ถือเงินอยู่`
-              : "รอการยืนยัน"}
+              : tr("รอการยืนยัน")}
           </p>
 
           {/* Tooltip — shown on hover (desktop) or tap toggle (mobile) */}
@@ -572,11 +562,8 @@ export default function OrdersClient({
               style={{ animation: "fadeIn 0.15s ease" }}
               onClick={(e) => e.stopPropagation()}
             >
-              <p className="font-bold text-amber-400 mb-1">ระบบ Escrow คืออะไร?</p>
-              <p className="text-[var(--c-line-str)]">
-                เมื่อคุณซื้อสินค้า เงินจะถูกพักไว้กับ PSU.Store อย่างปลอดภัย
-                และจะโอนให้ผู้ขายก็ต่อเมื่อคุณยืนยันว่าได้รับสินค้าแล้วเท่านั้น
-              </p>
+              <p className="font-bold text-amber-400 mb-1">{tr("ระบบ Escrow คืออะไร?")}</p>
+              <p className="text-[var(--c-line-str)]">{tr("เมื่อคุณซื้อสินค้า เงินจะถูกพักไว้กับ PSU.Store อย่างปลอดภัย และจะโอนให้ผู้ขายก็ต่อเมื่อคุณยืนยันว่าได้รับสินค้าแล้วเท่านั้น")}</p>
               {activeEscrowOrderCount > 0 && (
                 <p className="mt-1.5 text-amber-300 font-semibold">
                   ขณะนี้มีเงินค้างอยู่ใน {activeEscrowOrderCount} คำสั่งซื้อ
@@ -598,7 +585,7 @@ export default function OrdersClient({
             aria-pressed={tab === t}
             className={`ui-chip ${tab === t ? "is-on" : ""}`}
           >
-            {t === "buying" ? "ฉันซื้อ" : "ฉันขาย"}
+            {t === "buying" ? tr("ฉันซื้อ") : tr("ฉันขาย")}
             <span className="ui-chip-n">{t === "buying" ? buying.length : selling.length}</span>
           </button>
         ))}
@@ -614,14 +601,14 @@ export default function OrdersClient({
                 <path d="M3 4h2l2.4 11.2a1.5 1.5 0 0 0 1.5 1.2h7.9a1.5 1.5 0 0 0 1.5-1.2L20 8H6" />
               </svg>
             </div>
-            <h3>{tab === "buying" ? "ยังไม่มีรายการซื้อ" : "ยังไม่มีรายการขาย"}</h3>
+            <h3>{tab === "buying" ? tr("ยังไม่มีรายการซื้อ") : tr("ยังไม่มีรายการขาย")}</h3>
             <p>
               {tab === "buying"
-                ? "เมื่อคุณสั่งซื้อสินค้า รายการจะขึ้นที่นี่พร้อมสถานะและขั้นตอนถัดไป"
-                : "เมื่อมีคนสั่งซื้อสินค้าของคุณ รายการจะขึ้นที่นี่พร้อมสิ่งที่คุณต้องทำ"}
+                ? tr("เมื่อคุณสั่งซื้อสินค้า รายการจะขึ้นที่นี่พร้อมสถานะและขั้นตอนถัดไป")
+                : tr("เมื่อมีคนสั่งซื้อสินค้าของคุณ รายการจะขึ้นที่นี่พร้อมสิ่งที่คุณต้องทำ")}
             </p>
             <a href={tab === "buying" ? "/" : "/dashboard/my-items"} className="ui-btn ui-btn-primary mt-4">
-              {tab === "buying" ? "เลือกดูสินค้า" : "จัดการประกาศของฉัน"}
+              {tab === "buying" ? tr("เลือกดูสินค้า") : tr("จัดการประกาศของฉัน")}
             </a>
           </div>
         ) : (

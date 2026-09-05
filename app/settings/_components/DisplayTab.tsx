@@ -14,6 +14,7 @@ interface Props {
 }
 
 export default function DisplayTab({ preferences, showToast }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const setLocale    = useLocaleStore((s) => s.setLocale);
   const applyTheme   = useThemeStore((s) => s.setTheme);
   const currentTheme = useThemeStore((s) => s.theme);
@@ -57,15 +58,15 @@ export default function DisplayTab({ preferences, showToast }: Props) {
 
       {/* Language */}
       <div>
-        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">ภาษา</h3>
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">{tr("ภาษา")}</h3>
         <div className="space-y-2">
           <RadioOption
             id="lang-th"
             name="language"
             checked={language === "th"}
             onChange={() => setLanguage("th")}
-            label="🇹🇭 ไทย"
-            description="ใช้ภาษาไทยทั้งระบบ"
+            label={tr("🇹🇭 ไทย")}
+            description={tr("ใช้ภาษาไทยทั้งระบบ")}
           />
           <RadioOption
             id="lang-en"
@@ -80,31 +81,31 @@ export default function DisplayTab({ preferences, showToast }: Props) {
 
       {/* Theme */}
       <div className="border-t border-[var(--c-line)] pt-5">
-        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">ธีม</h3>
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">{tr("ธีม")}</h3>
         <div className="space-y-2">
           <RadioOption
             id="theme-light"
             name="theme"
             checked={theme === "light"}
             onChange={() => pickTheme("light")}
-            label="☀️ สว่าง"
-            description="ใช้ธีมสว่างตลอด"
+            label={tr("☀️ สว่าง")}
+            description={tr("ใช้ธีมสว่างตลอด")}
           />
           <RadioOption
             id="theme-dark"
             name="theme"
             checked={theme === "dark"}
             onChange={() => pickTheme("dark")}
-            label="🌙 มืด"
-            description="ใช้ธีมมืดตลอด"
+            label={tr("🌙 มืด")}
+            description={tr("ใช้ธีมมืดตลอด")}
           />
           <RadioOption
             id="theme-system"
             name="theme"
             checked={theme === "system"}
             onChange={() => pickTheme("system")}
-            label="💻 ตามระบบ"
-            description="ปรับตามการตั้งค่าของอุปกรณ์อัตโนมัติ"
+            label={tr("💻 ตามระบบ")}
+            description={tr("ปรับตามการตั้งค่าของอุปกรณ์อัตโนมัติ")}
           />
         </div>
       </div>
@@ -112,9 +113,7 @@ export default function DisplayTab({ preferences, showToast }: Props) {
       <p className="text-[11px] text-[var(--c-muted)] flex items-center gap-1">
         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        ธีมเปลี่ยนทันทีที่เลือก ส่วนภาษาจะมีผลหลังกดบันทึกและโหลดหน้าใหม่
-      </p>
+        </svg>{tr("ธีมเปลี่ยนทันทีที่เลือก ส่วนภาษาจะมีผลหลังกดบันทึกและโหลดหน้าใหม่")}</p>
 
       {/* Save */}
       <div className="flex justify-end pt-2">

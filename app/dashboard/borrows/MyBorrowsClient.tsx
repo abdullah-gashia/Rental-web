@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useMemo } from "react";
 import {
   BORROW_STATUS_LABEL, BORROW_CATEGORY_LABEL,
@@ -38,6 +40,7 @@ export default function MyBorrowsClient({
   suspendedUntil: string | null;
   tier: string;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [tab, setTab] = useState<(typeof TABS)[number]["key"]>("open");
 
   const shown = useMemo(() => {
@@ -64,33 +67,25 @@ export default function MyBorrowsClient({
           <header className="mb-6 flex items-end justify-between gap-4 flex-wrap">
             <div>
               <p className="bw-label mb-1.5">งานภัทร</p>
-              <h1 className="text-[24px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] leading-tight">
-                ของที่ยืม
-              </h1>
+              <h1 className="text-[24px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] leading-tight">{tr("ของที่ยืม")}</h1>
               <p className="text-[13px] text-[var(--bw-muted)] mt-1.5">
                 ยืมอยู่ {holding} จาก {MAX_CONCURRENT_BORROWS} ชิ้น
               </p>
             </div>
-            <a href="/borrow" className="bw-btn bw-btn-primary">ยืมของเพิ่ม</a>
+            <a href="/borrow" className="bw-btn bw-btn-primary">{tr("ยืมของเพิ่ม")}</a>
           </header>
 
           {/* ── Standing ───────────────────────────────────────────────── */}
           {suspended && (
             <div className="bw-panel !border-[var(--c-danger-line)] !bg-[var(--c-danger-soft)] mb-5">
-              <p className="text-[13.5px] font-semibold text-[var(--c-danger)]">สิทธิ์การยืมถูกระงับ</p>
-              <p className="text-[12.5px] text-[var(--c-danger)] mt-1 leading-[1.9]">
-                คุณมีอุปกรณ์ที่ยังไม่ได้คืนเกินกำหนด — ไม่มีค่าปรับ
-                แต่จะยืมชิ้นใหม่ไม่ได้จนกว่าจะคืนของที่ค้างอยู่
-              </p>
+              <p className="text-[13.5px] font-semibold text-[var(--c-danger)]">{tr("สิทธิ์การยืมถูกระงับ")}</p>
+              <p className="text-[12.5px] text-[var(--c-danger)] mt-1 leading-[1.9]">{tr("คุณมีอุปกรณ์ที่ยังไม่ได้คืนเกินกำหนด — ไม่มีค่าปรับ แต่จะยืมชิ้นใหม่ไม่ได้จนกว่าจะคืนของที่ค้างอยู่")}</p>
             </div>
           )}
 
           {!suspended && tier === "RESTRICTED" && (
             <div className="bw-panel !border-[var(--c-warn-line)] !bg-[var(--c-warn-soft)] mb-5">
-              <p className="text-[12.5px] text-[var(--c-warn)] leading-[1.9]">
-                ประวัติการยืมของคุณถูกทำเครื่องหมายว่าต้องระวัง
-                เจ้าหน้าที่อาจใช้เวลาพิจารณาคำขอนานขึ้น — คืนของตรงเวลาสองสามครั้งก็กลับมาปกติ
-              </p>
+              <p className="text-[12.5px] text-[var(--c-warn)] leading-[1.9]">{tr("ประวัติการยืมของคุณถูกทำเครื่องหมายว่าต้องระวัง เจ้าหน้าที่อาจใช้เวลาพิจารณาคำขอนานขึ้น — คืนของตรงเวลาสองสามครั้งก็กลับมาปกติ")}</p>
             </div>
           )}
 
@@ -100,7 +95,7 @@ export default function MyBorrowsClient({
                 {soonest < 0
                   ? `⚠️ คุณมีของเลยกำหนดคืนมา ${Math.abs(soonest)} วันแล้ว`
                   : soonest === 0
-                  ? "⏰ มีของครบกำหนดคืนวันนี้"
+                  ? tr("⏰ มีของครบกำหนดคืนวันนี้")
                   : `⏰ มีของครบกำหนดคืนในอีก ${soonest} วัน`}
               </p>
             </div>
@@ -128,10 +123,10 @@ export default function MyBorrowsClient({
           {shown.length === 0 ? (
             <div className="bw-panel text-center py-16">
               <p className="text-[14px] text-[var(--bw-muted)]">
-                {orders.length === 0 ? "คุณยังไม่เคยยืมอะไรเลย" : "ไม่มีรายการในหมวดนี้"}
+                {orders.length === 0 ? tr("คุณยังไม่เคยยืมอะไรเลย") : tr("ไม่มีรายการในหมวดนี้")}
               </p>
               {orders.length === 0 && (
-                <a href="/borrow" className="bw-btn bw-btn-primary mt-4">ดูอุปกรณ์ที่ยืมได้</a>
+                <a href="/borrow" className="bw-btn bw-btn-primary mt-4">{tr("ดูอุปกรณ์ที่ยืมได้")}</a>
               )}
             </div>
           ) : (
@@ -166,7 +161,7 @@ export default function MyBorrowsClient({
                     <div className="text-right flex-shrink-0">
                       {live && o.dueDate ? (
                         <>
-                          <p className="bw-label">คืนภายใน</p>
+                          <p className="bw-label">{tr("คืนภายใน")}</p>
                           <p className={`text-[13px] font-semibold mt-0.5 ${left !== null && left < 0 ? "text-[var(--c-danger)]" : ""}`}>
                             {new Date(o.dueDate).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}
                           </p>

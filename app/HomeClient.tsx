@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { ItemWithDetails, CategorySlug } from "@/lib/types";
@@ -66,6 +68,7 @@ export default function HomeClient({
   avgRating       = 0,
   reviewCount     = 0,
 }: HomeClientProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const router    = useRouter();
   const urlParams = useSearchParams(); // always-current URL params
 
@@ -126,14 +129,14 @@ export default function HomeClient({
     const messages: Record<string, string> = {
       // The e-mail already belongs to an account that signs in with a password
       OAuthAccountNotLinked:
-        "อีเมลนี้มีบัญชีที่ใช้รหัสผ่านอยู่แล้ว กรุณาเข้าสู่ระบบด้วยอีเมลและรหัสผ่านด้านล่าง",
-      AccessDenied:  "บัญชีนี้ถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแลระบบ",
-      OAuthSignin:   "ไม่สามารถเริ่มการเข้าสู่ระบบด้วย Google ได้ กรุณาลองใหม่",
-      OAuthCallback: "การเชื่อมต่อกับ Google ล้มเหลว กรุณาลองใหม่",
-      Configuration: "ระบบเข้าสู่ระบบด้วย Google ยังไม่ได้ตั้งค่า กรุณาติดต่อผู้ดูแลระบบ",
+        tr("อีเมลนี้มีบัญชีที่ใช้รหัสผ่านอยู่แล้ว กรุณาเข้าสู่ระบบด้วยอีเมลและรหัสผ่านด้านล่าง"),
+      AccessDenied:  tr("บัญชีนี้ถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแลระบบ"),
+      OAuthSignin:   tr("ไม่สามารถเริ่มการเข้าสู่ระบบด้วย Google ได้ กรุณาลองใหม่"),
+      OAuthCallback: tr("การเชื่อมต่อกับ Google ล้มเหลว กรุณาลองใหม่"),
+      Configuration: tr("ระบบเข้าสู่ระบบด้วย Google ยังไม่ได้ตั้งค่า กรุณาติดต่อผู้ดูแลระบบ"),
     };
 
-    setLoginError(messages[authError] ?? "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่");
+    setLoginError(messages[authError] ?? tr("เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่"));
     open("login");
 
     // Drop ?error= so a refresh doesn't replay the message
@@ -182,7 +185,7 @@ export default function HomeClient({
 
   const handleChatClick = useCallback(async (item: ItemWithDetails) => {
     if (!user) {
-      showToast("⚠️ กรุณาเข้าสู่ระบบก่อนแชท");
+      showToast(tr("⚠️ กรุณาเข้าสู่ระบบก่อนแชท"));
       open("login");
       return;
     }
@@ -195,7 +198,7 @@ export default function HomeClient({
       if (result.error) { showToast(`⚠️ ${result.error}`); close(); return; }
       if (result.conversation) setChatConvId(result.conversation.id);
     } catch {
-      showToast("⚠️ ไม่สามารถเปิดแชทได้");
+      showToast(tr("⚠️ ไม่สามารถเปิดแชทได้"));
     } finally {
       setChatLoading(false);
     }
@@ -220,7 +223,7 @@ export default function HomeClient({
       if (result.error) { showToast(`⚠️ ${result.error}`); close(); return; }
       if (result.conversation) setChatConvId(result.conversation.id);
     } catch {
-      showToast("⚠️ ไม่สามารถเปิดแชทได้");
+      showToast(tr("⚠️ ไม่สามารถเปิดแชทได้"));
     } finally {
       setChatLoading(false);
     }
@@ -289,7 +292,7 @@ export default function HomeClient({
                 title={
                   searchQuery.trim()
                     ? `“${searchQuery.trim()}”`
-                    : "สินค้าที่พบ"
+                    : tr("สินค้าที่พบ")
                 }
                 items={items}
                 onItemClick={handleItemClick}
@@ -303,7 +306,7 @@ export default function HomeClient({
               <div className="grid grid-cols-1 xl:grid-cols-2 items-start gap-4 xl:gap-5 mb-5">
                 {showSecondhand && (
                   <ProductPanel
-                    title="สินค้ามือสอง"
+                    title={tr("สินค้ามือสอง")}
                     items={secondhandItems}
                     onTitleClick={() => handleCatChange("secondhand")}
                     onItemClick={handleItemClick}
@@ -311,7 +314,7 @@ export default function HomeClient({
                 )}
                 {showRentals && (
                   <ProductPanel
-                    title="สินค้าปล่อยเช่า"
+                    title={tr("สินค้าปล่อยเช่า")}
                     items={rentalItems}
                     onTitleClick={() => handleCatChange("rental")}
                     onItemClick={handleItemClick}
@@ -319,7 +322,7 @@ export default function HomeClient({
                 )}
                 {showElectronics && (
                   <ProductPanel
-                    title="อิเล็กทรอนิกส์"
+                    title={tr("อิเล็กทรอนิกส์")}
                     items={electronicsItems}
                     onTitleClick={() => handleCatChange("electronics")}
                     onItemClick={handleItemClick}
@@ -352,9 +355,7 @@ export default function HomeClient({
         >
           <svg className="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-          </svg>
-          ลงประกาศ
-        </button>
+          </svg>{tr("ลงประกาศ")}</button>
       )}
 
       {/* Modals */}
@@ -403,6 +404,7 @@ export default function HomeClient({
 // ── Empty state ──────────────────────────────────────────────────────────────
 
 function EmptyState({ query }: { query: string }) {
+  const tr = useLocaleStore((s) => s.tr);
   const router = useRouter();
 
   function clearAll() {
@@ -417,14 +419,10 @@ function EmptyState({ query }: { query: string }) {
         </svg>
       </div>
       <h3 className="text-[15px] font-semibold text-[var(--hp-ink)] mb-1.5">
-        {query ? `ไม่พบสินค้าสำหรับ “${query}”` : "ไม่พบสินค้าที่ตรงกับตัวกรอง"}
+        {query ? `ไม่พบสินค้าสำหรับ “${query}”` : tr("ไม่พบสินค้าที่ตรงกับตัวกรอง")}
       </h3>
-      <p className="text-[13px] text-[var(--hp-muted)] max-w-xs mb-5 leading-relaxed">
-        ลองปรับคำค้นหาหรือตัวกรองให้กว้างขึ้น แล้วลองใหม่อีกครั้ง
-      </p>
-      <button onClick={clearAll} className="hp-btn hp-btn-ghost">
-        ล้างการค้นหาทั้งหมด
-      </button>
+      <p className="text-[13px] text-[var(--hp-muted)] max-w-xs mb-5 leading-relaxed">{tr("ลองปรับคำค้นหาหรือตัวกรองให้กว้างขึ้น แล้วลองใหม่อีกครั้ง")}</p>
+      <button onClick={clearAll} className="hp-btn hp-btn-ghost">{tr("ล้างการค้นหาทั้งหมด")}</button>
     </div>
   );
 }

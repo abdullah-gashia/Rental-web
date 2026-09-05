@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { approveItem, rejectItem } from "@/lib/actions/moderation-actions";
@@ -62,6 +64,7 @@ function RejectModal({
   onSubmit: (reason: string) => void;
   isPending: boolean;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [reason, setReason] = useState("");
   const [error, setError]   = useState("");
 
@@ -78,7 +81,7 @@ function RejectModal({
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div>
-            <h3 className="text-lg font-bold text-[var(--c-ink)]">ปฏิเสธสินค้า</h3>
+            <h3 className="text-lg font-bold text-[var(--c-ink)]">{tr("ปฏิเสธสินค้า")}</h3>
             <p className="text-sm text-[var(--c-ink-3)] mt-0.5 truncate max-w-xs">{item.title}</p>
           </div>
           <button
@@ -108,8 +111,7 @@ function RejectModal({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--c-ink-1)] mb-1.5">
-              เหตุผลในการปฏิเสธ <span className="text-[var(--c-danger)]">*</span>
+            <label className="block text-sm font-medium text-[var(--c-ink-1)] mb-1.5">{tr("เหตุผลในการปฏิเสธ")}<span className="text-[var(--c-danger)]">*</span>
             </label>
             <textarea
               value={reason}
@@ -139,16 +141,12 @@ function RejectModal({
                   <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
-                  กำลังส่ง...
-                </>
+                  </svg>{tr("กำลังส่ง...")}</>
               ) : (
                 <>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  ยืนยันปฏิเสธ
-                </>
+                  </svg>{tr("ยืนยันปฏิเสธ")}</>
               )}
             </button>
           </div>
@@ -161,6 +159,7 @@ function RejectModal({
 // ─── Main Component ──────────────────────────────────
 
 export default function ApprovalsClient({ items: initialItems }: { items: PendingItem[] }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [items, setItems]             = useState<PendingItem[]>(initialItems);
   const [rejectTarget, setRejectTarget] = useState<PendingItem | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -214,8 +213,8 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
       <div className="mb-6">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-[var(--c-ink)]">ตรวจสอบสินค้า</h1>
-            <p className="text-sm text-[var(--c-ink-3)] mt-1">สินค้าที่รอการอนุมัติจากผู้ขาย</p>
+            <h1 className="text-2xl font-bold text-[var(--c-ink)]">{tr("ตรวจสอบสินค้า")}</h1>
+            <p className="text-sm text-[var(--c-ink-3)] mt-1">{tr("สินค้าที่รอการอนุมัติจากผู้ขาย")}</p>
           </div>
           <div className="flex items-center gap-2 bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] px-4 py-2 rounded-xl">
             <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
@@ -232,8 +231,8 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-[var(--c-ink)] mb-2">ไม่มีสินค้าที่รอตรวจสอบ</h3>
-          <p className="text-sm text-[var(--c-ink-3)]">สินค้าทั้งหมดได้รับการตรวจสอบแล้ว 🎉</p>
+          <h3 className="text-lg font-semibold text-[var(--c-ink)] mb-2">{tr("ไม่มีสินค้าที่รอตรวจสอบ")}</h3>
+          <p className="text-sm text-[var(--c-ink-3)]">{tr("สินค้าทั้งหมดได้รับการตรวจสอบแล้ว 🎉")}</p>
         </div>
       )}
 
@@ -272,7 +271,7 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
                         <div className="flex-shrink-0 text-right">
                           <p className="text-lg font-bold text-[var(--c-accent)]">
                             ฿{item.price.toLocaleString()}
-                            {item.listingType === "RENT" && <span className="text-xs font-normal text-[var(--c-ink-3)]">/เดือน</span>}
+                            {item.listingType === "RENT" && <span className="text-xs font-normal text-[var(--c-ink-3)]">{tr("/เดือน")}</span>}
                           </p>
                           <p className="text-xs text-[var(--c-faint)]">{CONDITION_LABELS[item.condition] ?? item.condition}</p>
                         </div>
@@ -338,9 +337,7 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                      ปฏิเสธ
-                    </button>
+                      </svg>{tr("ปฏิเสธ")}</button>
                   </div>
                 </div>
               </div>

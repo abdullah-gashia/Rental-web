@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { confirmRentalPickup, confirmRentalReturn } from "@/lib/actions/rental-transitions";
@@ -65,6 +67,7 @@ export default function RentalHandshake({
   orderId, type, role, myConfirmed, otherConfirmed,
   itemTitle = "สินค้า", rentalDays = 1, securityDeposit = 0, lateFeePerDay = 0, userName = "—",
 }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -90,7 +93,7 @@ export default function RentalHandshake({
     ? buildPickupAgreement(itemTitle, rentalDays, securityDeposit, lateFeePerDay)
     : buildReturnAgreement(itemTitle, condition, damageFee);
 
-  const title     = type === "pickup" ? "📦 ยืนยันการรับของ (Digital Handshake #1)" : "🔄 ยืนยันการคืนของ (Digital Handshake #2)";
+  const title     = type === "pickup" ? tr("📦 ยืนยันการรับของ (Digital Handshake #1)") : tr("🔄 ยืนยันการคืนของ (Digital Handshake #2)");
   const meLabel   = isRenter ? "ผู้เช่า" : "เจ้าของ";
   const otherLabel = isRenter ? "เจ้าของ" : "ผู้เช่า";
 
@@ -114,8 +117,9 @@ export default function RentalHandshake({
   }
 
   function handleConfirm() {
-    if (!agreed) { setError("กรุณายืนยันว่าข้อมูลถูกต้อง"); return; }
-    if (needsSignature && !signature) { setError("กรุณาลงลายเซ็นดิจิทัลก่อน"); return; }
+  const tr = useLocaleStore((s) => s.tr);
+    if (!agreed) { setError(tr("กรุณายืนยันว่าข้อมูลถูกต้อง")); return; }
+    if (needsSignature && !signature) { setError(tr("กรุณาลงลายเซ็นดิจิทัลก่อน")); return; }
     setError(null);
     startTransition(async () => {
       let res;
@@ -149,7 +153,7 @@ export default function RentalHandshake({
   if (showSigPad) {
     return (
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
-        <h3 className="text-sm font-bold text-[var(--c-ink)] mb-4">✍️ ลงลายเซ็นดิจิทัล</h3>
+        <h3 className="text-sm font-bold text-[var(--c-ink)] mb-4">{tr("✍️ ลงลายเซ็นดิจิทัล")}</h3>
         <SignatureCapture
           signerName={userName}
           signerRole={signerRole}
@@ -173,12 +177,12 @@ export default function RentalHandshake({
           <span className={`px-2 py-1 rounded-full border ${
             myConfirmed ? "bg-[var(--c-ok-soft)] border-green-300 text-[var(--c-ok)]" : "bg-[var(--c-subtle)] border-[var(--c-line)] text-[var(--c-muted)]"
           }`}>
-            {meLabel}: {myConfirmed ? "✅ ยืนยันแล้ว" : "⏳ รอยืนยัน"}
+            {meLabel}: {myConfirmed ? "✅ ยืนยันแล้ว" : tr("⏳ รอยืนยัน")}
           </span>
           <span className={`px-2 py-1 rounded-full border ${
             otherConfirmed ? "bg-[var(--c-ok-soft)] border-green-300 text-[var(--c-ok)]" : "bg-[var(--c-subtle)] border-[var(--c-line)] text-[var(--c-muted)]"
           }`}>
-            {otherLabel}: {otherConfirmed ? "✅ ยืนยันแล้ว" : "⏳ รอยืนยัน"}
+            {otherLabel}: {otherConfirmed ? "✅ ยืนยันแล้ว" : tr("⏳ รอยืนยัน")}
           </span>
         </div>
       </div>
@@ -186,13 +190,13 @@ export default function RentalHandshake({
       {/* Photo upload */}
       <div>
         <p className="text-xs font-semibold text-[var(--c-ink-2)] mb-2">
-          📷 ถ่ายรูปสภาพสินค้า {type === "pickup" ? "(ก่อนรับ)" : "(หลังคืน)"}
+          📷 ถ่ายรูปสภาพสินค้า {type === "pickup" ? tr("(ก่อนรับ)") : tr("(หลังคืน)")}
         </p>
         <label className="flex items-center gap-2 px-3 py-2.5 border-2 border-dashed border-[var(--c-line)]
                           rounded-xl cursor-pointer hover:border-[var(--c-accent)]/50 transition">
           <span className="text-xl">📷</span>
           <span className="text-sm text-[var(--c-ink-3)]">
-            {uploading ? "กำลังอัปโหลด..." : "เลือกรูปภาพ (หลายรูปได้)"}
+            {uploading ? "กำลังอัปโหลด..." : tr("เลือกรูปภาพ (หลายรูปได้)")}
           </span>
           <input type="file" accept="image/*" multiple className="hidden" onChange={handleUpload} />
         </label>
@@ -209,7 +213,7 @@ export default function RentalHandshake({
       {/* Condition rating — return, owner only */}
       {isReturn && isOwner && (
         <div>
-          <p className="text-xs font-semibold text-[var(--c-ink-2)] mb-2">สภาพสินค้าหลังคืน</p>
+          <p className="text-xs font-semibold text-[var(--c-ink-2)] mb-2">{tr("สภาพสินค้าหลังคืน")}</p>
           <div className="grid grid-cols-2 gap-2">
             {CONDITIONS.map((c) => (
               <button
@@ -226,7 +230,7 @@ export default function RentalHandshake({
           </div>
           {["MINOR_DAMAGE", "MAJOR_DAMAGE"].includes(condition) && (
             <div className="mt-3 space-y-2">
-              <p className="text-xs font-semibold text-[var(--c-ink-2)]">ค่าเสียหาย (฿)</p>
+              <p className="text-xs font-semibold text-[var(--c-ink-2)]">{tr("ค่าเสียหาย (฿)")}</p>
               <input
                 type="number" min={0} value={damageFee}
                 onChange={(e) => setDamageFee(Number(e.target.value))}
@@ -240,12 +244,12 @@ export default function RentalHandshake({
 
       {/* Notes */}
       <div>
-        <p className="text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">หมายเหตุ (ไม่บังคับ)</p>
+        <p className="text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">{tr("หมายเหตุ (ไม่บังคับ)")}</p>
         <textarea
           value={conditionNote}
           onChange={(e) => setConditionNote(e.target.value)}
           rows={2}
-          placeholder="เช่น สภาพดี, มีรอยขีดข่วนเล็กน้อย..."
+          placeholder={tr("เช่น สภาพดี, มีรอยขีดข่วนเล็กน้อย...")}
           className="w-full px-3 py-2 text-sm border border-[var(--c-line)] rounded-xl resize-none
                      focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30"
         />
@@ -254,21 +258,19 @@ export default function RentalHandshake({
       {/* Digital Signature — renter at pickup, owner at return */}
       {needsSignature && (
         <div>
-          <p className="text-xs font-semibold text-[var(--c-ink-2)] mb-2">✍️ ลายเซ็นดิจิทัล (จำเป็น)</p>
+          <p className="text-xs font-semibold text-[var(--c-ink-2)] mb-2">{tr("✍️ ลายเซ็นดิจิทัล (จำเป็น)")}</p>
           {signature ? (
             <div className="flex items-center gap-3 bg-[var(--c-ok-soft)] border border-[var(--c-ok-line)] rounded-xl px-3 py-2.5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={signature} alt="ลายเซ็น" className="h-12 object-contain" />
+              <img src={signature} alt={tr("ลายเซ็น")} className="h-12 object-contain" />
               <div className="flex-1">
-                <p className="text-xs text-[var(--c-ok)] font-semibold">✅ ลงลายเซ็นแล้ว</p>
+                <p className="text-xs text-[var(--c-ok)] font-semibold">{tr("✅ ลงลายเซ็นแล้ว")}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setSignature(null)}
                 className="text-xs text-[var(--c-ink-3)] hover:text-[var(--c-danger)] transition"
-              >
-                เปลี่ยน
-              </button>
+              >{tr("เปลี่ยน")}</button>
             </div>
           ) : (
             <button
@@ -276,9 +278,7 @@ export default function RentalHandshake({
               onClick={() => setShowSigPad(true)}
               className="w-full py-3 border-2 border-dashed border-[var(--c-line)] rounded-xl text-sm
                          text-[var(--c-ink-3)] hover:border-[var(--c-accent)]/40 hover:text-[var(--c-accent)] transition"
-            >
-              ✍️ กดเพื่อลงลายเซ็น
-            </button>
+            >{tr("✍️ กดเพื่อลงลายเซ็น")}</button>
           )}
         </div>
       )}
@@ -289,9 +289,7 @@ export default function RentalHandshake({
           type="checkbox" checked={agreed}
           onChange={(e) => setAgreed(e.target.checked)}
           className="w-4 h-4 accent-[var(--c-accent)]"
-        />
-        ข้าพเจ้ายืนยันว่าข้อมูลข้างต้นถูกต้องและเป็นความจริง
-      </label>
+        />{tr("ข้าพเจ้ายืนยันว่าข้อมูลข้างต้นถูกต้องและเป็นความจริง")}</label>
 
       {error && (
         <div className="bg-[var(--c-danger-soft)] text-[var(--c-danger)] text-xs px-3 py-2 rounded-xl">{error}</div>
@@ -303,7 +301,7 @@ export default function RentalHandshake({
         className="w-full py-3 bg-[var(--c-accent)] text-white text-sm font-bold rounded-xl
                    hover:bg-[var(--c-accent-str)] transition disabled:opacity-50"
       >
-        {isPending ? "กำลังยืนยัน..." : `✅ ยืนยัน${type === "pickup" ? "การรับของ" : "การคืนของ"}`}
+        {isPending ? tr("กำลังยืนยัน...") : `✅ ยืนยัน${type === "pickup" ? tr("การรับของ") : tr("การคืนของ")}`}
       </button>
     </div>
   );

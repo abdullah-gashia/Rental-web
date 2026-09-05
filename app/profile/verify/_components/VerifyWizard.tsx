@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import FaceLivenessCapture, { type CapturedFrames } from "./FaceLivenessCapture";
@@ -69,6 +71,7 @@ function PsuIdStep({ form, onChange, onNext }: {
   onChange: (patch: Partial<FormState>) => void;
   onNext:   () => void;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [err,              setErr]              = useState("");
   const [explicitlyChosen, setExplicitlyChosen] = useState(false);
 
@@ -125,13 +128,13 @@ function PsuIdStep({ form, onChange, onNext }: {
     <div className="space-y-5">
       <div className="text-center space-y-1">
         <div className="text-4xl">🎓</div>
-        <h2 className="text-lg font-extrabold text-[var(--c-ink)]">ยืนยันตัวตนเพื่อเป็นผู้ขาย</h2>
-        <p className="text-sm text-[var(--c-muted)]">เฉพาะนักศึกษาและบุคลากร PSU เท่านั้น</p>
+        <h2 className="text-lg font-extrabold text-[var(--c-ink)]">{tr("ยืนยันตัวตนเพื่อเป็นผู้ขาย")}</h2>
+        <p className="text-sm text-[var(--c-muted)]">{tr("เฉพาะนักศึกษาและบุคลากร PSU เท่านั้น")}</p>
       </div>
 
       {/* Type selector — buttons replace radio so they're always clickable */}
       <div>
-        <p className="text-sm font-semibold text-[var(--c-ink-1)] mb-2">คุณเป็น <span className="text-[var(--c-danger)]">*</span></p>
+        <p className="text-sm font-semibold text-[var(--c-ink-1)] mb-2">{tr("คุณเป็น")}<span className="text-[var(--c-danger)]">*</span></p>
         <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
@@ -169,8 +172,7 @@ function PsuIdStep({ form, onChange, onNext }: {
 
       {/* ID input */}
       <div>
-        <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-1.5">
-          รหัสประจำตัว PSU <span className="text-[var(--c-danger)]">*</span>
+        <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-1.5">{tr("รหัสประจำตัว PSU")}<span className="text-[var(--c-danger)]">*</span>
         </label>
         <input
           type="text"
@@ -205,8 +207,7 @@ function PsuIdStep({ form, onChange, onNext }: {
 
       {/* Faculty */}
       <div>
-        <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-1.5">
-          คณะ / หน่วยงาน <span className="text-[var(--c-muted)] font-normal">(ไม่บังคับ)</span>
+        <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-1.5">{tr("คณะ / หน่วยงาน")}<span className="text-[var(--c-muted)] font-normal">{tr("(ไม่บังคับ)")}</span>
         </label>
         <input
           type="text"
@@ -220,9 +221,7 @@ function PsuIdStep({ form, onChange, onNext }: {
       <button
         onClick={() => { if (validate()) onNext(); }}
         className="w-full py-3 rounded-xl bg-[var(--c-accent)] text-white font-bold text-sm hover:bg-[var(--c-accent-str)] transition"
-      >
-        ถัดไป →
-      </button>
+      >{tr("ถัดไป →")}</button>
     </div>
   );
 }
@@ -235,6 +234,7 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
   onNext:   () => void;
   onBack:   () => void;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const fileRef  = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [err,       setErr]       = useState("");
@@ -282,8 +282,8 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
     <div className="space-y-5">
       <div className="text-center space-y-1">
         <div className="text-4xl">📸</div>
-        <h2 className="text-lg font-extrabold text-[var(--c-ink)]">อัปโหลดรูปบัตรประจำตัว</h2>
-        <p className="text-sm text-[var(--c-muted)]">ถ่ายรูปหน้าบัตร PSU ให้เห็นชื่อและรหัสชัดเจน</p>
+        <h2 className="text-lg font-extrabold text-[var(--c-ink)]">{tr("อัปโหลดรูปบัตรประจำตัว")}</h2>
+        <p className="text-sm text-[var(--c-muted)]">{tr("ถ่ายรูปหน้าบัตร PSU ให้เห็นชื่อและรหัสชัดเจน")}</p>
       </div>
 
       {/* Upload area */}
@@ -303,20 +303,20 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
               className="max-h-48 mx-auto rounded-xl object-contain"
             />
             {form.idCardImageUrl && (
-              <p className="text-xs text-[var(--c-ok)] font-medium">✓ อัปโหลดเรียบร้อยแล้ว</p>
+              <p className="text-xs text-[var(--c-ok)] font-medium">{tr("✓ อัปโหลดเรียบร้อยแล้ว")}</p>
             )}
             {uploading && (
-              <p className="text-xs text-[var(--c-muted)] animate-pulse">⏳ กำลังอัปโหลด…</p>
+              <p className="text-xs text-[var(--c-muted)] animate-pulse">{tr("⏳ กำลังอัปโหลด…")}</p>
             )}
             {!uploading && (
-              <p className="text-xs text-[var(--c-muted)]">คลิกเพื่อเปลี่ยนรูป</p>
+              <p className="text-xs text-[var(--c-muted)]">{tr("คลิกเพื่อเปลี่ยนรูป")}</p>
             )}
           </div>
         ) : (
           <div className="space-y-2 text-[var(--c-muted)]">
             <div className="text-4xl">🪪</div>
-            <p className="text-sm font-semibold">คลิกเพื่อเลือกรูป หรือลากไฟล์มาวางที่นี่</p>
-            <p className="text-xs">รูปภาพทุกชนิด ทุกขนาด • ระบบย่อขนาดให้อัตโนมัติ</p>
+            <p className="text-sm font-semibold">{tr("คลิกเพื่อเลือกรูป หรือลากไฟล์มาวางที่นี่")}</p>
+            <p className="text-xs">{tr("รูปภาพทุกชนิด ทุกขนาด • ระบบย่อขนาดให้อัตโนมัติ")}</p>
           </div>
         )}
         <input
@@ -341,9 +341,7 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
         <button
           onClick={onBack}
           className="flex-1 py-3 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
-        >
-          ← ย้อนกลับ
-        </button>
+        >{tr("← ย้อนกลับ")}</button>
         <button
           onClick={() => {
             if (!form.idCardImageUrl) { setErr("กรุณาอัปโหลดรูปบัตรก่อน"); return; }
@@ -352,7 +350,7 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
           disabled={uploading}
           className="flex-1 py-3 rounded-xl bg-[var(--c-accent)] text-white font-bold text-sm hover:bg-[var(--c-accent-str)] transition disabled:opacity-40"
         >
-          {uploading ? "กำลังอัปโหลด…" : "ถัดไป →"}
+          {uploading ? tr("กำลังอัปโหลด…") : tr("ถัดไป →")}
         </button>
       </div>
     </div>
@@ -367,6 +365,7 @@ function FaceLivenessStep({ form, onChange, onNext, onBack }: {
   onNext:   () => void;
   onBack:   () => void;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   // If frames were already captured in a previous visit, start as done
   const alreadyDone = !!form.frames.front;
   const [done, setDone] = useState(alreadyDone);
@@ -390,16 +389,12 @@ function FaceLivenessStep({ form, onChange, onNext, onBack }: {
         <button
           onClick={onBack}
           className="flex-1 py-3 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
-        >
-          ← ย้อนกลับ
-        </button>
+        >{tr("← ย้อนกลับ")}</button>
         <button
           onClick={onNext}
           disabled={!done}
           className="flex-1 py-3 rounded-xl bg-[var(--c-accent)] text-white font-bold text-sm hover:bg-[var(--c-accent-str)] transition disabled:opacity-40"
-        >
-          ถัดไป →
-        </button>
+        >{tr("ถัดไป →")}</button>
       </div>
     </div>
   );
@@ -408,6 +403,7 @@ function FaceLivenessStep({ form, onChange, onNext, onBack }: {
 // ─── Step 4: Review & Submit ──────────────────────────────────────────────────
 
 function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
+  const tr = useLocaleStore((s) => s.tr);
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error,      setError]      = useState<string | null>(null);
@@ -418,6 +414,7 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
   const canSubmit      = !missingIdCard && !missingSelfie;
 
   async function handleSubmit() {
+  const tr = useLocaleStore((s) => s.tr);
     if (!canSubmit) {
       setError("ข้อมูลไม่ครบ กรุณากลับไปตรวจสอบ");
       return;
@@ -444,7 +441,7 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
     if (res.success) {
       router.push("/profile/verify?submitted=1");
     } else {
-      setError(res.error ?? "เกิดข้อผิดพลาด");
+      setError(res.error ?? tr("เกิดข้อผิดพลาด"));
       setSubmitting(false);
     }
   }
@@ -459,18 +456,18 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
       {/* Summary */}
       <div className="bg-[var(--c-canvas)] rounded-xl p-4 space-y-2 text-sm">
         <div className="flex justify-between">
-          <span className="text-[var(--c-muted)]">ประเภท</span>
+          <span className="text-[var(--c-muted)]">{tr("ประเภท")}</span>
           <span className="font-semibold">
             {form.psuIdType === "STUDENT" ? "นักศึกษา" : form.psuIdType === "STAFF" ? "บุคลากร" : "—"}
           </span>
         </div>
         <div className="flex justify-between">
-          <span className="text-[var(--c-muted)]">รหัส PSU</span>
+          <span className="text-[var(--c-muted)]">{tr("รหัส PSU")}</span>
           <span className="font-mono font-semibold">{form.psuIdNumber || "—"}</span>
         </div>
         {form.facultyOrDepartment && (
           <div className="flex justify-between">
-            <span className="text-[var(--c-muted)]">คณะ/หน่วยงาน</span>
+            <span className="text-[var(--c-muted)]">{tr("คณะ/หน่วยงาน")}</span>
             <span className="font-semibold">{form.facultyOrDepartment}</span>
           </div>
         )}
@@ -479,7 +476,7 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
       {/* ID Card thumb */}
       {form.idCardImagePreview ? (
         <div>
-          <p className="text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">รูปบัตรประจำตัว</p>
+          <p className="text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">{tr("รูปบัตรประจำตัว")}</p>
           <img
             src={form.idCardImagePreview}
             alt="ID"
@@ -488,19 +485,15 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
         </div>
       ) : (
         missingIdCard && (
-          <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-4 py-3 text-xs text-[var(--c-danger)]">
-            ⚠️ ไม่พบรูปบัตรประจำตัว — กรุณากลับไปอัปโหลดอีกครั้ง
-          </div>
+          <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-4 py-3 text-xs text-[var(--c-danger)]">{tr("⚠️ ไม่พบรูปบัตรประจำตัว — กรุณากลับไปอัปโหลดอีกครั้ง")}</div>
         )
       )}
 
       {/* Selfie thumbs */}
       <div>
-        <p className="text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">รูปยืนยันตัวตน</p>
+        <p className="text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">{tr("รูปยืนยันตัวตน")}</p>
         {missingSelfie ? (
-          <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-4 py-3 text-xs text-[var(--c-danger)]">
-            ⚠️ ไม่พบรูปยืนยันตัวตน — กรุณากลับไปถ่ายรูปอีกครั้ง
-          </div>
+          <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-4 py-3 text-xs text-[var(--c-danger)]">{tr("⚠️ ไม่พบรูปยืนยันตัวตน — กรุณากลับไปถ่ายรูปอีกครั้ง")}</div>
         ) : (
           <div className="flex gap-2">
             {(["front","left","right","up"] as const).map((k) => (
@@ -519,9 +512,7 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
         )}
       </div>
 
-      <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-4 py-3 text-xs text-[var(--c-warn)]">
-        ⚠️ เมื่อส่งแล้ว ทีมงานจะตรวจสอบภายใน 24 ชม. คุณจะได้รับแจ้งเตือนเมื่อมีผลการตรวจสอบ
-      </div>
+      <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-4 py-3 text-xs text-[var(--c-warn)]">{tr("⚠️ เมื่อส่งแล้ว ทีมงานจะตรวจสอบภายใน 24 ชม. คุณจะได้รับแจ้งเตือนเมื่อมีผลการตรวจสอบ")}</div>
 
       {error && (
         <p className="text-sm text-[var(--c-danger)] text-center bg-[var(--c-danger-soft)] rounded-xl px-4 py-3">{error}</p>
@@ -532,9 +523,7 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
           onClick={onBack}
           disabled={submitting}
           className="flex-1 py-3 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-40"
-        >
-          ← ย้อนกลับ
-        </button>
+        >{tr("← ย้อนกลับ")}</button>
         <button
           onClick={handleSubmit}
           disabled={submitting || !canSubmit}

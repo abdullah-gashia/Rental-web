@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -71,10 +73,11 @@ function Avatar({ user, size = "sm" }: { user: { name: string | null; image: str
 // ─── Image Lightbox ───────────────────────────────────────────────────────────
 
 function EvidenceGallery({ images }: { images: string[] }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [lightbox, setLightbox] = useState<string | null>(null);
 
   if (images.length === 0) return (
-    <p className="text-xs text-[var(--c-muted)] italic">ไม่มีรูปภาพหลักฐาน</p>
+    <p className="text-xs text-[var(--c-muted)] italic">{tr("ไม่มีรูปภาพหลักฐาน")}</p>
   );
 
   return (
@@ -124,6 +127,7 @@ function ChatLog({
   buyerId:  string;
   sellerId: string;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [open, setOpen] = useState(false);
 
   // Find the conversation that includes both parties
@@ -157,7 +161,7 @@ function ChatLog({
       {open && (
         <div className="max-h-72 overflow-y-auto divide-y divide-[var(--c-line-soft)]">
           {messages.length === 0 ? (
-            <p className="px-4 py-6 text-center text-sm text-[var(--c-muted)]">ไม่มีข้อความ</p>
+            <p className="px-4 py-6 text-center text-sm text-[var(--c-muted)]">{tr("ไม่มีข้อความ")}</p>
           ) : (
             messages.map((msg) => {
               const isSystem = parseSystemMessage(msg.content) !== null;
@@ -168,9 +172,7 @@ function ChatLog({
                   <div key={msg.id} className="px-4 py-3 bg-[#fafaf9]">
                     <div className="flex items-center gap-1.5 mb-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-                      <span className="text-[10px] text-[var(--c-accent)] font-bold uppercase tracking-wider">
-                        ข้อมูลระบบ (System Record)
-                      </span>
+                      <span className="text-[10px] text-[var(--c-accent)] font-bold uppercase tracking-wider">{tr("ข้อมูลระบบ (System Record)")}</span>
                       <span className="text-[10px] text-[var(--c-faint-2)] ml-auto">
                         {new Date(msg.createdAt).toLocaleString("th-TH", {
                           month: "short", day: "numeric",
@@ -225,6 +227,7 @@ function DisputeCard({
   onResolve: (orderId: string, resolution: "REFUND_BUYER" | "RELEASE_TO_SELLER") => void;
   resolving: boolean;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [confirmAction, setConfirmAction] = useState<"REFUND_BUYER" | "RELEASE_TO_SELLER" | null>(null);
 
   const dispute     = order.dispute;
@@ -242,9 +245,7 @@ function DisputeCard({
       {/* ── Header strip ───────────────────────────────────────────────────── */}
       <div className="bg-[var(--c-danger-soft)] border-b border-red-100 px-5 py-3 flex flex-wrap items-center gap-3">
         <span className="flex items-center gap-1.5 text-xs font-bold text-[var(--c-danger)]">
-          <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-          ข้อพิพาท
-        </span>
+          <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />{tr("ข้อพิพาท")}</span>
         <span className="text-xs text-[var(--c-danger)] font-medium ml-auto">
           เปิดเมื่อ {new Date(filedDate).toLocaleDateString("th-TH", {
             day: "numeric", month: "short", year: "numeric",
@@ -269,7 +270,7 @@ function DisputeCard({
             <p className="text-base font-bold text-[var(--c-ink)] truncate">{order.item.title}</p>
             <p className="text-lg font-extrabold text-[var(--c-danger)] mt-0.5">
               ฿{order.amount.toLocaleString()}
-              <span className="text-xs font-normal text-[var(--c-muted)] ml-2">ถูกอายัด</span>
+              <span className="text-xs font-normal text-[var(--c-muted)] ml-2">{tr("ถูกอายัด")}</span>
             </p>
           </div>
         </div>
@@ -338,7 +339,7 @@ function DisputeCard({
                 ? "คืนเงิน ฿" + order.amount.toLocaleString() + " ให้ผู้ซื้อ"
                 : "โอนเงิน ฿" + order.amount.toLocaleString() + " ให้ผู้ขาย"}
             </p>
-            <p className="text-xs text-[var(--c-warn)]">การกระทำนี้ไม่สามารถยกเลิกได้</p>
+            <p className="text-xs text-[var(--c-warn)]">{tr("การกระทำนี้ไม่สามารถยกเลิกได้")}</p>
             <div className="flex gap-2">
               <button
                 onClick={() => setConfirmAction(null)}
@@ -365,9 +366,7 @@ function DisputeCard({
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-              </svg>
-              ตัดสินให้ผู้ซื้อ (คืนเงิน)
-            </button>
+              </svg>{tr("ตัดสินให้ผู้ซื้อ (คืนเงิน)")}</button>
             <button
               onClick={() => setConfirmAction("RELEASE_TO_SELLER")}
               disabled={resolving}
@@ -375,9 +374,7 @@ function DisputeCard({
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-              ตัดสินให้ผู้ขาย (โอนเงิน)
-            </button>
+              </svg>{tr("ตัดสินให้ผู้ขาย (โอนเงิน)")}</button>
           </div>
         )}
       </div>
@@ -388,6 +385,7 @@ function DisputeCard({
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function DisputesClient({ orders: initialOrders }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const router = useRouter();
   const [orders, setOrders]       = useState(initialOrders);
   const [isPending, start]        = useTransition();
@@ -409,6 +407,7 @@ export default function DisputesClient({ orders: initialOrders }: Props) {
   }
 
   function handleAutoRelease() {
+  const tr = useLocaleStore((s) => s.tr);
     setAutoMsg(null);
     start(async () => {
       const res = await checkAndAutoReleaseEscrows();
@@ -417,7 +416,7 @@ export default function DisputesClient({ orders: initialOrders }: Props) {
       } else {
         setAutoMsg(
           res.released === 0
-            ? "ไม่มีรายการที่ต้องปลดล็อคอัตโนมัติ"
+            ? tr("ไม่มีรายการที่ต้องปลดล็อคอัตโนมัติ")
             : `✅ ปลดล็อคอัตโนมัติ ${res.released} รายการเรียบร้อยแล้ว`
         );
         router.refresh();
@@ -431,8 +430,8 @@ export default function DisputesClient({ orders: initialOrders }: Props) {
       {/* ── Header ─────────────────────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--c-ink)]">ศูนย์จัดการข้อพิพาท</h1>
-          <p className="text-sm text-[var(--c-ink-3)] mt-1">ตรวจสอบหลักฐานและตัดสินผลเพื่อปลดล็อคเงิน Escrow</p>
+          <h1 className="text-2xl font-bold text-[var(--c-ink)]">{tr("ศูนย์จัดการข้อพิพาท")}</h1>
+          <p className="text-sm text-[var(--c-ink-3)] mt-1">{tr("ตรวจสอบหลักฐานและตัดสินผลเพื่อปลดล็อคเงิน Escrow")}</p>
         </div>
 
         <div className="flex items-center gap-3 flex-wrap">
@@ -443,7 +442,7 @@ export default function DisputesClient({ orders: initialOrders }: Props) {
               : "bg-[var(--c-ok-soft)] border-[var(--c-ok-line)] text-[var(--c-ok)]"
           }`}>
             <span className={`w-2 h-2 rounded-full ${orders.length > 0 ? "bg-red-500 animate-pulse" : "bg-emerald-500"}`} />
-            {orders.length > 0 ? `${orders.length} คดีเปิดอยู่` : "ไม่มีข้อพิพาทที่รอ"}
+            {orders.length > 0 ? `${orders.length} คดีเปิดอยู่` : tr("ไม่มีข้อพิพาทที่รอ")}
           </div>
 
           {/* Auto-release trigger */}
@@ -454,9 +453,7 @@ export default function DisputesClient({ orders: initialOrders }: Props) {
           >
             <svg className={`w-4 h-4 ${isPending ? "animate-spin" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            ตรวจ Auto-Release (7 วัน)
-          </button>
+            </svg>{tr("ตรวจ Auto-Release (7 วัน)")}</button>
         </div>
       </div>
 
@@ -475,8 +472,8 @@ export default function DisputesClient({ orders: initialOrders }: Props) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-[var(--c-ink)] mb-1">ไม่มีข้อพิพาทที่รอตรวจสอบ</h3>
-          <p className="text-sm text-[var(--c-ink-3)]">ทุกธุรกรรมดำเนินไปอย่างราบรื่น 🎉</p>
+          <h3 className="text-lg font-semibold text-[var(--c-ink)] mb-1">{tr("ไม่มีข้อพิพาทที่รอตรวจสอบ")}</h3>
+          <p className="text-sm text-[var(--c-ink-3)]">{tr("ทุกธุรกรรมดำเนินไปอย่างราบรื่น 🎉")}</p>
         </div>
       )}
 

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useEffect, useRef, useCallback } from "react";
 import Modal from "@/components/ui/Modal";
 import { getMessages, sendMessage, markMessagesAsRead } from "@/lib/actions/chat-actions";
@@ -70,6 +72,7 @@ function ItemContextCard({
   onSendGreeting: () => void;
   hasMessages:    boolean;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [copied, setCopied] = useState(false);
 
   function handleCopy() {
@@ -89,9 +92,7 @@ function ItemContextCard({
       {/* Section label */}
       <div className="flex items-center gap-2 mb-2.5">
         <div className="h-px flex-1 bg-[var(--c-line)]" />
-        <span className="text-[10px] font-bold text-[var(--c-muted)] uppercase tracking-widest whitespace-nowrap">
-          รายละเอียดสินค้า
-        </span>
+        <span className="text-[10px] font-bold text-[var(--c-muted)] uppercase tracking-widest whitespace-nowrap">{tr("รายละเอียดสินค้า")}</span>
         <div className="h-px flex-1 bg-[var(--c-line)]" />
       </div>
 
@@ -137,19 +138,13 @@ function ItemContextCard({
 
           {/* Shipping */}
           {context.allowShipping && (
-            <span className="inline-flex items-center gap-1 bg-[var(--c-accent-soft)] text-[var(--c-accent-str)] text-xs font-medium px-2.5 py-1 rounded-full">
-              📦 จัดส่งไปรษณีย์ได้
-            </span>
+            <span className="inline-flex items-center gap-1 bg-[var(--c-accent-soft)] text-[var(--c-accent-str)] text-xs font-medium px-2.5 py-1 rounded-full">{tr("📦 จัดส่งไปรษณีย์ได้")}</span>
           )}
           {context.allowMeetup && !context.allowShipping && (
-            <span className="inline-flex items-center gap-1 bg-[var(--c-accent-soft)] text-sky-700 text-xs font-medium px-2.5 py-1 rounded-full">
-              🤝 นัดรับเท่านั้น
-            </span>
+            <span className="inline-flex items-center gap-1 bg-[var(--c-accent-soft)] text-sky-700 text-xs font-medium px-2.5 py-1 rounded-full">{tr("🤝 นัดรับเท่านั้น")}</span>
           )}
           {context.allowMeetup && context.allowShipping && (
-            <span className="inline-flex items-center gap-1 bg-[var(--c-accent-soft)] text-sky-700 text-xs font-medium px-2.5 py-1 rounded-full">
-              🤝 นัดรับได้
-            </span>
+            <span className="inline-flex items-center gap-1 bg-[var(--c-accent-soft)] text-sky-700 text-xs font-medium px-2.5 py-1 rounded-full">{tr("🤝 นัดรับได้")}</span>
           )}
 
           {/* Location */}
@@ -164,9 +159,7 @@ function ItemContextCard({
         {context.contact && (
           <div className="mx-4 mb-3 flex items-center justify-between gap-3 bg-[var(--c-canvas)] rounded-xl px-3 py-2.5 border border-[var(--c-line)]">
             <div className="min-w-0">
-              <p className="text-[10px] font-semibold text-[var(--c-muted)] uppercase tracking-wide mb-0.5">
-                📞 ช่องทางติดต่อผู้ขาย
-              </p>
+              <p className="text-[10px] font-semibold text-[var(--c-muted)] uppercase tracking-wide mb-0.5">{tr("📞 ช่องทางติดต่อผู้ขาย")}</p>
               <p className="text-sm font-bold text-[var(--c-ink)] truncate">{context.contact}</p>
             </div>
             <button
@@ -181,16 +174,12 @@ function ItemContextCard({
                 <>
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                  </svg>
-                  คัดลอกแล้ว
-                </>
+                  </svg>{tr("คัดลอกแล้ว")}</>
               ) : (
                 <>
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                  คัดลอก
-                </>
+                  </svg>{tr("คัดลอก")}</>
               )}
             </button>
           </div>
@@ -205,9 +194,7 @@ function ItemContextCard({
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/>
-              </svg>
-              สวัสดีครับ/ค่ะ สนใจสินค้าชิ้นนี้
-            </button>
+              </svg>{tr("สวัสดีครับ/ค่ะ สนใจสินค้าชิ้นนี้")}</button>
           </div>
         )}
       </div>
@@ -228,6 +215,7 @@ export default function ChatModal({
   convLoading,
   itemContext,
 }: ChatModalProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const [messages,     setMessages]     = useState<ChatMessage[]>([]);
   const [msgLoading,   setMsgLoading]   = useState(false);
   const [input,        setInput]        = useState("");
@@ -289,6 +277,7 @@ export default function ChatModal({
 
   // ── File → upload ─────────────────────────────────────────────
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const tr = useLocaleStore((s) => s.tr);
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = "";
@@ -307,11 +296,11 @@ export default function ChatModal({
         setPendingImage(data.url);
       } else {
         setImagePreview(null);
-        alert(data.error ?? "อัปโหลดรูปภาพไม่สำเร็จ");
+        alert(data.error ?? tr("อัปโหลดรูปภาพไม่สำเร็จ"));
       }
     } catch {
       setImagePreview(null);
-      alert("อัปโหลดรูปภาพไม่สำเร็จ");
+      alert(tr("อัปโหลดรูปภาพไม่สำเร็จ"));
     } finally {
       setUploading(false);
     }
@@ -396,7 +385,7 @@ export default function ChatModal({
             price={itemPrice}
             context={itemContext}
             listingType={itemContext.listingType}
-            onSendGreeting={() => handleSend("สวัสดีครับ/ค่ะ สนใจสินค้าชิ้นนี้ครับ 👋")}
+            onSendGreeting={() => handleSend(tr("สวัสดีครับ/ค่ะ สนใจสินค้าชิ้นนี้ครับ 👋"))}
             hasMessages={messages.length > 0}
           />
         )}
@@ -405,14 +394,14 @@ export default function ChatModal({
         {messages.length === 0 && !loading && !itemContext && (
           <div className="text-center text-[var(--c-muted)] text-sm py-12">
             <p className="text-3xl mb-2">💬</p>
-            <p>เริ่มแชทกับผู้ขาย</p>
+            <p>{tr("เริ่มแชทกับผู้ขาย")}</p>
           </div>
         )}
 
         {/* Loading state */}
         {loading && messages.length === 0 && (
           <div className="text-center text-[var(--c-muted)] text-sm py-12">
-            <p>กำลังโหลด...</p>
+            <p>{tr("กำลังโหลด...")}</p>
           </div>
         )}
 
@@ -443,7 +432,7 @@ export default function ChatModal({
                   <a href={msg.imageUrl!} target="_blank" rel="noopener noreferrer" className="block mb-1">
                     <img
                       src={msg.imageUrl!}
-                      alt="รูปภาพ"
+                      alt={tr("รูปภาพ")}
                       className={`max-w-full max-h-56 rounded-2xl object-contain cursor-zoom-in hover:opacity-90 transition border border-black/5 ${
                         isMine ? "rounded-br-md" : "rounded-bl-md"
                       }`}
@@ -465,7 +454,7 @@ export default function ChatModal({
                   {new Date(msg.createdAt).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}
                 </p>
                 {isMine && isLastSent && msg.read && (
-                  <span className="text-[9px] text-[var(--c-accent)] font-semibold">อ่านแล้ว</span>
+                  <span className="text-[9px] text-[var(--c-accent)] font-semibold">{tr("อ่านแล้ว")}</span>
                 )}
               </div>
             </div>
@@ -486,14 +475,14 @@ export default function ChatModal({
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-[var(--c-ink-1)]">{uploading ? "กำลังอัปโหลด..." : "พร้อมส่ง"}</p>
-            <p className="text-[10px] text-[var(--c-muted)]">คุณสามารถพิมพ์ข้อความเพิ่มได้</p>
+            <p className="text-xs font-medium text-[var(--c-ink-1)]">{uploading ? "กำลังอัปโหลด..." : tr("พร้อมส่ง")}</p>
+            <p className="text-[10px] text-[var(--c-muted)]">{tr("คุณสามารถพิมพ์ข้อความเพิ่มได้")}</p>
           </div>
           <button
             onClick={clearPendingImage}
             disabled={uploading}
             className="text-[var(--c-muted)] hover:text-[var(--c-danger)] transition text-lg leading-none disabled:opacity-30"
-            aria-label="ยกเลิกรูปภาพ"
+            aria-label={tr("ยกเลิกรูปภาพ")}
           >
             ×
           </button>

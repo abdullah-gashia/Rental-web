@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { deleteInteraction, clearAllHistory, toggleTracking, getUserHistory } from "./actions";
 
@@ -43,6 +45,7 @@ function relativeTime(iso: string): string {
 }
 
 export default function HistoryClient({ initialHistory, trackingEnabled: initialTracking }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [history,  setHistory]  = useState<HistoryResult>(initialHistory);
   const [tracking, setTracking] = useState(initialTracking);
   const [pending,  start]       = useTransition();
@@ -60,6 +63,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
   }
 
   function handleDelete(id: string) {
+  const tr = useLocaleStore((s) => s.tr);
     start(async () => {
       const res = await deleteInteraction(id);
       if (res.success) {
@@ -68,29 +72,31 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
           interactions: h.interactions.filter((i) => i.id !== id),
           total:        h.total - 1,
         }));
-        showMessage("ลบรายการแล้ว");
+        showMessage(tr("ลบรายการแล้ว"));
       }
     });
   }
 
   function handleClearAll() {
+  const tr = useLocaleStore((s) => s.tr);
     start(async () => {
       const res = await clearAllHistory();
       if (res.success) {
         setHistory((h) => ({ ...h, interactions: [], total: 0 }));
         setShowClearConfirm(false);
-        showMessage("ล้างประวัติทั้งหมดแล้ว");
+        showMessage(tr("ล้างประวัติทั้งหมดแล้ว"));
       }
     });
   }
 
   function handleToggleTracking() {
+  const tr = useLocaleStore((s) => s.tr);
     const next = !tracking;
     start(async () => {
       const res = await toggleTracking(next);
       if (res.success) {
         setTracking(next);
-        showMessage(next ? "เปิดการบันทึกประวัติแล้ว" : "หยุดบันทึกประวัติแล้ว");
+        showMessage(next ? tr("เปิดการบันทึกประวัติแล้ว") : tr("หยุดบันทึกประวัติแล้ว"));
       }
     });
   }
@@ -104,7 +110,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
     const now  = new Date();
     const diffDays = Math.floor((now.getTime() - d.getTime()) / 86_400_000);
     const label =
-      diffDays === 0 ? "วันนี้" :
+      diffDays === 0 ? tr("วันนี้") :
       diffDays === 1 ? "เมื่อวาน" :
       d.toLocaleDateString("th-TH", { day: "numeric", month: "long", year: "numeric" });
 
@@ -129,13 +135,9 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
       <div className="max-w-2xl mx-auto px-5 py-10 space-y-6">
         {/* Header */}
         <div>
-          <a href="/" className="text-sm text-[var(--c-muted)] hover:text-[var(--c-ink)] transition">
-            ← กลับหน้าหลัก
-          </a>
-          <h1 className="text-2xl font-bold text-[var(--c-ink)] mt-3">ประวัติการเข้าชม</h1>
-          <p className="text-sm text-[var(--c-ink-3)] mt-1">
-            สินค้าที่คุณเคยดูจะถูกใช้เพื่อแนะนำสินค้าที่ตรงใจคุณ
-          </p>
+          <a href="/" className="text-sm text-[var(--c-muted)] hover:text-[var(--c-ink)] transition">{tr("← กลับหน้าหลัก")}</a>
+          <h1 className="text-2xl font-bold text-[var(--c-ink)] mt-3">{tr("ประวัติการเข้าชม")}</h1>
+          <p className="text-sm text-[var(--c-ink-3)] mt-1">{tr("สินค้าที่คุณเคยดูจะถูกใช้เพื่อแนะนำสินค้าที่ตรงใจคุณ")}</p>
         </div>
 
         {/* Control bar */}
@@ -150,7 +152,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
                 : "bg-[var(--c-ink)] border-[var(--c-ink)] text-white"
             }`}
           >
-            {tracking ? "⏸ หยุดบันทึกชั่วคราว" : "▶ เปิดการบันทึก"}
+            {tracking ? tr("⏸ หยุดบันทึกชั่วคราว") : tr("▶ เปิดการบันทึก")}
           </button>
 
           {history.total > 0 && (
@@ -169,8 +171,8 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/40" onClick={() => setShowClearConfirm(false)} />
             <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-sm p-6 space-y-4">
-              <h3 className="font-bold text-[var(--c-ink)]">ล้างประวัติทั้งหมด?</h3>
-              <p className="text-sm text-[var(--c-ink-2)]">ข้อมูลการแนะนำสินค้าจะถูกรีเซ็ต คุณจะเห็นสินค้ายอดนิยมแทน</p>
+              <h3 className="font-bold text-[var(--c-ink)]">{tr("ล้างประวัติทั้งหมด?")}</h3>
+              <p className="text-sm text-[var(--c-ink-2)]">{tr("ข้อมูลการแนะนำสินค้าจะถูกรีเซ็ต คุณจะเห็นสินค้ายอดนิยมแทน")}</p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowClearConfirm(false)}
@@ -182,9 +184,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
                   onClick={handleClearAll}
                   disabled={pending}
                   className="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-sm font-bold text-white transition disabled:opacity-50"
-                >
-                  ล้างทั้งหมด
-                </button>
+                >{tr("ล้างทั้งหมด")}</button>
               </div>
             </div>
           </div>
@@ -194,8 +194,8 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
         {history.total === 0 ? (
           <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] py-16 text-center">
             <p className="text-4xl mb-3">📭</p>
-            <p className="text-sm font-semibold text-[var(--c-ink-1)]">ยังไม่มีประวัติการเข้าชม</p>
-            <p className="text-xs text-[var(--c-muted)] mt-1">เริ่มดูสินค้าเพื่อรับการแนะนำที่ตรงใจ</p>
+            <p className="text-sm font-semibold text-[var(--c-ink-1)]">{tr("ยังไม่มีประวัติการเข้าชม")}</p>
+            <p className="text-xs text-[var(--c-muted)] mt-1">{tr("เริ่มดูสินค้าเพื่อรับการแนะนำที่ตรงใจ")}</p>
           </div>
         ) : (
           <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] overflow-hidden divide-y divide-[var(--c-line-soft)]">
@@ -234,7 +234,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
                       onClick={() => handleDelete(ix.id)}
                       disabled={pending}
                       className="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--c-muted)] hover:text-[var(--c-danger)] hover:bg-[var(--c-danger-soft)] transition disabled:opacity-40 flex-shrink-0"
-                      aria-label="ลบรายการนี้"
+                      aria-label={tr("ลบรายการนี้")}
                     >
                       ×
                     </button>
@@ -256,16 +256,12 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
                 onClick={() => refreshPage(history.page - 1)}
                 disabled={history.page === 1 || pending}
                 className="px-3 py-1.5 text-sm border border-[var(--c-line)] rounded-lg disabled:opacity-30 hover:bg-[var(--c-line-soft)] transition"
-              >
-                ← ก่อนหน้า
-              </button>
+              >{tr("← ก่อนหน้า")}</button>
               <button
                 onClick={() => refreshPage(history.page + 1)}
                 disabled={history.page >= history.totalPages || pending}
                 className="px-3 py-1.5 text-sm border border-[var(--c-line)] rounded-lg disabled:opacity-30 hover:bg-[var(--c-line-soft)] transition"
-              >
-                ถัดไป →
-              </button>
+              >{tr("ถัดไป →")}</button>
             </div>
           </div>
         )}

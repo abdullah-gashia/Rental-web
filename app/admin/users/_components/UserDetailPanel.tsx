@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition, useEffect } from "react";
 import type { UserDetail }                     from "../../_lib/types";
 import { formatThaiDate }                      from "../../_lib/utils";
@@ -21,6 +23,7 @@ const VERIFICATION_LABELS: Record<string, string> = {
 };
 
 export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [data, setData]    = useState<UserDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [pending, startTransition] = useTransition();
@@ -120,7 +123,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
             </svg>
             ปิด
           </button>
-          <h2 className="text-sm font-bold text-[var(--c-ink)]">รายละเอียดผู้ใช้</h2>
+          <h2 className="text-sm font-bold text-[var(--c-ink)]">{tr("รายละเอียดผู้ใช้")}</h2>
           <div className="flex gap-2">
             <button
               onClick={onClose}
@@ -146,7 +149,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
             ))}
           </div>
         ) : !data ? (
-          <div className="p-10 text-center text-[var(--c-faint)]">ไม่พบข้อมูลผู้ใช้</div>
+          <div className="p-10 text-center text-[var(--c-faint)]">{tr("ไม่พบข้อมูลผู้ใช้")}</div>
         ) : (
           <div className="p-5 space-y-5">
             {/* ── Profile header ────────────────────────────────────────── */}
@@ -167,10 +170,10 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
 
             {/* ── Status badges row ────────────────────────────────────── */}
             <div className="grid grid-cols-4 gap-2">
-              <StatCard label="สถานะ" val={data.isBanned ? "ถูกแบน" : "ปกติ"} color={data.isBanned ? "red" : "green"} />
-              <StatCard label="ยืนยัน" val={VERIFICATION_LABELS[data.verificationStatus] ?? data.verificationStatus} color={data.verificationStatus === "APPROVED" ? "green" : "yellow"} />
+              <StatCard label={tr("สถานะ")} val={data.isBanned ? "ถูกแบน" : "ปกติ"} color={data.isBanned ? "red" : "green"} />
+              <StatCard label={tr("ยืนยัน")} val={VERIFICATION_LABELS[data.verificationStatus] ?? data.verificationStatus} color={data.verificationStatus === "APPROVED" ? "green" : "yellow"} />
               <StatCard label="Trust" val={String(data.trustScore)} color={data.trustScore >= 80 ? "green" : data.trustScore >= 50 ? "yellow" : "red"} />
-              <StatCard label="บทบาท" val={data.role === "ADMIN" ? "แอดมิน" : "นักศึกษา"} color={data.role === "ADMIN" ? "purple" : "gray"} />
+              <StatCard label={tr("บทบาท")} val={data.role === "ADMIN" ? "แอดมิน" : "นักศึกษา"} color={data.role === "ADMIN" ? "purple" : "gray"} />
             </div>
 
             {/* ── Financial summary ────────────────────────────────────── */}
@@ -178,29 +181,25 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
 
             {/* ── Activity summary ─────────────────────────────────────── */}
             <div className="p-4 bg-[var(--c-subtle)] rounded-xl border border-[var(--c-line)]">
-              <h3 className="text-xs font-semibold text-[var(--c-ink-2)] uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                📊 สรุปกิจกรรม
-              </h3>
+              <h3 className="text-xs font-semibold text-[var(--c-ink-2)] uppercase tracking-wider mb-3 flex items-center gap-1.5">{tr("📊 สรุปกิจกรรม")}</h3>
               <div className="grid grid-cols-3 gap-y-2 gap-x-4 text-sm">
-                <div><span className="text-[var(--c-muted)]">สินค้าทั้งหมด:</span> <span className="font-medium">{data.itemCount}</span></div>
-                <div><span className="text-[var(--c-muted)]">ขายแล้ว:</span> <span className="font-medium">{data.soldItemCount}</span></div>
-                <div><span className="text-[var(--c-muted)]">กำลังขาย:</span> <span className="font-medium">{data.activeItemCount}</span></div>
-                <div><span className="text-[var(--c-muted)]">ออเดอร์ (ซื้อ):</span> <span className="font-medium">{data.buyOrderCount}</span></div>
-                <div><span className="text-[var(--c-muted)]">ออเดอร์ (ขาย):</span> <span className="font-medium">{data.sellOrderCount}</span></div>
-                <div><span className="text-[var(--c-muted)]">ข้อพิพาท:</span> <span className="font-medium">{data.disputeCount}</span></div>
-                <div><span className="text-[var(--c-muted)]">ถูกยกเลิก:</span> <span className="font-medium">{data.cancelledCount}</span></div>
+                <div><span className="text-[var(--c-muted)]">{tr("สินค้าทั้งหมด:")}</span> <span className="font-medium">{data.itemCount}</span></div>
+                <div><span className="text-[var(--c-muted)]">{tr("ขายแล้ว:")}</span> <span className="font-medium">{data.soldItemCount}</span></div>
+                <div><span className="text-[var(--c-muted)]">{tr("กำลังขาย:")}</span> <span className="font-medium">{data.activeItemCount}</span></div>
+                <div><span className="text-[var(--c-muted)]">{tr("ออเดอร์ (ซื้อ):")}</span> <span className="font-medium">{data.buyOrderCount}</span></div>
+                <div><span className="text-[var(--c-muted)]">{tr("ออเดอร์ (ขาย):")}</span> <span className="font-medium">{data.sellOrderCount}</span></div>
+                <div><span className="text-[var(--c-muted)]">{tr("ข้อพิพาท:")}</span> <span className="font-medium">{data.disputeCount}</span></div>
+                <div><span className="text-[var(--c-muted)]">{tr("ถูกยกเลิก:")}</span> <span className="font-medium">{data.cancelledCount}</span></div>
               </div>
             </div>
 
             {/* ── Editable fields ──────────────────────────────────────── */}
             <div className="p-4 bg-[var(--c-surface)] rounded-xl border border-[var(--c-line)] space-y-3">
-              <h3 className="text-xs font-semibold text-[var(--c-ink-2)] uppercase tracking-wider flex items-center gap-1.5">
-                ✏️ แก้ไขข้อมูล
-              </h3>
+              <h3 className="text-xs font-semibold text-[var(--c-ink-2)] uppercase tracking-wider flex items-center gap-1.5">{tr("✏️ แก้ไขข้อมูล")}</h3>
 
               {/* Name */}
               <div>
-                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">ชื่อที่แสดง *</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">{tr("ชื่อที่แสดง *")}</label>
                 <input
                   type="text"
                   value={name}
@@ -212,7 +211,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
 
               {/* Phone */}
               <div>
-                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">เบอร์โทร</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">{tr("เบอร์โทร")}</label>
                 <input
                   type="tel"
                   value={phone}
@@ -224,27 +223,27 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
 
               {/* Role */}
               <div>
-                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">บทบาท *</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">{tr("บทบาท *")}</label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value as "ADMIN" | "STUDENT")}
                   className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm bg-[var(--c-surface)] focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
                 >
-                  <option value="STUDENT">นักศึกษา (STUDENT)</option>
-                  <option value="ADMIN">แอดมิน (ADMIN)</option>
+                  <option value="STUDENT">{tr("นักศึกษา (STUDENT)")}</option>
+                  <option value="ADMIN">{tr("แอดมิน (ADMIN)")}</option>
                 </select>
               </div>
 
               {/* Ban status */}
               <div>
-                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">สถานะบัญชี *</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">{tr("สถานะบัญชี *")}</label>
                 <select
                   value={banned ? "BANNED" : "ACTIVE"}
                   onChange={(e) => setBanned(e.target.value === "BANNED")}
                   className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm bg-[var(--c-surface)] focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
                 >
-                  <option value="ACTIVE">ปกติ (ACTIVE)</option>
-                  <option value="BANNED">ถูกแบน (BANNED)</option>
+                  <option value="ACTIVE">{tr("ปกติ (ACTIVE)")}</option>
+                  <option value="BANNED">{tr("ถูกแบน (BANNED)")}</option>
                 </select>
               </div>
 
@@ -263,24 +262,23 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
 
               {/* KYC status */}
               <div>
-                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">สถานะ KYC *</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">{tr("สถานะ KYC *")}</label>
                 <select
                   value={kyc}
                   onChange={(e) => setKyc(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm bg-[var(--c-surface)] focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
                 >
-                  <option value="UNVERIFIED">ยังไม่ยืนยัน (UNVERIFIED)</option>
-                  <option value="PENDING">รอตรวจสอบ (PENDING)</option>
-                  <option value="APPROVED">ผ่านแล้ว (APPROVED)</option>
-                  <option value="REJECTED">ถูกปฏิเสธ (REJECTED)</option>
-                  <option value="SUSPENDED">ถูกระงับ (SUSPENDED)</option>
+                  <option value="UNVERIFIED">{tr("ยังไม่ยืนยัน (UNVERIFIED)")}</option>
+                  <option value="PENDING">{tr("รอตรวจสอบ (PENDING)")}</option>
+                  <option value="APPROVED">{tr("ผ่านแล้ว (APPROVED)")}</option>
+                  <option value="REJECTED">{tr("ถูกปฏิเสธ (REJECTED)")}</option>
+                  <option value="SUSPENDED">{tr("ถูกระงับ (SUSPENDED)")}</option>
                 </select>
               </div>
 
               {/* Admin note */}
               <div>
-                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">
-                  บันทึก Admin <span className="text-[var(--c-faint)]">(ไม่แสดงให้ user เห็น)</span>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">{tr("บันทึก Admin")}<span className="text-[var(--c-faint)]">{tr("(ไม่แสดงให้ user เห็น)")}</span>
                 </label>
                 <textarea
                   value={note}
@@ -288,7 +286,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                   maxLength={500}
                   rows={2}
                   className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
-                  placeholder="บันทึกสำหรับผู้ดูแลระบบ..."
+                  placeholder={tr("บันทึกสำหรับผู้ดูแลระบบ...")}
                 />
               </div>
             </div>
@@ -296,7 +294,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
             {/* -- Reputation ------------------------------------------- */}
             <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-2xl p-4 space-y-3">
               <div className="flex items-center justify-between gap-3">
-                <h4 className="text-sm font-bold text-[var(--c-ink-1)]">⭐ คะแนนและรีวิว</h4>
+                <h4 className="text-sm font-bold text-[var(--c-ink-1)]">{tr("⭐ คะแนนและรีวิว")}</h4>
                 {data.reviewCount > 0 ? (
                   <span className="text-sm">
                     <PanelStars rating={data.avgRating ?? 0} />
@@ -304,12 +302,12 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                     <span className="ml-1 text-xs text-[var(--c-muted)]">({data.reviewCount} รีวิว)</span>
                   </span>
                 ) : (
-                  <span className="text-xs text-[var(--c-muted)]">ยังไม่มีรีวิว</span>
+                  <span className="text-xs text-[var(--c-muted)]">{tr("ยังไม่มีรีวิว")}</span>
                 )}
               </div>
 
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs text-[var(--c-ink-3)]">ปรับคะแนนความน่าเชื่อถือ:</span>
+                <span className="text-xs text-[var(--c-ink-3)]">{tr("ปรับคะแนนความน่าเชื่อถือ:")}</span>
                 {[-10, -5, 5, 10].map((d) => (
                   <button
                     key={d}
@@ -343,11 +341,9 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                       <button
                         disabled={pending}
                         onClick={() => run(() => deleteUserReview(r.id))}
-                        title="ลบรีวิวนี้ (คะแนนดาวจะถูกคำนวณใหม่)"
+                        title={tr("ลบรีวิวนี้ (คะแนนดาวจะถูกคำนวณใหม่)")}
                         className="text-[11px] text-[var(--c-danger)] hover:bg-[var(--c-danger-soft)] px-2 py-1 rounded-lg transition flex-shrink-0 disabled:opacity-50"
-                      >
-                        ลบ
-                      </button>
+                      >{tr("ลบ")}</button>
                     </div>
                   ))}
                 </div>
@@ -365,11 +361,11 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                     </span>
                   )}
                 </h4>
-                <span className="text-[10px] text-[var(--c-faint)]">ผู้ถูกรายงานไม่เห็นข้อมูลนี้</span>
+                <span className="text-[10px] text-[var(--c-faint)]">{tr("ผู้ถูกรายงานไม่เห็นข้อมูลนี้")}</span>
               </div>
 
               {data.reports.length === 0 ? (
-                <p className="text-xs text-[var(--c-muted)] py-3 text-center">ยังไม่มีรายงาน</p>
+                <p className="text-xs text-[var(--c-muted)] py-3 text-center">{tr("ยังไม่มีรายงาน")}</p>
               ) : (
                 <div className="max-h-64 overflow-y-auto space-y-2">
                   {data.reports.map((rep) => (
@@ -388,7 +384,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                           : rep.status === "REVIEWED" ? "bg-[var(--c-ok-soft)] text-[var(--c-ok)]"
                           :                             "bg-gray-200 text-[var(--c-ink-3)]"
                         }`}>
-                          {rep.status === "OPEN" ? "รอตรวจสอบ" : rep.status === "REVIEWED" ? "ตรวจแล้ว" : "ยกเลิก"}
+                          {rep.status === "OPEN" ? "รอตรวจสอบ" : rep.status === "REVIEWED" ? tr("ตรวจแล้ว") : "ยกเลิก"}
                         </span>
                       </div>
                       <p className="text-xs text-[var(--c-ink-2)] mt-1.5 whitespace-pre-wrap">{rep.reason}</p>
@@ -401,16 +397,12 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                             disabled={pending}
                             onClick={() => run(() => setReportStatus(rep.id, "REVIEWED"))}
                             className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-green-600 text-white hover:bg-green-700 transition disabled:opacity-50"
-                          >
-                            ตรวจสอบแล้ว
-                          </button>
+                          >{tr("ตรวจสอบแล้ว")}</button>
                           <button
                             disabled={pending}
                             onClick={() => run(() => setReportStatus(rep.id, "DISMISSED"))}
                             className="text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-[var(--c-line)] text-[var(--c-ink-2)] hover:bg-[var(--c-line-soft)] transition disabled:opacity-50"
-                          >
-                            ไม่มีมูล
-                          </button>
+                          >{tr("ไม่มีมูล")}</button>
                         </div>
                       )}
                     </div>
@@ -421,19 +413,19 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
 
             {/* -- Send the user an e-mail ------------------------------- */}
             <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-2xl p-4 space-y-2.5">
-              <h4 className="text-sm font-bold text-[var(--c-ink-1)]">✉️ ส่งอีเมลถึงผู้ใช้</h4>
+              <h4 className="text-sm font-bold text-[var(--c-ink-1)]">{tr("✉️ ส่งอีเมลถึงผู้ใช้")}</h4>
               <p className="text-[11px] text-[var(--c-muted)]">ส่งไปที่ {data.email}</p>
               <input
                 value={mailSubject}
                 onChange={(e) => setMailSubject(e.target.value.slice(0, 150))}
-                placeholder="หัวข้อ"
+                placeholder={tr("หัวข้อ")}
                 className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
               />
               <textarea
                 value={mailBody}
                 onChange={(e) => setMailBody(e.target.value.slice(0, 3000))}
                 rows={4}
-                placeholder="ข้อความถึงผู้ใช้..."
+                placeholder={tr("ข้อความถึงผู้ใช้...")}
                 className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
               />
               <div className="flex justify-end">
@@ -442,17 +434,17 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                   disabled={pending || !mailSubject.trim() || !mailBody.trim()}
                   className="px-4 py-2 rounded-xl bg-[var(--c-accent)] text-white text-sm font-bold hover:bg-[var(--c-accent-str)] transition disabled:opacity-40"
                 >
-                  {pending ? "กำลังส่ง…" : "ส่งอีเมล"}
+                  {pending ? "กำลังส่ง…" : tr("ส่งอีเมล")}
                 </button>
               </div>
             </div>
 
             {/* ── Quick links ──────────────────────────────────────────── */}
             <div className="flex flex-wrap gap-2">
-              <QuickLink href={`/admin/items?seller=${userId}`} label="ดูสินค้าของผู้ใช้" />
-              <QuickLink href={`/admin/orders?user=${userId}`} label="ดูออเดอร์" />
-              <QuickLink href={`/admin/disputes?user=${userId}`} label="ดูข้อพิพาท" />
-              <QuickLink href={`/admin/verifications?user=${userId}`} label="ดู KYC" />
+              <QuickLink href={`/admin/items?seller=${userId}`} label={tr("ดูสินค้าของผู้ใช้")} />
+              <QuickLink href={`/admin/orders?user=${userId}`} label={tr("ดูออเดอร์")} />
+              <QuickLink href={`/admin/disputes?user=${userId}`} label={tr("ดูข้อพิพาท")} />
+              <QuickLink href={`/admin/verifications?user=${userId}`} label={tr("ดู KYC")} />
             </div>
 
             {/* ── Bottom action bar ────────────────────────────────────── */}

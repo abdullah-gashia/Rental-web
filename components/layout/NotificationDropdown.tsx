@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useRef, useEffect } from "react";
 import { getNotifications, markNotificationsRead } from "@/lib/actions/notification-actions";
 
@@ -38,6 +40,7 @@ function typeIcon(type: string): string {
 }
 
 export default function NotificationDropdown({ onClose }: NotificationDropdownProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -82,9 +85,7 @@ export default function NotificationDropdown({ onClose }: NotificationDropdownPr
       <div className="px-4 pt-4 pb-3 border-b border-[var(--c-line)]">
         <div className="flex items-center justify-between">
           <h3 className="text-base font-bold text-[var(--c-ink)]">การแจ้งเตือน</h3>
-          <button className="text-xs text-[var(--c-accent)] font-medium hover:underline">
-            อ่านทั้งหมด
-          </button>
+          <button className="text-xs text-[var(--c-accent)] font-medium hover:underline">{tr("อ่านทั้งหมด")}</button>
         </div>
       </div>
 
@@ -92,13 +93,11 @@ export default function NotificationDropdown({ onClose }: NotificationDropdownPr
       <div className="max-h-[380px] overflow-y-auto">
         {loading ? (
           <div className="py-12 text-center text-[var(--c-muted)] text-sm">
-            <div className="animate-spin w-6 h-6 border-2 border-[var(--c-line)] border-t-[var(--c-ink)] rounded-full mx-auto mb-2" />
-            กำลังโหลด...
-          </div>
+            <div className="animate-spin w-6 h-6 border-2 border-[var(--c-line)] border-t-[var(--c-ink)] rounded-full mx-auto mb-2" />{tr("กำลังโหลด...")}</div>
         ) : notifications.length === 0 ? (
           <div className="py-12 text-center text-[var(--c-muted)]">
             <p className="text-3xl mb-2">🔕</p>
-            <p className="text-sm">ยังไม่มีการแจ้งเตือน</p>
+            <p className="text-sm">{tr("ยังไม่มีการแจ้งเตือน")}</p>
           </div>
         ) : (
           notifications.map((notif) => (
@@ -130,9 +129,7 @@ export default function NotificationDropdown({ onClose }: NotificationDropdownPr
       {/* Footer */}
       {notifications.length > 0 && (
         <div className="px-4 py-2.5 border-t border-[var(--c-line)] text-center">
-          <button className="text-[13px] font-medium text-[var(--c-accent)] hover:underline">
-            ดูการแจ้งเตือนทั้งหมด
-          </button>
+          <button className="text-[13px] font-medium text-[var(--c-accent)] hover:underline">{tr("ดูการแจ้งเตือนทั้งหมด")}</button>
         </div>
       )}
     </div>

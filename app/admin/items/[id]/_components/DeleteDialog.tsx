@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState } from "react";
 
 interface Props {
@@ -13,6 +15,7 @@ interface Props {
 export default function DeleteDialog({
   open, itemTitle, loading = false, onConfirm, onCancel,
 }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [reason, setReason] = useState("");
   const [confirmText, setConfirmText] = useState("");
 
@@ -51,19 +54,18 @@ export default function DeleteDialog({
         <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-3 py-2.5 text-sm text-[var(--c-danger)] flex items-start gap-2">
           <span className="mt-0.5">⚠️</span>
           <div>
-            <p className="font-medium">การลบนี้ไม่สามารถย้อนกลับได้</p>
-            <p className="text-xs mt-0.5 text-[var(--c-danger)]">สินค้าจะถูกเปลี่ยนสถานะเป็น &quot;ถูกลบ&quot; และไม่แสดงในระบบ</p>
+            <p className="font-medium">{tr("การลบนี้ไม่สามารถย้อนกลับได้")}</p>
+            <p className="text-xs mt-0.5 text-[var(--c-danger)]">{tr("สินค้าจะถูกเปลี่ยนสถานะเป็น &quot;ถูกลบ&quot; และไม่แสดงในระบบ")}</p>
           </div>
         </div>
 
         {/* Reason textarea */}
         <div>
-          <label className="text-sm text-[var(--c-ink-2)] font-medium block mb-1.5">
-            เหตุผลในการลบ <span className="text-[var(--c-danger)]">*</span>
+          <label className="text-sm text-[var(--c-ink-2)] font-medium block mb-1.5">{tr("เหตุผลในการลบ")}<span className="text-[var(--c-danger)]">*</span>
           </label>
           <textarea
             className="w-full border border-[var(--c-line)] rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-400 transition"
-            placeholder="ระบุเหตุผลในการลบ..."
+            placeholder={tr("ระบุเหตุผลในการลบ...")}
             rows={2}
             value={reason}
             onChange={(e) => setReason(e.target.value)}
@@ -73,9 +75,7 @@ export default function DeleteDialog({
 
         {/* Type-to-confirm */}
         <div>
-          <label className="text-sm text-[var(--c-ink-2)] font-medium block mb-1.5">
-            พิมพ์ชื่อสินค้า &ldquo;<span className="font-bold text-[var(--c-ink)]">{itemTitle}</span>&rdquo; เพื่อยืนยัน:
-          </label>
+          <label className="text-sm text-[var(--c-ink-2)] font-medium block mb-1.5">{tr("พิมพ์ชื่อสินค้า &ldquo;")}<span className="font-bold text-[var(--c-ink)]">{itemTitle}</span>{tr("&rdquo; เพื่อยืนยัน:")}</label>
           <input
             type="text"
             className={`w-full border rounded-xl p-3 text-sm focus:outline-none focus:ring-2 transition ${
@@ -92,7 +92,7 @@ export default function DeleteDialog({
         {/* Warning */}
         <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-3 py-2 text-xs text-[var(--c-warn)] flex items-start gap-2">
           <span className="mt-0.5">⚠️</span>
-          <span>ผู้ขายจะได้รับแจ้งเตือนการลบพร้อมเหตุผล</span>
+          <span>{tr("ผู้ขายจะได้รับแจ้งเตือนการลบพร้อมเหตุผล")}</span>
         </div>
 
         {/* Buttons */}

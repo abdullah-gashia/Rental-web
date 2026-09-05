@@ -19,6 +19,7 @@ const THEMES: { key: ThemeChoice; th: string; en: string; icon: string }[] = [
 ];
 
 export default function AppearanceMenu() {
+  const tr = useLocaleStore((s) => s.tr);
   const locale     = useLocaleStore((s) => s.locale);
   const setLocale  = useLocaleStore((s) => s.setLocale);
   const theme      = useThemeStore((s) => s.theme);
@@ -42,7 +43,7 @@ export default function AppearanceMenu() {
       <button
         onClick={() => setOpen((o) => !o)}
         className="ui-btn ui-btn-ghost ui-btn-sm !px-2.5"
-        aria-label={th ? "ภาษาและธีม" : "Language and theme"}
+        aria-label={th ? tr("ภาษาและธีม") : "Language and theme"}
         aria-expanded={open}
       >
         <span className="font-semibold tracking-wide">{locale.toUpperCase()}</span>
@@ -54,7 +55,7 @@ export default function AppearanceMenu() {
 
       {open && (
         <div className="absolute right-0 top-full mt-2 w-[210px] rounded-xl border border-[var(--c-line)] bg-[var(--c-surface)] shadow-lg p-2 z-[300]">
-          <p className="ui-eyebrow px-2 py-1.5">{th ? "ภาษา" : "Language"}</p>
+          <p className="ui-eyebrow px-2 py-1.5">{th ? tr("ภาษา") : "Language"}</p>
           <div className="grid grid-cols-2 gap-1.5 px-1 pb-2">
             {(["th", "en"] as const).map((l) => (
               <button
@@ -63,13 +64,13 @@ export default function AppearanceMenu() {
                 aria-pressed={locale === l}
                 className={`ui-chip justify-center ${locale === l ? "is-on" : ""}`}
               >
-                {l === "th" ? "ไทย" : "English"}
+                {l === "th" ? tr("ไทย") : "English"}
               </button>
             ))}
           </div>
 
           <div className="border-t border-[var(--c-line)] pt-2">
-            <p className="ui-eyebrow px-2 py-1.5">{th ? "ธีม" : "Theme"}</p>
+            <p className="ui-eyebrow px-2 py-1.5">{th ? tr("ธีม") : "Theme"}</p>
             <div className="flex flex-col gap-0.5">
               {THEMES.map((x) => (
                 <button

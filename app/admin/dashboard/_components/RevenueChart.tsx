@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import {
   BarChart,
   Bar,
@@ -46,6 +48,7 @@ function CustomTooltip({ active, payload, label }: any) {
 }
 
 export default function RevenueChart({ data }: RevenueChartProps) {
+  const tr = useLocaleStore((s) => s.tr);
   // Sparse ticks: show every other label so the axis doesn't crowd on mobile
   const tickDates = data.filter((_, i) => i % 2 === 0).map((d) => d.date);
 
@@ -53,8 +56,8 @@ export default function RevenueChart({ data }: RevenueChartProps) {
     <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-bold text-[var(--c-ink)]">รายได้แพลตฟอร์ม (14 วัน)</h3>
-          <p className="text-xs text-[var(--c-muted)] mt-0.5">ค่าธรรมเนียมที่เก็บได้จากคำสั่งซื้อที่เสร็จสิ้น</p>
+          <h3 className="text-sm font-bold text-[var(--c-ink)]">{tr("รายได้แพลตฟอร์ม (14 วัน)")}</h3>
+          <p className="text-xs text-[var(--c-muted)] mt-0.5">{tr("ค่าธรรมเนียมที่เก็บได้จากคำสั่งซื้อที่เสร็จสิ้น")}</p>
         </div>
         <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-50 text-purple-700">
           Platform Fee
@@ -79,8 +82,8 @@ export default function RevenueChart({ data }: RevenueChartProps) {
             width={48}
           />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: "var(--c-canvas)" }} />
-          <Bar dataKey="fee"    fill="#7c3aed" radius={[4, 4, 0, 0]} name="ค่าธรรมเนียม" />
-          <Bar dataKey="orders" fill="#ddd6fe" radius={[4, 4, 0, 0]} name="คำสั่งซื้อ" yAxisId={0} hide />
+          <Bar dataKey="fee"    fill="#7c3aed" radius={[4, 4, 0, 0]} name={tr("ค่าธรรมเนียม")} />
+          <Bar dataKey="orders" fill="#ddd6fe" radius={[4, 4, 0, 0]} name={tr("คำสั่งซื้อ")} yAxisId={0} hide />
         </BarChart>
       </ResponsiveContainer>
     </div>

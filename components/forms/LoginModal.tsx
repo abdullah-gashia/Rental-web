@@ -15,6 +15,7 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose, initialError = "" }: LoginModalProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const t = useLocaleStore((s) => s.t);
   const showToast = useToastStore((s) => s.show);
   const setUser = useAuthStore((s) => s.setUser);
@@ -28,6 +29,7 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
   useEffect(() => { if (initialError) setError(initialError); }, [initialError]);
 
   const handleGoogle = async () => {
+  const tr = useLocaleStore((s) => s.tr);
     setError("");
     setGoogleLoading(true);
     try {
@@ -40,7 +42,7 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
     } catch (e: any) {
       // Next.js signals the redirect by throwing — that is the success path
       if (e?.digest?.startsWith?.("NEXT_REDIRECT")) throw e;
-      setError("ไม่สามารถเชื่อมต่อ Google ได้ กรุณาลองใหม่");
+      setError(tr("ไม่สามารถเชื่อมต่อ Google ได้ กรุณาลองใหม่"));
       setGoogleLoading(false);
     }
   };
@@ -106,7 +108,7 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
           </svg>
           )}
-          <span>{googleLoading ? "กำลังเปิด Google…" : t("login_google")}</span>
+          <span>{googleLoading ? tr("กำลังเปิด Google…") : t("login_google")}</span>
         </button>
       </div>
       <div className="relative mb-6">
@@ -140,12 +142,10 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
           disabled={loading}
           className="w-full bg-[var(--c-ink)] text-white font-semibold py-3 rounded-xl hover:bg-[var(--c-ink-1)] transition mt-1 disabled:opacity-50"
         >
-          {loading ? "กำลังเข้าสู่ระบบ…" : t("login_btn")}
+          {loading ? tr("กำลังเข้าสู่ระบบ…") : t("login_btn")}
         </button>
       </form>
-      <p className="text-xs text-center text-[var(--c-faint)] mt-4">
-        ทดสอบ: somchai.p@psu.ac.th / password123
-      </p>
+      <p className="text-xs text-center text-[var(--c-faint)] mt-4">{tr("ทดสอบ: somchai.p@psu.ac.th / password123")}</p>
     </Modal>
   );
 }

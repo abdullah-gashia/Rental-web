@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import Image                        from "next/image";
 import type { ItemRow }             from "../../_lib/types";
@@ -14,6 +16,7 @@ interface Props {
 }
 
 export default function ItemsTable({ rows }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [pending, startTransition] = useTransition();
 
   type DialogKind = "approve" | "reject" | "delete";
@@ -50,7 +53,7 @@ export default function ItemsTable({ rows }: Props) {
 
   if (rows.length === 0) {
     return (
-      <div className="py-20 text-center text-[var(--c-faint)] text-sm">ไม่พบสินค้า</div>
+      <div className="py-20 text-center text-[var(--c-faint)] text-sm">{tr("ไม่พบสินค้า")}</div>
     );
   }
 
@@ -71,9 +74,9 @@ export default function ItemsTable({ rows }: Props) {
       <ConfirmDialog
         open={!!dialog}
         title={
-          dialog?.kind === "approve" ? "อนุมัติสินค้านี้?" :
-          dialog?.kind === "reject"  ? "ปฏิเสธสินค้านี้?" :
-          "ลบสินค้านี้?"
+          dialog?.kind === "approve" ? tr("อนุมัติสินค้านี้?") :
+          dialog?.kind === "reject"  ? tr("ปฏิเสธสินค้านี้?") :
+          tr("ลบสินค้านี้?")
         }
         description={
           dialog?.kind === "approve"
@@ -83,9 +86,9 @@ export default function ItemsTable({ rows }: Props) {
             : `"${dialog?.label}" จะถูกลบออกจากระบบ`
         }
         confirmLabel={
-          dialog?.kind === "approve" ? "อนุมัติ" :
-          dialog?.kind === "reject"  ? "ปฏิเสธ"  :
-          "ลบ"
+          dialog?.kind === "approve" ? tr("อนุมัติ") :
+          dialog?.kind === "reject"  ? tr("ปฏิเสธ")  :
+          tr("ลบ")
         }
         danger={dialog?.kind === "reject" || dialog?.kind === "delete"}
         loading={pending}
@@ -95,7 +98,7 @@ export default function ItemsTable({ rows }: Props) {
         {dialog?.kind === "reject" && (
           <textarea
             className="w-full border border-[var(--c-line)] rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/20 focus:border-[var(--c-accent)]"
-            placeholder="เหตุผลในการปฏิเสธ..."
+            placeholder={tr("เหตุผลในการปฏิเสธ...")}
             rows={3}
             value={rejectReason}
             onChange={(e) => setRejectReason(e.target.value)}
@@ -108,13 +111,13 @@ export default function ItemsTable({ rows }: Props) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-[var(--c-line)] bg-[var(--c-subtle)]">
-              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)] w-[280px]">สินค้า</th>
+              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)] w-[280px]">{tr("สินค้า")}</th>
               <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">ผู้ขาย</th>
-              <th className="text-right px-4 py-3 font-semibold text-[var(--c-ink-2)]">ราคา</th>
-              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">ประเภท</th>
-              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">สถานะ</th>
-              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">โพสต์เมื่อ</th>
-              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">การจัดการ</th>
+              <th className="text-right px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("ราคา")}</th>
+              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("ประเภท")}</th>
+              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("สถานะ")}</th>
+              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("โพสต์เมื่อ")}</th>
+              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("การจัดการ")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--c-line-soft)]">
@@ -160,7 +163,7 @@ export default function ItemsTable({ rows }: Props) {
 
                 {/* Type */}
                 <td className="px-4 py-3 text-[var(--c-ink-2)]">
-                  {item.listingType === "SELL" ? "ขาย" : "เช่า"}
+                  {item.listingType === "SELL" ? tr("ขาย") : tr("เช่า")}
                 </td>
 
                 {/* Status */}
@@ -168,9 +171,7 @@ export default function ItemsTable({ rows }: Props) {
                   <div className="flex items-center gap-1.5">
                     <StatusBadge status={item.status} type="item" />
                     {item.isTrending && (
-                      <span className="inline-flex items-center text-[10px] text-[var(--c-warn)] bg-[var(--c-warn-soft)] px-1.5 py-0.5 rounded-full font-medium">
-                        🔥 มาแรง
-                      </span>
+                      <span className="inline-flex items-center text-[10px] text-[var(--c-warn)] bg-[var(--c-warn-soft)] px-1.5 py-0.5 rounded-full font-medium">{tr("🔥 มาแรง")}</span>
                     )}
                   </div>
                 </td>
@@ -217,6 +218,7 @@ function ItemActionsDropdown({
   onDelete:  () => void;
   onTrendingToggle: () => void;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [open, setOpen] = useState(false);
   const isPending = item.status === "PENDING";
 
@@ -225,7 +227,7 @@ function ItemActionsDropdown({
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--c-line-soft)] transition text-[var(--c-ink-2)]"
-        aria-label="เมนูการจัดการ"
+        aria-label={tr("เมนูการจัดการ")}
       >
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -241,15 +243,11 @@ function ItemActionsDropdown({
                 <button
                   onClick={() => { setOpen(false); onApprove(); }}
                   className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[var(--c-canvas)] text-[var(--c-ok)] transition"
-                >
-                  ✅ อนุมัติ
-                </button>
+                >{tr("✅ อนุมัติ")}</button>
                 <button
                   onClick={() => { setOpen(false); onReject(); }}
                   className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[var(--c-canvas)] text-[var(--c-danger)] transition"
-                >
-                  ❌ ปฏิเสธ
-                </button>
+                >{tr("❌ ปฏิเสธ")}</button>
                 <div className="my-1 border-t border-[var(--c-line-soft)]" />
               </>
             )}
@@ -257,25 +255,21 @@ function ItemActionsDropdown({
               href={`/admin/items/${item.id}`}
               onClick={() => setOpen(false)}
               className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[var(--c-canvas)] text-[var(--c-ink-1)] transition"
-            >
-              🔗 ดูสินค้า
-            </a>
+            >{tr("🔗 ดูสินค้า")}</a>
             {/* Trending toggle */}
             {item.status === "APPROVED" && (
               <button
                 onClick={() => { setOpen(false); onTrendingToggle(); }}
                 className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[var(--c-canvas)] text-[var(--c-warn)] transition"
               >
-                {item.isTrending ? "🔥 ลบออกจากมาแรง" : "🔥 ตั้งเป็นสินค้ามาแรง"}
+                {item.isTrending ? tr("🔥 ลบออกจากมาแรง") : tr("🔥 ตั้งเป็นสินค้ามาแรง")}
               </button>
             )}
             {item.status !== "REMOVED" && (
               <button
                 onClick={() => { setOpen(false); onDelete(); }}
                 className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[var(--c-canvas)] text-[var(--c-danger)] transition"
-              >
-                🗑 ลบสินค้า
-              </button>
+              >{tr("🗑 ลบสินค้า")}</button>
             )}
           </div>
         </>

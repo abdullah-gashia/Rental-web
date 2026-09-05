@@ -19,6 +19,7 @@ function getBadgeType(item: ItemWithDetails): { type: "sale" | "rent" | "ship" |
 }
 
 export default function ProductCard({ item, index = 0, onClick }: ProductCardProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const { t } = useLocaleStore();
 
   const badgeInfo = getBadgeType(item);
@@ -60,7 +61,7 @@ export default function ProductCard({ item, index = 0, onClick }: ProductCardPro
         {/* Listing type — only marked when it is a rental */}
         {isRent && (
           <div className="absolute top-2 left-2">
-            <span className="hp-chip hp-chip-solid">เช่า</span>
+            <span className="hp-chip hp-chip-solid">{tr("เช่า")}</span>
           </div>
         )}
 

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { createSavedAddress, updateSavedAddress } from "../actions";
 import { deleteSavedAddress, setDefaultAddress } from "@/lib/actions/saved-addresses";
@@ -43,14 +45,16 @@ const emptyForm = {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function AddressesTab({ addresses, showToast }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [list, setList] = useState(addresses);
   const [editing, setEditing] = useState<string | null>(null); // address id or "new"
   const [form, setForm] = useState(emptyForm);
   const [pending, startTransition] = useTransition();
 
   const startNew = () => {
+  const tr = useLocaleStore((s) => s.tr);
     if (list.length >= 5) {
-      showToast(false, "คุณมีที่อยู่ครบ 5 รายการแล้ว กรุณาลบที่อยู่เดิมก่อนเพิ่มใหม่");
+      showToast(false, tr("คุณมีที่อยู่ครบ 5 รายการแล้ว กรุณาลบที่อยู่เดิมก่อนเพิ่มใหม่"));
       return;
     }
     setForm(emptyForm);
@@ -94,24 +98,26 @@ export default function AddressesTab({ addresses, showToast }: Props) {
   };
 
   const handleDelete = (id: string) => {
+  const tr = useLocaleStore((s) => s.tr);
     startTransition(async () => {
       const res = await deleteSavedAddress(id);
       if (res.error) {
         showToast(false, res.error);
       } else {
-        showToast(true, "ลบที่อยู่เรียบร้อยแล้ว");
+        showToast(true, tr("ลบที่อยู่เรียบร้อยแล้ว"));
         setList((prev) => prev.filter((a) => a.id !== id));
       }
     });
   };
 
   const handleSetDefault = (id: string) => {
+  const tr = useLocaleStore((s) => s.tr);
     startTransition(async () => {
       const res = await setDefaultAddress(id);
       if (res.error) {
         showToast(false, res.error);
       } else {
-        showToast(true, "ตั้งเป็นค่าเริ่มต้นเรียบร้อยแล้ว");
+        showToast(true, tr("ตั้งเป็นค่าเริ่มต้นเรียบร้อยแล้ว"));
         setList((prev) =>
           prev.map((a) => ({ ...a, isDefault: a.id === id }))
         );
@@ -137,8 +143,8 @@ export default function AddressesTab({ addresses, showToast }: Props) {
       {list.length === 0 && !editing && (
         <div className="py-12 text-center text-[var(--c-faint)] text-sm">
           <p className="text-3xl mb-2">📍</p>
-          <p>ยังไม่มีที่อยู่จัดส่ง</p>
-          <p className="text-xs mt-1">เพิ่มที่อยู่เพื่อใช้ในการสั่งซื้อ</p>
+          <p>{tr("ยังไม่มีที่อยู่จัดส่ง")}</p>
+          <p className="text-xs mt-1">{tr("เพิ่มที่อยู่เพื่อใช้ในการสั่งซื้อ")}</p>
         </div>
       )}
 
@@ -159,9 +165,7 @@ export default function AddressesTab({ addresses, showToast }: Props) {
                     🏠 {addr.label}
                   </span>
                   {addr.isDefault && (
-                    <span className="inline-flex items-center rounded-full border border-[var(--c-accent)]/30 bg-[var(--c-warn-soft)] px-2 py-0.5 text-[10px] font-semibold text-[var(--c-accent)]">
-                      ⭐ ค่าเริ่มต้น
-                    </span>
+                    <span className="inline-flex items-center rounded-full border border-[var(--c-accent)]/30 bg-[var(--c-warn-soft)] px-2 py-0.5 text-[10px] font-semibold text-[var(--c-accent)]">{tr("⭐ ค่าเริ่มต้น")}</span>
                   )}
                 </div>
                 <p className="text-sm text-[var(--c-ink-1)] font-medium">{addr.recipientName}</p>
@@ -185,17 +189,13 @@ export default function AddressesTab({ addresses, showToast }: Props) {
                 onClick={() => startEdit(addr)}
                 disabled={pending}
                 className="text-xs text-[var(--c-ink-2)] hover:text-[var(--c-accent)] transition flex items-center gap-1 disabled:opacity-50"
-              >
-                ✏️ แก้ไข
-              </button>
+              >{tr("✏️ แก้ไข")}</button>
               <span className="text-[var(--c-line)]">|</span>
               <button
                 onClick={() => handleDelete(addr.id)}
                 disabled={pending}
                 className="text-xs text-[var(--c-ink-2)] hover:text-[var(--c-danger)] transition flex items-center gap-1 disabled:opacity-50"
-              >
-                🗑️ ลบ
-              </button>
+              >{tr("🗑️ ลบ")}</button>
               {!addr.isDefault && (
                 <>
                   <span className="text-[var(--c-line)]">|</span>
@@ -203,9 +203,7 @@ export default function AddressesTab({ addresses, showToast }: Props) {
                     onClick={() => handleSetDefault(addr.id)}
                     disabled={pending}
                     className="text-xs text-[var(--c-ink-2)] hover:text-[var(--c-accent)] transition flex items-center gap-1 disabled:opacity-50"
-                  >
-                    ⭐ ตั้งเป็นค่าเริ่มต้น
-                  </button>
+                  >{tr("⭐ ตั้งเป็นค่าเริ่มต้น")}</button>
                 </>
               )}
             </div>
@@ -217,21 +215,21 @@ export default function AddressesTab({ addresses, showToast }: Props) {
       {editing ? (
         <form onSubmit={handleSubmit} className="p-4 rounded-xl border border-[var(--c-line)] bg-[var(--c-subtle)] space-y-3">
           <h3 className="text-sm font-semibold text-[var(--c-ink-1)]">
-            {editing === "new" ? "➕ เพิ่มที่อยู่ใหม่" : "✏️ แก้ไขที่อยู่"}
+            {editing === "new" ? tr("➕ เพิ่มที่อยู่ใหม่") : tr("✏️ แก้ไขที่อยู่")}
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <FormField label="ชื่อที่อยู่" value={form.label} onChange={(v) => updateField("label", v)} placeholder="เช่น บ้าน, หอพัก" required />
-            <FormField label="ชื่อผู้รับ" value={form.recipientName} onChange={(v) => updateField("recipientName", v)} placeholder="ชื่อ-นามสกุลผู้รับ" required />
-            <FormField label="เบอร์โทร" value={form.phone} onChange={(v) => updateField("phone", v.replace(/\D/g, "").slice(0, 10))} placeholder="0812345678" required />
-            <FormField label="ที่อยู่บรรทัด 1" value={form.addressLine1} onChange={(v) => updateField("addressLine1", v)} placeholder="บ้านเลขที่ ซอย ถนน" required />
-            <FormField label="ที่อยู่บรรทัด 2" value={form.addressLine2} onChange={(v) => updateField("addressLine2", v)} placeholder="(ไม่บังคับ)" />
-            <FormField label="อำเภอ/เขต" value={form.district} onChange={(v) => updateField("district", v)} placeholder="หาดใหญ่" required />
-            <FormField label="จังหวัด" value={form.province} onChange={(v) => updateField("province", v)} placeholder="สงขลา" required />
-            <FormField label="รหัสไปรษณีย์" value={form.postalCode} onChange={(v) => updateField("postalCode", v.replace(/\D/g, "").slice(0, 5))} placeholder="90110" required />
+            <FormField label={tr("ชื่อที่อยู่")} value={form.label} onChange={(v) => updateField("label", v)} placeholder={tr("เช่น บ้าน, หอพัก")} required />
+            <FormField label={tr("ชื่อผู้รับ")} value={form.recipientName} onChange={(v) => updateField("recipientName", v)} placeholder={tr("ชื่อ-นามสกุลผู้รับ")} required />
+            <FormField label={tr("เบอร์โทร")} value={form.phone} onChange={(v) => updateField("phone", v.replace(/\D/g, "").slice(0, 10))} placeholder="0812345678" required />
+            <FormField label={tr("ที่อยู่บรรทัด 1")} value={form.addressLine1} onChange={(v) => updateField("addressLine1", v)} placeholder={tr("บ้านเลขที่ ซอย ถนน")} required />
+            <FormField label={tr("ที่อยู่บรรทัด 2")} value={form.addressLine2} onChange={(v) => updateField("addressLine2", v)} placeholder={tr("(ไม่บังคับ)")} />
+            <FormField label="อำเภอ/เขต" value={form.district} onChange={(v) => updateField("district", v)} placeholder={tr("หาดใหญ่")} required />
+            <FormField label={tr("จังหวัด")} value={form.province} onChange={(v) => updateField("province", v)} placeholder={tr("สงขลา")} required />
+            <FormField label={tr("รหัสไปรษณีย์")} value={form.postalCode} onChange={(v) => updateField("postalCode", v.replace(/\D/g, "").slice(0, 5))} placeholder="90110" required />
           </div>
 
-          <FormField label="หมายเหตุ" value={form.note} onChange={(v) => updateField("note", v)} placeholder="เช่น วางไว้หน้าห้อง" />
+          <FormField label={tr("หมายเหตุ")} value={form.note} onChange={(v) => updateField("note", v)} placeholder={tr("เช่น วางไว้หน้าห้อง")} />
 
           <div className="flex items-center justify-between pt-2">
             <button
@@ -248,7 +246,7 @@ export default function AddressesTab({ addresses, showToast }: Props) {
               className="px-5 py-2 bg-[var(--c-accent)] hover:bg-[var(--c-accent-str)] text-white rounded-xl text-sm font-bold transition disabled:opacity-50 flex items-center gap-2"
             >
               {pending && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-              {editing === "new" ? "เพิ่มที่อยู่" : "บันทึก"}
+              {editing === "new" ? tr("เพิ่มที่อยู่") : tr("บันทึก")}
             </button>
           </div>
         </form>
@@ -257,9 +255,7 @@ export default function AddressesTab({ addresses, showToast }: Props) {
           onClick={startNew}
           disabled={list.length >= 5}
           className="w-full py-3 rounded-xl border-2 border-dashed border-[var(--c-line)] text-sm font-medium text-[var(--c-ink-3)] hover:border-[var(--c-accent)] hover:text-[var(--c-accent)] transition disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          + เพิ่มที่อยู่ใหม่
-        </button>
+        >{tr("+ เพิ่มที่อยู่ใหม่")}</button>
       )}
     </div>
   );

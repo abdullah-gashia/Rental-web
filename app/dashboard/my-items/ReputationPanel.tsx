@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState } from "react";
 
 interface ReviewRow {
@@ -80,6 +82,7 @@ function ReviewList({ reviews, empty }: { reviews: ReviewRow[]; empty: string })
 }
 
 export default function ReputationPanel({ reputation }: { reputation: Reputation }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [tab, setTab] = useState<"orders" | "profile">("orders");
 
   const {
@@ -88,8 +91,8 @@ export default function ReputationPanel({ reputation }: { reputation: Reputation
   } = reputation;
 
   const tabs = [
-    { key: "orders"  as const, label: "รีวิวจากการซื้อขาย", count: orderReviews.length },
-    { key: "profile" as const, label: "รีวิวโปรไฟล์",       count: profileReviews.length },
+    { key: "orders"  as const, label: tr("รีวิวจากการซื้อขาย"), count: orderReviews.length },
+    { key: "profile" as const, label: tr("รีวิวโปรไฟล์"),       count: profileReviews.length },
   ];
 
   return (
@@ -98,7 +101,7 @@ export default function ReputationPanel({ reputation }: { reputation: Reputation
       <div className="p-5 sm:p-6 flex flex-col sm:flex-row gap-6">
         {/* Average */}
         <div className="flex-shrink-0 sm:w-44 text-center sm:text-left">
-          <p className="text-xs font-semibold text-[var(--c-ink-3)] mb-1.5">คะแนนของฉัน</p>
+          <p className="text-xs font-semibold text-[var(--c-ink-3)] mb-1.5">{tr("คะแนนของฉัน")}</p>
           {reviewCount > 0 ? (
             <>
               <div className="flex items-baseline gap-2 justify-center sm:justify-start">
@@ -111,7 +114,7 @@ export default function ReputationPanel({ reputation }: { reputation: Reputation
           ) : (
             <>
               <Stars rating={0} className="text-lg" />
-              <p className="text-xs text-[var(--c-muted)] mt-1">ยังไม่มีรีวิว</p>
+              <p className="text-xs text-[var(--c-muted)] mt-1">{tr("ยังไม่มีรีวิว")}</p>
             </>
           )}
         </div>
@@ -134,18 +137,16 @@ export default function ReputationPanel({ reputation }: { reputation: Reputation
               })}
             </div>
           ) : (
-            <p className="text-sm text-[var(--c-muted)]">
-              เมื่อมีคนให้คะแนนคุณ คะแนนเฉลี่ยและรีวิวจะแสดงที่นี่
-            </p>
+            <p className="text-sm text-[var(--c-muted)]">{tr("เมื่อมีคนให้คะแนนคุณ คะแนนเฉลี่ยและรีวิวจะแสดงที่นี่")}</p>
           )}
         </div>
 
         {/* Counters */}
         <div className="flex sm:flex-col gap-4 sm:gap-3 sm:w-36 flex-shrink-0 sm:border-l sm:border-[var(--c-line-soft)] sm:pl-5">
           {[
-            { label: "คะแนนความน่าเชื่อถือ", value: trustScore },
-            { label: "ขายสำเร็จ",            value: totalSold },
-            { label: "ซื้อสำเร็จ",           value: totalBought },
+            { label: tr("คะแนนความน่าเชื่อถือ"), value: trustScore },
+            { label: tr("ขายสำเร็จ"),            value: totalSold },
+            { label: tr("ซื้อสำเร็จ"),           value: totalBought },
           ].map((c) => (
             <div key={c.label}>
               <p className="text-lg font-bold text-[var(--c-ink)] leading-none">{c.value}</p>
@@ -176,9 +177,9 @@ export default function ReputationPanel({ reputation }: { reputation: Reputation
 
         <div className="px-5 sm:px-6 pb-4 border-t border-[var(--c-line-soft)]">
           {tab === "orders" ? (
-            <ReviewList reviews={orderReviews} empty="ยังไม่มีรีวิวจากการซื้อขาย" />
+            <ReviewList reviews={orderReviews} empty={tr("ยังไม่มีรีวิวจากการซื้อขาย")} />
           ) : (
-            <ReviewList reviews={profileReviews} empty="ยังไม่มีรีวิวบนโปรไฟล์" />
+            <ReviewList reviews={profileReviews} empty={tr("ยังไม่มีรีวิวบนโปรไฟล์")} />
           )}
         </div>
       </div>

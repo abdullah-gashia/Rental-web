@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import {
   ComposedChart,
   Bar,
@@ -62,16 +64,17 @@ function CustomTooltip({
 }
 
 export default function SalesChart({ data }: SalesChartProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const formatted = data.map((d) => ({ ...d, dateLabel: formatDate(d.date) }));
 
   return (
     <div
       className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 shadow-sm"
-      aria-label="กราฟยอดขายรายวัน 7 วันล่าสุด"
+      aria-label={tr("กราฟยอดขายรายวัน 7 วันล่าสุด")}
     >
       <h3 className="text-sm font-semibold text-[var(--c-ink-1)] mb-4">
         ยอดขายรายวัน{" "}
-        <span className="text-xs font-normal text-[var(--c-muted)]">(7 วันล่าสุด)</span>
+        <span className="text-xs font-normal text-[var(--c-muted)]">{tr("(7 วันล่าสุด)")}</span>
       </h3>
 
       {/* min-h ensures ResponsiveContainer has a non-zero height during SSR */}
@@ -113,7 +116,7 @@ export default function SalesChart({ data }: SalesChartProps) {
               iconType="circle"
               iconSize={8}
               formatter={(value) =>
-                value === "sales" ? "จำนวนรายการ" : "รายได้ (฿)"
+                value === "sales" ? tr("จำนวนรายการ") : tr("รายได้ (฿)")
               }
               wrapperStyle={{ fontSize: 12, color: "var(--c-ink-2)" }}
             />

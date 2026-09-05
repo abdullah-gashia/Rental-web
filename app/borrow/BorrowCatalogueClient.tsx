@@ -27,6 +27,7 @@ function baht(n: number) {
 }
 
 export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const router = useRouter();
   const t      = useLocaleStore((s) => s.t);
   const locale = useLocaleStore((s) => s.locale);
@@ -71,7 +72,7 @@ export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }
 
           {/* ── Header ─────────────────────────────────────────────────── */}
           <header className="mb-6">
-            <p className="bw-label mb-2">งานภัทร · มหาวิทยาลัยสงขลานครินทร์</p>
+            <p className="bw-label mb-2">{tr("งานภัทร · มหาวิทยาลัยสงขลานครินทร์")}</p>
             <h1 className="text-[26px] sm:text-[32px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] leading-tight">
               {t("bw_free_title")}
             </h1>
@@ -100,10 +101,8 @@ export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }
           {/* ── Office notice for staff / admins ───────────────────────── */}
           {(viewerRole === "PATTARA" || viewerRole === "ADMIN") && (
             <div className="bw-panel mb-6 flex flex-wrap items-center justify-between gap-3 !py-3.5">
-              <p className="text-[13px] text-[var(--bw-ink-2)]">
-                คุณกำลังดูหน้าที่นักศึกษาเห็น — จัดการคลังอุปกรณ์ได้ที่แดชบอร์ดงานภัทร
-              </p>
-              <a href="/pattara" className="bw-btn bw-btn-ghost !h-9">ไปที่แดชบอร์ด →</a>
+              <p className="text-[13px] text-[var(--bw-ink-2)]">{tr("คุณกำลังดูหน้าที่นักศึกษาเห็น — จัดการคลังอุปกรณ์ได้ที่แดชบอร์ดงานภัทร")}</p>
+              <a href="/pattara" className="bw-btn bw-btn-ghost !h-9">{tr("ไปที่แดชบอร์ด →")}</a>
             </div>
           )}
 

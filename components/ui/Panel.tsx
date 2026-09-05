@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 interface PanelProps {
   title: string;
   /** Optional line under the title */
@@ -34,6 +36,7 @@ export default function Panel({
   className = "",
   children,
 }: PanelProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const showArrows = !!(onPrev || onNext);
 
   return (
@@ -65,7 +68,7 @@ export default function Panel({
                   className="hp-arrow"
                   onClick={onPrev}
                   disabled={prevDisabled || !onPrev}
-                  aria-label="ก่อนหน้า"
+                  aria-label={tr("ก่อนหน้า")}
                 >
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M15 19l-7-7 7-7" />
@@ -75,7 +78,7 @@ export default function Panel({
                   className="hp-arrow"
                   onClick={onNext}
                   disabled={nextDisabled || !onNext}
-                  aria-label="ถัดไป"
+                  aria-label={tr("ถัดไป")}
                 >
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M9 5l7 7-7 7" />

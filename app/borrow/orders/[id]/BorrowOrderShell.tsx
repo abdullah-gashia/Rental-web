@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import SideRail from "@/components/layout/SideRail";
@@ -12,6 +14,7 @@ import Footer from "@/components/layout/Footer";
  * office, which has its own sidebar and must not render the marketplace one.
  */
 export default function BorrowOrderShell({ children }: { children: React.ReactNode }) {
+  const tr = useLocaleStore((s) => s.tr);
   const router = useRouter();
   const go = (c: string) => router.push(c === "all" ? "/" : `/?cat=${c}`);
 
@@ -20,7 +23,7 @@ export default function BorrowOrderShell({ children }: { children: React.ReactNo
       <Navbar
         searchQuery=""
         onSearchChange={() => {}}
-        searchPlaceholder="ค้นหาอุปกรณ์ให้ยืม…"
+        searchPlaceholder={tr("ค้นหาอุปกรณ์ให้ยืม…")}
         hideCategories
         activeCat="borrow"
         onCatChange={go}

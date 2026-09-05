@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { updateTrackingPreference, clearViewHistory, exportMyData } from "../actions";
 import DeleteAccountDialog from "./DeleteAccountDialog";
@@ -24,6 +26,7 @@ function formatThaiDate(iso: string): string {
 }
 
 export default function SecurityTab({ userData, showToast }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [tracking, setTracking] = useState(userData.trackingEnabled);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
@@ -47,6 +50,7 @@ export default function SecurityTab({ userData, showToast }: Props) {
   };
 
   const handleExport = () => {
+  const tr = useLocaleStore((s) => s.tr);
     startTransition(async () => {
       const res = await exportMyData();
       if (res.success) {
@@ -60,7 +64,7 @@ export default function SecurityTab({ userData, showToast }: Props) {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        showToast(true, "ดาวน์โหลดข้อมูลเรียบร้อยแล้ว");
+        showToast(true, tr("ดาวน์โหลดข้อมูลเรียบร้อยแล้ว"));
       } else {
         showToast(false, res.error);
       }
@@ -75,21 +79,21 @@ export default function SecurityTab({ userData, showToast }: Props) {
 
       {/* Login info */}
       <div className="space-y-2">
-        <h3 className="text-sm font-semibold text-[var(--c-ink-2)]">การเข้าสู่ระบบ</h3>
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)]">{tr("การเข้าสู่ระบบ")}</h3>
         <div className="p-4 bg-[var(--c-subtle)] rounded-xl border border-[var(--c-line)] space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-[var(--c-ink-2)]">วิธีเข้าสู่ระบบ</span>
+            <span className="text-sm text-[var(--c-ink-2)]">{tr("วิธีเข้าสู่ระบบ")}</span>
             <span className="text-sm font-medium text-[var(--c-ink-1)]">PSU Account (Credentials)</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-[var(--c-ink-2)]">สมัครเมื่อ</span>
+            <span className="text-sm text-[var(--c-ink-2)]">{tr("สมัครเมื่อ")}</span>
             <span className="text-sm font-medium text-[var(--c-ink-1)]">{formatThaiDate(userData.createdAt)}</span>
           </div>
 
           <div className="flex items-center justify-between border-t border-[var(--c-line)] pt-3 mt-1">
             <div>
-              <span className="text-sm text-[var(--c-ink-2)]">รหัสผ่าน</span>
-              <p className="text-[11px] text-[var(--c-muted)]">ต้องยืนยันรหัสผ่านปัจจุบันก่อนตั้งรหัสใหม่</p>
+              <span className="text-sm text-[var(--c-ink-2)]">{tr("รหัสผ่าน")}</span>
+              <p className="text-[11px] text-[var(--c-muted)]">{tr("ต้องยืนยันรหัสผ่านปัจจุบันก่อนตั้งรหัสใหม่")}</p>
             </div>
             <button
               type="button"
@@ -98,24 +102,20 @@ export default function SecurityTab({ userData, showToast }: Props) {
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 11.001-.001M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3" />
-              </svg>
-              เปลี่ยนรหัสผ่าน
-            </button>
+              </svg>{tr("เปลี่ยนรหัสผ่าน")}</button>
           </div>
         </div>
       </div>
 
       {/* Browsing history */}
       <div className="border-t border-[var(--c-line)] pt-5 space-y-3">
-        <h3 className="text-sm font-semibold text-[var(--c-ink-2)]">ประวัติการเข้าชม</h3>
-        <p className="text-xs text-[var(--c-muted)]">
-          ระบบจดจำสินค้าที่คุณเคยดูเพื่อแนะนำสินค้าที่ตรงใจ
-        </p>
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)]">{tr("ประวัติการเข้าชม")}</h3>
+        <p className="text-xs text-[var(--c-muted)]">{tr("ระบบจดจำสินค้าที่คุณเคยดูเพื่อแนะนำสินค้าที่ตรงใจ")}</p>
 
         <div className="flex items-center justify-between py-3 px-3 rounded-lg bg-[var(--c-subtle)] border border-[var(--c-line)]">
           <div>
-            <p className="text-sm font-medium text-[var(--c-ink-1)]">เปิดการบันทึกประวัติ</p>
-            <p className="text-[11px] text-[var(--c-muted)]">ใช้สำหรับแนะนำสินค้าอัตโนมัติ</p>
+            <p className="text-sm font-medium text-[var(--c-ink-1)]">{tr("เปิดการบันทึกประวัติ")}</p>
+            <p className="text-[11px] text-[var(--c-muted)]">{tr("ใช้สำหรับแนะนำสินค้าอัตโนมัติ")}</p>
           </div>
           <button
             type="button"
@@ -147,7 +147,7 @@ export default function SecurityTab({ userData, showToast }: Props) {
 
       {/* Data export */}
       <div className="border-t border-[var(--c-line)] pt-5 space-y-3">
-        <h3 className="text-sm font-semibold text-[var(--c-ink-2)]">ข้อมูลของฉัน</h3>
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)]">{tr("ข้อมูลของฉัน")}</h3>
         <button
           onClick={handleExport}
           disabled={pending}
@@ -159,24 +159,20 @@ export default function SecurityTab({ userData, showToast }: Props) {
         <p className="text-[11px] text-[var(--c-muted)] flex items-center gap-1">
           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          ดาวน์โหลดข้อมูลทั้งหมดที่เกี่ยวข้องกับบัญชีของคุณ (JSON)
-        </p>
+          </svg>{tr("ดาวน์โหลดข้อมูลทั้งหมดที่เกี่ยวข้องกับบัญชีของคุณ (JSON)")}</p>
       </div>
 
       {/* Danger zone */}
       <div className="border-t border-[var(--c-line)] pt-5">
-        <h3 className="text-sm font-semibold text-[var(--c-danger)] mb-3 flex items-center gap-1.5">
-          ⚠️ โซนอันตราย
-        </h3>
+        <h3 className="text-sm font-semibold text-[var(--c-danger)] mb-3 flex items-center gap-1.5">{tr("⚠️ โซนอันตราย")}</h3>
         <div className="p-4 rounded-xl border-2 border-[var(--c-danger-line)] bg-[var(--c-danger-soft)]/50 space-y-3">
           <div>
-            <p className="text-sm font-semibold text-[var(--c-danger)]">🗑️ ขอลบบัญชี</p>
+            <p className="text-sm font-semibold text-[var(--c-danger)]">{tr("🗑️ ขอลบบัญชี")}</p>
             <ul className="text-xs text-[var(--c-danger)]/80 mt-2 space-y-1 pl-4 list-disc">
-              <li>ลบสินค้าทั้งหมดของคุณออกจากแพลตฟอร์ม</li>
-              <li>ยกเลิกคำสั่งซื้อที่กำลังดำเนินอยู่</li>
-              <li>ลบข้อมูลส่วนตัวทั้งหมด</li>
-              <li>ไม่สามารถกู้คืนได้</li>
+              <li>{tr("ลบสินค้าทั้งหมดของคุณออกจากแพลตฟอร์ม")}</li>
+              <li>{tr("ยกเลิกคำสั่งซื้อที่กำลังดำเนินอยู่")}</li>
+              <li>{tr("ลบข้อมูลส่วนตัวทั้งหมด")}</li>
+              <li>{tr("ไม่สามารถกู้คืนได้")}</li>
             </ul>
             {userData.escrowBalance > 0 && (
               <p className="text-xs text-[var(--c-warn)] mt-2 flex items-center gap-1">
@@ -188,9 +184,7 @@ export default function SecurityTab({ userData, showToast }: Props) {
           <button
             onClick={() => setShowDeleteDialog(true)}
             className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold transition"
-          >
-            ขอลบบัญชีของฉัน
-          </button>
+          >{tr("ขอลบบัญชีของฉัน")}</button>
         </div>
       </div>
 

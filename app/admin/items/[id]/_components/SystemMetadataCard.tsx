@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { formatThaiDate, formatNumber, truncateId } from "../../../_lib/utils";
 import { useState } from "react";
 
@@ -17,6 +19,7 @@ interface Props {
 }
 
 export default function SystemMetadataCard({ item }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [copied, setCopied] = useState(false);
 
   function copyId() {
@@ -27,7 +30,7 @@ export default function SystemMetadataCard({ item }: Props) {
 
   return (
     <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
-      <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-4">ข้อมูลระบบ</h3>
+      <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-4">{tr("ข้อมูลระบบ")}</h3>
 
       <div className="space-y-3">
         {/* Item ID */}
@@ -35,7 +38,7 @@ export default function SystemMetadataCard({ item }: Props) {
           <button
             onClick={copyId}
             className="text-xs text-[var(--c-faint)] hover:text-[var(--c-ink-2)] transition-colors font-mono flex items-center gap-1"
-            title="คัดลอก ID"
+            title={tr("คัดลอก ID")}
           >
             {truncateId(item.id)}
             <span className="text-sm">{copied ? "✅" : "📋"}</span>
@@ -43,37 +46,37 @@ export default function SystemMetadataCard({ item }: Props) {
         </Row>
 
         {/* Created */}
-        <Row label="สร้างเมื่อ">
+        <Row label={tr("สร้างเมื่อ")}>
           <span className="text-sm text-[var(--c-ink-1)]">
             {formatThaiDateWithTime(item.createdAt)}
           </span>
         </Row>
 
         {/* Updated */}
-        <Row label="แก้ไขล่าสุด">
+        <Row label={tr("แก้ไขล่าสุด")}>
           <span className="text-sm text-[var(--c-ink-1)]">
             {formatThaiDateWithTime(item.updatedAt)}
           </span>
         </Row>
 
         {/* Last viewed */}
-        <Row label="เข้าชมล่าสุด">
+        <Row label={tr("เข้าชมล่าสุด")}>
           <span className="text-sm text-[var(--c-ink-1)]">
             {item.lastViewedAt
               ? formatThaiDateWithTime(item.lastViewedAt)
-              : "ยังไม่มีผู้เข้าชม"}
+              : tr("ยังไม่มีผู้เข้าชม")}
           </span>
         </Row>
 
         {/* Divider */}
         <div className="border-t border-[var(--c-line-soft)] pt-3">
           <div className="grid grid-cols-2 gap-3">
-            <StatBox icon="👁" label="เข้าชม" value={`${formatNumber(item.viewCount)} ครั้ง`} />
+            <StatBox icon="👁" label={tr("เข้าชม")} value={`${formatNumber(item.viewCount)} ครั้ง`} />
             <StatBox icon="❤️" label="Wishlist" value={`${formatNumber(item.wishlistCount)}`} />
             <StatBox icon="📊" label="Interactions" value={`${formatNumber(item.interactionCount)}`} />
             <StatBox
               icon="⚠️"
-              label="รายงาน"
+              label={tr("รายงาน")}
               value={`${item.reportCount}`}
               danger={item.reportCount > 0}
             />

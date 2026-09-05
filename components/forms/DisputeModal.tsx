@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useRef, useTransition } from "react";
 import { fileDispute } from "@/lib/actions/escrow-actions";
 import { prepareImageForUpload } from "@/lib/utils/image-upload";
@@ -32,6 +34,7 @@ async function uploadFile(file: File): Promise<string> {
 }
 
 export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSuccess }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const fileInputRef                    = useRef<HTMLInputElement>(null);
   const [reason, setReason]             = useState("");
   const [images, setImages]             = useState<PendingImage[]>([]);
@@ -96,14 +99,15 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
   // ─── Submit ─────────────────────────────────────────────────────────────────
 
   function handleSubmit(e: React.FormEvent) {
+  const tr = useLocaleStore((s) => s.tr);
     e.preventDefault();
     setSubmitError(null);
 
     if (!reason.trim()) { setSubmitError("กรุณาระบุเหตุผล"); return; }
-    if (images.some((i) => i.uploading)) { setSubmitError("กรุณารอให้อัปโหลดภาพเสร็จสิ้น"); return; }
+    if (images.some((i) => i.uploading)) { setSubmitError(tr("กรุณารอให้อัปโหลดภาพเสร็จสิ้น")); return; }
 
     const uploadedUrls = images.filter((i) => i.url).map((i) => i.url!);
-    if (uploadedUrls.length === 0) { setSubmitError("กรุณาอัปโหลดหลักฐานอย่างน้อย 1 ภาพ"); return; }
+    if (uploadedUrls.length === 0) { setSubmitError(tr("กรุณาอัปโหลดหลักฐานอย่างน้อย 1 ภาพ")); return; }
 
     startTransition(async () => {
       const res = await fileDispute(orderId, reason, uploadedUrls);
@@ -132,10 +136,8 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
         {/* ── Header ─────────────────────────────────────────────────────────── */}
         <div className="sticky top-0 bg-[var(--c-surface)] border-b border-[var(--c-line)] px-6 py-4 flex items-start justify-between z-10 rounded-t-2xl">
           <div>
-            <h3 className="text-lg font-bold text-[var(--c-ink)]">แจ้งปัญหา / เปิดข้อพิพาท</h3>
-            <p className="text-xs text-[var(--c-muted)] mt-0.5">
-              เงินจะถูกอายัดรอการตัดสินจากผู้ดูแลระบบ
-            </p>
+            <h3 className="text-lg font-bold text-[var(--c-ink)]">{tr("แจ้งปัญหา / เปิดข้อพิพาท")}</h3>
+            <p className="text-xs text-[var(--c-muted)] mt-0.5">{tr("เงินจะถูกอายัดรอการตัดสินจากผู้ดูแลระบบ")}</p>
           </div>
           <button
             onClick={onClose}
@@ -165,8 +167,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
 
           {/* Reason */}
           <div>
-            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-1.5">
-              เหตุผลในการแจ้งปัญหา <span className="text-[var(--c-danger)]">*</span>
+            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-1.5">{tr("เหตุผลในการแจ้งปัญหา")}<span className="text-[var(--c-danger)]">*</span>
             </label>
             <textarea
               value={reason}
@@ -174,14 +175,13 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
               rows={4}
               disabled={isPending}
               className="w-full border border-[var(--c-line)] rounded-xl px-4 py-3 text-sm text-[var(--c-ink)] placeholder-[var(--c-faint-2)] focus:outline-none focus:ring-2 focus:ring-red-400/30 focus:border-red-400 transition resize-none disabled:opacity-60"
-              placeholder="อธิบายปัญหาที่พบ เช่น ไม่ได้รับสินค้า, สินค้าไม่ตรงปก, สินค้าชำรุดเสียหาย..."
+              placeholder={tr("อธิบายปัญหาที่พบ เช่น ไม่ได้รับสินค้า, สินค้าไม่ตรงปก, สินค้าชำรุดเสียหาย...")}
             />
           </div>
 
           {/* Evidence Images */}
           <div>
-            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-0.5">
-              หลักฐาน (รูปภาพ) <span className="text-[var(--c-danger)]">*</span>
+            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-0.5">{tr("หลักฐาน (รูปภาพ)")}<span className="text-[var(--c-danger)]">*</span>
             </label>
             <p className="text-xs text-[var(--c-muted)] mb-3">
               อย่างน้อย 1 ภาพ · สูงสุด {MAX_IMAGES} ภาพ · รูปภาพทุกชนิด ทุกขนาด
@@ -234,7 +234,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
-                  <span className="text-[10px] font-medium">เพิ่มรูป</span>
+                  <span className="text-[10px] font-medium">{tr("เพิ่มรูป")}</span>
                 </button>
               )}
             </div>
@@ -259,7 +259,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
 
           {/* Warning notice */}
           <div className="bg-[var(--c-canvas)] rounded-xl px-4 py-3 text-xs text-[var(--c-ink-3)] leading-relaxed">
-            <span className="font-semibold text-[var(--c-ink-2)]">หมายเหตุ:</span>{" "}
+            <span className="font-semibold text-[var(--c-ink-2)]">{tr("หมายเหตุ:")}</span>{" "}
             การเปิดข้อพิพาทจะทำให้เงินถูกอายัดทันที และไม่สามารถยกเลิกได้
             ผู้ดูแลระบบจะตรวจสอบหลักฐานและตัดสินผลภายใน 2–3 วันทำการ
           </div>
@@ -286,11 +286,9 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
                 </>
               ) : stillUploading ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  กำลังอัปโหลด…
-                </>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />{tr("กำลังอัปโหลด…")}</>
               ) : (
-                "ยืนยันเปิดข้อพิพาท"
+                tr("ยืนยันเปิดข้อพิพาท")
               )}
             </button>
           </div>

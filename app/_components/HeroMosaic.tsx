@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { FeaturedItemDisplay } from "@/lib/actions/featured";
@@ -14,6 +16,7 @@ interface Props {
  * one tall card and two short cards stacked on the right.
  */
 export default function HeroMosaic({ items, onItemClick }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   // The spotlight rotates through everything that isn't pinned to the side grid
   const sideItems      = items.slice(0, 3);
   const spotlightItems = items.length > 3 ? items.slice(3) : items;
@@ -59,7 +62,7 @@ export default function HeroMosaic({ items, onItemClick }: Props) {
               <button
                 className="hp-arrow hp-arrow-float absolute left-3 top-1/2 -translate-y-1/2 z-10"
                 onClick={() => go(index - 1)}
-                aria-label="ก่อนหน้า"
+                aria-label={tr("ก่อนหน้า")}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M15 19l-7-7 7-7" />
@@ -68,7 +71,7 @@ export default function HeroMosaic({ items, onItemClick }: Props) {
               <button
                 className="hp-arrow hp-arrow-float absolute right-3 top-1/2 -translate-y-1/2 z-10"
                 onClick={() => go(index + 1)}
-                aria-label="ถัดไป"
+                aria-label={tr("ถัดไป")}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M9 5l7 7-7 7" />
@@ -121,6 +124,7 @@ export default function HeroMosaic({ items, onItemClick }: Props) {
 // ─── Spotlight ────────────────────────────────────────────────────────────────
 
 function SpotlightCard({ featured, onClick }: { featured: FeaturedItemDisplay; onClick: () => void }) {
+  const tr = useLocaleStore((s) => s.tr);
   const { item, customLabel } = featured;
   const img = item.images.find((i) => i.isMain) ?? item.images[0];
 
@@ -144,7 +148,7 @@ function SpotlightCard({ featured, onClick }: { featured: FeaturedItemDisplay; o
 
       <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 z-10">
         <span className="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-md bg-[var(--c-surface)]/15 backdrop-blur-sm border border-white/25 text-white text-[11px] font-semibold mb-3">
-          {customLabel ?? "กำลังมาแรง"}
+          {customLabel ?? tr("กำลังมาแรง")}
         </span>
 
         <h2 className="text-white text-[26px] sm:text-[34px] font-semibold tracking-[-0.02em] leading-tight line-clamp-2 max-w-[80%]">
@@ -152,9 +156,7 @@ function SpotlightCard({ featured, onClick }: { featured: FeaturedItemDisplay; o
         </h2>
 
         <div className="flex flex-wrap items-center gap-3 mt-4">
-          <span className="hp-btn bg-[var(--c-surface)] text-[var(--psu-navy)] hover:bg-[var(--c-surface)]/90 h-9 px-5">
-            ดูรายละเอียด
-          </span>
+          <span className="hp-btn bg-[var(--c-surface)] text-[var(--psu-navy)] hover:bg-[var(--c-surface)]/90 h-9 px-5">{tr("ดูรายละเอียด")}</span>
           <span className="hp-num text-white text-[15px] font-medium">
             ฿{item.price.toLocaleString()}
           </span>

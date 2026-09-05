@@ -4,11 +4,12 @@ import { useLocaleStore } from "@/lib/stores/locale-store";
 import Brand from "@/components/layout/Brand";
 
 export default function Footer() {
+  const tr = useLocaleStore((s) => s.tr);
   const t = useLocaleStore((s) => s.t);
 
   const columns: { heading: string; links: { label: string; href: string }[] }[] = [
     {
-      heading: "แพลตฟอร์ม",
+      heading: tr("แพลตฟอร์ม"),
       links: [
         { label: t("nav_about"),   href: "#" },
         { label: t("nav_post"),    href: "#" },
@@ -16,10 +17,10 @@ export default function Footer() {
       ],
     },
     {
-      heading: "ข้อกำหนด",
+      heading: tr("ข้อกำหนด"),
       links: [
-        { label: "เงื่อนไขการใช้งาน", href: "#" },
-        { label: "นโยบายความเป็นส่วนตัว", href: "#" },
+        { label: tr("เงื่อนไขการใช้งาน"), href: "#" },
+        { label: tr("นโยบายความเป็นส่วนตัว"), href: "#" },
       ],
     },
   ];

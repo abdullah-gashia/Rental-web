@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { calcRentalDays, calcRentalPricing } from "./useRentalCheckoutReducer";
 import PriceBreakdown from "./PriceBreakdown";
 import type { RentalCheckoutState } from "./useRentalCheckoutReducer";
@@ -17,6 +19,7 @@ interface Props {
 }
 
 export default function DateSelectionStep({ state, item, onChange }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const today = new Date().toISOString().slice(0, 10);
   const maxStart = (() => {
     const d = new Date();
@@ -59,8 +62,7 @@ export default function DateSelectionStep({ state, item, onChange }: Props) {
   return (
     <div className="space-y-5">
       <div>
-        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">
-          วันเริ่มเช่า <span className="text-[var(--c-danger)]">*</span>
+        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">{tr("วันเริ่มเช่า")}<span className="text-[var(--c-danger)]">*</span>
         </label>
         <input
           type="date"
@@ -71,12 +73,11 @@ export default function DateSelectionStep({ state, item, onChange }: Props) {
           className="w-full px-3 py-2.5 border border-[var(--c-line)] rounded-xl text-sm
                      focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)]"
         />
-        <p className="text-[11px] text-[var(--c-faint)] mt-1">เริ่มเช่าได้ตั้งแต่วันนี้เป็นต้นไป</p>
+        <p className="text-[11px] text-[var(--c-faint)] mt-1">{tr("เริ่มเช่าได้ตั้งแต่วันนี้เป็นต้นไป")}</p>
       </div>
 
       <div>
-        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">
-          วันสิ้นสุดเช่า (วันคืนของ) <span className="text-[var(--c-danger)]">*</span>
+        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">{tr("วันสิ้นสุดเช่า (วันคืนของ)")}<span className="text-[var(--c-danger)]">*</span>
         </label>
         <input
           type="date"

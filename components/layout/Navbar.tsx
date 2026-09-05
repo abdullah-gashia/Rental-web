@@ -73,6 +73,7 @@ export default function Navbar({
   searchQuery, onSearchChange, activeCat, onCatChange, onChatOpen,
   searchPlaceholder, hideCategories = false,
 }: NavbarProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const { t, locale, toggleLocale } = useLocaleStore();
   const wishlistCount = useWishlistStore((s) => s.count);
   const openModal = useModalStore((s) => s.open);
@@ -160,7 +161,7 @@ export default function Navbar({
                 {/* Chat */}
                 <div className="relative">
                   <IconButton
-                    title="แชท"
+                    title={tr("แชท")}
                     active={showChat}
                     badge={unreadMessages}
                     onClick={() => {
@@ -210,7 +211,7 @@ export default function Navbar({
                     className={`w-7 h-7 rounded-full overflow-hidden flex items-center justify-center ring-2 transition ${
                       showUserMenu ? "ring-[var(--psu-navy)]" : "ring-transparent hover:ring-[var(--hp-border-str)]"
                     }`}
-                    title={user.name || "โปรไฟล์"}
+                    title={user.name || tr("โปรไฟล์")}
                   >
                     {user.image ? (
                       <img src={user.image} alt={user.name || ""} className="w-full h-full object-cover" />
@@ -228,7 +229,7 @@ export default function Navbar({
                 {/* Wishlist lives in the rail on desktop — keep it reachable on mobile */}
                 <div className="md:hidden">
                   <IconButton
-                    title="รายการโปรด"
+                    title={tr("รายการโปรด")}
                     badge={wishlistCount()}
                     onClick={() => openModal("wishlist")}
                   >

@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { type Locale, type DictionaryKey, translate } from "@/lib/i18n/dictionaries";
+import { translatePhrase } from "@/lib/i18n/phrases";
 
 /**
  * Language, held in a cookie and nothing else.
@@ -31,6 +32,7 @@ interface LocaleState {
   setLocale: (locale: Locale) => void;
   toggleLocale: () => void;
   t: (key: DictionaryKey, params?: Record<string, string | number>) => string;
+  tr: (source: string) => string;
 }
 
 export const useLocaleStore = create<LocaleState>((set, get) => ({
@@ -48,4 +50,6 @@ export const useLocaleStore = create<LocaleState>((set, get) => ({
   toggleLocale: () => get().setLocale(get().locale === "th" ? "en" : "th"),
 
   t: (key, params) => translate(get().locale, key, params),
+
+  tr: (source) => translatePhrase(get().locale, source),
 }));

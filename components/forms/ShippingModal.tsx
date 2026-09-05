@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useRef, useTransition } from "react";
 import { confirmShipment } from "@/lib/actions/escrow-actions";
 import { prepareImageForUpload } from "@/lib/utils/image-upload";
@@ -31,6 +33,7 @@ async function uploadFile(file: File): Promise<string> {
 }
 
 export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [method,          setMethod]          = useState("POST");
@@ -78,15 +81,16 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
   // ─── Submit ───────────────────────────────────────────────────────────────
 
   function handleSubmit(e: React.FormEvent) {
+  const tr = useLocaleStore((s) => s.tr);
     e.preventDefault();
     setFormError(null);
 
     if (!isMeetup && !trackingNumber.trim()) {
-      setFormError("กรุณาระบุหมายเลขพัสดุ (หรือเลือก 'นัดรับด้วยตนเอง')");
+      setFormError(tr("กรุณาระบุหมายเลขพัสดุ (หรือเลือก 'นัดรับด้วยตนเอง')"));
       return;
     }
     if (proofUploading) {
-      setFormError("กรุณารอให้อัปโหลดรูปเสร็จสิ้น");
+      setFormError(tr("กรุณารอให้อัปโหลดรูปเสร็จสิ้น"));
       return;
     }
 
@@ -116,7 +120,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
         {/* Header */}
         <div className="sticky top-0 bg-[var(--c-surface)] border-b border-[var(--c-line)] px-6 py-4 flex items-start justify-between z-10 rounded-t-2xl">
           <div>
-            <h3 className="text-lg font-bold text-[var(--c-ink)]">ยืนยันการจัดส่ง</h3>
+            <h3 className="text-lg font-bold text-[var(--c-ink)]">{tr("ยืนยันการจัดส่ง")}</h3>
             <p className="text-xs text-[var(--c-muted)] mt-0.5 truncate max-w-xs">{itemTitle}</p>
           </div>
           <button
@@ -133,8 +137,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
 
           {/* Delivery method */}
           <div>
-            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-2">
-              วิธีจัดส่ง <span className="text-[var(--c-danger)]">*</span>
+            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-2">{tr("วิธีจัดส่ง")}<span className="text-[var(--c-danger)]">*</span>
             </label>
             <div className="grid grid-cols-3 gap-2">
               {METHODS.map((m) => (
@@ -158,14 +161,13 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
           {/* Tracking number — hidden for meetup */}
           {!isMeetup && (
             <div>
-              <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-1.5">
-                หมายเลขพัสดุ <span className="text-[var(--c-danger)]">*</span>
+              <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-1.5">{tr("หมายเลขพัสดุ")}<span className="text-[var(--c-danger)]">*</span>
               </label>
               <input
                 type="text"
                 value={trackingNumber}
                 onChange={(e) => { setTrackingNumber(e.target.value); setFormError(null); }}
-                placeholder="เช่น TH123456789TH"
+                placeholder={tr("เช่น TH123456789TH")}
                 disabled={isPending}
                 className="w-full border border-[var(--c-line)] rounded-xl px-4 py-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400 transition disabled:opacity-60"
               />
@@ -174,11 +176,9 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
 
           {/* Proof image upload */}
           <div>
-            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-0.5">
-              รูปหลักฐานการจัดส่ง
-              <span className="ml-1 text-xs font-normal text-[var(--c-muted)]">(ไม่บังคับ แต่แนะนำ)</span>
+            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-0.5">{tr("รูปหลักฐานการจัดส่ง")}<span className="ml-1 text-xs font-normal text-[var(--c-muted)]">{tr("(ไม่บังคับ แต่แนะนำ)")}</span>
             </label>
-            <p className="text-xs text-[var(--c-muted)] mb-3">รูปใบเสร็จ / พัสดุก่อนส่ง · รูปภาพทุกชนิด ทุกขนาด</p>
+            <p className="text-xs text-[var(--c-muted)] mb-3">{tr("รูปใบเสร็จ / พัสดุก่อนส่ง · รูปภาพทุกชนิด ทุกขนาด")}</p>
 
             {proofPreview ? (
               <div className="relative w-full h-40 rounded-xl overflow-hidden border border-[var(--c-line)] bg-[var(--c-line-soft)]">
@@ -214,7 +214,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <span className="text-xs font-medium">อัปโหลดรูปหลักฐาน</span>
+                <span className="text-xs font-medium">{tr("อัปโหลดรูปหลักฐาน")}</span>
               </button>
             )}
 
@@ -230,8 +230,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
           {/* Meetup note */}
           {isMeetup && (
             <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-4 py-3 text-xs text-amber-800 leading-relaxed">
-              <span className="font-semibold">นัดรับ:</span> ผู้ซื้อจะได้รับแจ้งเตือนให้ยืนยันเมื่อรับสินค้าจากคุณโดยตรง
-            </div>
+              <span className="font-semibold">{tr("นัดรับ:")}</span>{tr("ผู้ซื้อจะได้รับแจ้งเตือนให้ยืนยันเมื่อรับสินค้าจากคุณโดยตรง")}</div>
           )}
 
           {/* Error */}
@@ -260,7 +259,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
               {(isPending || proofUploading) && (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               )}
-              {isPending ? "กำลังบันทึก…" : proofUploading ? "กำลังอัปโหลด…" : "📦 ยืนยันจัดส่งแล้ว"}
+              {isPending ? tr("กำลังบันทึก…") : proofUploading ? tr("กำลังอัปโหลด…") : tr("📦 ยืนยันจัดส่งแล้ว")}
             </button>
           </div>
         </form>

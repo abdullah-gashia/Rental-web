@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import ReasonDialog from "./ReasonDialog";
 import DeleteDialog from "./DeleteDialog";
@@ -23,6 +25,7 @@ interface Props {
 }
 
 export default function AdminActionPanel({ item }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [pending, startTransition] = useTransition();
   const [toast, setToast] = useState<{ ok: boolean; msg: string } | null>(null);
 
@@ -103,13 +106,11 @@ export default function AdminActionPanel({ item }: Props) {
       )}
 
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
-        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-4">การจัดการ</h3>
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-4">{tr("การจัดการ")}</h3>
 
         {/* Removed banner */}
         {isRemoved && (
-          <div className="mb-4 bg-[var(--c-line-soft)] border border-[var(--c-line-str)] rounded-xl px-3 py-2.5 text-sm text-[var(--c-ink-3)] text-center font-medium">
-            🗑️ สินค้านี้ถูกลบแล้ว
-          </div>
+          <div className="mb-4 bg-[var(--c-line-soft)] border border-[var(--c-line-str)] rounded-xl px-3 py-2.5 text-sm text-[var(--c-ink-3)] text-center font-medium">{tr("🗑️ สินค้านี้ถูกลบแล้ว")}</div>
         )}
 
         <div className="space-y-2.5">
@@ -134,9 +135,7 @@ export default function AdminActionPanel({ item }: Props) {
               className="w-full px-4 py-2.5 border border-[var(--c-danger-line)] text-[var(--c-danger)] rounded-xl font-medium
                          hover:bg-[var(--c-danger-soft)] transition-colors flex items-center justify-center gap-2
                          disabled:opacity-50 text-sm"
-            >
-              ❌ ปฏิเสธสินค้า
-            </button>
+            >{tr("❌ ปฏิเสธสินค้า")}</button>
           )}
 
           {/* ── Suspend (APPROVED / ACTIVE) ── */}
@@ -147,9 +146,7 @@ export default function AdminActionPanel({ item }: Props) {
               className="w-full px-4 py-2.5 border border-amber-300 text-[var(--c-warn)] rounded-xl font-medium
                          hover:bg-[var(--c-warn-soft)] transition-colors flex items-center justify-center gap-2
                          disabled:opacity-50 text-sm"
-            >
-              ⚠️ ระงับการขาย
-            </button>
+            >{tr("⚠️ ระงับการขาย")}</button>
           )}
 
           {/* ── Unsuspend (UNAVAILABLE) ── */}
@@ -184,7 +181,7 @@ export default function AdminActionPanel({ item }: Props) {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs text-[var(--c-ink-2)] bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-3 py-2.5">
                 <div>
-                  <p className="font-semibold text-[var(--c-warn)]">🔥 อยู่ในรายการมาแรง</p>
+                  <p className="font-semibold text-[var(--c-warn)]">{tr("🔥 อยู่ในรายการมาแรง")}</p>
                   <p className="text-[var(--c-warn)] mt-0.5">ตำแหน่ง #{trending.position}</p>
                 </div>
                 <button
@@ -195,9 +192,7 @@ export default function AdminActionPanel({ item }: Props) {
                   })}
                   disabled={pending}
                   className="text-xs text-[var(--c-danger)] hover:text-[var(--c-danger)] font-medium disabled:opacity-40"
-                >
-                  ลบออก
-                </button>
+                >{tr("ลบออก")}</button>
               </div>
             </div>
           ) : (
@@ -213,13 +208,11 @@ export default function AdminActionPanel({ item }: Props) {
                 }
               })}
               disabled={pending || item.status !== "APPROVED"}
-              title={item.status !== "APPROVED" ? "สินค้าต้องได้รับการอนุมัติก่อน" : undefined}
+              title={item.status !== "APPROVED" ? tr("สินค้าต้องได้รับการอนุมัติก่อน") : undefined}
               className="w-full px-4 py-2.5 border border-orange-300 text-[var(--c-warn)] rounded-xl font-medium
                          hover:bg-[var(--c-warn-soft)] transition-colors flex items-center justify-center gap-2
                          disabled:opacity-40 text-sm"
-            >
-              🔥 เพิ่มเป็นสินค้ามาแรง
-            </button>
+            >{tr("🔥 เพิ่มเป็นสินค้ามาแรง")}</button>
           )}
 
           {/* ── Delete (always, unless already removed) ── */}
@@ -232,9 +225,7 @@ export default function AdminActionPanel({ item }: Props) {
                 className="w-full px-4 py-2.5 border border-[var(--c-danger-line)] text-[var(--c-danger)] rounded-xl font-medium
                            hover:bg-[var(--c-danger-soft)] transition-colors flex items-center justify-center gap-2
                            disabled:opacity-50 text-sm"
-              >
-                🗑️ ลบสินค้าถาวร
-              </button>
+              >{tr("🗑️ ลบสินค้าถาวร")}</button>
             </>
           )}
 
@@ -245,9 +236,7 @@ export default function AdminActionPanel({ item }: Props) {
             rel="noopener noreferrer"
             className="w-full px-4 py-2.5 border border-[var(--c-line)] text-[var(--c-ink-2)] rounded-xl
                        hover:bg-[var(--c-subtle)] transition-colors flex items-center justify-center gap-2 text-xs font-medium"
-          >
-            🔗 ดูหน้าสินค้าจริง (เปิดแท็บใหม่)
-          </a>
+          >{tr("🔗 ดูหน้าสินค้าจริง (เปิดแท็บใหม่)")}</a>
         </div>
       </div>
 
@@ -256,7 +245,7 @@ export default function AdminActionPanel({ item }: Props) {
       <ReasonDialog
         open={rejectOpen}
         title={`❌ ปฏิเสธสินค้า "${item.title}"`}
-        confirmLabel="ยืนยันปฏิเสธ"
+        confirmLabel={tr("ยืนยันปฏิเสธ")}
         danger
         loading={pending}
         onConfirm={handleReject}
@@ -266,7 +255,7 @@ export default function AdminActionPanel({ item }: Props) {
       <ReasonDialog
         open={suspendOpen}
         title={`⚠️ ระงับสินค้า "${item.title}"`}
-        confirmLabel="ยืนยันระงับ"
+        confirmLabel={tr("ยืนยันระงับ")}
         loading={pending}
         onConfirm={handleSuspend}
         onCancel={() => setSuspendOpen(false)}

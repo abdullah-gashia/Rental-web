@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import type { PaginationMeta } from "../_lib/types";
 
@@ -8,6 +10,7 @@ interface PaginationProps {
 }
 
 export default function Pagination({ meta }: PaginationProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const router     = useRouter();
   const sp         = useSearchParams();
   const pathname   = usePathname();
@@ -43,10 +46,8 @@ export default function Pagination({ meta }: PaginationProps) {
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 px-1 py-3">
-      <p className="text-sm text-[var(--c-ink-3)]">
-        แสดง <span className="font-medium text-[var(--c-ink-1)]">{from}–{to}</span>{" "}
-        จาก <span className="font-medium text-[var(--c-ink-1)]">{totalCount.toLocaleString()}</span> รายการ
-      </p>
+      <p className="text-sm text-[var(--c-ink-3)]">{tr("แสดง")}<span className="font-medium text-[var(--c-ink-1)]">{from}–{to}</span>{" "}
+        จาก <span className="font-medium text-[var(--c-ink-1)]">{totalCount.toLocaleString()}</span>{tr("รายการ")}</p>
 
       <div className="flex items-center gap-1">
         {/* Prev */}
@@ -54,7 +55,7 @@ export default function Pagination({ meta }: PaginationProps) {
           onClick={() => goTo(currentPage - 1)}
           disabled={currentPage === 1}
           className={`${btnBase} ${currentPage === 1 ? btnDisabled : btnIdle}`}
-          aria-label="หน้าก่อน"
+          aria-label={tr("หน้าก่อน")}
         >
           ‹
         </button>
@@ -79,7 +80,7 @@ export default function Pagination({ meta }: PaginationProps) {
           onClick={() => goTo(currentPage + 1)}
           disabled={currentPage === totalPages}
           className={`${btnBase} ${currentPage === totalPages ? btnDisabled : btnIdle}`}
-          aria-label="หน้าถัดไป"
+          aria-label={tr("หน้าถัดไป")}
         >
           ›
         </button>

@@ -34,13 +34,14 @@ const PATHS = {
 };
 
 export default function SideRail({ activeCat, onCatChange }: SideRailProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const t             = useLocaleStore((s) => s.t);
   const openModal     = useModalStore((s) => s.open);
   const user          = useAuthStore((s) => s.user);
   const wishlistCount = useWishlistStore((s) => s.count);
 
   const navItems: { key: CategorySlug; label: string; path: string }[] = [
-    { key: "all",         label: "หน้าแรก",        path: PATHS.home },
+    { key: "all",         label: tr("หน้าแรก"),        path: PATHS.home },
     { key: "secondhand",  label: t("cat_secondhand"),  path: PATHS.tag },
     { key: "rental",      label: t("cat_rental"),      path: PATHS.rent },
     { key: "electronics", label: t("cat_electronics"), path: PATHS.electronics },
@@ -50,7 +51,7 @@ export default function SideRail({ activeCat, onCatChange }: SideRailProps) {
   ];
 
   return (
-    <aside className="hp-rail" aria-label="หมวดหมู่">
+    <aside className="hp-rail" aria-label={tr("หมวดหมู่")}>
       <nav className="flex flex-col items-center gap-1" role="tablist">
         {navItems.map((it) => (
           <button
@@ -71,24 +72,24 @@ export default function SideRail({ activeCat, onCatChange }: SideRailProps) {
       <div className="mt-auto pt-3 flex flex-col items-center gap-1">
         <a
           href="/borrow"
-          title="ยืมของฟรีจากงานภัทร"
+          title={tr("ยืมของฟรีจากงานภัทร")}
           className={`hp-rail-item ${activeCat === "borrow" ? "active" : ""}`}
         >
           {icon(PATHS.borrow)}
-          <span>ยืมของ</span>
+          <span>{tr("ยืมของ")}</span>
         </a>
 
         <a
           href="/users"
-          title="ผู้ใช้งาน"
+          title={tr("ผู้ใช้งาน")}
           className={`hp-rail-item ${activeCat === "users" ? "active" : ""}`}
         >
           {icon(PATHS.people)}
-          <span>ผู้ใช้งาน</span>
+          <span>{tr("ผู้ใช้งาน")}</span>
         </a>
 
         <button
-          title="รายการโปรด"
+          title={tr("รายการโปรด")}
           onClick={() => openModal("wishlist")}
           className="hp-rail-item"
         >
@@ -100,7 +101,7 @@ export default function SideRail({ activeCat, onCatChange }: SideRailProps) {
               </span>
             )}
           </span>
-          <span>โปรด</span>
+          <span>{tr("โปรด")}</span>
         </button>
 
         {user?.role === "ADMIN" ? (

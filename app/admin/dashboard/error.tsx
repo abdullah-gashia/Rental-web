@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 export default function DashboardError({
   error,
   reset,
@@ -7,12 +9,11 @@ export default function DashboardError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   return (
     <div className="flex flex-col items-center justify-center py-24 text-center">
       <div className="text-5xl mb-4 select-none">⚠️</div>
-      <h2 className="text-lg font-bold text-[var(--c-ink)] mb-2">
-        เกิดข้อผิดพลาดในการโหลดข้อมูล
-      </h2>
+      <h2 className="text-lg font-bold text-[var(--c-ink)] mb-2">{tr("เกิดข้อผิดพลาดในการโหลดข้อมูล")}</h2>
       <p className="text-sm text-[var(--c-ink-3)] max-w-sm mb-6">
         กรุณาลองใหม่อีกครั้ง หากปัญหายังคงอยู่ โปรดติดต่อนักพัฒนา
         {error.digest && (
@@ -27,9 +28,7 @@ export default function DashboardError({
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-        </svg>
-        ลองใหม่
-      </button>
+        </svg>{tr("ลองใหม่")}</button>
     </div>
   );
 }

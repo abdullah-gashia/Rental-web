@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 interface Order {
   id:        string;
   amount:    number;
@@ -41,11 +43,12 @@ function relativeTime(iso: string): string {
 }
 
 export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
+  const tr = useLocaleStore((s) => s.tr);
   if (orders.length === 0) {
     return (
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 shadow-sm">
-        <h3 className="text-sm font-semibold text-[var(--c-ink-1)] mb-4">รายการล่าสุด</h3>
-        <p className="text-sm text-[var(--c-muted)] text-center py-8">ยังไม่มีรายการ</p>
+        <h3 className="text-sm font-semibold text-[var(--c-ink-1)] mb-4">{tr("รายการล่าสุด")}</h3>
+        <p className="text-sm text-[var(--c-muted)] text-center py-8">{tr("ยังไม่มีรายการ")}</p>
       </div>
     );
   }
@@ -53,25 +56,17 @@ export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
   return (
     <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] shadow-sm overflow-hidden">
       <div className="px-5 py-4 border-b border-[var(--c-line)]">
-        <h3 className="text-sm font-semibold text-[var(--c-ink-1)]">รายการล่าสุด</h3>
+        <h3 className="text-sm font-semibold text-[var(--c-ink-1)]">{tr("รายการล่าสุด")}</h3>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-sm" aria-label="รายการ Escrow ล่าสุด">
+        <table className="w-full text-sm" aria-label={tr("รายการ Escrow ล่าสุด")}>
           <thead>
             <tr className="border-b border-[var(--c-line)] bg-[var(--c-canvas)]">
-              <th className="text-left px-5 py-3 text-xs font-semibold text-[var(--c-ink-3)] uppercase tracking-wide">
-                รหัสคำสั่ง
-              </th>
-              <th className="text-right px-5 py-3 text-xs font-semibold text-[var(--c-ink-3)] uppercase tracking-wide">
-                จำนวนเงิน
-              </th>
-              <th className="text-center px-5 py-3 text-xs font-semibold text-[var(--c-ink-3)] uppercase tracking-wide">
-                สถานะ
-              </th>
-              <th className="text-right px-5 py-3 text-xs font-semibold text-[var(--c-ink-3)] uppercase tracking-wide">
-                วันที่
-              </th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-[var(--c-ink-3)] uppercase tracking-wide">{tr("รหัสคำสั่ง")}</th>
+              <th className="text-right px-5 py-3 text-xs font-semibold text-[var(--c-ink-3)] uppercase tracking-wide">{tr("จำนวนเงิน")}</th>
+              <th className="text-center px-5 py-3 text-xs font-semibold text-[var(--c-ink-3)] uppercase tracking-wide">{tr("สถานะ")}</th>
+              <th className="text-right px-5 py-3 text-xs font-semibold text-[var(--c-ink-3)] uppercase tracking-wide">{tr("วันที่")}</th>
             </tr>
           </thead>
           <tbody>

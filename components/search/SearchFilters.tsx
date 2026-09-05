@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -32,6 +34,7 @@ export default function SearchFilters({
   initialCondition = "",
   initialSort      = "newest",
 }: SearchFiltersProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const router     = useRouter();
   // useSearchParams() is always in sync with the live URL — no stale reads
   const urlParams  = useSearchParams();
@@ -106,17 +109,16 @@ export default function SearchFilters({
     <div className="flex flex-wrap items-center gap-2">
       {/* Result count */}
       <span className="text-[13px] text-[var(--hp-muted)] mr-auto">
-        <strong className="hp-num text-[var(--hp-ink)] font-medium">{totalCount}</strong> รายการ
-      </span>
+        <strong className="hp-num text-[var(--hp-ink)] font-medium">{totalCount}</strong>{tr("รายการ")}</span>
 
       {/* Sort */}
       <div className="flex items-center gap-1.5">
-        <label className="text-[12px] text-[var(--hp-muted)] hidden sm:block">เรียง</label>
+        <label className="text-[12px] text-[var(--hp-muted)] hidden sm:block">{tr("เรียง")}</label>
         <select
           value={sort}
           onChange={(e) => applySort(e.target.value)}
           className="hp-field hp-select"
-          aria-label="เรียงลำดับ"
+          aria-label={tr("เรียงลำดับ")}
         >
           {Object.entries(SORT_LABELS).map(([k, v]) => (
             <option key={k} value={k}>{v}</option>
@@ -129,9 +131,9 @@ export default function SearchFilters({
         value={condition}
         onChange={(e) => applyCondition(e.target.value)}
         className="hp-field hp-select"
-        aria-label="สภาพสินค้า"
+        aria-label={tr("สภาพสินค้า")}
       >
-        <option value="">สภาพทั้งหมด</option>
+        <option value="">{tr("สภาพทั้งหมด")}</option>
         {Object.entries(CONDITION_LABELS).map(([k, v]) => (
           <option key={k} value={k}>{v}</option>
         ))}
@@ -139,26 +141,26 @@ export default function SearchFilters({
 
       {/* Price range — one grouped control, like a real filter bar */}
       <div className="flex items-center h-8 rounded-md border border-[var(--hp-border)] bg-[var(--c-surface)] overflow-hidden">
-        <span className="text-[12px] text-[var(--hp-muted)] pl-2.5 pr-1.5 hidden sm:block">฿</span>
+        <span className="text-[12px] text-[var(--hp-muted)] pl-2.5 pr-1.5 hidden sm:block">{tr("฿")}</span>
         <input
           type="number"
           min={0}
-          placeholder="ต่ำสุด"
+          placeholder={tr("ต่ำสุด")}
           value={minPrice}
           onChange={(e) => setMinPrice(e.target.value)}
           onKeyDown={handlePriceKeyDown}
-          aria-label="ราคาต่ำสุด"
+          aria-label={tr("ราคาต่ำสุด")}
           className="hp-num w-[74px] h-full px-2 text-[13px] bg-transparent border-0 focus:outline-none placeholder:font-sans placeholder:text-[var(--c-muted)]"
         />
         <span className="w-px h-4 bg-[var(--hp-border)]" />
         <input
           type="number"
           min={0}
-          placeholder="สูงสุด"
+          placeholder={tr("สูงสุด")}
           value={maxPrice}
           onChange={(e) => setMaxPrice(e.target.value)}
           onKeyDown={handlePriceKeyDown}
-          aria-label="ราคาสูงสุด"
+          aria-label={tr("ราคาสูงสุด")}
           className="hp-num w-[74px] h-full px-2 text-[13px] bg-transparent border-0 focus:outline-none placeholder:font-sans placeholder:text-[var(--c-muted)]"
         />
       </div>
@@ -168,9 +170,7 @@ export default function SearchFilters({
         <button onClick={clearAll} className="hp-btn hp-btn-ghost h-8 text-[12px]">
           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-          ล้างตัวกรอง
-        </button>
+          </svg>{tr("ล้างตัวกรอง")}</button>
       )}
     </div>
   );

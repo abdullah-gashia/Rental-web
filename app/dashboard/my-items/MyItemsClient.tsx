@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { deleteItem, cancelDeletion } from "@/lib/actions/item-actions";
 import { useToastStore } from "@/lib/stores/toast-store";
@@ -99,6 +101,7 @@ function DeleteModal({
   onConfirm: () => void;
   isPending: boolean;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   return (
     <div className="fixed inset-0 z-[300] flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
@@ -108,14 +111,10 @@ function DeleteModal({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h3 className="text-lg font-bold text-[var(--c-ink)] text-center mb-2">กำหนดลบสินค้า?</h3>
-        <p className="text-sm text-[var(--c-ink-2)] text-center mb-1 px-2">
-          สินค้า <span className="font-semibold">&ldquo;{item.title}&rdquo;</span> จะถูกลบออกหลังจาก
-        </p>
-        <p className="text-sm font-bold text-[var(--c-warn)] text-center mb-4">24 ชั่วโมง</p>
-        <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-4 py-3 mb-6 text-xs text-[var(--c-warn)] text-center">
-          คุณสามารถ <span className="font-semibold">ยกเลิก</span>การลบได้ตลอดระหว่าง 24 ชั่วโมงนี้
-        </div>
+        <h3 className="text-lg font-bold text-[var(--c-ink)] text-center mb-2">{tr("กำหนดลบสินค้า?")}</h3>
+        <p className="text-sm text-[var(--c-ink-2)] text-center mb-1 px-2">{tr("สินค้า")}<span className="font-semibold">&ldquo;{item.title}&rdquo;</span>{tr("จะถูกลบออกหลังจาก")}</p>
+        <p className="text-sm font-bold text-[var(--c-warn)] text-center mb-4">{tr("24 ชั่วโมง")}</p>
+        <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-4 py-3 mb-6 text-xs text-[var(--c-warn)] text-center">{tr("คุณสามารถ")}<span className="font-semibold">ยกเลิก</span>{tr("การลบได้ตลอดระหว่าง 24 ชั่วโมงนี้")}</div>
         <div className="flex gap-3">
           <button
             onClick={onClose}
@@ -133,9 +132,7 @@ function DeleteModal({
                 <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-                กำลังดำเนินการ...
-              </>
+                </svg>{tr("กำลังดำเนินการ...")}</>
             ) : "ยืนยันการลบ"}
           </button>
         </div>
@@ -147,6 +144,7 @@ function DeleteModal({
 // ─── Main component ───────────────────────────────────
 
 export default function MyItemsClient({ items, userName, reputation }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [deleteTarget, setDeleteTarget] = useState<MyItem | null>(null);
   const [filter, setFilter]             = useState<FilterKey>("ALL");
   const [isPending, startTransition]    = useTransition();
@@ -221,26 +219,22 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
       {/* Header */}
       <header className="ui-head">
         <div>
-          <p className="ui-eyebrow mb-1.5">ที่ฉันขาย</p>
-          <h1>ประกาศของฉัน</h1>
+          <p className="ui-eyebrow mb-1.5">{tr("ที่ฉันขาย")}</p>
+          <h1>{tr("ประกาศของฉัน")}</h1>
           <p>
             {activeItems.length === 0
-              ? "ยังไม่มีประกาศ — ลงชิ้นแรกได้จากหน้าร้าน"
+              ? tr("ยังไม่มีประกาศ — ลงชิ้นแรกได้จากหน้าร้าน")
               : `${activeItems.length} ประกาศ · เผยแพร่อยู่ ${approvedCount} · รอตรวจสอบ ${pendingCount}`}
           </p>
         </div>
-        <a href="/" className="ui-btn ui-btn-primary">ลงประกาศใหม่</a>
+        <a href="/" className="ui-btn ui-btn-primary">{tr("ลงประกาศใหม่")}</a>
       </header>
 
       {/* Deletion-pending warning strip */}
       {deletingCount > 0 && (
         <div className="ui-note ui-note-warn mb-5 flex items-center justify-between gap-3 flex-wrap">
-          <span>
-            คุณมี <strong>{deletingCount} ประกาศ</strong> ที่อยู่ในช่วงรอลบ ยกเลิกได้ก่อนหมดเวลา
-          </span>
-          <button onClick={() => setFilter("DELETING")} className="ui-btn ui-btn-ghost ui-btn-sm">
-            ดูรายการ
-          </button>
+          <span>{tr("คุณมี")}<strong>{deletingCount} ประกาศ</strong>{tr("ที่อยู่ในช่วงรอลบ ยกเลิกได้ก่อนหมดเวลา")}</span>
+          <button onClick={() => setFilter("DELETING")} className="ui-btn ui-btn-ghost ui-btn-sm">{tr("ดูรายการ")}</button>
         </div>
       )}
 
@@ -272,17 +266,15 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
           </div>
           {activeItems.length === 0 ? (
             <>
-              <h3>ยังไม่มีประกาศ</h3>
-              <p>ลงประกาศชิ้นแรกจากหน้าร้าน แล้วรายการจะมาอยู่ที่นี่พร้อมสถานะการตรวจสอบ</p>
-              <a href="/" className="ui-btn ui-btn-primary mt-4">ลงประกาศใหม่</a>
+              <h3>{tr("ยังไม่มีประกาศ")}</h3>
+              <p>{tr("ลงประกาศชิ้นแรกจากหน้าร้าน แล้วรายการจะมาอยู่ที่นี่พร้อมสถานะการตรวจสอบ")}</p>
+              <a href="/" className="ui-btn ui-btn-primary mt-4">{tr("ลงประกาศใหม่")}</a>
             </>
           ) : (
             <>
               <h3>ไม่มีประกาศในหมวด &ldquo;{FILTERS.find((f) => f.key === filter)?.label}&rdquo;</h3>
-              <p>ลองเลือกหมวดอื่น หรือดูประกาศทั้งหมดของคุณ</p>
-              <button onClick={() => setFilter("ALL")} className="ui-btn ui-btn-ghost mt-4">
-                ดูทั้งหมด
-              </button>
+              <p>{tr("ลองเลือกหมวดอื่น หรือดูประกาศทั้งหมดของคุณ")}</p>
+              <button onClick={() => setFilter("ALL")} className="ui-btn ui-btn-ghost mt-4">{tr("ดูทั้งหมด")}</button>
             </>
           )}
         </div>
@@ -342,7 +334,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                   {/* Price */}
                   <p className={`text-base font-bold mt-2 ${isScheduled ? "text-[var(--c-faint)] line-through" : "text-[var(--c-accent)]"}`}>
                     ฿{item.price.toLocaleString()}
-                    {item.listingType === "RENT" && <span className="text-xs font-normal">/เดือน</span>}
+                    {item.listingType === "RENT" && <span className="text-xs font-normal">{tr("/เดือน")}</span>}
                   </p>
 
                   {/* ── Countdown banner (grace period active) ── */}
@@ -352,16 +344,14 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                         <svg className="w-4 h-4 text-[var(--c-danger)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span className="text-xs font-semibold text-[var(--c-danger)]">กำลังจะถูกลบใน</span>
+                        <span className="text-xs font-semibold text-[var(--c-danger)]">{tr("กำลังจะถูกลบใน")}</span>
                         <CountdownTimer
                           targetDate={expiry}
                           className="text-xs font-bold text-[var(--c-danger)]"
                           onExpire={() => router.refresh()}
                         />
                       </div>
-                      <p className="text-[11px] text-[var(--c-danger)] leading-relaxed">
-                        สินค้ายังปรากฏต่อผู้ซื้อพร้อมคำเตือน คุณสามารถยกเลิกได้ก่อนหมดเวลา
-                      </p>
+                      <p className="text-[11px] text-[var(--c-danger)] leading-relaxed">{tr("สินค้ายังปรากฏต่อผู้ซื้อพร้อมคำเตือน คุณสามารถยกเลิกได้ก่อนหมดเวลา")}</p>
                     </div>
                   )}
 
@@ -371,7 +361,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                       <svg className="w-4 h-4 text-[var(--c-faint)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
-                      <p className="text-xs text-[var(--c-muted)]">หมดเวลา — สินค้าถูกลบออกจากหน้าหลักแล้ว</p>
+                      <p className="text-xs text-[var(--c-muted)]">{tr("หมดเวลา — สินค้าถูกลบออกจากหน้าหลักแล้ว")}</p>
                     </div>
                   )}
 
@@ -382,7 +372,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
                       <p className="text-xs text-[var(--c-danger)]">
-                        <span className="font-semibold">เหตุผล:</span> {item.rejectReason}
+                        <span className="font-semibold">{tr("เหตุผล:")}</span> {item.rejectReason}
                       </p>
                     </div>
                   )}
@@ -393,7 +383,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                       <svg className="w-4 h-4 text-yellow-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      <p className="text-xs text-[var(--c-warn)]">รอผู้ดูแลระบบตรวจสอบ อาจใช้เวลา 1–24 ชั่วโมง</p>
+                      <p className="text-xs text-[var(--c-warn)]">{tr("รอผู้ดูแลระบบตรวจสอบ อาจใช้เวลา 1–24 ชั่วโมง")}</p>
                     </div>
                   )}
 
@@ -430,18 +420,14 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            แก้ไข
-                          </a>
+                            </svg>{tr("แก้ไข")}</a>
                           <button
                             onClick={() => setDeleteTarget(item)}
                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--c-warn-line)] text-xs font-medium text-[var(--c-warn)] hover:bg-[var(--c-warn-soft)] transition"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                            ลบ
-                          </button>
+                            </svg>{tr("ลบ")}</button>
                         </>
                       )
                     )}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useRef } from "react";
 
 export interface ReceiptData {
@@ -26,6 +28,7 @@ interface Props {
 }
 
 export default function ReceiptModal({ data, onClose }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const printRef = useRef<HTMLDivElement>(null);
 
   const shortId     = data.orderId.slice(-10).toUpperCase();
@@ -47,6 +50,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
     : null;
 
   function handlePrint() {
+  const tr = useLocaleStore((s) => s.tr);
     if (!printRef.current) return;
 
     const html = `<!DOCTYPE html>
@@ -86,48 +90,48 @@ export default function ReceiptModal({ data, onClose }: Props) {
 <body>
   <div class="header">
     <div class="logo">PSU<span>.</span>STORE</div>
-    <div class="badge">✅ ชำระเงินแล้ว (PAID via Escrow)</div>
-    <div class="title">ใบเสร็จรับเงิน</div>
+    <div class="badge">{tr("✅ ชำระเงินแล้ว (PAID via Escrow)")}</div>
+    <div class="title">{tr("ใบเสร็จรับเงิน")}</div>
     <div class="ref">หมายเลขอ้างอิง: #${shortId}</div>
   </div>
 
   <div class="section">
-    <div class="section-title">รายละเอียดธุรกรรม</div>
-    <div class="row"><span class="label">สินค้า</span><span class="value">${data.itemTitle}</span></div>
+    <div class="section-title">{tr("รายละเอียดธุรกรรม")}</div>
+    <div class="row"><span class="label">{tr("สินค้า")}</span><span class="value">${data.itemTitle}</span></div>
     <div class="row"><span class="label">ผู้ซื้อ</span><span class="value">${data.buyerName}</span></div>
     <div class="row"><span class="label">ผู้ขาย</span><span class="value">${data.sellerName}</span></div>
-    <div class="row"><span class="label">วันที่เสร็จสิ้น</span><span class="value">${completedDate}</span></div>
-    <div class="row"><span class="label">สถานะ</span><span class="value">✅ PAID via Escrow</span></div>
+    <div class="row"><span class="label">{tr("วันที่เสร็จสิ้น")}</span><span class="value">${completedDate}</span></div>
+    <div class="row"><span class="label">{tr("สถานะ")}</span><span class="value">✅ PAID via Escrow</span></div>
   </div>
 
   <div class="amount">฿${data.amount.toLocaleString("th-TH")}</div>
 
   ${methodLabel ? `
   <div class="section">
-    <div class="section-title">ข้อมูลการจัดส่ง</div>
-    <div class="row"><span class="label">วิธีจัดส่ง</span><span class="value">${methodLabel}</span></div>
-    ${data.trackingNumber ? `<div class="row"><span class="label">หมายเลขพัสดุ</span><span class="value">${data.trackingNumber}</span></div>` : ""}
+    <div class="section-title">{tr("ข้อมูลการจัดส่ง")}</div>
+    <div class="row"><span class="label">{tr("วิธีจัดส่ง")}</span><span class="value">${methodLabel}</span></div>
+    ${data.trackingNumber ? `<div class="row"><span class="label">{tr("หมายเลขพัสดุ")}</span><span class="value">${data.trackingNumber}</span></div>` : ""}
     ${data.shippingProofImage ? `<div class="proof"><img src="${data.shippingProofImage}" alt="หลักฐานจัดส่ง"/></div>` : ""}
   </div>` : ""}
 
   ${data.deliveryMethod === "MEETUP" && (data.handoverSignature || data.handoverPhotoUrl) ? `
   <div class="evidence">
-    <div class="evidence-title">🤝 หลักฐานการส่งมอบสินค้า (Proof of Delivery)</div>
+    <div class="evidence-title">{tr("🤝 หลักฐานการส่งมอบสินค้า (Proof of Delivery)")}</div>
     ${data.handoverSignature ? `
-    <div class="evidence-label">ลายมือชื่อผู้รับสินค้า</div>
+    <div class="evidence-label">{tr("ลายมือชื่อผู้รับสินค้า")}</div>
     <div class="sig-box">
-      <img src="${data.handoverSignature}" alt="ลายมือชื่อผู้รับสินค้า" />
+      <img src="${data.handoverSignature}" alt={tr("ลายมือชื่อผู้รับสินค้า")} />
     </div>` : ""}
     ${data.handoverPhotoUrl ? `
-    <div class="evidence-label">ภาพถ่ายหลักฐานการส่งมอบ</div>
+    <div class="evidence-label">{tr("ภาพถ่ายหลักฐานการส่งมอบ")}</div>
     <div class="photo-box">
-      <img src="${data.handoverPhotoUrl}" alt="ภาพถ่ายหลักฐานการส่งมอบ" />
+      <img src="${data.handoverPhotoUrl}" alt={tr("ภาพถ่ายหลักฐานการส่งมอบ")} />
     </div>
     ${data.handoverConfirmedAt ? `<div class="timestamp">บันทึกเมื่อ: ${new Date(data.handoverConfirmedAt).toLocaleString("th-TH", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}</div>` : ""}` : ""}
   </div>` : ""}
 
   <div class="footer">
-    <p>เอกสารนี้ออกโดยระบบ PSU.STORE อัตโนมัติ • ไม่ต้องมีลายเซ็น</p>
+    <p>{tr("เอกสารนี้ออกโดยระบบ PSU.STORE อัตโนมัติ • ไม่ต้องมีลายเซ็น")}</p>
     <p>Order ID: ${data.orderId}</p>
   </div>
 </body>
@@ -152,7 +156,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <h3 className="text-base font-bold text-white">ใบเสร็จรับเงิน</h3>
+            <h3 className="text-base font-bold text-white">{tr("ใบเสร็จรับเงิน")}</h3>
           </div>
           <button
             onClick={onClose}
@@ -171,21 +175,19 @@ export default function ReceiptModal({ data, onClose }: Props) {
             <p className="text-xl font-black tracking-tighter">
               PSU<span style={{ color: "var(--c-accent)" }}>.</span>STORE
             </p>
-            <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">
-              ✅ ชำระเงินแล้ว (PAID via Escrow)
-            </span>
+            <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">{tr("✅ ชำระเงินแล้ว (PAID via Escrow)")}</span>
             <p className="text-xs text-[var(--c-muted)] font-mono">#{shortId}</p>
           </div>
 
           {/* Transaction details */}
           <div className="bg-[var(--c-canvas)] rounded-xl p-4 space-y-2">
-            <p className="text-[10px] font-bold text-[var(--c-muted)] uppercase tracking-wider mb-3">รายละเอียดธุรกรรม</p>
+            <p className="text-[10px] font-bold text-[var(--c-muted)] uppercase tracking-wider mb-3">{tr("รายละเอียดธุรกรรม")}</p>
             {[
-              { label: "สินค้า",         value: data.itemTitle },
+              { label: tr("สินค้า"),         value: data.itemTitle },
               { label: "ผู้ซื้อ",         value: data.buyerName  || "ไม่ระบุ" },
               { label: "ผู้ขาย",         value: data.sellerName || "ไม่ระบุ" },
-              { label: "วันที่เสร็จสิ้น", value: completedDate },
-              { label: "สถานะ",          value: "✅ PAID via Escrow" },
+              { label: tr("วันที่เสร็จสิ้น"), value: completedDate },
+              { label: tr("สถานะ"),          value: "✅ PAID via Escrow" },
             ].map(({ label, value }) => (
               <div key={label} className="flex items-start justify-between gap-2 text-sm">
                 <span className="text-[var(--c-muted)] flex-shrink-0">{label}</span>
@@ -196,21 +198,21 @@ export default function ReceiptModal({ data, onClose }: Props) {
 
           {/* Amount */}
           <div className="text-center py-3 border-y border-[var(--c-line)]">
-            <p className="text-[10px] text-[var(--c-muted)] uppercase tracking-wider mb-1">ยอดรวม</p>
+            <p className="text-[10px] text-[var(--c-muted)] uppercase tracking-wider mb-1">{tr("ยอดรวม")}</p>
             <p className="text-4xl font-black text-[var(--c-ok)]">฿{data.amount.toLocaleString()}</p>
           </div>
 
           {/* Shipping info */}
           {methodLabel && (
             <div className="bg-[var(--c-accent-soft)] border border-blue-100 rounded-xl p-4 space-y-2">
-              <p className="text-[10px] font-bold text-[var(--c-accent)] uppercase tracking-wider mb-2">ข้อมูลการจัดส่ง</p>
+              <p className="text-[10px] font-bold text-[var(--c-accent)] uppercase tracking-wider mb-2">{tr("ข้อมูลการจัดส่ง")}</p>
               <div className="flex items-start justify-between gap-2 text-sm">
-                <span className="text-[var(--c-muted)]">วิธีจัดส่ง</span>
+                <span className="text-[var(--c-muted)]">{tr("วิธีจัดส่ง")}</span>
                 <span className="font-semibold text-[var(--c-ink)]">{methodLabel}</span>
               </div>
               {data.trackingNumber && (
                 <div className="flex items-start justify-between gap-2 text-sm">
-                  <span className="text-[var(--c-muted)]">หมายเลขพัสดุ</span>
+                  <span className="text-[var(--c-muted)]">{tr("หมายเลขพัสดุ")}</span>
                   <span className="font-mono font-bold text-[var(--c-ink)]">{data.trackingNumber}</span>
                 </div>
               )}
@@ -230,17 +232,16 @@ export default function ReceiptModal({ data, onClose }: Props) {
           {data.deliveryMethod === "MEETUP" && (data.handoverSignature || data.handoverPhotoUrl) && (
             <div className="bg-[var(--c-subtle)] rounded-xl border border-[var(--c-line)] p-4 space-y-4">
               <p className="text-[10px] font-bold text-[var(--c-muted)] uppercase tracking-wider flex items-center gap-1.5">
-                <span>🤝</span> หลักฐานการส่งมอบสินค้า
-              </p>
+                <span>🤝</span>{tr("หลักฐานการส่งมอบสินค้า")}</p>
 
               {/* Signature block */}
               {data.handoverSignature && (
                 <div className="space-y-1.5">
-                  <p className="text-xs font-semibold text-[var(--c-ink-2)]">ลายมือชื่อผู้รับสินค้า</p>
+                  <p className="text-xs font-semibold text-[var(--c-ink-2)]">{tr("ลายมือชื่อผู้รับสินค้า")}</p>
                   <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-lg p-2 flex items-center justify-center">
                     <img
                       src={data.handoverSignature}
-                      alt="ลายมือชื่อผู้รับสินค้า"
+                      alt={tr("ลายมือชื่อผู้รับสินค้า")}
                       className="h-24 w-full object-contain"
                     />
                   </div>
@@ -250,7 +251,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
               {/* Photo block */}
               {data.handoverPhotoUrl && (
                 <div className="space-y-1.5">
-                  <p className="text-xs font-semibold text-[var(--c-ink-2)]">ภาพถ่ายหลักฐานการส่งมอบ</p>
+                  <p className="text-xs font-semibold text-[var(--c-ink-2)]">{tr("ภาพถ่ายหลักฐานการส่งมอบ")}</p>
                   <a
                     href={data.handoverPhotoUrl}
                     target="_blank"
@@ -259,7 +260,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
                   >
                     <img
                       src={data.handoverPhotoUrl}
-                      alt="ภาพถ่ายหลักฐานการส่งมอบ"
+                      alt={tr("ภาพถ่ายหลักฐานการส่งมอบ")}
                       className="aspect-video h-40 w-full object-contain rounded-md border border-[var(--c-line)] hover:opacity-90 transition"
                     />
                   </a>
@@ -278,8 +279,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
           )}
 
           {/* Footer note */}
-          <p className="text-[10px] text-center text-[var(--c-muted)] leading-relaxed">
-            เอกสารนี้ออกโดยระบบ PSU.STORE อัตโนมัติ ไม่ต้องมีลายเซ็น<br />
+          <p className="text-[10px] text-center text-[var(--c-muted)] leading-relaxed">{tr("เอกสารนี้ออกโดยระบบ PSU.STORE อัตโนมัติ ไม่ต้องมีลายเซ็น")}<br />
             Order ID: <span className="font-mono">{data.orderId}</span>
           </p>
         </div>
@@ -298,9 +298,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            ดาวน์โหลด / พิมพ์
-          </button>
+            </svg>{tr("ดาวน์โหลด / พิมพ์")}</button>
         </div>
       </div>
     </div>

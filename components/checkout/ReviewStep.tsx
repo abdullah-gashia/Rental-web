@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import type { CheckoutState, CheckoutAction } from "./useCheckoutReducer";
 import { getPriceBreakdown } from "@/lib/utils/pricing";
 
@@ -18,6 +20,7 @@ export default function ReviewStep({
   itemTitle,
   sellerName,
 }: ReviewStepProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const deliveryMethod = state.deliveryMethod ?? "SHIPPING";
   const paymentMethod = state.paymentMethod ?? "ESCROW";
   const breakdown = getPriceBreakdown(itemPrice, deliveryMethod, paymentMethod);
@@ -25,7 +28,7 @@ export default function ReviewStep({
 
   return (
     <div className="fade-up space-y-4">
-      <h3 className="text-base font-bold text-[var(--c-ink)]">📋 ตรวจสอบคำสั่งซื้อ</h3>
+      <h3 className="text-base font-bold text-[var(--c-ink)]">{tr("📋 ตรวจสอบคำสั่งซื้อ")}</h3>
 
       {/* Item */}
       <div className="rounded-xl bg-[var(--c-canvas)] border border-[var(--c-line)] p-3">
@@ -40,16 +43,14 @@ export default function ReviewStep({
           <button
             onClick={() => dispatch({ type: "GO_TO_STEP", payload: 1 })}
             className="text-xs text-[var(--c-accent)] font-semibold hover:underline"
-          >
-            แก้ไข
-          </button>
+          >{tr("แก้ไข")}</button>
         </div>
 
         {deliveryMethod === "SHIPPING" && addr ? (
           <div className="text-sm text-[var(--c-ink-2)] space-y-0.5">
             <p className="flex items-center gap-1.5">
               <span>🚚</span>
-              <span className="font-semibold">จัดส่งถึงที่อยู่</span>
+              <span className="font-semibold">{tr("จัดส่งถึงที่อยู่")}</span>
             </p>
             <p>{addr.recipientName}, {addr.phone}</p>
             <p>{addr.addressLine1}</p>
@@ -61,7 +62,7 @@ export default function ReviewStep({
           <div className="text-sm text-[var(--c-ink-2)] space-y-0.5">
             <p className="flex items-center gap-1.5">
               <span>🤝</span>
-              <span className="font-semibold">นัดรับสินค้า</span>
+              <span className="font-semibold">{tr("นัดรับสินค้า")}</span>
             </p>
             <p>📍 {state.meetupLocation}</p>
             {state.meetupDateTime && (
@@ -89,15 +90,13 @@ export default function ReviewStep({
           <button
             onClick={() => dispatch({ type: "GO_TO_STEP", payload: 2 })}
             className="text-xs text-[var(--c-accent)] font-semibold hover:underline"
-          >
-            แก้ไข
-          </button>
+          >{tr("แก้ไข")}</button>
         </div>
         <p className="text-sm text-[var(--c-ink-2)]">
           {paymentMethod === "ESCROW" ? (
-            <span>💳 Escrow (กักเงินจนกว่าจะรับของ)</span>
+            <span>{tr("💳 Escrow (กักเงินจนกว่าจะรับของ)")}</span>
           ) : (
-            <span>💵 จ่ายเงินสด ({deliveryMethod === "SHIPPING" ? "เก็บเงินปลายทาง" : "จ่ายตอนนัดรับ"})</span>
+            <span>💵 จ่ายเงินสด ({deliveryMethod === "SHIPPING" ? tr("เก็บเงินปลายทาง") : tr("จ่ายตอนนัดรับ")})</span>
           )}
         </p>
       </div>
@@ -105,12 +104,12 @@ export default function ReviewStep({
       {/* Price breakdown */}
       <div className="rounded-xl border border-[var(--c-line)] p-4 space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-[var(--c-ink-2)]">ราคาสินค้า</span>
+          <span className="text-[var(--c-ink-2)]">{tr("ราคาสินค้า")}</span>
           <span>฿{breakdown.itemPrice.toLocaleString()}</span>
         </div>
         {breakdown.shippingCost > 0 && (
           <div className="flex justify-between text-sm">
-            <span className="text-[var(--c-ink-2)]">ค่าจัดส่ง</span>
+            <span className="text-[var(--c-ink-2)]">{tr("ค่าจัดส่ง")}</span>
             <span>฿{breakdown.shippingCost.toLocaleString()}</span>
           </div>
         )}
@@ -121,11 +120,11 @@ export default function ReviewStep({
           <span>
             {breakdown.platformFee > 0
               ? `฿${breakdown.platformFee.toLocaleString()}`
-              : "฿0 (ฟรี)"}
+              : tr("฿0 (ฟรี)")}
           </span>
         </div>
         <div className="flex justify-between text-base font-extrabold text-[var(--c-ink)] border-t border-[var(--c-line)] pt-2">
-          <span>รวมทั้งสิ้น</span>
+          <span>{tr("รวมทั้งสิ้น")}</span>
           <span>฿{breakdown.totalAmount.toLocaleString()}</span>
         </div>
       </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useToastStore } from "@/lib/stores/toast-store";
@@ -54,6 +56,7 @@ const STEPS = [
 // ─── Main Component ──────────────────────────────────────────────────────────
 
 export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const router    = useRouter();
   const showToast = useToastStore((s) => s.show);
   const { state, dispatch, reset } = useRentalCheckoutReducer();
@@ -82,6 +85,7 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
   const canNext = canAdvance(state, minRentalDays, maxRentalDays);
 
   function handleSubmit() {
+  const tr = useLocaleStore((s) => s.tr);
     setSubmitError(null);
     startTransition(async () => {
       const res = await createRentalOrder({
@@ -97,11 +101,11 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
       });
 
       if (res.success) {
-        showToast("ส่งคำขอเช่าแล้ว! รอเจ้าของตอบรับ");
+        showToast(tr("ส่งคำขอเช่าแล้ว! รอเจ้าของตอบรับ"));
         onClose();
         router.push(`/rental/orders/${res.orderId}`);
       } else {
-        setSubmitError(res.error ?? "เกิดข้อผิดพลาด กรุณาลองใหม่");
+        setSubmitError(res.error ?? tr("เกิดข้อผิดพลาด กรุณาลองใหม่"));
       }
     });
   }
@@ -125,7 +129,7 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-[var(--c-line-soft)] flex-shrink-0">
           <div>
-            <h2 className="text-sm font-bold text-[var(--c-ink)]">🔑 ทำรายการเช่าสินค้า</h2>
+            <h2 className="text-sm font-bold text-[var(--c-ink)]">{tr("🔑 ทำรายการเช่าสินค้า")}</h2>
             <p className="text-[11px] text-[var(--c-faint)]">ขั้นตอน {state.step}/4</p>
           </div>
           <button
@@ -180,7 +184,7 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
           {pricing.rentalDays > 0 && (
             <div className="text-right flex-shrink-0 py-3">
               <p className="text-xs font-bold text-[var(--c-accent)]">฿{pricing.totalPaid.toLocaleString()}</p>
-              <p className="text-[10px] text-[var(--c-faint)]">รวม</p>
+              <p className="text-[10px] text-[var(--c-faint)]">{tr("รวม")}</p>
             </div>
           )}
         </div>
@@ -251,9 +255,7 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
                 disabled={isPending}
                 className="flex-1 py-3 border border-[var(--c-line)] text-sm font-medium text-[var(--c-ink-2)]
                            rounded-xl hover:bg-[var(--c-line-soft)] transition disabled:opacity-50"
-              >
-                ← ย้อนกลับ
-              </button>
+              >{tr("← ย้อนกลับ")}</button>
             )}
 
             {state.step < 4 ? (
@@ -262,9 +264,7 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
                 disabled={!canNext || isPending}
                 className="flex-1 py-3 bg-[var(--c-accent)] text-white text-sm font-bold rounded-xl
                            hover:bg-[var(--c-accent-str)] transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                ถัดไป →
-              </button>
+              >{tr("ถัดไป →")}</button>
             ) : (
               <button
                 onClick={handleSubmit}
@@ -273,16 +273,14 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
                            hover:bg-[var(--c-accent-str)] transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isPending
-                  ? "กำลังส่งคำขอ..."
+                  ? tr("กำลังส่งคำขอ...")
                   : `🔑 ยืนยันการเช่า ฿${pricing.totalPaid.toLocaleString()}`}
               </button>
             )}
           </div>
 
           {state.step === 4 && (
-            <p className="text-[11px] text-[var(--c-faint)] text-center">
-              เงินจะถูกหักเมื่อเจ้าของตอบรับ · มัดจำคืนหลังคืนของสำเร็จ
-            </p>
+            <p className="text-[11px] text-[var(--c-faint)] text-center">{tr("เงินจะถูกหักเมื่อเจ้าของตอบรับ · มัดจำคืนหลังคืนของสำเร็จ")}</p>
           )}
         </div>
       </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { approveBorrow, rejectBorrow } from "@/lib/actions/borrow-orders";
@@ -15,6 +17,7 @@ export default function RequestQueueClient({
   orders: any[];
   history: History;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [open, setOpen]   = useState<string | null>(null);
@@ -39,11 +42,11 @@ export default function RequestQueueClient({
   return (
     <div className="flex flex-col gap-5">
       <header>
-        <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)]">คำขอยืม</h1>
+        <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)]">{tr("คำขอยืม")}</h1>
         <p className="text-[13px] text-[var(--bw-muted)] mt-1">
           {orders.length > 0
             ? `${orders.length} คำขอรอการตัดสินใจ · ถ้าไม่ตอบภายใน 7 วัน ระบบจะยกเลิกให้เอง`
-            : "ไม่มีคำขอค้างอยู่"}
+            : tr("ไม่มีคำขอค้างอยู่")}
         </p>
       </header>
 
@@ -57,7 +60,7 @@ export default function RequestQueueClient({
 
       {orders.length === 0 ? (
         <div className="bw-panel text-center py-16">
-          <p className="text-[14px] text-[var(--bw-muted)]">คิวว่าง ไม่มีอะไรรออยู่</p>
+          <p className="text-[14px] text-[var(--bw-muted)]">{tr("คิวว่าง ไม่มีอะไรรออยู่")}</p>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -87,7 +90,7 @@ export default function RequestQueueClient({
                     {/* Who is asking, and how they have behaved before */}
                     <div className="mt-3 pt-3 border-t border-[var(--bw-line)] flex flex-wrap gap-x-5 gap-y-1 text-[12px]">
                       <span>
-                        <span className="text-[var(--bw-muted)]">ผู้ขอ </span>
+                        <span className="text-[var(--bw-muted)]">{tr("ผู้ขอ")}</span>
                         <a href={`/user/${o.borrower.id}`} target="_blank" className="font-medium text-[var(--psu-blue)] hover:underline">
                           {o.borrower.name ?? o.borrower.email}
                         </a>
@@ -100,7 +103,7 @@ export default function RequestQueueClient({
 
                     {o.purposeNote && (
                       <div className="mt-3 rounded-lg bg-[var(--bw-ground)] border border-[var(--bw-line)] px-3.5 py-2.5">
-                        <p className="bw-label mb-1">เหตุผลที่ขอยืม</p>
+                        <p className="bw-label mb-1">{tr("เหตุผลที่ขอยืม")}</p>
                         <p className="text-[12.5px] leading-[1.9] whitespace-pre-wrap">{o.purposeNote}</p>
                       </div>
                     )}
@@ -109,34 +112,28 @@ export default function RequestQueueClient({
                       <button
                         onClick={() => { setOpen(open === o.id ? null : o.id); setMode("approve"); setWhere(o.office?.location ?? ""); }}
                         className="bw-btn bw-btn-primary !h-9"
-                      >
-                        อนุมัติ
-                      </button>
+                      >{tr("อนุมัติ")}</button>
                       <button
                         onClick={() => { setOpen(open === o.id ? null : o.id); setMode("reject"); }}
                         className="bw-btn bw-btn-ghost !h-9 !text-[var(--c-danger)] !border-[var(--c-danger-line)]"
-                      >
-                        ไม่อนุมัติ
-                      </button>
-                      <a href={`/pattara/orders/${o.id}`} className="bw-btn bw-btn-ghost !h-9">
-                        รายละเอียด
-                      </a>
+                      >{tr("ไม่อนุมัติ")}</button>
+                      <a href={`/pattara/orders/${o.id}`} className="bw-btn bw-btn-ghost !h-9">{tr("รายละเอียด")}</a>
                     </div>
 
                     {open === o.id && mode === "approve" && (
                       <div className="mt-4 pt-4 border-t border-[var(--bw-line)] flex flex-col gap-3">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
-                            <label className="bw-label block mb-1.5">นัดรับ (ไม่บังคับ)</label>
+                            <label className="bw-label block mb-1.5">{tr("นัดรับ (ไม่บังคับ)")}</label>
                             <input type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} className="bw-input" />
                           </div>
                           <div>
-                            <label className="bw-label block mb-1.5">จุดนัดรับ</label>
-                            <input value={where} onChange={(e) => setWhere(e.target.value)} className="bw-input" placeholder="สำนักงานงานภัทร" />
+                            <label className="bw-label block mb-1.5">{tr("จุดนัดรับ")}</label>
+                            <input value={where} onChange={(e) => setWhere(e.target.value)} className="bw-input" placeholder={tr("สำนักงานงานภัทร")} />
                           </div>
                         </div>
                         <div>
-                          <label className="bw-label block mb-1.5">บันทึกภายใน (ผู้ยืมไม่เห็น)</label>
+                          <label className="bw-label block mb-1.5">{tr("บันทึกภายใน (ผู้ยืมไม่เห็น)")}</label>
                           <input value={note} onChange={(e) => setNote(e.target.value)} className="bw-input" />
                         </div>
                         <button
@@ -144,7 +141,7 @@ export default function RequestQueueClient({
                           disabled={pending}
                           className="bw-btn bw-btn-primary self-start"
                         >
-                          {pending ? "กำลังบันทึก…" : "ยืนยันการอนุมัติ"}
+                          {pending ? tr("กำลังบันทึก…") : tr("ยืนยันการอนุมัติ")}
                         </button>
                       </div>
                     )}
@@ -152,16 +149,16 @@ export default function RequestQueueClient({
                     {open === o.id && mode === "reject" && (
                       <div className="mt-4 pt-4 border-t border-[var(--bw-line)] flex flex-col gap-3">
                         <div>
-                          <label className="bw-label block mb-1.5">เหตุผลที่ไม่อนุมัติ (ผู้ขอจะเห็นข้อความนี้)</label>
+                          <label className="bw-label block mb-1.5">{tr("เหตุผลที่ไม่อนุมัติ (ผู้ขอจะเห็นข้อความนี้)")}</label>
                           <input value={note} onChange={(e) => setNote(e.target.value)} className="bw-input"
-                            placeholder="เช่น อุปกรณ์ถูกจองไว้สำหรับวิชาแล็บสัปดาห์นี้" />
+                            placeholder={tr("เช่น อุปกรณ์ถูกจองไว้สำหรับวิชาแล็บสัปดาห์นี้")} />
                         </div>
                         <button
                           onClick={() => run(() => rejectBorrow(o.id, note))}
                           disabled={pending || !note.trim()}
                           className="bw-btn bw-btn-ghost !text-[var(--c-danger)] !border-[var(--c-danger-line)] self-start"
                         >
-                          {pending ? "กำลังบันทึก…" : "ยืนยันการปฏิเสธ"}
+                          {pending ? tr("กำลังบันทึก…") : tr("ยืนยันการปฏิเสธ")}
                         </button>
                       </div>
                     )}

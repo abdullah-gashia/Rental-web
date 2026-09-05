@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState } from "react";
 import { CAMPUS_MEETUP_LOCATIONS } from "@/lib/config/meetup-locations";
 import type { RentalCheckoutState } from "./useRentalCheckoutReducer";
@@ -17,6 +19,7 @@ interface Props {
 }
 
 export default function PickupStep({ state, startDate, onUpdate }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [useCustomPickup,  setUseCustomPickup]  = useState(
     !CAMPUS_MEETUP_LOCATIONS.some((l) => l.label === state.pickupLocation)
   );
@@ -26,7 +29,7 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
   const existingTime = state.pickupDateTime?.slice(11, 16) || "10:00";
   const [pickupTime, setPickupTime] = useState(existingTime);
 
-  // Formatted date label for the static "วันที่นัดรับ" row
+  // Formatted date label for the static tr("วันที่นัดรับ") row
   const formattedStartDate = startDate
     ? new Date(startDate).toLocaleDateString("th-TH", {
         year: "numeric", month: "long", day: "numeric", weekday: "long",
@@ -56,8 +59,7 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
     <div className="space-y-5">
       {/* Pickup location */}
       <div>
-        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-2">
-          📍 สถานที่นัดรับ <span className="text-[var(--c-danger)]">*</span>
+        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-2">{tr("📍 สถานที่นัดรับ")}<span className="text-[var(--c-danger)]">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2 mb-2">
           {CAMPUS_MEETUP_LOCATIONS.map((loc) => (
@@ -91,14 +93,14 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
                 : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:border-[var(--c-faint)]"
             }`}
           >
-            <p className="font-semibold">✏️ กำหนดเอง</p>
-            <p className="text-[10px] opacity-70 mt-0.5">ระบุสถานที่อื่น</p>
+            <p className="font-semibold">{tr("✏️ กำหนดเอง")}</p>
+            <p className="text-[10px] opacity-70 mt-0.5">{tr("ระบุสถานที่อื่น")}</p>
           </button>
         </div>
         {useCustomPickup && (
           <input
             type="text"
-            placeholder="ระบุสถานที่นัดรับ..."
+            placeholder={tr("ระบุสถานที่นัดรับ...")}
             value={state.pickupLocation}
             onChange={(e) => patch({
               pickupLocation: e.target.value,
@@ -112,20 +114,17 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
 
       {/* Pickup time — date is locked to rentalStartDate from Step 1 */}
       <div>
-        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">
-          🕐 เวลานัดรับ <span className="text-[var(--c-danger)]">*</span>
+        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">{tr("🕐 เวลานัดรับ")}<span className="text-[var(--c-danger)]">*</span>
         </label>
 
         {/* Static date display */}
         <div className="flex items-center gap-2 bg-[var(--c-subtle)] border border-[var(--c-line)] rounded-xl px-3 py-2.5 mb-2">
           <span className="text-sm">📅</span>
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] text-[var(--c-faint)] font-medium uppercase tracking-wide">วันที่นัดรับ</p>
+            <p className="text-[10px] text-[var(--c-faint)] font-medium uppercase tracking-wide">{tr("วันที่นัดรับ")}</p>
             <p className="text-sm font-semibold text-[var(--c-ink)] truncate">{formattedStartDate}</p>
           </div>
-          <span className="text-[10px] text-[var(--c-accent)] bg-[var(--c-accent)]/10 px-2 py-0.5 rounded-full font-semibold flex-shrink-0">
-            ล็อกจาก Step 1
-          </span>
+          <span className="text-[10px] text-[var(--c-accent)] bg-[var(--c-accent)]/10 px-2 py-0.5 rounded-full font-semibold flex-shrink-0">{tr("ล็อกจาก Step 1")}</span>
         </div>
 
         {/* Time-only picker */}
@@ -136,14 +135,12 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
           className="w-full px-3 py-2.5 border border-[var(--c-line)] rounded-xl text-sm
                      focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)]"
         />
-        <p className="text-[11px] text-[var(--c-faint)] mt-1">เลือกเวลาที่สะดวกนัดรับของในวันดังกล่าว</p>
+        <p className="text-[11px] text-[var(--c-faint)] mt-1">{tr("เลือกเวลาที่สะดวกนัดรับของในวันดังกล่าว")}</p>
       </div>
 
       {/* Return location */}
       <div>
-        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-2">
-          📦 สถานที่คืนของ
-        </label>
+        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-2">{tr("📦 สถานที่คืนของ")}</label>
         <label className="flex items-center gap-2 cursor-pointer mb-3">
           <input
             type="checkbox"
@@ -157,7 +154,7 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
             }}
             className="w-4 h-4 accent-[var(--c-accent)]"
           />
-          <span className="text-sm text-[var(--c-ink-2)]">คืนที่เดียวกับที่รับ</span>
+          <span className="text-sm text-[var(--c-ink-2)]">{tr("คืนที่เดียวกับที่รับ")}</span>
         </label>
 
         {!state.sameReturnLocation && (
@@ -190,13 +187,13 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
                     : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:border-[var(--c-faint)]"
                 }`}
               >
-                <p className="font-semibold">✏️ กำหนดเอง</p>
+                <p className="font-semibold">{tr("✏️ กำหนดเอง")}</p>
               </button>
             </div>
             {useCustomReturn && (
               <input
                 type="text"
-                placeholder="ระบุสถานที่คืนของ..."
+                placeholder={tr("ระบุสถานที่คืนของ...")}
                 value={state.returnLocation}
                 onChange={(e) => patch({ returnLocation: e.target.value })}
                 className="w-full px-3 py-2.5 border border-[var(--c-line)] rounded-xl text-sm
@@ -209,12 +206,12 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
 
       {/* Note */}
       <div>
-        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">หมายเหตุ (ไม่บังคับ)</label>
+        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">{tr("หมายเหตุ (ไม่บังคับ)")}</label>
         <textarea
           value={state.pickupNote}
           onChange={(e) => patch({ pickupNote: e.target.value })}
           rows={2}
-          placeholder='เช่น "ใส่เสื้อสีแดง" หรือ "จะโทรก่อนถึง 10 นาที"'
+          placeholder='เช่น "ใส่เสื้อสีแดง" หรือ tr("จะโทรก่อนถึง 10 นาที")'
           className="w-full px-3 py-2.5 border border-[var(--c-line)] rounded-xl text-sm resize-none
                      focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30"
         />

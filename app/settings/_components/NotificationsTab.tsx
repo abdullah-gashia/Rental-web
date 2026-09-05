@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { updatePreferences } from "../actions";
 
@@ -28,6 +30,7 @@ const DEFAULTS = {
 };
 
 export default function NotificationsTab({ preferences, showToast }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const prefs = preferences ?? DEFAULTS;
   const [state, setState] = useState(prefs);
   const [pending, startTransition] = useTransition();
@@ -51,31 +54,29 @@ export default function NotificationsTab({ preferences, showToast }: Props) {
 
       {/* In-app notifications */}
       <div>
-        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">
-          การแจ้งเตือนในแอป
-        </h3>
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">{tr("การแจ้งเตือนในแอป")}</h3>
         <div className="space-y-0.5">
           <ToggleRow
-            label="คำสั่งซื้อและการชำระเงิน"
-            description="แจ้งเตือนเมื่อมีการซื้อ ขาย หรือชำระเงิน"
+            label={tr("คำสั่งซื้อและการชำระเงิน")}
+            description={tr("แจ้งเตือนเมื่อมีการซื้อ ขาย หรือชำระเงิน")}
             checked={state.notifyOrders}
             onChange={() => toggle("notifyOrders")}
           />
           <ToggleRow
-            label="ข้อความจากผู้ซื้อ/ผู้ขาย"
-            description="แจ้งเตือนเมื่อได้รับข้อความใหม่"
+            label={tr("ข้อความจากผู้ซื้อ/ผู้ขาย")}
+            description={tr("แจ้งเตือนเมื่อได้รับข้อความใหม่")}
             checked={state.notifyMessages}
             onChange={() => toggle("notifyMessages")}
           />
           <ToggleRow
-            label="การอัปเดตสินค้า (ลดราคา ฯลฯ)"
-            description="แจ้งเตือนเมื่อสินค้าที่สนใจมีการเปลี่ยนแปลง"
+            label={tr("การอัปเดตสินค้า (ลดราคา ฯลฯ)")}
+            description={tr("แจ้งเตือนเมื่อสินค้าที่สนใจมีการเปลี่ยนแปลง")}
             checked={state.notifyItemUpdates}
             onChange={() => toggle("notifyItemUpdates")}
           />
           <ToggleRow
-            label="ข่าวสารและโปรโมชั่น"
-            description="รับข่าวสาร กิจกรรม และส่วนลดพิเศษ"
+            label={tr("ข่าวสารและโปรโมชั่น")}
+            description={tr("รับข่าวสาร กิจกรรม และส่วนลดพิเศษ")}
             checked={state.notifyPromotions}
             onChange={() => toggle("notifyPromotions")}
           />
@@ -84,25 +85,23 @@ export default function NotificationsTab({ preferences, showToast }: Props) {
 
       {/* Email notifications */}
       <div className="border-t border-[var(--c-line)] pt-5">
-        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">
-          การแจ้งเตือนทางอีเมล
-        </h3>
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">{tr("การแจ้งเตือนทางอีเมล")}</h3>
         <div className="space-y-0.5">
           <ToggleRow
-            label="ส่งการแจ้งเตือนทั้งหมดเข้าอีเมล"
-            description="ทุกครั้งที่มีแจ้งเตือนในแอป จะส่งสำเนาไปที่อีเมลของคุณด้วย"
+            label={tr("ส่งการแจ้งเตือนทั้งหมดเข้าอีเมล")}
+            description={tr("ทุกครั้งที่มีแจ้งเตือนในแอป จะส่งสำเนาไปที่อีเมลของคุณด้วย")}
             checked={state.emailNotifications}
             onChange={() => toggle("emailNotifications")}
           />
           <ToggleRow
-            label="สรุปรายสัปดาห์"
-            description="ส่งสรุปยอดขาย สินค้าใหม่ และกิจกรรมทุกสัปดาห์"
+            label={tr("สรุปรายสัปดาห์")}
+            description={tr("ส่งสรุปยอดขาย สินค้าใหม่ และกิจกรรมทุกสัปดาห์")}
             checked={state.emailWeeklySummary}
             onChange={() => toggle("emailWeeklySummary")}
           />
           <ToggleRow
-            label="สินค้าที่คุณอาจสนใจ"
-            description="แนะนำสินค้าจากพฤติกรรมการใช้งานของคุณ"
+            label={tr("สินค้าที่คุณอาจสนใจ")}
+            description={tr("แนะนำสินค้าจากพฤติกรรมการใช้งานของคุณ")}
             checked={state.emailRecommendations}
             onChange={() => toggle("emailRecommendations")}
           />

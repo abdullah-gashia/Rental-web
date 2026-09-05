@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import Link from "next/link";
 import Image from "next/image";
 import type { VerificationListItem } from "../actions";
@@ -16,11 +18,12 @@ interface Props {
 }
 
 export default function VerificationTable({ requests, filter }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   if (requests.length === 0) {
     return (
       <div className="text-center py-16 text-[var(--c-muted)]">
         <p className="text-4xl mb-3">📭</p>
-        <p className="font-medium">ไม่มีคำขอ{filter === "PENDING" ? "ที่รอตรวจสอบ" : ""}</p>
+        <p className="font-medium">ไม่มีคำขอ{filter === "PENDING" ? tr("ที่รอตรวจสอบ") : ""}</p>
       </div>
     );
   }
@@ -31,10 +34,10 @@ export default function VerificationTable({ requests, filter }: Props) {
         <thead>
           <tr className="border-b border-[var(--c-line)] text-left text-[var(--c-muted)]">
             <th className="pb-3 font-medium pr-4">ผู้ใช้</th>
-            <th className="pb-3 font-medium pr-4">รหัส PSU</th>
-            <th className="pb-3 font-medium pr-4">ประเภท</th>
-            <th className="pb-3 font-medium pr-4">ส่งเมื่อ</th>
-            <th className="pb-3 font-medium pr-4">สถานะ</th>
+            <th className="pb-3 font-medium pr-4">{tr("รหัส PSU")}</th>
+            <th className="pb-3 font-medium pr-4">{tr("ประเภท")}</th>
+            <th className="pb-3 font-medium pr-4">{tr("ส่งเมื่อ")}</th>
+            <th className="pb-3 font-medium pr-4">{tr("สถานะ")}</th>
             <th className="pb-3 font-medium"></th>
           </tr>
         </thead>
@@ -80,9 +83,7 @@ export default function VerificationTable({ requests, filter }: Props) {
                   <Link
                     href={`/admin/verifications/${r.id}`}
                     className="px-3 py-1.5 bg-[var(--c-ink)] text-white text-xs rounded-lg hover:bg-[var(--c-ink-1)] transition"
-                  >
-                    ตรวจสอบ →
-                  </Link>
+                  >{tr("ตรวจสอบ →")}</Link>
                 </td>
               </tr>
             );

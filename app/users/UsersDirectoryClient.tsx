@@ -27,6 +27,7 @@ function trustTone(score: number) {
 }
 
 export default function UsersDirectoryClient({ users }: { users: DirectoryUser[] }) {
+  const tr = useLocaleStore((s) => s.tr);
   const router = useRouter();
   const locale = useLocaleStore((s) => s.locale);
   const th = locale !== "en";
@@ -57,7 +58,7 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
       <Navbar
         searchQuery={query}
         onSearchChange={setQuery}
-        searchPlaceholder={th ? "ค้นหาผู้ใช้งาน…" : "Search people…"}
+        searchPlaceholder={th ? tr("ค้นหาผู้ใช้งาน…") : "Search people…"}
         hideCategories
         activeCat="users"
         onCatChange={goToCategory}
@@ -69,11 +70,11 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
       {/* Page header */}
       <header className="mb-6">
         <h1 className="text-[24px] sm:text-[28px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] leading-tight">
-          {th ? "ผู้ใช้งานในระบบ" : "People on PSU Store"}
+          {th ? tr("ผู้ใช้งานในระบบ") : "People on PSU Store"}
         </h1>
         <p className="text-[14px] text-[var(--hp-muted)] mt-1.5">
           {th
-            ? "ดูคะแนนความน่าเชื่อถือและรีวิวของผู้ขายก่อนตัดสินใจซื้อ — และหาหน่วยงานที่ให้ยืมอุปกรณ์ฟรี"
+            ? tr("ดูคะแนนความน่าเชื่อถือและรีวิวของผู้ขายก่อนตัดสินใจซื้อ — และหาหน่วยงานที่ให้ยืมอุปกรณ์ฟรี")
             : "Check a seller's trust score and reviews, and find offices that lend equipment for free."}
         </p>
       </header>
@@ -82,7 +83,7 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
       <div className="flex flex-wrap gap-2 mb-4">
         {([
           { k: "all",     label: th ? "ทั้งหมด"    : "Everyone", n: users.length },
-          { k: "office",  label: th ? "หน่วยงาน"   : "Offices",  n: officeCount  },
+          { k: "office",  label: th ? tr("หน่วยงาน")   : "Offices",  n: officeCount  },
           { k: "student", label: th ? "นักศึกษา"   : "Students", n: studentCount },
         ] as const).map((t) => (
           <button
@@ -110,7 +111,7 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
       {filtered.length === 0 ? (
         <div className="hp-panel text-center py-16">
           <p className="text-[14px] text-[var(--hp-muted)]">
-            {th ? "ไม่พบผู้ใช้ที่ตรงกับคำค้นหา" : "No one matches that search."}
+            {th ? tr("ไม่พบผู้ใช้ที่ตรงกับคำค้นหา") : "No one matches that search."}
           </p>
         </div>
       ) : (
@@ -140,13 +141,13 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
 
                     <div className="min-w-0 flex-1">
                       <span className="text-[10px] font-bold tracking-[0.09em] uppercase text-[var(--psu-blue)]">
-                        {th ? "หน่วยงาน" : "Office"}
+                        {th ? tr("หน่วยงาน") : "Office"}
                       </span>
                       <p className="text-[14px] font-semibold text-[var(--hp-ink)] truncate group-hover:text-[var(--psu-indigo)]">
                         {u.name ?? (th ? "งานภัทร" : "Office")}
                       </p>
                       <p className="text-[11.5px] text-[var(--hp-muted)] mt-0.5 truncate">
-                        {u.officeLocation ?? (th ? "ให้ยืมอุปกรณ์ฟรีสำหรับนักศึกษา" : "Free equipment lending")}
+                        {u.officeLocation ?? (th ? tr("ให้ยืมอุปกรณ์ฟรีสำหรับนักศึกษา") : "Free equipment lending")}
                       </p>
                       <div className="flex items-center gap-2 mt-2 flex-wrap">
                         <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded-md border bg-[var(--c-accent-soft)] text-[var(--c-accent-str)] border-[#cfe0ff]">
@@ -183,7 +184,7 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
                         {u.name ?? (th ? "ผู้ใช้" : "User")}
                       </p>
                       {u.verified && (
-                        <svg className="w-3.5 h-3.5 flex-shrink-0 text-[var(--psu-blue)]" fill="currentColor" viewBox="0 0 20 20" aria-label="ยืนยันตัวตนแล้ว">
+                        <svg className="w-3.5 h-3.5 flex-shrink-0 text-[var(--psu-blue)]" fill="currentColor" viewBox="0 0 20 20" aria-label={tr("ยืนยันตัวตนแล้ว")}>
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
                       )}
@@ -201,7 +202,7 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
                         </>
                       ) : (
                         <span className="text-[11.5px] text-[var(--hp-muted)]">
-                          {th ? "ยังไม่มีรีวิว" : "No reviews yet"}
+                          {th ? tr("ยังไม่มีรีวิว") : "No reviews yet"}
                         </span>
                       )}
                     </div>

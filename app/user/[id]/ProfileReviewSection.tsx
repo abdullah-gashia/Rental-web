@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ReviewFormClient from "./ReviewFormClient";
@@ -33,6 +35,7 @@ export default function ProfileReviewSection({
   sellerId,
   sellerName,
 }: ProfileReviewSectionProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const router = useRouter();
   const [formVisible, setFormVisible] = useState(false);
   const [submitted,   setSubmitted]   = useState(false);
@@ -58,39 +61,31 @@ export default function ProfileReviewSection({
           ) : (
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold text-[var(--c-ink)]">มีประสบการณ์กับผู้ขายคนนี้?</p>
-                <p className="text-xs text-[var(--c-muted)] mt-0.5">
-                  แชร์รีวิวของคุณเพื่อช่วยให้ชุมชนปลอดภัยขึ้น
-                </p>
+                <p className="text-sm font-semibold text-[var(--c-ink)]">{tr("มีประสบการณ์กับผู้ขายคนนี้?")}</p>
+                <p className="text-xs text-[var(--c-muted)] mt-0.5">{tr("แชร์รีวิวของคุณเพื่อช่วยให้ชุมชนปลอดภัยขึ้น")}</p>
               </div>
               <button
                 onClick={() => setFormVisible(true)}
                 className="flex-shrink-0 bg-[var(--c-accent)] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-[var(--c-accent-str)] transition"
-              >
-                เขียนรีวิว
-              </button>
+              >{tr("เขียนรีวิว")}</button>
             </div>
           )}
         </div>
       ) : (
-        <div className="bg-[var(--c-ok-soft)] border border-[var(--c-ok-line)] rounded-2xl px-5 py-4 text-sm font-semibold text-[var(--c-ok)]">
-          ✅ ส่งรีวิวเรียบร้อยแล้ว ขอบคุณที่ช่วยสร้างชุมชนที่ดี!
-        </div>
+        <div className="bg-[var(--c-ok-soft)] border border-[var(--c-ok-line)] rounded-2xl px-5 py-4 text-sm font-semibold text-[var(--c-ok)]">{tr("✅ ส่งรีวิวเรียบร้อยแล้ว ขอบคุณที่ช่วยสร้างชุมชนที่ดี!")}</div>
       )}
 
       {/* ── Reviews List ───────────────────────────────────────────────── */}
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] overflow-hidden">
         <div className="px-6 py-4 border-b border-[var(--c-line)]">
-          <h2 className="text-sm font-bold text-[var(--c-ink)]">
-            รีวิว
-            <span className="ml-2 text-[var(--c-muted)] font-normal">({reviews.length})</span>
+          <h2 className="text-sm font-bold text-[var(--c-ink)]">{tr("รีวิว")}<span className="ml-2 text-[var(--c-muted)] font-normal">({reviews.length})</span>
           </h2>
         </div>
 
         {reviews.length === 0 ? (
           <div className="px-6 py-12 text-center text-[var(--c-muted)]">
             <p className="text-3xl mb-2">💬</p>
-            <p className="text-sm">ยังไม่มีรีวิว</p>
+            <p className="text-sm">{tr("ยังไม่มีรีวิว")}</p>
           </div>
         ) : (
           <ul className="divide-y divide-[var(--c-line-soft)]">
@@ -110,7 +105,7 @@ export default function ProfileReviewSection({
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-1">
                       <span className="text-sm font-semibold text-[var(--c-ink)]">
-                        {review.reviewer.name ?? "ผู้ใช้ไม่ระบุชื่อ"}
+                        {review.reviewer.name ?? tr("ผู้ใช้ไม่ระบุชื่อ")}
                       </span>
                       <Stars rating={review.rating} />
                       <span className="text-[10px] text-[var(--c-faint)] ml-auto">

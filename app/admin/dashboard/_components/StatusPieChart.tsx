@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 interface StatusPieChartProps {
@@ -61,6 +63,7 @@ function legendFormatter(value: string) {
 }
 
 export default function StatusPieChart({ data }: StatusPieChartProps) {
+  const tr = useLocaleStore((s) => s.tr);
   // Filter out zero-count statuses to keep the chart clean
   const filtered = data.filter((d) => d.count > 0);
   const total    = filtered.reduce((s, d) => s + d.count, 0);
@@ -68,7 +71,7 @@ export default function StatusPieChart({ data }: StatusPieChartProps) {
   if (filtered.length === 0) {
     return (
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 shadow-sm flex flex-col items-center justify-center min-h-[280px]">
-        <p className="text-sm text-[var(--c-muted)]">ยังไม่มีข้อมูลสินค้า</p>
+        <p className="text-sm text-[var(--c-muted)]">{tr("ยังไม่มีข้อมูลสินค้า")}</p>
       </div>
     );
   }
@@ -76,7 +79,7 @@ export default function StatusPieChart({ data }: StatusPieChartProps) {
   return (
     <div
       className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 shadow-sm"
-      aria-label="กราฟสัดส่วนสถานะสินค้า"
+      aria-label={tr("กราฟสัดส่วนสถานะสินค้า")}
     >
       <h3 className="text-sm font-semibold text-[var(--c-ink-1)] mb-4">
         สัดส่วนสถานะสินค้า{" "}

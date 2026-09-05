@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useToastStore } from "@/lib/stores/toast-store";
@@ -54,6 +56,7 @@ export default function CheckoutWizard({
   onClose,
   item,
 }: CheckoutWizardProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const router    = useRouter();
   const showToast = useToastStore((s) => s.show);
   const { state, dispatch, reset } = useCheckoutReducer();
@@ -112,6 +115,7 @@ export default function CheckoutWizard({
   const canAdvance = canAdvanceFromStep(state, state.currentStep, hasSufficientBalance);
 
   async function handleSubmit() {
+  const tr = useLocaleStore((s) => s.tr);
     if (!state.deliveryMethod || !state.paymentMethod) return;
     dispatch({ type: "SUBMIT_START" });
 
@@ -143,7 +147,7 @@ export default function CheckoutWizard({
 
     if (result.success) {
       dispatch({ type: "SUBMIT_SUCCESS" });
-      showToast("✅ สร้างคำสั่งซื้อเรียบร้อยแล้ว!");
+      showToast(tr("✅ สร้างคำสั่งซื้อเรียบร้อยแล้ว!"));
       reset();
       onClose();
       router.push("/dashboard/orders");
@@ -193,7 +197,7 @@ export default function CheckoutWizard({
 
           {/* Header */}
           <div className="px-6 pt-5 pb-2 pr-14">
-            <h2 className="text-lg font-extrabold text-[var(--c-ink)] tracking-tight">สั่งซื้อสินค้า</h2>
+            <h2 className="text-lg font-extrabold text-[var(--c-ink)] tracking-tight">{tr("สั่งซื้อสินค้า")}</h2>
             <p className="text-xs text-[var(--c-muted)] mt-0.5">ขั้นตอน {state.currentStep}/3</p>
           </div>
 
@@ -256,9 +260,7 @@ export default function CheckoutWizard({
                   onClick={() => dispatch({ type: "PREV_STEP" })}
                   disabled={state.isSubmitting}
                   className="flex-1 py-3 rounded-2xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-40"
-                >
-                  ← ย้อนกลับ
-                </button>
+                >{tr("← ย้อนกลับ")}</button>
               )}
 
               {state.currentStep < 3 ? (
@@ -266,9 +268,7 @@ export default function CheckoutWizard({
                   onClick={() => dispatch({ type: "NEXT_STEP" })}
                   disabled={!canAdvance}
                   className="flex-1 py-3 rounded-2xl bg-[var(--c-ink)] text-white text-sm font-bold hover:bg-[var(--c-ink-1)] transition disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  ถัดไป →
-                </button>
+                >{tr("ถัดไป →")}</button>
               ) : (
                 <button
                   onClick={handleSubmit}

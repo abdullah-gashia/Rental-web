@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { updateItem } from "@/lib/actions/moderation-actions";
@@ -91,6 +93,7 @@ function Thumb({
   error?: string | null;
   onRemove: () => void;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   return (
     <div className="relative group w-[88px] h-[88px] rounded-xl overflow-hidden border border-[var(--c-line)] bg-[var(--c-line-soft)] flex-shrink-0">
       <img src={src} alt="" className="w-full h-full object-contain bg-[var(--c-subtle-2)]" />
@@ -102,7 +105,7 @@ function Thumb({
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
-          <span className="text-[9px] text-white font-semibold">กำลังอัปโหลด</span>
+          <span className="text-[9px] text-white font-semibold">{tr("กำลังอัปโหลด")}</span>
         </div>
       )}
 
@@ -112,15 +115,13 @@ function Thumb({
           <svg className="w-5 h-5 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <span className="text-[9px] text-red-200 text-center leading-tight">อัปโหลดล้มเหลว</span>
+          <span className="text-[9px] text-red-200 text-center leading-tight">{tr("อัปโหลดล้มเหลว")}</span>
         </div>
       )}
 
       {/* Main badge */}
       {isMain && !uploading && !error && (
-        <span className="absolute bottom-1 left-1 bg-[var(--c-accent)] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md leading-none">
-          หลัก
-        </span>
+        <span className="absolute bottom-1 left-1 bg-[var(--c-accent)] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md leading-none">{tr("หลัก")}</span>
       )}
 
       {/* Remove button */}
@@ -141,6 +142,7 @@ function Thumb({
 // ─── Main component ───────────────────────────────────
 
 export default function EditItemClient({ item }: { item: EditableItem }) {
+  const tr = useLocaleStore((s) => s.tr);
   // Form fields
   const [title, setTitle]             = useState(item.title);
   const [price, setPrice]             = useState(String(item.price));
@@ -244,18 +246,19 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
 
   // ── Form submit ──────────────────────────────────────
   function handleSubmit(e: React.FormEvent) {
+  const tr = useLocaleStore((s) => s.tr);
     e.preventDefault();
     setFormError("");
 
     // Validate text fields
     const parsedPrice = parseFloat(price);
-    if (!title.trim()) { setFormError("กรุณากรอกชื่อสินค้า"); return; }
-    if (isNaN(parsedPrice) || parsedPrice <= 0) { setFormError("ราคาต้องมากกว่า 0"); return; }
+    if (!title.trim()) { setFormError(tr("กรุณากรอกชื่อสินค้า")); return; }
+    if (isNaN(parsedPrice) || parsedPrice <= 0) { setFormError(tr("ราคาต้องมากกว่า 0")); return; }
 
     // Block submit while any upload is in-flight
     const uploading = pendingImages.some((p) => p.uploading);
     if (uploading) {
-      setFormError("กรุณารอให้รูปภาพอัปโหลดเสร็จก่อน");
+      setFormError(tr("กรุณารอให้รูปภาพอัปโหลดเสร็จก่อน"));
       return;
     }
 
@@ -295,7 +298,7 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
       if (result.error) {
         setFormError(result.error);
       } else {
-        showToast("✅ บันทึกสำเร็จ! สินค้าจะถูกส่งรอการอนุมัติอีกครั้ง");
+        showToast(tr("✅ บันทึกสำเร็จ! สินค้าจะถูกส่งรอการอนุมัติอีกครั้ง"));
         router.push("/dashboard/my-items");
         router.refresh();
       }
@@ -311,11 +314,9 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        กลับไปสินค้าของฉัน
-      </a>
+        </svg>{tr("กลับไปสินค้าของฉัน")}</a>
 
-      <h1 className="text-xl font-bold text-[var(--c-ink)] mb-6">แก้ไขสินค้า</h1>
+      <h1 className="text-xl font-bold text-[var(--c-ink)] mb-6">{tr("แก้ไขสินค้า")}</h1>
 
       {/* Item header card */}
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-4 mb-6 flex gap-4 items-center">
@@ -344,7 +345,7 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
           <div>
-            <p className="text-sm font-semibold text-[var(--c-danger)] mb-0.5">เหตุผลที่ถูกปฏิเสธ</p>
+            <p className="text-sm font-semibold text-[var(--c-danger)] mb-0.5">{tr("เหตุผลที่ถูกปฏิเสธ")}</p>
             <p className="text-sm text-[var(--c-danger)]">{item.rejectReason}</p>
           </div>
         </div>
@@ -355,9 +356,7 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
         <svg className="w-5 h-5 text-[var(--c-accent)] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <p className="text-sm text-[var(--c-accent-str)]">
-          หลังบันทึก สินค้าจะถูกส่งรอการอนุมัติใหม่ และจะซ่อนจากหน้าหลักชั่วคราว
-        </p>
+        <p className="text-sm text-[var(--c-accent-str)]">{tr("หลังบันทึก สินค้าจะถูกส่งรอการอนุมัติใหม่ และจะซ่อนจากหน้าหลักชั่วคราว")}</p>
       </div>
 
       {/* ── Edit Form ────────────────────────────────── */}
@@ -366,7 +365,7 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
         {/* ── Image Section ──────────────────────────── */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <label className="text-sm font-medium text-[var(--c-ink-1)]">รูปภาพสินค้า</label>
+            <label className="text-sm font-medium text-[var(--c-ink-1)]">{tr("รูปภาพสินค้า")}</label>
             <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
               totalImages >= MAX_IMAGES
                 ? "bg-[var(--c-danger-soft)] text-[var(--c-danger)]"
@@ -410,7 +409,7 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
                 <svg className="w-6 h-6 text-[var(--c-faint-2)] group-hover:text-[var(--c-accent)] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
                 </svg>
-                <span className="text-[10px] text-[var(--c-faint)] group-hover:text-[var(--c-accent)] transition font-medium">เพิ่มรูป</span>
+                <span className="text-[10px] text-[var(--c-faint)] group-hover:text-[var(--c-accent)] transition font-medium">{tr("เพิ่มรูป")}</span>
               </button>
             )}
           </div>
@@ -435,21 +434,21 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
 
         {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-[var(--c-ink-1)] mb-1.5">ชื่อสินค้า</label>
+          <label className="block text-sm font-medium text-[var(--c-ink-1)] mb-1.5">{tr("ชื่อสินค้า")}</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             maxLength={100}
             className="w-full border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm text-[var(--c-ink)] focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
-            placeholder="ชื่อสินค้า"
+            placeholder={tr("ชื่อสินค้า")}
           />
         </div>
 
         {/* Price */}
         <div>
           <label className="block text-sm font-medium text-[var(--c-ink-1)] mb-1.5">
-            ราคา (฿){item.listingType === "RENT" && <span className="text-[var(--c-faint)] font-normal"> / เดือน</span>}
+            ราคา (฿){item.listingType === "RENT" && <span className="text-[var(--c-faint)] font-normal">{tr("/ เดือน")}</span>}
           </label>
           <input
             type="number"
@@ -464,54 +463,54 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-[var(--c-ink-1)] mb-1.5">รายละเอียด</label>
+          <label className="block text-sm font-medium text-[var(--c-ink-1)] mb-1.5">{tr("รายละเอียด")}</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={5}
             className="w-full border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm text-[var(--c-ink)] focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition resize-none"
-            placeholder="อธิบายสินค้าของคุณ..."
+            placeholder={tr("อธิบายสินค้าของคุณ...")}
           />
         </div>
 
         {/* ── Rental fields (only for RENT items) ── */}
         {item.listingType === "RENT" && (
           <div className="border border-[var(--c-line)] rounded-xl p-4 space-y-4 bg-[var(--c-subtle)]">
-            <p className="text-sm font-bold text-[var(--c-ink)]">🔑 ตั้งค่าการเช่า</p>
+            <p className="text-sm font-bold text-[var(--c-ink)]">{tr("🔑 ตั้งค่าการเช่า")}</p>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">ค่าเช่า/วัน (฿) *</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">{tr("ค่าเช่า/วัน (฿) *")}</label>
                 <input type="number" min={0} value={dailyRate}
                   onChange={(e) => setDailyRate(e.target.value)}
                   className="w-full border border-[var(--c-line)] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">เงินมัดจำ (฿) *</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">{tr("เงินมัดจำ (฿) *")}</label>
                 <input type="number" min={0} value={securityDeposit}
                   onChange={(e) => setSecurityDeposit(e.target.value)}
                   className="w-full border border-[var(--c-line)] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">เช่าขั้นต่ำ (วัน)</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">{tr("เช่าขั้นต่ำ (วัน)")}</label>
                 <input type="number" min={1} value={minRentalDays}
                   onChange={(e) => setMinRentalDays(e.target.value)}
                   className="w-full border border-[var(--c-line)] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">เช่าสูงสุด (วัน)</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">{tr("เช่าสูงสุด (วัน)")}</label>
                 <input type="number" min={1} value={maxRentalDays}
                   onChange={(e) => setMaxRentalDays(e.target.value)}
                   className="w-full border border-[var(--c-line)] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">ค่าปรับล่าช้า/วัน (฿)</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">{tr("ค่าปรับล่าช้า/วัน (฿)")}</label>
                 <input type="number" min={0} value={lateFeePerDay}
                   onChange={(e) => setLateFeePerDay(e.target.value)}
                   className="w-full border border-[var(--c-line)] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">ต่ออายุได้สูงสุด (ครั้ง)</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">{tr("ต่ออายุได้สูงสุด (ครั้ง)")}</label>
                 <input type="number" min={0} value={maxRenewals}
                   onChange={(e) => setMaxRenewals(e.target.value)}
                   className="w-full border border-[var(--c-line)] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30" />
@@ -521,19 +520,19 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" checked={isRenewable} onChange={(e) => setIsRenewable(e.target.checked)}
                 className="w-4 h-4 accent-[var(--c-accent)]" />
-              <span className="text-sm text-[var(--c-ink-2)]">อนุญาตให้ต่ออายุการเช่า</span>
+              <span className="text-sm text-[var(--c-ink-2)]">{tr("อนุญาตให้ต่ออายุการเช่า")}</span>
             </label>
 
             <div>
-              <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">เงื่อนไขเพิ่มเติม</label>
+              <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">{tr("เงื่อนไขเพิ่มเติม")}</label>
               <textarea rows={2} value={rentalTerms} onChange={(e) => setRentalTerms(e.target.value)}
-                placeholder="เช่น ห้ามนำไปใช้กลางแจ้ง..."
+                placeholder={tr("เช่น ห้ามนำไปใช้กลางแจ้ง...")}
                 className="w-full border border-[var(--c-line)] rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">คำแนะนำการใช้งาน</label>
+              <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">{tr("คำแนะนำการใช้งาน")}</label>
               <textarea rows={2} value={rentalInstructions} onChange={(e) => setRentalInstructions(e.target.value)}
-                placeholder="เช่น ชาร์จด้วย USB-C เท่านั้น..."
+                placeholder={tr("เช่น ชาร์จด้วย USB-C เท่านั้น...")}
                 className="w-full border border-[var(--c-line)] rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30" />
             </div>
           </div>
@@ -567,18 +566,14 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
                 <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-                กำลังบันทึก...
-              </>
+                </svg>{tr("กำลังบันทึก...")}</>
             ) : pendingImages.some((p) => p.uploading) ? (
               <>
                 <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-                กำลังอัปโหลดรูป...
-              </>
-            ) : "บันทึกและส่งอนุมัติ"}
+                </svg>{tr("กำลังอัปโหลดรูป...")}</>
+            ) : tr("บันทึกและส่งอนุมัติ")}
           </button>
         </div>
       </form>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useRef, useTransition } from "react";
 import { createPortal } from "react-dom";
 import type { UserRow }             from "../../_lib/types";
@@ -14,6 +16,7 @@ interface Props {
 }
 
 export default function UsersTable({ rows }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [pending, startTransition] = useTransition();
 
   // ── Dialog state ────────────────────────────────────────────────────────────
@@ -49,7 +52,7 @@ export default function UsersTable({ rows }: Props) {
 
   if (rows.length === 0) {
     return (
-      <div className="py-20 text-center text-[var(--c-faint)] text-sm">ไม่พบผู้ใช้งาน</div>
+      <div className="py-20 text-center text-[var(--c-faint)] text-sm">{tr("ไม่พบผู้ใช้งาน")}</div>
     );
   }
 
@@ -70,9 +73,9 @@ export default function UsersTable({ rows }: Props) {
       <ConfirmDialog
         open={!!dialog}
         title={
-          dialog?.kind === "ban"   ? "แบนผู้ใช้นี้?" :
-          dialog?.kind === "unban" ? "ปลดแบนผู้ใช้นี้?" :
-          "เปลี่ยนบทบาท?"
+          dialog?.kind === "ban"   ? tr("แบนผู้ใช้นี้?") :
+          dialog?.kind === "unban" ? tr("ปลดแบนผู้ใช้นี้?") :
+          tr("เปลี่ยนบทบาท?")
         }
         description={
           dialog?.kind === "ban"
@@ -81,10 +84,10 @@ export default function UsersTable({ rows }: Props) {
             ? `${dialog?.label} จะสามารถเข้าสู่ระบบได้อีกครั้ง`
             : `เปลี่ยนบทบาทของ ${dialog?.label} เป็น ${
                 dialog?.newRole === "ADMIN"   ? "แอดมิน"
-              : dialog?.newRole === "PATTARA" ? "บัญชีหน่วยงานงานภัทร — จะซื้อ ขาย หรือเช่าไม่ได้อีก"
+              : dialog?.newRole === "PATTARA" ? tr("บัญชีหน่วยงานงานภัทร — จะซื้อ ขาย หรือเช่าไม่ได้อีก")
               : "นักศึกษา"}`
         }
-        confirmLabel={dialog?.kind === "ban" ? "แบน" : "ยืนยัน"}
+        confirmLabel={dialog?.kind === "ban" ? tr("แบน") : tr("ยืนยัน")}
         danger={dialog?.kind === "ban"}
         loading={pending}
         onConfirm={handleConfirm}
@@ -106,15 +109,15 @@ export default function UsersTable({ rows }: Props) {
           <thead>
             <tr className="border-b border-[var(--c-line)] bg-[var(--c-subtle)]">
               <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)] w-[260px]">ผู้ใช้</th>
-              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">บทบาท</th>
-              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">สถานะ</th>
-              <th className="text-right px-4 py-3 font-semibold text-[var(--c-ink-2)]">คะแนน</th>
-              <th className="text-left  px-4 py-3 font-semibold text-[var(--c-ink-2)]">ดาว</th>
-              <th className="text-center px-4 py-3 font-semibold text-[var(--c-ink-2)]">รีพอร์ต</th>
-              <th className="text-right px-4 py-3 font-semibold text-[var(--c-ink-2)]">สินค้า</th>
-              <th className="text-right px-4 py-3 font-semibold text-[var(--c-ink-2)]">คำสั่งซื้อ</th>
-              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">สมัครเมื่อ</th>
-              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">การจัดการ</th>
+              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("บทบาท")}</th>
+              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("สถานะ")}</th>
+              <th className="text-right px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("คะแนน")}</th>
+              <th className="text-left  px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("ดาว")}</th>
+              <th className="text-center px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("รีพอร์ต")}</th>
+              <th className="text-right px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("สินค้า")}</th>
+              <th className="text-right px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("คำสั่งซื้อ")}</th>
+              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("สมัครเมื่อ")}</th>
+              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("การจัดการ")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--c-line-soft)]">
@@ -163,7 +166,7 @@ export default function UsersTable({ rows }: Props) {
                       <span className="text-[11px] text-[var(--c-muted)]">({u.reviewCount})</span>
                     </span>
                   ) : (
-                    <span className="text-xs text-[var(--c-faint-2)]">ยังไม่มีรีวิว</span>
+                    <span className="text-xs text-[var(--c-faint-2)]">{tr("ยังไม่มีรีวิว")}</span>
                   )}
                 </td>
 
@@ -172,7 +175,7 @@ export default function UsersTable({ rows }: Props) {
                   {u.openReportCount > 0 && u.role !== "ADMIN" ? (
                     <button
                       onClick={() => setDetailUserId(u.id)}
-                      title="เปิดดูรายงาน"
+                      title={tr("เปิดดูรายงาน")}
                       className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] text-[var(--c-danger)] text-xs font-bold hover:bg-[var(--c-danger-soft)] transition"
                     >
                       🚩 {u.openReportCount}
@@ -225,6 +228,7 @@ function ActionsDropdown({
   onUnban: () => void;
   onRole:  (r: "ADMIN" | "STUDENT" | "PATTARA") => void;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [open, setOpen] = useState(false);
   const [pos, setPos]   = useState<{ top: number; right: number } | null>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -252,7 +256,7 @@ function ActionsDropdown({
         ref={btnRef}
         onClick={toggle}
         className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--c-line-soft)] transition text-[var(--c-ink-2)]"
-        aria-label="เมนูการจัดการ"
+        aria-label={tr("เมนูการจัดการ")}
       >
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -267,19 +271,18 @@ function ActionsDropdown({
             style={{ top: pos.top, right: pos.right }}
           >
             {isAdmin ? (
-              <div className="px-3 py-2.5 text-xs text-[var(--c-muted)] leading-relaxed">
-                🛡️ บัญชีผู้ดูแลระบบ<br />
-                <span className="text-[11px]">ไม่สามารถแก้ไข แบน หรือลดสิทธิ์ได้</span>
+              <div className="px-3 py-2.5 text-xs text-[var(--c-muted)] leading-relaxed">{tr("🛡️ บัญชีผู้ดูแลระบบ")}<br />
+                <span className="text-[11px]">{tr("ไม่สามารถแก้ไข แบน หรือลดสิทธิ์ได้")}</span>
               </div>
             ) : (
               <>
                 <MenuItem
-                  label="ดูรายละเอียด"
+                  label={tr("ดูรายละเอียด")}
                   icon="👁️"
                   onClick={() => { setOpen(false); onView(); }}
                 />
                 <MenuItem
-                  label="แก้ไขข้อมูล"
+                  label={tr("แก้ไขข้อมูล")}
                   icon="✏️"
                   onClick={() => { setOpen(false); onEdit(); }}
                 />
@@ -289,13 +292,13 @@ function ActionsDropdown({
                 {/* Ban / Unban */}
                 {user.isBanned ? (
                   <MenuItem
-                    label="ปลดแบน"
+                    label={tr("ปลดแบน")}
                     icon="✅"
                     onClick={() => { setOpen(false); onUnban(); }}
                   />
                 ) : (
                   <MenuItem
-                    label="แบนผู้ใช้"
+                    label={tr("แบนผู้ใช้")}
                     icon="🚫"
                     danger
                     onClick={() => { setOpen(false); onBan(); }}
@@ -305,19 +308,19 @@ function ActionsDropdown({
                 <div className="my-1 border-t border-[var(--c-line-soft)]" />
 
                 <MenuItem
-                  label="เลื่อนเป็นแอดมิน"
+                  label={tr("เลื่อนเป็นแอดมิน")}
                   icon="👑"
                   onClick={() => { setOpen(false); onRole("ADMIN"); }}
                 />
                 {user.role === "PATTARA" ? (
                   <MenuItem
-                    label="กลับเป็นนักศึกษา"
+                    label={tr("กลับเป็นนักศึกษา")}
                     icon="🎓"
                     onClick={() => { setOpen(false); onRole("STUDENT"); }}
                   />
                 ) : (
                   <MenuItem
-                    label="ตั้งเป็นบัญชีงานภัทร"
+                    label={tr("ตั้งเป็นบัญชีงานภัทร")}
                     icon="💙"
                     onClick={() => { setOpen(false); onRole("PATTARA"); }}
                   />

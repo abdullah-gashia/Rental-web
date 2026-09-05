@@ -27,6 +27,7 @@ interface ProductDetailProps {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function ProductDetail({ item, isOpen, onClose, onChatClick }: ProductDetailProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const t = useLocaleStore((s) => s.t);
   // Two separate selectors — avoids returning a new object literal on every call,
   // which would break useSyncExternalStore's stable-snapshot requirement.
@@ -161,7 +162,7 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
             <div className="ml-auto text-sm flex-shrink-0">
               {(() => {
                 const reviews = item.seller.reviewsReceived ?? [];
-                if (reviews.length === 0) return <span className="text-xs text-[var(--c-faint-2)] italic">ยังไม่มีรีวิว</span>;
+                if (reviews.length === 0) return <span className="text-xs text-[var(--c-faint-2)] italic">{tr("ยังไม่มีรีวิว")}</span>;
                 const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
                 return (
                   <span className="flex items-center gap-1">
@@ -182,7 +183,7 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
-                <span className="text-xs font-semibold text-[var(--c-muted)] tracking-wide">โหมดมุมมองผู้ดูแลระบบ</span>
+                <span className="text-xs font-semibold text-[var(--c-muted)] tracking-wide">{tr("โหมดมุมมองผู้ดูแลระบบ")}</span>
               </div>
             ) : (
               /* ── Normal buyer actions ──
@@ -198,15 +199,13 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
                 />
 
                 {isOwnItem ? (
-                  <a href="/dashboard/my-items" className="ui-btn ui-btn-ghost flex-1">
-                    จัดการประกาศนี้
-                  </a>
+                  <a href="/dashboard/my-items" className="ui-btn ui-btn-ghost flex-1">{tr("จัดการประกาศนี้")}</a>
                 ) : !isAuthenticated ? (
                   <button
                     onClick={() => { onClose(); openModal("login"); }}
                     className="ui-btn ui-btn-primary flex-1"
                   >
-                    เข้าสู่ระบบเพื่อ{isRentListing ? "เช่า" : "ซื้อ"}
+                    เข้าสู่ระบบเพื่อ{isRentListing ? tr("เช่า") : tr("ซื้อ")}
                   </button>
                 ) : (
                   <>
@@ -228,7 +227,7 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
                         }}
                         className="ui-btn ui-btn-primary flex-1"
                       >
-                        {isRentListing ? "เช่าสินค้านี้" : "ซื้อสินค้านี้"}
+                        {isRentListing ? tr("เช่าสินค้านี้") : tr("ซื้อสินค้านี้")}
                       </button>
                     )}
                   </>
@@ -243,11 +242,11 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
             <div className="grid grid-cols-2 gap-y-2 gap-x-3 text-[13px]">
               <div className="text-[var(--hp-muted)]">{t("category_label")}</div>
               {/* The raw slug used to be printed here — "secondhand" rather
-                  than "สินค้ามือสอง". */}
+                  than tr("สินค้ามือสอง"). */}
               <div className="font-medium">{item.category.nameTh ?? item.category.slug}</div>
               <div className="text-[var(--hp-muted)]">{t("condition_label")}</div>
               <div className="font-medium">{conditionMap[item.condition]}</div>
-              <div className="text-[var(--hp-muted)]">สถานที่</div>
+              <div className="text-[var(--hp-muted)]">{tr("สถานที่")}</div>
               <div className="font-medium">{item.location ?? "—"}</div>
             </div>
           </div>

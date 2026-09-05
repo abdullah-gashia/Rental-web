@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
@@ -14,6 +16,7 @@ import {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export default function BorrowItemClient({ item }: { item: any }) {
+  const tr = useLocaleStore((s) => s.tr);
   const router    = useRouter();
   const openModal = useModalStore((s) => s.open);
 
@@ -48,7 +51,7 @@ export default function BorrowItemClient({ item }: { item: any }) {
       <Navbar
         searchQuery=""
         onSearchChange={() => {}}
-        searchPlaceholder="ค้นหาอุปกรณ์ให้ยืม…"
+        searchPlaceholder={tr("ค้นหาอุปกรณ์ให้ยืม…")}
         hideCategories
         activeCat="borrow"
         onCatChange={(c) => router.push(c === "all" ? "/" : `/?cat=${c}`)}
@@ -58,9 +61,7 @@ export default function BorrowItemClient({ item }: { item: any }) {
       <div className="md:pl-[68px]">
         <main className="max-w-[1080px] mx-auto px-3 sm:px-5 pt-6 pb-20">
 
-          <a href="/borrow" className="text-[12.5px] text-[var(--bw-muted)] hover:text-[var(--psu-navy)] transition">
-            ← อุปกรณ์ให้ยืมทั้งหมด
-          </a>
+          <a href="/borrow" className="text-[12.5px] text-[var(--bw-muted)] hover:text-[var(--psu-navy)] transition">{tr("← อุปกรณ์ให้ยืมทั้งหมด")}</a>
 
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px] gap-6 mt-4">
 
@@ -108,15 +109,15 @@ export default function BorrowItemClient({ item }: { item: any }) {
               </div>
 
               <div className="bw-panel">
-                <h2 className="bw-h">รายละเอียด</h2>
+                <h2 className="bw-h">{tr("รายละเอียด")}</h2>
                 <dl className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-4">
                   {[
-                    ["สภาพ",          CONDITION_LABEL[item.condition] ?? item.condition],
-                    ["ยืมได้นานสุด",   `${item.maxLendingDays} วัน`],
-                    ["ยืมขั้นต่ำ",     `${item.minLendingDays} วัน`],
-                    ["ต่ออายุ",        item.isRenewable ? `ได้ ${item.maxRenewals} ครั้ง` : "ไม่ได้"],
-                    ["รหัสครุภัณฑ์",   item.assetTag ?? "—"],
-                    ["ให้ยืมมาแล้ว",   `${item.totalLentCount} ครั้ง`],
+                    [tr("สภาพ"),          CONDITION_LABEL[item.condition] ?? item.condition],
+                    [tr("ยืมได้นานสุด"),   `${item.maxLendingDays} วัน`],
+                    [tr("ยืมขั้นต่ำ"),     `${item.minLendingDays} วัน`],
+                    [tr("ต่ออายุ"),        item.isRenewable ? `ได้ ${item.maxRenewals} ครั้ง` : tr("ไม่ได้")],
+                    [tr("รหัสครุภัณฑ์"),   item.assetTag ?? "—"],
+                    [tr("ให้ยืมมาแล้ว"),   `${item.totalLentCount} ครั้ง`],
                   ].map(([k, v]) => (
                     <div key={k as string}>
                       <dt className="bw-label">{k}</dt>
@@ -127,7 +128,7 @@ export default function BorrowItemClient({ item }: { item: any }) {
               </div>
 
               <div className="bw-panel">
-                <h2 className="bw-h">ผู้ให้ยืม</h2>
+                <h2 className="bw-h">{tr("ผู้ให้ยืม")}</h2>
                 <p className="text-[14px] font-semibold text-[var(--psu-navy)]">
                   {office.officeName ?? office.name ?? "งานภัทร"}
                 </p>
@@ -138,12 +139,12 @@ export default function BorrowItemClient({ item }: { item: any }) {
                 )}
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-[var(--bw-line)]">
                   <div>
-                    <dt className="bw-label">จุดรับ–คืนของ</dt>
-                    <dd className="text-[13px] mt-1">{office.officeLocation ?? "ติดต่อเจ้าหน้าที่"}</dd>
+                    <dt className="bw-label">{tr("จุดรับ–คืนของ")}</dt>
+                    <dd className="text-[13px] mt-1">{office.officeLocation ?? tr("ติดต่อเจ้าหน้าที่")}</dd>
                   </div>
                   <div>
-                    <dt className="bw-label">เวลาทำการ</dt>
-                    <dd className="text-[13px] mt-1">{office.officeHours ?? "ติดต่อเจ้าหน้าที่"}</dd>
+                    <dt className="bw-label">{tr("เวลาทำการ")}</dt>
+                    <dd className="text-[13px] mt-1">{office.officeHours ?? tr("ติดต่อเจ้าหน้าที่")}</dd>
                   </div>
                 </dl>
               </div>
@@ -152,49 +153,33 @@ export default function BorrowItemClient({ item }: { item: any }) {
             {/* ── Right: asking for it ─────────────────────────────────── */}
             <aside className="lg:sticky lg:top-[64px] h-fit">
               <div className="bw-panel">
-                <p className="text-[20px] font-semibold text-[var(--psu-blue)]">ยืมฟรี</p>
-                <p className="text-[12.5px] text-[var(--bw-muted)] mt-0.5 mb-4">
-                  ไม่มีค่ามัดจำ ไม่มีค่าเช่า ไม่มีค่าปรับ
-                </p>
+                <p className="text-[20px] font-semibold text-[var(--psu-blue)]">{tr("ยืมฟรี")}</p>
+                <p className="text-[12.5px] text-[var(--bw-muted)] mt-0.5 mb-4">{tr("ไม่มีค่ามัดจำ ไม่มีค่าเช่า ไม่มีค่าปรับ")}</p>
 
                 {done ? (
                   <div className="rounded-xl border border-[var(--psu-sky-200)] bg-[var(--bw-tint)] px-4 py-4 text-center">
-                    <p className="text-[14px] font-semibold text-[var(--psu-blue-700)]">ส่งคำขอแล้ว</p>
-                    <p className="text-[12.5px] text-[var(--bw-ink-2)] mt-1 leading-[1.8]">
-                      เจ้าหน้าที่จะตรวจสอบและแจ้งผลทางอีเมล
-                    </p>
-                    <a href="/dashboard/borrows" className="bw-btn bw-btn-primary w-full mt-3">
-                      ดูสถานะคำขอ
-                    </a>
+                    <p className="text-[14px] font-semibold text-[var(--psu-blue-700)]">{tr("ส่งคำขอแล้ว")}</p>
+                    <p className="text-[12.5px] text-[var(--bw-ink-2)] mt-1 leading-[1.8]">{tr("เจ้าหน้าที่จะตรวจสอบและแจ้งผลทางอีเมล")}</p>
+                    <a href="/dashboard/borrows" className="bw-btn bw-btn-primary w-full mt-3">{tr("ดูสถานะคำขอ")}</a>
                   </div>
                 ) : item.alreadyRequested ? (
                   <div className="rounded-xl border border-[var(--bw-line-2)] bg-[var(--bw-ground)] px-4 py-4 text-center">
-                    <p className="text-[13.5px] font-medium">คุณมีคำขอสำหรับชิ้นนี้อยู่แล้ว</p>
-                    <a href="/dashboard/borrows" className="bw-btn bw-btn-ghost w-full mt-3">
-                      ดูสถานะ
-                    </a>
+                    <p className="text-[13.5px] font-medium">{tr("คุณมีคำขอสำหรับชิ้นนี้อยู่แล้ว")}</p>
+                    <a href="/dashboard/borrows" className="bw-btn bw-btn-ghost w-full mt-3">{tr("ดูสถานะ")}</a>
                   </div>
                 ) : !available ? (
                   <div className="rounded-xl border border-[var(--bw-line-2)] bg-[var(--bw-ground)] px-4 py-5 text-center">
-                    <p className="text-[13.5px] font-medium text-[var(--bw-ink-2)]">
-                      ตอนนี้มีคนยืมอยู่
-                    </p>
-                    <p className="text-[12px] text-[var(--bw-muted)] mt-1 leading-[1.8]">
-                      ยังไม่มีระบบจองคิว ลองกลับมาดูใหม่อีกครั้ง
-                    </p>
+                    <p className="text-[13.5px] font-medium text-[var(--bw-ink-2)]">{tr("ตอนนี้มีคนยืมอยู่")}</p>
+                    <p className="text-[12px] text-[var(--bw-muted)] mt-1 leading-[1.8]">{tr("ยังไม่มีระบบจองคิว ลองกลับมาดูใหม่อีกครั้ง")}</p>
                   </div>
                 ) : !item.signedIn ? (
-                  <button onClick={() => openModal("login")} className="bw-btn bw-btn-primary w-full">
-                    เข้าสู่ระบบเพื่อขอยืม
-                  </button>
+                  <button onClick={() => openModal("login")} className="bw-btn bw-btn-primary w-full">{tr("เข้าสู่ระบบเพื่อขอยืม")}</button>
                 ) : !canAsk ? (
-                  <div className="rounded-xl border border-[var(--bw-line-2)] bg-[var(--bw-ground)] px-4 py-4 text-[12.5px] text-[var(--bw-ink-2)] leading-[1.8]">
-                    บัญชีนี้เป็นบัญชีเจ้าหน้าที่ ไม่สามารถยืมอุปกรณ์ได้
-                  </div>
+                  <div className="rounded-xl border border-[var(--bw-line-2)] bg-[var(--bw-ground)] px-4 py-4 text-[12.5px] text-[var(--bw-ink-2)] leading-[1.8]">{tr("บัญชีนี้เป็นบัญชีเจ้าหน้าที่ ไม่สามารถยืมอุปกรณ์ได้")}</div>
                 ) : (
                   <div className="flex flex-col gap-4">
                     <div>
-                      <label htmlFor="days" className="bw-label block mb-2">ยืมกี่วัน</label>
+                      <label htmlFor="days" className="bw-label block mb-2">{tr("ยืมกี่วัน")}</label>
                       <div className="flex items-center gap-3">
                         <input
                           id="days"
@@ -218,20 +203,16 @@ export default function BorrowItemClient({ item }: { item: any }) {
                     </div>
 
                     <div>
-                      <label htmlFor="purpose" className="bw-label block mb-2">
-                        จะเอาไปใช้ทำอะไร
-                      </label>
+                      <label htmlFor="purpose" className="bw-label block mb-2">{tr("จะเอาไปใช้ทำอะไร")}</label>
                       <textarea
                         id="purpose"
                         rows={3}
                         value={purpose}
                         onChange={(e) => setPurpose(e.target.value.slice(0, 1000))}
-                        placeholder="เช่น ใช้ทำแล็บวิชาฟิสิกส์ สัปดาห์หน้า"
+                        placeholder={tr("เช่น ใช้ทำแล็บวิชาฟิสิกส์ สัปดาห์หน้า")}
                         className="bw-input"
                       />
-                      <p className="text-[11px] text-[var(--bw-muted)] mt-1.5 leading-[1.7]">
-                        เฉพาะเจ้าหน้าที่งานภัทรเท่านั้นที่เห็นข้อความนี้ ไม่แสดงบนโปรไฟล์ของคุณ
-                      </p>
+                      <p className="text-[11px] text-[var(--bw-muted)] mt-1.5 leading-[1.7]">{tr("เฉพาะเจ้าหน้าที่งานภัทรเท่านั้นที่เห็นข้อความนี้ ไม่แสดงบนโปรไฟล์ของคุณ")}</p>
                     </div>
 
                     {error && (
@@ -241,7 +222,7 @@ export default function BorrowItemClient({ item }: { item: any }) {
                     )}
 
                     <button onClick={submit} disabled={pending} className="bw-btn bw-btn-primary w-full">
-                      {pending ? "กำลังส่ง…" : "ขอยืมชิ้นนี้"}
+                      {pending ? "กำลังส่ง…" : tr("ขอยืมชิ้นนี้")}
                     </button>
 
                     <p className="text-[11.5px] text-[var(--bw-muted)] text-center leading-[1.8]">

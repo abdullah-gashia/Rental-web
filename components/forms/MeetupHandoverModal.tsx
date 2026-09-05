@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useRef, useState, useEffect, useCallback } from "react";
 import { confirmMeetupWithProof } from "@/lib/actions/order-transitions";
 import { prepareImageForUpload } from "@/lib/utils/image-upload";
@@ -25,6 +27,7 @@ function SignaturePad({
   isEmpty:     boolean;
   setIsEmpty:  (v: boolean) => void;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const isDrawing = useRef(false);
   const lastPos   = useRef<{ x: number; y: number } | null>(null);
 
@@ -104,14 +107,12 @@ function SignaturePad({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold text-[var(--c-ink-2)]">✍️ ลายเซ็นผู้ซื้อ</p>
+        <p className="text-xs font-semibold text-[var(--c-ink-2)]">{tr("✍️ ลายเซ็นผู้ซื้อ")}</p>
         <button
           type="button"
           onClick={clearPad}
           className="text-[10px] font-semibold text-[var(--c-muted)] hover:text-[var(--c-danger)] transition px-2 py-1 rounded-lg hover:bg-[var(--c-danger-soft)]"
-        >
-          ล้างลายเซ็น
-        </button>
+        >{tr("ล้างลายเซ็น")}</button>
       </div>
       <div className="relative rounded-2xl border-2 border-dashed border-[var(--c-line)] bg-[#fafaf8] overflow-hidden">
         <canvas
@@ -128,13 +129,11 @@ function SignaturePad({
         />
         {isEmpty && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <p className="text-xs text-[#c0bdb7] font-medium select-none">
-              ลงนามที่นี่ / Sign here
-            </p>
+            <p className="text-xs text-[#c0bdb7] font-medium select-none">{tr("ลงนามที่นี่ / Sign here")}</p>
           </div>
         )}
       </div>
-      <p className="text-[10px] text-[var(--c-muted)]">ผู้ซื้อลงนามยืนยันรับสินค้าบนหน้าจอนี้</p>
+      <p className="text-[10px] text-[var(--c-muted)]">{tr("ผู้ซื้อลงนามยืนยันรับสินค้าบนหน้าจอนี้")}</p>
     </div>
   );
 }
@@ -152,6 +151,7 @@ function PhotoUpload({
   uploading:    boolean;
   setUploading: (v: boolean) => void;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleFile(file: File) {
@@ -182,7 +182,7 @@ function PhotoUpload({
 
   return (
     <div className="space-y-2">
-      <p className="text-xs font-semibold text-[var(--c-ink-2)]">📸 ภาพหลักฐานการส่งมอบ <span className="text-[var(--c-muted)] font-normal">(ไม่บังคับ)</span></p>
+      <p className="text-xs font-semibold text-[var(--c-ink-2)]">{tr("📸 ภาพหลักฐานการส่งมอบ")}<span className="text-[var(--c-muted)] font-normal">{tr("(ไม่บังคับ)")}</span></p>
       <div
         className={`relative rounded-2xl border-2 border-dashed transition cursor-pointer overflow-hidden ${
           photoUrl
@@ -251,6 +251,7 @@ export default function MeetupHandoverModal({
   onClose,
   onSuccess,
 }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const canvasRef       = useRef<HTMLCanvasElement>(null);
   const [sigEmpty, setSigEmpty]         = useState(true);
   const [photoUrl, setPhotoUrl]         = useState<string | null>(null);
@@ -330,7 +331,7 @@ export default function MeetupHandoverModal({
         <div className="px-6 pt-5 pb-3 flex-shrink-0 pr-14">
           <div className="flex items-center gap-2.5 mb-1">
             <div className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center text-base">🤝</div>
-            <h2 className="text-base font-extrabold text-[var(--c-ink)] tracking-tight">ยืนยันการส่งมอบสินค้า</h2>
+            <h2 className="text-base font-extrabold text-[var(--c-ink)] tracking-tight">{tr("ยืนยันการส่งมอบสินค้า")}</h2>
           </div>
           <p className="text-xs text-[var(--c-muted)]">
             <span className="font-semibold text-[var(--c-ink-2)]">{itemTitle}</span>
@@ -343,11 +344,11 @@ export default function MeetupHandoverModal({
 
           {/* Info banner */}
           <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-2xl px-4 py-3 text-xs text-[var(--c-warn)] leading-relaxed">
-            <p className="font-semibold mb-0.5">ก่อนกดยืนยัน:</p>
+            <p className="font-semibold mb-0.5">{tr("ก่อนกดยืนยัน:")}</p>
             <ul className="list-disc list-inside space-y-0.5 text-[var(--c-warn)]">
-              <li>ตรวจสอบว่าผู้ซื้อได้รับสินค้าครบถ้วนแล้ว</li>
-              <li>ขอให้ผู้ซื้อลงนามยืนยันบนหน้าจอนี้</li>
-              <li>ถ่ายภาพหลักฐานการส่งมอบ (แนะนำ)</li>
+              <li>{tr("ตรวจสอบว่าผู้ซื้อได้รับสินค้าครบถ้วนแล้ว")}</li>
+              <li>{tr("ขอให้ผู้ซื้อลงนามยืนยันบนหน้าจอนี้")}</li>
+              <li>{tr("ถ่ายภาพหลักฐานการส่งมอบ (แนะนำ)")}</li>
             </ul>
           </div>
 

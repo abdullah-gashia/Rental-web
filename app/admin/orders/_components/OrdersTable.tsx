@@ -15,6 +15,7 @@ interface Props {
 }
 
 export default function OrdersTable({ rows }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [pending, startTransition] = useTransition();
 
   type DialogKind = "complete" | "cancel";
@@ -52,7 +53,7 @@ export default function OrdersTable({ rows }: Props) {
 
   if (rows.length === 0) {
     return (
-      <div className="py-20 text-center text-[var(--c-faint)] text-sm">ไม่พบรายการสั่งซื้อ</div>
+      <div className="py-20 text-center text-[var(--c-faint)] text-sm">{tr("ไม่พบรายการสั่งซื้อ")}</div>
     );
   }
 
@@ -72,13 +73,13 @@ export default function OrdersTable({ rows }: Props) {
       {/* Confirm dialog */}
       <ConfirmDialog
         open={!!dialog}
-        title={dialog?.kind === "complete" ? "บังคับให้คำสั่งซื้อสำเร็จ?" : "ยกเลิกคำสั่งซื้อ?"}
+        title={dialog?.kind === "complete" ? tr("บังคับให้คำสั่งซื้อสำเร็จ?") : tr("ยกเลิกคำสั่งซื้อ?")}
         description={
           dialog?.kind === "complete"
             ? `คำสั่งซื้อ ${dialog?.ref} จะถูกทำเครื่องหมายว่าสำเร็จ และเงินจะถูกปล่อยให้ผู้ขาย`
             : `คำสั่งซื้อ ${dialog?.ref} จะถูกยกเลิก และเงินจะถูกคืนให้ผู้ซื้อ กรุณาระบุเหตุผล`
         }
-        confirmLabel={dialog?.kind === "complete" ? "บังคับสำเร็จ" : "ยกเลิก"}
+        confirmLabel={dialog?.kind === "complete" ? tr("บังคับสำเร็จ") : "ยกเลิก"}
         danger={dialog?.kind === "cancel"}
         loading={pending}
         onConfirm={handleConfirm}
@@ -87,7 +88,7 @@ export default function OrdersTable({ rows }: Props) {
         {dialog?.kind === "cancel" && (
           <textarea
             className="w-full border border-[var(--c-line)] rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/20 focus:border-[var(--c-accent)]"
-            placeholder="เหตุผลในการยกเลิก..."
+            placeholder={tr("เหตุผลในการยกเลิก...")}
             rows={3}
             value={cancelReason}
             onChange={(e) => setCancelReason(e.target.value)}
@@ -225,11 +226,11 @@ export default function OrdersTable({ rows }: Props) {
                       {/* Core IDs + dates */}
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div>
-                          <p className="text-[var(--c-faint)] text-xs mb-1">รหัสเต็ม</p>
+                          <p className="text-[var(--c-faint)] text-xs mb-1">{tr("รหัสเต็ม")}</p>
                           <p className="font-mono text-xs text-[var(--c-ink-1)]">{order.id}</p>
                         </div>
                         <div>
-                          <p className="text-[var(--c-faint)] text-xs mb-1">สินค้า ID</p>
+                          <p className="text-[var(--c-faint)] text-xs mb-1">{tr("สินค้า ID")}</p>
                           <a
                             href={`/items/${order.item.id}`}
                             target="_blank"
@@ -240,18 +241,18 @@ export default function OrdersTable({ rows }: Props) {
                           </a>
                         </div>
                         <div>
-                          <p className="text-[var(--c-faint)] text-xs mb-1">วันที่สั่งซื้อ</p>
+                          <p className="text-[var(--c-faint)] text-xs mb-1">{tr("วันที่สั่งซื้อ")}</p>
                           <p className="text-[var(--c-ink-1)]">{formatThaiDate(order.createdAt)}</p>
                         </div>
                         {order.shippedAt && (
                           <div>
-                            <p className="text-[var(--c-faint)] text-xs mb-1">วันที่จัดส่ง</p>
+                            <p className="text-[var(--c-faint)] text-xs mb-1">{tr("วันที่จัดส่ง")}</p>
                             <p className="text-[var(--c-ink-1)]">{formatThaiDate(order.shippedAt)}</p>
                           </div>
                         )}
                         {order.trackingNumber && (
                           <div>
-                            <p className="text-[var(--c-faint)] text-xs mb-1">เลขพัสดุ</p>
+                            <p className="text-[var(--c-faint)] text-xs mb-1">{tr("เลขพัสดุ")}</p>
                             <p className="font-mono text-xs text-[var(--c-ink-1)]">{order.trackingNumber}</p>
                           </div>
                         )}
@@ -277,7 +278,7 @@ export default function OrdersTable({ rows }: Props) {
                       )}
                       {order.deliveryMethod === "MEETUP" && (order.meetupLocation || order.meetupDateTime) && (
                         <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-xl px-4 py-3 text-sm">
-                          <p className="text-[var(--c-faint)] text-xs font-semibold uppercase tracking-wide mb-2">นัดพบ</p>
+                          <p className="text-[var(--c-faint)] text-xs font-semibold uppercase tracking-wide mb-2">{tr("นัดพบ")}</p>
                           {order.meetupLocation && (
                             <p className="text-[var(--c-ink-1)]">📍 {order.meetupLocation}</p>
                           )}
@@ -311,6 +312,7 @@ function OrderActionsDropdown({
   onComplete: () => void;
   onCancel:   () => void;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [open, setOpen] = useState(false);
 
   // Statuses where admin can force-complete (release funds to seller)
@@ -336,7 +338,7 @@ function OrderActionsDropdown({
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--c-line)] transition text-[var(--c-ink-2)]"
-        aria-label="เมนูการจัดการ"
+        aria-label={tr("เมนูการจัดการ")}
       >
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -351,17 +353,13 @@ function OrderActionsDropdown({
               <button
                 onClick={() => { setOpen(false); onComplete(); }}
                 className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[var(--c-canvas)] text-[var(--c-ok)] transition"
-              >
-                ✅ บังคับให้สำเร็จ
-              </button>
+              >{tr("✅ บังคับให้สำเร็จ")}</button>
             )}
             {canCancel && (
               <button
                 onClick={() => { setOpen(false); onCancel(); }}
                 className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[var(--c-canvas)] text-[var(--c-danger)] transition"
-              >
-                ❌ ยกเลิกและคืนเงิน
-              </button>
+              >{tr("❌ ยกเลิกและคืนเงิน")}</button>
             )}
           </div>
         </>
@@ -379,13 +377,14 @@ function DeliveryMethodBadge({
   delivery: string | null;
   payment:  string | null;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   if (!delivery && !payment) {
     return <span className="text-xs text-[var(--c-faint-2)]">—</span>;
   }
 
   const deliveryLabel: Record<string, string> = {
-    SHIPPING: "🚚 ส่งพัสดุ",
-    MEETUP:   "🤝 นัดพบ",
+    SHIPPING: tr("🚚 ส่งพัสดุ"),
+    MEETUP:   tr("🤝 นัดพบ"),
   };
   const paymentLabel: Record<string, string> = {
     ESCROW: "🔒 Escrow",

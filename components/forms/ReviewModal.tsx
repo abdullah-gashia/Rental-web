@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { submitOrderReview } from "@/lib/actions/escrow-actions";
 
@@ -21,6 +23,7 @@ export default function ReviewModal({
   onClose,
   onSuccess,
 }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const roleLabel = counterpartyRole === "seller" ? "ผู้ขาย" : "ผู้ซื้อ";
   const [rating,    setRating]    = useState(0);
   const [hovered,   setHovered]   = useState(0);
@@ -30,10 +33,11 @@ export default function ReviewModal({
 
   const displayRating = hovered || rating;
 
-  const STAR_LABELS = ["", "แย่มาก", "พอใช้", "ปานกลาง", "ดี", "ยอดเยี่ยม"];
+  const STAR_LABELS = ["", "แย่มาก", "พอใช้", tr("ปานกลาง"), "ดี", tr("ยอดเยี่ยม")];
 
   function handleSubmit() {
-    if (rating === 0) { setError("กรุณาเลือกคะแนนดาวก่อน"); return; }
+  const tr = useLocaleStore((s) => s.tr);
+    if (rating === 0) { setError(tr("กรุณาเลือกคะแนนดาวก่อน")); return; }
     setError(null);
     startTransition(async () => {
       const res = await submitOrderReview(orderId, rating, comment || undefined);
@@ -54,7 +58,7 @@ export default function ReviewModal({
         <div className="bg-gradient-to-r from-amber-400 to-orange-400 px-6 py-5 text-center">
           <p className="text-3xl mb-1">⭐</p>
           <h3 className="text-base font-extrabold text-white">
-            {counterpartyRole === "seller" ? "ให้คะแนนสินค้าและผู้ขาย" : "ให้คะแนนผู้ซื้อ"}
+            {counterpartyRole === "seller" ? tr("ให้คะแนนสินค้าและผู้ขาย") : "ให้คะแนนผู้ซื้อ"}
           </h3>
           <p className="text-amber-100 text-xs mt-0.5 truncate">"{itemTitle}"</p>
         </div>
@@ -86,22 +90,20 @@ export default function ReviewModal({
             <p className={`text-sm font-semibold h-5 transition-colors ${
               displayRating ? "text-[var(--c-warn)]" : "text-[var(--c-line-str)]"
             }`}>
-              {displayRating ? STAR_LABELS[displayRating] : "เลือกคะแนน"}
+              {displayRating ? STAR_LABELS[displayRating] : tr("เลือกคะแนน")}
             </p>
           </div>
 
           {/* Comment textarea */}
           <div>
-            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-1.5">
-              ความคิดเห็น
-              <span className="ml-1.5 text-xs font-normal text-[var(--c-muted)]">(ไม่บังคับ)</span>
+            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-1.5">{tr("ความคิดเห็น")}<span className="ml-1.5 text-xs font-normal text-[var(--c-muted)]">{tr("(ไม่บังคับ)")}</span>
             </label>
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               rows={3}
               maxLength={500}
-              placeholder="บอกเล่าประสบการณ์การซื้อขายของคุณ…"
+              placeholder={tr("บอกเล่าประสบการณ์การซื้อขายของคุณ…")}
               disabled={isPending}
               className="w-full border border-[var(--c-line)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 transition resize-none disabled:opacity-60"
             />
@@ -123,9 +125,7 @@ export default function ReviewModal({
               onClick={onClose}
               disabled={isPending}
               className="flex-1 py-3 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
-            >
-              ข้าม
-            </button>
+            >{tr("ข้าม")}</button>
             <button
               type="button"
               onClick={handleSubmit}
@@ -135,7 +135,7 @@ export default function ReviewModal({
               {isPending && (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               )}
-              {isPending ? "กำลังส่ง…" : "ส่งรีวิว ⭐"}
+              {isPending ? "กำลังส่ง…" : tr("ส่งรีวิว ⭐")}
             </button>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import "server-only";
 import { cookies } from "next/headers";
 import { type Locale, type DictionaryKey, translate } from "./dictionaries";
+import { translatePhrase } from "./phrases";
 
 /**
  * Language and theme on the server.
@@ -42,4 +43,12 @@ export async function getT(): Promise<TFunction> {
 export async function getI18n(): Promise<{ locale: Locale; t: TFunction }> {
   const locale = await getLocale();
   return { locale, t: (key, params) => translate(locale, key, params) };
+}
+
+export type TrFunction = (source: string) => string;
+
+/** Translate by Thai source text, for server components. Falls back to Thai. */
+export async function getTr(): Promise<TrFunction> {
+  const locale = await getLocale();
+  return (source) => translatePhrase(locale, source);
 }

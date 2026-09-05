@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState } from "react";
 import { submitDirectReview } from "@/lib/actions/trust-actions";
 
@@ -16,6 +18,7 @@ export default function ReviewFormClient({
   sellerName,
   onSuccess,
 }: ReviewFormClientProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const [hovered,  setHovered]  = useState(0);
   const [selected, setSelected] = useState(0);
   const [comment,  setComment]  = useState("");
@@ -25,8 +28,9 @@ export default function ReviewFormClient({
   const display = hovered || selected;
 
   async function handleSubmit(e: { preventDefault(): void }) {
+  const tr = useLocaleStore((s) => s.tr);
     e.preventDefault();
-    if (selected === 0) { setError("กรุณาเลือกคะแนนก่อน"); return; }
+    if (selected === 0) { setError(tr("กรุณาเลือกคะแนนก่อน")); return; }
     setError("");
     setLoading(true);
     const result = await submitDirectReview(revieweeId, selected, comment);
@@ -39,9 +43,7 @@ export default function ReviewFormClient({
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
         <p className="text-sm font-bold text-[var(--c-ink)]">ให้คะแนน {sellerName}</p>
-        <p className="text-xs text-[var(--c-muted)] mt-0.5">
-          รีวิวของคุณจะช่วยให้ชุมชนปลอดภัยขึ้น
-        </p>
+        <p className="text-xs text-[var(--c-muted)] mt-0.5">{tr("รีวิวของคุณจะช่วยให้ชุมชนปลอดภัยขึ้น")}</p>
       </div>
 
       {/* Star picker */}
@@ -67,15 +69,14 @@ export default function ReviewFormClient({
 
       {/* Comment */}
       <div>
-        <label className="block text-sm font-medium text-[var(--c-ink-1)] mb-1.5">
-          ความคิดเห็น <span className="font-normal text-[var(--c-muted)]">(ไม่บังคับ)</span>
+        <label className="block text-sm font-medium text-[var(--c-ink-1)] mb-1.5">{tr("ความคิดเห็น")}<span className="font-normal text-[var(--c-muted)]">{tr("(ไม่บังคับ)")}</span>
         </label>
         <textarea
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           rows={3}
           maxLength={500}
-          placeholder="แชร์ประสบการณ์ของคุณกับผู้ขายคนนี้..."
+          placeholder={tr("แชร์ประสบการณ์ของคุณกับผู้ขายคนนี้...")}
           className="w-full border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm resize-none focus:outline-none focus:border-[var(--c-ink)] transition"
         />
         <p className="text-[11px] text-[var(--c-faint)] text-right mt-0.5">{comment.length}/500</p>
@@ -97,10 +98,8 @@ export default function ReviewFormClient({
             <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-            กำลังส่ง...
-          </>
-        ) : "ส่งรีวิว"}
+            </svg>{tr("กำลังส่ง...")}</>
+        ) : tr("ส่งรีวิว")}
       </button>
     </form>
   );

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState } from "react";
 import ProductRow from "@/components/items/ProductRow";
 import Panel from "@/components/ui/Panel";
@@ -25,6 +27,7 @@ interface Props {
 const PER_PAGE = 6;
 
 export default function RecommendedSection({ items, strategy, onItemClick }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [page, setPage] = useState(0);
 
   if (items.length === 0) return null;
@@ -36,8 +39,8 @@ export default function RecommendedSection({ items, strategy, onItemClick }: Pro
 
   return (
     <Panel
-      title={isPersonalized ? "สินค้าที่คุณอาจสนใจ" : "กำลังมาแรงตอนนี้"}
-      sub={isPersonalized ? "แนะนำจากสิ่งที่คุณเคยดู" : undefined}
+      title={isPersonalized ? tr("สินค้าที่คุณอาจสนใจ") : tr("กำลังมาแรงตอนนี้")}
+      sub={isPersonalized ? tr("แนะนำจากสิ่งที่คุณเคยดู") : undefined}
       onPrev={() => setPage((p) => Math.max(0, p - 1))}
       onNext={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
       prevDisabled={safePage === 0}

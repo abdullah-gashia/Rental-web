@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -82,6 +84,7 @@ export default function OrderTrackingClient({
   order: OrderData;
   currentUserId: string;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const router = useRouter();
   const showToast = useToastStore((s) => s.show);
   const [isPending, startTransition] = useTransition();
@@ -99,37 +102,41 @@ export default function OrderTrackingClient({
   // ── Actions ──────────────────────────────────────────────────────────
 
   function handleShip() {
-    if (!trackNum.trim()) { showToast("⚠️ กรุณากรอกเลขพัสดุ"); return; }
+  const tr = useLocaleStore((s) => s.tr);
+    if (!trackNum.trim()) { showToast(tr("⚠️ กรุณากรอกเลขพัสดุ")); return; }
     startTransition(async () => {
       const res = await confirmShipmentNew(order.id, trackNum, trackCarrier);
       if (res.error) showToast(`❌ ${res.error}`);
-      else { showToast("✅ อัปเดตสถานะเรียบร้อย"); router.refresh(); }
+      else { showToast(tr("✅ อัปเดตสถานะเรียบร้อย")); router.refresh(); }
     });
   }
 
   function handleConfirmDelivery() {
+  const tr = useLocaleStore((s) => s.tr);
     startTransition(async () => {
       const res = await confirmDelivery(order.id);
       if (res.error) showToast(`❌ ${res.error}`);
-      else { showToast("✅ ยืนยันรับสินค้าเรียบร้อย"); router.refresh(); }
+      else { showToast(tr("✅ ยืนยันรับสินค้าเรียบร้อย")); router.refresh(); }
     });
   }
 
   function handleConfirmMeetup() {
+  const tr = useLocaleStore((s) => s.tr);
     startTransition(async () => {
       const res = await confirmMeetupComplete(order.id);
       if (res.error) showToast(`❌ ${res.error}`);
-      else { showToast("✅ ยืนยันนัดรับสำเร็จ"); router.refresh(); }
+      else { showToast(tr("✅ ยืนยันนัดรับสำเร็จ")); router.refresh(); }
     });
   }
 
   function handleCancel() {
-    if (!confirm("คุณแน่ใจหรือไม่ว่าต้องการยกเลิกคำสั่งซื้อนี้?")) return;
+  const tr = useLocaleStore((s) => s.tr);
+    if (!confirm(tr("คุณแน่ใจหรือไม่ว่าต้องการยกเลิกคำสั่งซื้อนี้?"))) return;
     const role = isBuyer ? "BUYER" : "SELLER";
     startTransition(async () => {
-      const res = await cancelOrderNew(order.id, role, "ยกเลิกโดยผู้ใช้");
+      const res = await cancelOrderNew(order.id, role, tr("ยกเลิกโดยผู้ใช้"));
       if (res.error) showToast(`❌ ${res.error}`);
-      else { showToast("✅ ยกเลิกเรียบร้อย"); router.refresh(); }
+      else { showToast(tr("✅ ยกเลิกเรียบร้อย")); router.refresh(); }
     });
   }
 
@@ -143,9 +150,7 @@ export default function OrderTrackingClient({
       <Link
         href="/dashboard/orders"
         className="inline-flex items-center gap-1.5 text-sm text-[var(--c-muted)] hover:text-[var(--c-ink)] mb-6 transition"
-      >
-        ← กลับไปรายการคำสั่งซื้อ
-      </Link>
+      >{tr("← กลับไปรายการคำสั่งซื้อ")}</Link>
 
       {/* Header */}
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6 mb-4 shadow-sm">
@@ -172,11 +177,11 @@ export default function OrderTrackingClient({
 
       {/* Delivery Info */}
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 mb-4 shadow-sm">
-        <h2 className="text-sm font-bold text-[var(--c-ink)] mb-3">📍 ข้อมูลการจัดส่ง</h2>
+        <h2 className="text-sm font-bold text-[var(--c-ink)] mb-3">{tr("📍 ข้อมูลการจัดส่ง")}</h2>
 
         {order.deliveryMethod === "SHIPPING" && order.shippingAddress ? (
           <div className="text-sm text-[var(--c-ink-2)] space-y-1">
-            <p className="font-semibold">🚚 จัดส่งถึงที่อยู่</p>
+            <p className="font-semibold">{tr("🚚 จัดส่งถึงที่อยู่")}</p>
             <p>{order.shippingAddress.recipientName}, {order.shippingAddress.phone}</p>
             <p>{order.shippingAddress.addressLine1}</p>
             {order.shippingAddress.addressLine2 && <p>{order.shippingAddress.addressLine2}</p>}
@@ -184,7 +189,7 @@ export default function OrderTrackingClient({
           </div>
         ) : order.deliveryMethod === "MEETUP" ? (
           <div className="text-sm text-[var(--c-ink-2)] space-y-1">
-            <p className="font-semibold">🤝 นัดรับสินค้า</p>
+            <p className="font-semibold">{tr("🤝 นัดรับสินค้า")}</p>
             <p>📍 {order.meetupLocation}</p>
             {order.meetupDateTime && (
               <p>🕐 {new Date(order.meetupDateTime).toLocaleDateString("th-TH", {
@@ -195,14 +200,13 @@ export default function OrderTrackingClient({
             {order.meetupNote && <p className="text-[var(--c-muted)] italic">"{order.meetupNote}"</p>}
           </div>
         ) : (
-          <p className="text-sm text-[var(--c-muted)]">ไม่ระบุวิธีจัดส่ง (คำสั่งซื้อเดิม)</p>
+          <p className="text-sm text-[var(--c-muted)]">{tr("ไม่ระบุวิธีจัดส่ง (คำสั่งซื้อเดิม)")}</p>
         )}
 
         {/* Tracking info */}
         {order.trackingNumber && (
           <div className="mt-3 pt-3 border-t border-[var(--c-line)]">
-            <p className="text-sm text-[var(--c-ink-2)]">
-              📦 เลขพัสดุ: <span className="font-bold text-[var(--c-ink)]">{order.trackingNumber}</span>
+            <p className="text-sm text-[var(--c-ink-2)]">{tr("📦 เลขพัสดุ:")}<span className="font-bold text-[var(--c-ink)]">{order.trackingNumber}</span>
               {order.trackingCarrier && <span className="text-[var(--c-muted)]"> ({order.trackingCarrier})</span>}
             </p>
           </div>
@@ -211,46 +215,46 @@ export default function OrderTrackingClient({
 
       {/* Financial */}
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 mb-4 shadow-sm">
-        <h2 className="text-sm font-bold text-[var(--c-ink)] mb-3">💰 ข้อมูลการเงิน</h2>
+        <h2 className="text-sm font-bold text-[var(--c-ink)] mb-3">{tr("💰 ข้อมูลการเงิน")}</h2>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
-            <span className="text-[var(--c-ink-2)]">ราคาสินค้า</span>
+            <span className="text-[var(--c-ink-2)]">{tr("ราคาสินค้า")}</span>
             <span>฿{order.amount.toLocaleString()}</span>
           </div>
           {order.shippingCost > 0 && (
             <div className="flex justify-between">
-              <span className="text-[var(--c-ink-2)]">ค่าจัดส่ง</span>
+              <span className="text-[var(--c-ink-2)]">{tr("ค่าจัดส่ง")}</span>
               <span>฿{order.shippingCost.toLocaleString()}</span>
             </div>
           )}
           <div className="flex justify-between">
-            <span className="text-[var(--c-ink-2)]">ค่าธรรมเนียม</span>
-            <span>{order.platformFee > 0 ? `฿${order.platformFee.toLocaleString()}` : "฿0 (ฟรี)"}</span>
+            <span className="text-[var(--c-ink-2)]">{tr("ค่าธรรมเนียม")}</span>
+            <span>{order.platformFee > 0 ? `฿${order.platformFee.toLocaleString()}` : tr("฿0 (ฟรี)")}</span>
           </div>
           <div className="flex justify-between font-bold text-[var(--c-ink)] border-t border-[var(--c-line)] pt-2">
-            <span>รวมทั้งสิ้น</span>
+            <span>{tr("รวมทั้งสิ้น")}</span>
             <span>฿{(order.totalAmount ?? order.amount).toLocaleString()}</span>
           </div>
           <div className="flex justify-between text-xs text-[var(--c-muted)]">
             <span>การชำระเงิน</span>
-            <span>{order.paymentMethod === "COD" ? "💵 เงินสด" : "💳 Escrow"}</span>
+            <span>{order.paymentMethod === "COD" ? tr("💵 เงินสด") : "💳 Escrow"}</span>
           </div>
         </div>
       </div>
 
       {/* Parties */}
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 mb-4 shadow-sm">
-        <h2 className="text-sm font-bold text-[var(--c-ink)] mb-3">👤 คู่สัญญา</h2>
+        <h2 className="text-sm font-bold text-[var(--c-ink)] mb-3">{tr("👤 คู่สัญญา")}</h2>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-xs text-[var(--c-muted)] font-semibold mb-1">ผู้ซื้อ</p>
             <p className="font-bold text-[var(--c-ink)]">{order.buyer.name ?? order.buyer.email}</p>
-            {isBuyer && <span className="text-[10px] text-[var(--c-accent)] font-bold">(คุณ)</span>}
+            {isBuyer && <span className="text-[10px] text-[var(--c-accent)] font-bold">{tr("(คุณ)")}</span>}
           </div>
           <div>
             <p className="text-xs text-[var(--c-muted)] font-semibold mb-1">ผู้ขาย</p>
             <p className="font-bold text-[var(--c-ink)]">{order.seller.name ?? order.seller.email}</p>
-            {isSeller && <span className="text-[10px] text-[var(--c-accent)] font-bold">(คุณ)</span>}
+            {isSeller && <span className="text-[10px] text-[var(--c-accent)] font-bold">{tr("(คุณ)")}</span>}
           </div>
         </div>
       </div>
@@ -258,7 +262,7 @@ export default function OrderTrackingClient({
       {/* Status History Timeline */}
       {history.length > 0 && (
         <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 mb-4 shadow-sm">
-          <h2 className="text-sm font-bold text-[var(--c-ink)] mb-3">📜 ประวัติสถานะ</h2>
+          <h2 className="text-sm font-bold text-[var(--c-ink)] mb-3">{tr("📜 ประวัติสถานะ")}</h2>
           <div className="space-y-3">
             {history.map((h: any, i: number) => {
               const hs = STATUS_LABELS[h.status];
@@ -285,7 +289,7 @@ export default function OrderTrackingClient({
 
       {/* Action Buttons */}
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 shadow-sm space-y-3">
-        <h2 className="text-sm font-bold text-[var(--c-ink)] mb-1">⚡ การดำเนินการ</h2>
+        <h2 className="text-sm font-bold text-[var(--c-ink)] mb-1">{tr("⚡ การดำเนินการ")}</h2>
 
         {/* Seller: Ship */}
         {isSeller && (order.status === "FUNDS_HELD" || order.status === "AWAITING_SHIPMENT") && (
@@ -295,23 +299,21 @@ export default function OrderTrackingClient({
                 onClick={() => setShowShipForm(true)}
                 disabled={isPending}
                 className="w-full py-3 rounded-xl bg-indigo-600 text-white text-sm font-bold hover:bg-indigo-700 transition disabled:opacity-40"
-              >
-                📦 จัดส่งสินค้า
-              </button>
+              >{tr("📦 จัดส่งสินค้า")}</button>
             ) : (
               <div className="rounded-xl border border-indigo-200 bg-[var(--c-accent-soft)] p-4 space-y-3">
                 <input
                   type="text"
                   value={trackNum}
                   onChange={(e) => setTrackNum(e.target.value)}
-                  placeholder="เลขพัสดุ *"
+                  placeholder={tr("เลขพัสดุ *")}
                   className="checkout-input"
                 />
                 <input
                   type="text"
                   value={trackCarrier}
                   onChange={(e) => setTrackCarrier(e.target.value)}
-                  placeholder="ขนส่ง (e.g. Kerry, Flash)"
+                  placeholder={tr("ขนส่ง (e.g. Kerry, Flash)")}
                   className="checkout-input"
                 />
                 <div className="flex gap-2">
@@ -323,7 +325,7 @@ export default function OrderTrackingClient({
                     disabled={isPending}
                     className="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold hover:bg-indigo-700 transition disabled:opacity-40"
                   >
-                    {isPending ? "กำลังอัปเดต…" : "✅ ยืนยันจัดส่ง"}
+                    {isPending ? tr("กำลังอัปเดต…") : tr("✅ ยืนยันจัดส่ง")}
                   </button>
                 </div>
               </div>
@@ -338,7 +340,7 @@ export default function OrderTrackingClient({
             disabled={isPending}
             className="w-full py-3 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition disabled:opacity-40"
           >
-            {isPending ? "กำลังดำเนินการ…" : "📬 ยืนยันรับสินค้า"}
+            {isPending ? "กำลังดำเนินการ…" : tr("📬 ยืนยันรับสินค้า")}
           </button>
         )}
 
@@ -349,7 +351,7 @@ export default function OrderTrackingClient({
             disabled={isPending}
             className="w-full py-3 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition disabled:opacity-40"
           >
-            {isPending ? "กำลังดำเนินการ…" : "🤝 ยืนยันนัดรับสำเร็จ"}
+            {isPending ? "กำลังดำเนินการ…" : tr("🤝 ยืนยันนัดรับสำเร็จ")}
           </button>
         )}
 
@@ -359,22 +361,20 @@ export default function OrderTrackingClient({
             onClick={handleCancel}
             disabled={isPending}
             className="w-full py-3 rounded-xl border border-[var(--c-danger-line)] text-[var(--c-danger)] text-sm font-bold hover:bg-[var(--c-danger-soft)] transition disabled:opacity-40"
-          >
-            ❌ ยกเลิกคำสั่งซื้อ
-          </button>
+          >{tr("❌ ยกเลิกคำสั่งซื้อ")}</button>
         )}
 
         {/* Completed / Cancelled — no actions */}
         {["COMPLETED", "CANCELLED", "REFUNDED", "CANCELLED_BY_ADMIN"].includes(order.status) && (
           <p className="text-center text-sm text-[var(--c-muted)] py-2">
-            คำสั่งซื้อนี้ {order.status === "COMPLETED" ? "เสร็จสิ้นแล้ว" : "ถูกยกเลิกแล้ว"}
+            คำสั่งซื้อนี้ {order.status === "COMPLETED" ? tr("เสร็จสิ้นแล้ว") : tr("ถูกยกเลิกแล้ว")}
           </p>
         )}
 
         {/* Cancel info */}
         {order.cancelReason && (
           <div className="rounded-lg bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] p-3 text-xs text-[var(--c-danger)]">
-            <p className="font-semibold">เหตุผลที่ยกเลิก:</p>
+            <p className="font-semibold">{tr("เหตุผลที่ยกเลิก:")}</p>
             <p>{order.cancelReason}</p>
           </div>
         )}
@@ -383,9 +383,7 @@ export default function OrderTrackingClient({
         <Link
           href="/dashboard/orders"
           className="block text-center py-2.5 text-sm text-[var(--c-muted)] hover:text-[var(--c-ink)] transition"
-        >
-          ← กลับไปรายการทั้งหมด
-        </Link>
+        >{tr("← กลับไปรายการทั้งหมด")}</Link>
       </div>
     </div>
   );

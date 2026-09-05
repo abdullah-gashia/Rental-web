@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { BORROW_CATEGORY_LABEL } from "@/lib/borrow-config";
 
 export interface BorrowPromoItem {
@@ -27,6 +29,7 @@ interface Props {
  * than no aisle.
  */
 export default function BorrowPromo({ items, raised, itemsTotal, timesLent }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   if (itemsTotal === 0) return null;
 
   return (
@@ -37,9 +40,7 @@ export default function BorrowPromo({ items, raised, itemsTotal, timesLent }: Pr
             <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-[var(--psu-blue)]">
               งานภัทร
             </p>
-            <h2 className="text-[19px] font-semibold tracking-[-0.015em] text-[var(--psu-navy)] mt-1.5">
-              ยืมอุปกรณ์ฟรี ไม่ต้องมัดจำ
-            </h2>
+            <h2 className="text-[19px] font-semibold tracking-[-0.015em] text-[var(--psu-navy)] mt-1.5">{tr("ยืมอุปกรณ์ฟรี ไม่ต้องมัดจำ")}</h2>
             <p className="text-[13px] text-[var(--hp-muted)] mt-1.5 max-w-[54ch] leading-[1.85]">
               ค่าธรรมเนียม{" "}
               <strong className="text-[var(--hp-ink)] hp-num">
@@ -48,14 +49,12 @@ export default function BorrowPromo({ items, raised, itemsTotal, timesLent }: Pr
               ที่เก็บได้จากการซื้อขายในเว็บนี้ กลายเป็นอุปกรณ์ให้ยืมแล้ว{" "}
               <strong className="text-[var(--hp-ink)] hp-num">{itemsTotal}</strong> ชิ้น
               {timesLent > 0 && (
-                <> · ให้ยืมไปแล้ว <strong className="text-[var(--hp-ink)] hp-num">{timesLent}</strong> ครั้ง</>
+                <>{tr("· ให้ยืมไปแล้ว")}<strong className="text-[var(--hp-ink)] hp-num">{timesLent}</strong>{tr("ครั้ง")}</>
               )}
             </p>
           </div>
 
-          <a href="/borrow" className="bw-btn bw-btn-primary flex-shrink-0">
-            ดูของที่ยืมได้
-          </a>
+          <a href="/borrow" className="bw-btn bw-btn-primary flex-shrink-0">{tr("ดูของที่ยืมได้")}</a>
         </div>
 
         {items.length > 0 && (

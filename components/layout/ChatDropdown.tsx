@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useRef, useEffect } from "react";
 import { getUserConversations } from "@/lib/actions/chat-actions";
 import { useAuthStore } from "@/lib/stores/auth-store";
@@ -35,6 +37,7 @@ function timeAgo(dateStr: string): string {
 }
 
 export default function ChatDropdown({ onClose, onOpenChat }: ChatDropdownProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const [conversations, setConversations] = useState<ConversationPreview[]>([]);
   const [loading, setLoading] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -81,9 +84,9 @@ export default function ChatDropdown({ onClose, onOpenChat }: ChatDropdownProps)
       {/* Header */}
       <div className="px-4 pt-4 pb-3 border-b border-[var(--c-line)]">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-bold text-[var(--c-ink)]">แชท</h3>
+          <h3 className="text-base font-bold text-[var(--c-ink)]">{tr("แชท")}</h3>
           <div className="flex items-center gap-2">
-            <button className="text-xs text-[var(--c-muted)] hover:text-[var(--c-ink)] transition" title="ค้นหา">
+            <button className="text-xs text-[var(--c-muted)] hover:text-[var(--c-ink)] transition" title={tr("ค้นหา")}>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -93,7 +96,7 @@ export default function ChatDropdown({ onClose, onOpenChat }: ChatDropdownProps)
         {/* Filter pills */}
         <div className="flex gap-1.5 mt-2.5">
           <span className="px-3 py-1 bg-[var(--c-ink)] text-white text-[11px] font-semibold rounded-full">ทั้งหมด</span>
-          <span className="px-3 py-1 bg-[var(--c-line-soft)] text-[var(--c-ink-2)] text-[11px] font-medium rounded-full hover:bg-[var(--c-line)] cursor-pointer transition">ยังไม่ได้อ่าน</span>
+          <span className="px-3 py-1 bg-[var(--c-line-soft)] text-[var(--c-ink-2)] text-[11px] font-medium rounded-full hover:bg-[var(--c-line)] cursor-pointer transition">{tr("ยังไม่ได้อ่าน")}</span>
         </div>
       </div>
 
@@ -101,14 +104,12 @@ export default function ChatDropdown({ onClose, onOpenChat }: ChatDropdownProps)
       <div className="max-h-[380px] overflow-y-auto">
         {loading ? (
           <div className="py-12 text-center text-[var(--c-muted)] text-sm">
-            <div className="animate-spin w-6 h-6 border-2 border-[var(--c-line)] border-t-[var(--c-ink)] rounded-full mx-auto mb-2" />
-            กำลังโหลด...
-          </div>
+            <div className="animate-spin w-6 h-6 border-2 border-[var(--c-line)] border-t-[var(--c-ink)] rounded-full mx-auto mb-2" />{tr("กำลังโหลด...")}</div>
         ) : conversations.length === 0 ? (
           <div className="py-12 text-center text-[var(--c-muted)]">
             <p className="text-3xl mb-2">💬</p>
-            <p className="text-sm font-medium">ยังไม่มีแชท</p>
-            <p className="text-xs mt-1">เริ่มแชทกับผู้ขายโดยคลิก &quot;แชทกับผู้ขาย&quot; ในหน้าสินค้า</p>
+            <p className="text-sm font-medium">{tr("ยังไม่มีแชท")}</p>
+            <p className="text-xs mt-1">{tr("เริ่มแชทกับผู้ขายโดยคลิก &quot;แชทกับผู้ขาย&quot; ในหน้าสินค้า")}</p>
           </div>
         ) : (
           conversations.map((conv) => {
@@ -149,11 +150,11 @@ export default function ChatDropdown({ onClose, onOpenChat }: ChatDropdownProps)
                     <p className="text-[12px] text-[var(--c-muted)] truncate">
                       {lastMsg ? (
                         <>
-                          {lastMsgIsMine && <span className="text-[var(--c-ink-2)]">คุณ: </span>}
+                          {lastMsgIsMine && <span className="text-[var(--c-ink-2)]">{tr("คุณ:")}</span>}
                           {lastMsg.content}
                         </>
                       ) : (
-                        <span className="italic">เริ่มแชท</span>
+                        <span className="italic">{tr("เริ่มแชท")}</span>
                       )}
                     </p>
                   </div>
@@ -166,9 +167,7 @@ export default function ChatDropdown({ onClose, onOpenChat }: ChatDropdownProps)
 
       {/* Footer */}
       <div className="px-4 py-2.5 border-t border-[var(--c-line)] text-center">
-        <button className="text-[13px] font-medium text-[var(--c-accent)] hover:underline">
-          ดูแชททั้งหมด
-        </button>
+        <button className="text-[13px] font-medium text-[var(--c-accent)] hover:underline">{tr("ดูแชททั้งหมด")}</button>
       </div>
     </div>
   );

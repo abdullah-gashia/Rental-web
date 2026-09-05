@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useEffect, useTransition } from "react";
 import { changePassword } from "../actions";
 
@@ -69,6 +71,7 @@ function PasswordField({
 }
 
 export default function ChangePasswordDialog({ open, onClose, showToast }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const [current, setCurrent] = useState("");
   const [next, setNext]       = useState("");
   const [confirm, setConfirm] = useState("");
@@ -136,18 +139,14 @@ export default function ChangePasswordDialog({ open, onClose, showToast }: Props
         className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4"
       >
         <div>
-          <h3 id="change-password-title" className="text-base font-bold text-[var(--c-ink)] flex items-center gap-2">
-            🔑 เปลี่ยนรหัสผ่าน
-          </h3>
-          <p className="text-xs text-[var(--c-muted)] mt-1">
-            ยืนยันรหัสผ่านปัจจุบันก่อน แล้วตั้งรหัสผ่านใหม่ตามต้องการ
-          </p>
+          <h3 id="change-password-title" className="text-base font-bold text-[var(--c-ink)] flex items-center gap-2">{tr("🔑 เปลี่ยนรหัสผ่าน")}</h3>
+          <p className="text-xs text-[var(--c-muted)] mt-1">{tr("ยืนยันรหัสผ่านปัจจุบันก่อน แล้วตั้งรหัสผ่านใหม่ตามต้องการ")}</p>
         </div>
 
         <div className="space-y-3.5">
           <PasswordField
             id="cp-current"
-            label="รหัสผ่านปัจจุบัน"
+            label={tr("รหัสผ่านปัจจุบัน")}
             value={current}
             onChange={(v) => { setCurrent(v); setError(null); }}
             autoFocus
@@ -158,7 +157,7 @@ export default function ChangePasswordDialog({ open, onClose, showToast }: Props
           <div className="border-t border-[var(--c-line)] pt-3.5 space-y-3.5">
             <PasswordField
               id="cp-new"
-              label="รหัสผ่านใหม่"
+              label={tr("รหัสผ่านใหม่")}
               value={next}
               onChange={(v) => { setNext(v); setError(null); }}
               disabled={pending}
@@ -168,16 +167,14 @@ export default function ChangePasswordDialog({ open, onClose, showToast }: Props
             <div>
               <PasswordField
                 id="cp-confirm"
-                label="ยืนยันรหัสผ่านใหม่"
+                label={tr("ยืนยันรหัสผ่านใหม่")}
                 value={confirm}
                 onChange={(v) => { setConfirm(v); setError(null); }}
                 disabled={pending}
                 autoComplete="new-password"
               />
               {mismatch && (
-                <p className="text-[11px] text-[var(--c-danger)] mt-1.5">
-                  รหัสผ่านใหม่และการยืนยันยังไม่ตรงกัน
-                </p>
+                <p className="text-[11px] text-[var(--c-danger)] mt-1.5">{tr("รหัสผ่านใหม่และการยืนยันยังไม่ตรงกัน")}</p>
               )}
             </div>
           </div>

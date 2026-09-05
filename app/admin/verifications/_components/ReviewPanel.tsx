@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { reviewVerification } from "@/app/profile/verify/actions";
@@ -20,6 +22,7 @@ interface Props {
 }
 
 export default function ReviewPanel({ request }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -42,13 +45,11 @@ export default function ReviewPanel({ request }: Props) {
     return (
       <div className="bg-[var(--c-ok-soft)] border border-[var(--c-ok-line)] rounded-2xl p-6 text-center space-y-3">
         <p className="text-3xl">✅</p>
-        <p className="font-semibold text-emerald-800">บันทึกผลเรียบร้อยแล้ว</p>
+        <p className="font-semibold text-emerald-800">{tr("บันทึกผลเรียบร้อยแล้ว")}</p>
         <button
           onClick={() => router.push("/admin/verifications")}
           className="text-sm text-[var(--c-ok)] underline"
-        >
-          กลับรายการ
-        </button>
+        >{tr("กลับรายการ")}</button>
       </div>
     );
   }
@@ -56,9 +57,10 @@ export default function ReviewPanel({ request }: Props) {
   const finalReason = rejectionReason === "อื่นๆ" ? customReason : rejectionReason;
 
   function handleSubmit() {
+  const tr = useLocaleStore((s) => s.tr);
     if (!decision) return;
     if (decision === "REJECTED" && !finalReason.trim()) {
-      setError("กรุณาระบุเหตุผลการปฏิเสธ");
+      setError(tr("กรุณาระบุเหตุผลการปฏิเสธ"));
       return;
     }
     setError(null);
@@ -72,7 +74,7 @@ export default function ReviewPanel({ request }: Props) {
       });
 
       if (!result.success) {
-        setError(result.error ?? "เกิดข้อผิดพลาด");
+        setError(result.error ?? tr("เกิดข้อผิดพลาด"));
       } else {
         setDone(true);
         router.refresh();
@@ -82,7 +84,7 @@ export default function ReviewPanel({ request }: Props) {
 
   return (
     <div className="space-y-5">
-      <h3 className="font-semibold text-[var(--c-ink)]">ผลการตรวจสอบ</h3>
+      <h3 className="font-semibold text-[var(--c-ink)]">{tr("ผลการตรวจสอบ")}</h3>
 
       {/* Decision buttons */}
       <div className="flex gap-3">
@@ -93,9 +95,7 @@ export default function ReviewPanel({ request }: Props) {
               ? "border-emerald-500 bg-[var(--c-ok-soft)] text-[var(--c-ok)]"
               : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:border-emerald-300"
           }`}
-        >
-          ✅ อนุมัติ
-        </button>
+        >{tr("✅ อนุมัติ")}</button>
         <button
           onClick={() => { setDecision("REJECTED"); setRejection(""); }}
           className={`flex-1 py-3 rounded-xl font-semibold text-sm border-2 transition ${
@@ -103,15 +103,13 @@ export default function ReviewPanel({ request }: Props) {
               ? "border-red-400 bg-[var(--c-danger-soft)] text-[var(--c-danger)]"
               : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:border-[var(--c-danger-line)]"
           }`}
-        >
-          ❌ ปฏิเสธ
-        </button>
+        >{tr("❌ ปฏิเสธ")}</button>
       </div>
 
       {/* Rejection reasons */}
       {decision === "REJECTED" && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-[var(--c-ink-1)]">เหตุผลการปฏิเสธ</label>
+          <label className="text-sm font-medium text-[var(--c-ink-1)]">{tr("เหตุผลการปฏิเสธ")}</label>
           <div className="space-y-2">
             {REJECTION_REASONS.map((r) => (
               <label key={r} className="flex items-center gap-2.5 cursor-pointer">
@@ -131,7 +129,7 @@ export default function ReviewPanel({ request }: Props) {
             <textarea
               value={customReason}
               onChange={(e) => setCustomReason(e.target.value)}
-              placeholder="ระบุเหตุผล..."
+              placeholder={tr("ระบุเหตุผล...")}
               rows={2}
               className="w-full px-3 py-2 text-sm border border-[var(--c-line)] rounded-xl focus:outline-none focus:border-[var(--c-ink)] resize-none"
             />
@@ -141,11 +139,11 @@ export default function ReviewPanel({ request }: Props) {
 
       {/* Admin note */}
       <div className="space-y-1.5">
-        <label className="text-sm font-medium text-[var(--c-ink-1)]">บันทึกแอดมิน (ไม่บังคับ)</label>
+        <label className="text-sm font-medium text-[var(--c-ink-1)]">{tr("บันทึกแอดมิน (ไม่บังคับ)")}</label>
         <textarea
           value={adminNote}
           onChange={(e) => setAdminNote(e.target.value)}
-          placeholder="บันทึกส่วนตัวสำหรับแอดมิน ผู้ใช้จะไม่เห็น..."
+          placeholder={tr("บันทึกส่วนตัวสำหรับแอดมิน ผู้ใช้จะไม่เห็น...")}
           rows={2}
           className="w-full px-3 py-2 text-sm border border-[var(--c-line)] rounded-xl focus:outline-none focus:border-[var(--c-ink)] resize-none"
         />
@@ -167,7 +165,7 @@ export default function ReviewPanel({ request }: Props) {
             : "bg-[var(--c-ink)] text-white"
         }`}
       >
-        {isPending ? "กำลังบันทึก…" : "บันทึกผล"}
+        {isPending ? tr("กำลังบันทึก…") : tr("บันทึกผล")}
       </button>
     </div>
   );
