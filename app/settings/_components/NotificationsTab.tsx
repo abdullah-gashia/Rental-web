@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { updatePreferences } from "../actions";
@@ -30,7 +30,7 @@ const DEFAULTS = {
 };
 
 export default function NotificationsTab({ preferences, showToast }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const prefs = preferences ?? DEFAULTS;
   const [state, setState] = useState(prefs);
   const [pending, startTransition] = useTransition();

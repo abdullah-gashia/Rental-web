@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -73,7 +73,7 @@ function Avatar({ user, size = "sm" }: { user: { name: string | null; image: str
 // ─── Image Lightbox ───────────────────────────────────────────────────────────
 
 function EvidenceGallery({ images }: { images: string[] }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [lightbox, setLightbox] = useState<string | null>(null);
 
   if (images.length === 0) return (
@@ -127,7 +127,7 @@ function ChatLog({
   buyerId:  string;
   sellerId: string;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [open, setOpen] = useState(false);
 
   // Find the conversation that includes both parties
@@ -225,7 +225,7 @@ function DisputeCard({
   onResolve: (orderId: string, resolution: "REFUND_BUYER" | "RELEASE_TO_SELLER") => void;
   resolving: boolean;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [confirmAction, setConfirmAction] = useState<"REFUND_BUYER" | "RELEASE_TO_SELLER" | null>(null);
 
   const dispute     = order.dispute;
@@ -379,7 +379,7 @@ function DisputeCard({
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function DisputesClient({ orders: initialOrders }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
   const [orders, setOrders]       = useState(initialOrders);
   const [isPending, start]        = useTransition();
@@ -401,7 +401,7 @@ export default function DisputesClient({ orders: initialOrders }: Props) {
   }
 
   function handleAutoRelease() {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     setAutoMsg(null);
     start(async () => {
       const res = await checkAndAutoReleaseEscrows();

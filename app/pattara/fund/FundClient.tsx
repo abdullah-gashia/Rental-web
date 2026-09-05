@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -24,7 +24,7 @@ const blank: FundEntryInput = {
 };
 
 export default function FundClient({ summary, entries }: { summary: any; entries: any[] }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [form, setForm]   = useState<FundEntryInput>(blank);
@@ -45,7 +45,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
   }
 
   async function uploadReceipt(file: File | undefined) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!file) return;
     setUploading(true);
     try {

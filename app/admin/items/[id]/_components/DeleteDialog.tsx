@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
 
@@ -15,7 +15,7 @@ interface Props {
 export default function DeleteDialog({
   open, itemTitle, loading = false, onConfirm, onCancel,
 }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [reason, setReason] = useState("");
   const [confirmText, setConfirmText] = useState("");
 

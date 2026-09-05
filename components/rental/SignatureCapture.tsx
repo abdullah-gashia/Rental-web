@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useRef, useState, useEffect, useCallback } from "react";
 
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function SignatureCapture({ onComplete, onCancel, agreementText, signerName, signerRole }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const [isDrawing,    setIsDrawing]    = useState(false);
   const [hasSignature, setHasSignature] = useState(false);

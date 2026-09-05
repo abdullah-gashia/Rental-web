@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
 
@@ -30,7 +30,7 @@ export interface Reputation {
 }
 
 function Stars({ rating, className = "" }: { rating: number; className?: string }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   return (
     <span className={`inline-flex ${className}`} aria-label={tr("{0} ดาว", [rating])}>
       {[1, 2, 3, 4, 5].map((s) => (
@@ -45,7 +45,7 @@ function formatDate(iso: string) {
 }
 
 function ReviewList({ reviews, empty }: { reviews: ReviewRow[]; empty: string }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   if (reviews.length === 0) {
     return <p className="text-sm text-[var(--c-muted)] py-8 text-center">{empty}</p>;
   }
@@ -84,7 +84,7 @@ function ReviewList({ reviews, empty }: { reviews: ReviewRow[]; empty: string })
 }
 
 export default function ReputationPanel({ reputation }: { reputation: Reputation }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [tab, setTab] = useState<"orders" | "profile">("orders");
 
   const {

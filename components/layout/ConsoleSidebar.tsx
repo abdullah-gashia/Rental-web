@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
@@ -78,7 +78,7 @@ interface Props {
 export default function ConsoleSidebar({
   title, groups, user, backHref = "/", backLabel = "กลับหน้าร้าน", userFallback = "ผู้ใช้",
 }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 

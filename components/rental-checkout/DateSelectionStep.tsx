@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { calcRentalDays, calcRentalPricing } from "./useRentalCheckoutReducer";
 import PriceBreakdown from "./PriceBreakdown";
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export default function DateSelectionStep({ state, item, onChange }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const today = new Date().toISOString().slice(0, 10);
   const maxStart = (() => {
     const d = new Date();

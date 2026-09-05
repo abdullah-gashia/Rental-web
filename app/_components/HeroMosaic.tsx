@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -16,7 +16,7 @@ interface Props {
  * one tall card and two short cards stacked on the right.
  */
 export default function HeroMosaic({ items, onItemClick }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   // The spotlight rotates through everything that isn't pinned to the side grid
   const sideItems      = items.slice(0, 3);
   const spotlightItems = items.length > 3 ? items.slice(3) : items;
@@ -124,7 +124,7 @@ export default function HeroMosaic({ items, onItemClick }: Props) {
 // ─── Spotlight ────────────────────────────────────────────────────────────────
 
 function SpotlightCard({ featured, onClick }: { featured: FeaturedItemDisplay; onClick: () => void }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const { item, customLabel } = featured;
   const img = item.images.find((i) => i.isMain) ?? item.images[0];
 

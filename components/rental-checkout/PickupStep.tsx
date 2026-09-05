@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
 import { CAMPUS_MEETUP_LOCATIONS } from "@/lib/config/meetup-locations";
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export default function PickupStep({ state, startDate, onUpdate }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [useCustomPickup,  setUseCustomPickup]  = useState(
     !CAMPUS_MEETUP_LOCATIONS.some((l) => l.label === state.pickupLocation)
   );

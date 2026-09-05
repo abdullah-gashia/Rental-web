@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useT, useLocale } from "@/lib/i18n/LocaleProvider";
 import type { TrendCard } from "@/lib/types";
 
 const trendCards: TrendCard[] = [
@@ -15,7 +15,8 @@ const trendCards: TrendCard[] = [
 ];
 
 export default function TrendingCarousel() {
-  const { t, locale } = useLocaleStore();
+  const t = useT();
+  const locale = useLocale();
 
   const renderCard = (card: TrendCard, i: number) => {
     const bg = card.grad ? { background: card.grad } : { background: card.bg, border: card.border };

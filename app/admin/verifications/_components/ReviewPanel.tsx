@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export default function ReviewPanel({ request }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -55,7 +55,7 @@ export default function ReviewPanel({ request }: Props) {
   const finalReason = rejectionReason === tr("อื่นๆ") ? customReason : rejectionReason;
 
   function handleSubmit() {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!decision) return;
     if (decision === "REJECTED" && !finalReason.trim()) {
       setError(tr("กรุณาระบุเหตุผลการปฏิเสธ"));

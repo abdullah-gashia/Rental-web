@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useRef, useState, useCallback, useEffect } from "react";
 
@@ -28,7 +28,7 @@ interface Props {
 }
 
 export default function FaceLivenessCapture({ onComplete }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const videoRef  = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 

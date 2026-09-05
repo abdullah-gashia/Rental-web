@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import type { RentalCheckoutState, RentalPricing } from "./useRentalCheckoutReducer";
 
@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function PaymentStep({ state, pricing, walletBalance, onSetPayment }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const balance = walletBalance ?? 0;
   const { totalPaid, securityDeposit, rentalFee, platformFee } = pricing;
 

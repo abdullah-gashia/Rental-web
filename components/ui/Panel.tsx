@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 interface PanelProps {
   title: string;
@@ -36,7 +36,7 @@ export default function Panel({
   className = "",
   children,
 }: PanelProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const showArrows = !!(onPrev || onNext);
 
   return (

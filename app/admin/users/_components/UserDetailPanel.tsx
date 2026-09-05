@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition, useEffect } from "react";
 import type { UserDetail }                     from "../../_lib/types";
@@ -23,7 +23,7 @@ const VERIFICATION_LABELS: Record<string, string> = {
 };
 
 export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [data, setData]    = useState<UserDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [pending, startTransition] = useTransition();

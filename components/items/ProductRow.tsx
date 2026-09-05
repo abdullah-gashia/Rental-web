@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useT, useLocale } from "@/lib/i18n/LocaleProvider";
 import type { ItemWithDetails } from "@/lib/types";
 
 interface ProductRowProps {
@@ -13,7 +13,8 @@ interface ProductRowProps {
  * price tag on the right. The unit inside every panel.
  */
 export default function ProductRow({ item, onClick }: ProductRowProps) {
-  const { t, locale } = useLocaleStore();
+  const t = useT();
+  const locale = useLocale();
 
   const isRent     = item.listingType === "RENT";
   const rentAmount = item.rentalRate ?? item.dailyRate ?? 0;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import ReasonDialog from "./ReasonDialog";
@@ -25,7 +25,7 @@ interface Props {
 }
 
 export default function AdminActionPanel({ item }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [pending, startTransition] = useTransition();
   const [toast, setToast] = useState<{ ok: boolean; msg: string } | null>(null);
 

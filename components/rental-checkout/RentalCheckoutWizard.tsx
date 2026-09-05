@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -56,7 +56,7 @@ const STEPS = [
 // ─── Main Component ──────────────────────────────────────────────────────────
 
 export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router    = useRouter();
   const showToast = useToastStore((s) => s.show);
   const { state, dispatch, reset } = useRentalCheckoutReducer();
@@ -85,7 +85,7 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
   const canNext = canAdvance(state, minRentalDays, maxRentalDays);
 
   function handleSubmit() {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     setSubmitError(null);
     startTransition(async () => {
       const res = await createRentalOrder({

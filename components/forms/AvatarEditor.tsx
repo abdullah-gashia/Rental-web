@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useRef, useCallback, useEffect } from "react";
 
@@ -30,7 +30,7 @@ interface Props {
 }
 
 export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [img, setImg]       = useState<HTMLImageElement | null>(null);
   const [zoom, setZoom]     = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -84,7 +84,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
   );
 
   function pick(file: File | undefined) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!file) return;
     setError(null);
 
@@ -134,7 +134,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
 
   // ── Export ────────────────────────────────────────────────────────────────
   async function save() {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!img) return;
     setBusy(true);
     setError(null);

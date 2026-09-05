@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useT, useTr } from "@/lib/i18n/LocaleProvider";
 
 interface StatsBarProps {
   totalItems: number;
@@ -19,8 +19,8 @@ interface StatsBarProps {
  * platform far larger and better rated than the real one.
  */
 export default function StatsBar({ totalItems, verifiedSellers, avgRating, reviewCount }: StatsBarProps) {
-  const tr = useLocaleStore((s) => s.tr);
-  const t = useLocaleStore((s) => s.t);
+  const tr = useTr();
+  const t = useT();
 
   const stats = [
     { value: totalItems.toLocaleString(),      label: t("stat_listings") },

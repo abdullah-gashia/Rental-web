@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import {
   BarChart,
@@ -35,7 +35,7 @@ function baht(n: number) {
 
 // Custom tooltip
 function CustomTooltip({ active, payload, label }: any) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   if (!active || !payload?.length) return null;
   const fee    = payload[0]?.value ?? 0;
   const orders = payload[1]?.value ?? 0;
@@ -49,7 +49,7 @@ function CustomTooltip({ active, payload, label }: any) {
 }
 
 export default function RevenueChart({ data }: RevenueChartProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   // Sparse ticks: show every other label so the axis doesn't crowd on mobile
   const tickDates = data.filter((_, i) => i % 2 === 0).map((d) => d.date);
 

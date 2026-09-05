@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { BORROW_CATEGORY_LABEL } from "@/lib/borrow-config";
 
@@ -47,7 +47,7 @@ interface Props {
  * than no aisle.
  */
 export default function BorrowPromo({ items, raised, itemsTotal, timesLent }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   if (itemsTotal === 0) return null;
 
   return (

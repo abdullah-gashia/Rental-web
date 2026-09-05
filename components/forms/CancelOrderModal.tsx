@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { cancelOrderNew } from "@/lib/actions/order-transitions";
@@ -44,7 +44,7 @@ const SELLER_REASONS_MEETUP = [
 export default function CancelOrderModal({
   orderId, itemTitle, amount, role, paymentMethod, meetupDateTime, onClose, onSuccess,
 }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const isMeetupOrder = !!meetupDateTime;
   const reasons = role === "buyer"
     ? BUYER_REASONS
@@ -71,7 +71,7 @@ export default function CancelOrderModal({
   })();
 
   function handleSubmit(e: React.FormEvent) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     e.preventDefault();
     setFormError(null);
 

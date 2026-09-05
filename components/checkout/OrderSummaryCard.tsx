@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 interface OrderSummaryCardProps {
   title: string;
@@ -17,7 +17,7 @@ export default function OrderSummaryCard({
   imageUrl,
   emoji,
 }: OrderSummaryCardProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   return (
     <div className="flex items-center gap-3 bg-[var(--c-canvas)] rounded-xl px-4 py-3 mb-5 border border-[var(--c-line)]">
       {/* Thumbnail */}

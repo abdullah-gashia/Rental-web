@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import type { CheckoutState, CheckoutAction } from "./useCheckoutReducer";
 import { getPriceBreakdown } from "@/lib/utils/pricing";
@@ -20,7 +20,7 @@ export default function ReviewStep({
   itemTitle,
   sellerName,
 }: ReviewStepProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const deliveryMethod = state.deliveryMethod ?? "SHIPPING";
   const paymentMethod = state.paymentMethod ?? "ESCROW";
   const breakdown = getPriceBreakdown(itemPrice, deliveryMethod, paymentMethod);

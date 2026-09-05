@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
@@ -14,7 +14,7 @@ export default function SearchInput({
   placeholder = "ค้นหา...",
   paramKey    = "search",
 }: SearchInputProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router   = useRouter();
   const sp       = useSearchParams();
   const pathname = usePathname();

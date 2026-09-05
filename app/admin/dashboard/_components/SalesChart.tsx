@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import {
   ComposedChart,
@@ -47,7 +47,7 @@ function CustomTooltip({
   payload?: { name: string; value: number; color: string }[];
   label?: string;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-xl shadow-lg px-4 py-3 text-sm">
@@ -65,7 +65,7 @@ function CustomTooltip({
 }
 
 export default function SalesChart({ data }: SalesChartProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const formatted = data.map((d) => ({ ...d, dateLabel: formatDate(d.date) }));
 
   return (

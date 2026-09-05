@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { updateTrackingPreference, clearViewHistory, exportMyData } from "../actions";
@@ -26,7 +26,7 @@ function formatThaiDate(iso: string): string {
 }
 
 export default function SecurityTab({ userData, showToast }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [tracking, setTracking] = useState(userData.trackingEnabled);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
@@ -50,7 +50,7 @@ export default function SecurityTab({ userData, showToast }: Props) {
   };
 
   const handleExport = () => {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     startTransition(async () => {
       const res = await exportMyData();
       if (res.success) {

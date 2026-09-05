@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 import type { TrFn } from "@/lib/i18n/phrases";
 
 interface Order {
@@ -44,7 +44,7 @@ function relativeTime(iso: string, tr: TrFn): string {
 }
 
 export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   if (orders.length === 0) {
     return (
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 shadow-sm">

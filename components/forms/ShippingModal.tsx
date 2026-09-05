@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useRef, useTransition } from "react";
 import { confirmShipment } from "@/lib/actions/escrow-actions";
@@ -33,7 +33,7 @@ async function uploadFile(file: File): Promise<string> {
 }
 
 export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [method,          setMethod]          = useState("POST");
@@ -50,7 +50,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
   // ─── Proof image upload ───────────────────────────────────────────────────
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
@@ -82,7 +82,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
   // ─── Submit ───────────────────────────────────────────────────────────────
 
   function handleSubmit(e: React.FormEvent) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     e.preventDefault();
     setFormError(null);
 

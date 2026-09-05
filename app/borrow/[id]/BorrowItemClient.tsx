@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,7 @@ import {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export default function BorrowItemClient({ item }: { item: any }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router    = useRouter();
   const openModal = useModalStore((s) => s.open);
 

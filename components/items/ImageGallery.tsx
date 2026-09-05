@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useEffect, useCallback } from "react";
 import type { ItemImage } from "@/lib/types";
@@ -15,7 +15,7 @@ interface ImageGalleryProps {
 }
 
 export default function ImageGallery({ images: rawImages, emoji, color, title }: ImageGalleryProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   // Filter out broken relations: null entries or entries missing a url
   const images = rawImages.filter((img): img is ItemImage => !!img?.url);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 interface ConfirmDialogProps {
   open:          boolean;
@@ -25,7 +25,7 @@ export default function ConfirmDialog({
   onCancel,
   children,
 }: ConfirmDialogProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   if (!open) return null;
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useRef, useEffect } from "react";
 import { useAuthStore } from "@/lib/stores/auth-store";
@@ -11,7 +11,7 @@ interface UserDropdownProps {
 }
 
 export default function UserDropdown({ onClose }: UserDropdownProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const { user, logout: clearAuth } = useAuthStore();
   const dropdownRef = useRef<HTMLDivElement>(null);
 

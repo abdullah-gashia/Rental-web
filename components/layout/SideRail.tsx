@@ -3,7 +3,7 @@
 import { useModalStore } from "@/lib/stores/modal-store";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { useWishlistStore } from "@/lib/stores/wishlist-store";
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useT, useTr } from "@/lib/i18n/LocaleProvider";
 import type { CategorySlug, RailSelection } from "@/lib/types";
 
 interface SideRailProps {
@@ -34,8 +34,8 @@ const PATHS = {
 };
 
 export default function SideRail({ activeCat, onCatChange }: SideRailProps) {
-  const tr = useLocaleStore((s) => s.tr);
-  const t             = useLocaleStore((s) => s.t);
+  const tr = useTr();
+  const t             = useT();
   const openModal     = useModalStore((s) => s.open);
   const user          = useAuthStore((s) => s.user);
   const wishlistCount = useWishlistStore((s) => s.count);

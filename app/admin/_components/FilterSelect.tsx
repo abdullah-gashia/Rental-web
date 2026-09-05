@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
@@ -15,7 +15,7 @@ interface FilterSelectProps {
 }
 
 export default function FilterSelect({ name, options }: FilterSelectProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router   = useRouter();
   const sp       = useSearchParams();
   const pathname = usePathname();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -35,7 +35,7 @@ const CONDITION_LABELS: Record<string, string> = {
 
 /** Colour tracks the band the score falls in, not the raw number. */
 function SafetyBadge({ score }: { score: number }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const tone =
     score >= 95 ? { bg: "var(--c-ok-soft)", fg: "var(--c-ok)", br: "var(--c-ok-line)" } :
     score >= 50 ? { bg: "#fff7e6", fg: "var(--c-warn)", br: "#f5e3b8" } :
@@ -65,12 +65,12 @@ function RejectModal({
   onSubmit: (reason: string) => void;
   isPending: boolean;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [reason, setReason] = useState("");
   const [error, setError]   = useState("");
 
   function handleSubmit(e: React.FormEvent) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     e.preventDefault();
     if (!reason.trim()) { setError(tr("กรุณาระบุเหตุผล")); return; }
     onSubmit(reason);
@@ -159,7 +159,7 @@ function RejectModal({
 // ─── Main Component ──────────────────────────────────
 
 export default function ApprovalsClient({ items: initialItems }: { items: PendingItem[] }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [items, setItems]             = useState<PendingItem[]>(initialItems);
   const [rejectTarget, setRejectTarget] = useState<PendingItem | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);

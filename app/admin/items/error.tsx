@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 export default function ItemsError({
   error,
@@ -9,7 +9,7 @@ export default function ItemsError({
   error: Error;
   reset: () => void;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   return (
     <div className="flex flex-col items-center justify-center py-24 gap-4">
       <div className="text-4xl">⚠️</div>

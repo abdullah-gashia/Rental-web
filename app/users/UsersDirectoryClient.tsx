@@ -1,8 +1,9 @@
 "use client";
 
+import type { TrFn } from "@/lib/i18n/phrases";
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useLocale, useTr } from "@/lib/i18n/LocaleProvider";
 import Navbar from "@/components/layout/Navbar";
 import SideRail from "@/components/layout/SideRail";
 import Footer from "@/components/layout/Footer";
@@ -10,7 +11,7 @@ import type { DirectoryUser } from "@/lib/actions/user-directory";
 
 /** Five stars, the last one half-lit when the average lands between two. */
 function Stars({ rating, className = "" }: { rating: number; className?: string }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const rounded = Math.round(rating);
   return (
     <span className={`inline-flex ${className}`} aria-label={tr("{0} ดาว", [rating.toFixed(1)])}>
@@ -21,17 +22,16 @@ function Stars({ rating, className = "" }: { rating: number; className?: string 
   );
 }
 
-function trustTone(score: number) {
-  const tr = useLocaleStore((s) => s.tr);
+function trustTone(score: number, tr: TrFn) {
   if (score >= 120) return { label: tr("น่าเชื่อถือสูง"), cls: "bg-[var(--c-ok-soft)] text-[var(--c-ok)] border-[var(--c-ok-line)]" };
   if (score >= 80)  return { label: tr("ปกติ"),          cls: "bg-[var(--hp-subtle)] text-[var(--hp-ink-2)] border-[var(--hp-border)]" };
   return              { label: tr("ควรระวัง"),      cls: "bg-[#fff7e6] text-[var(--c-warn)] border-[#f5e3b8]" };
 }
 
 export default function UsersDirectoryClient({ users }: { users: DirectoryUser[] }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
-  const locale = useLocaleStore((s) => s.locale);
+  const locale = useLocale();
   const th = locale !== "en";
 
   const [query, setQuery] = useState("");
@@ -119,7 +119,7 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {filtered.map((u) => {
-            const tone = trustTone(u.trustScore);
+            const tone = trustTone(u.trustScore, tr);
 
             // ── An office ────────────────────────────────────────────────
             if (u.isOffice) {

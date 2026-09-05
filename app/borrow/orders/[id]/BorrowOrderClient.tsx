@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -48,12 +48,12 @@ function Row({ k, v }: { k: string; v: React.ReactNode }) {
 
 /** Photo picker that compresses in the browser before uploading. */
 function PhotoPicker({ photos, onChange }: { photos: string[]; onChange: (p: string[]) => void }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [busy, setBusy] = useState(false);
   const [err, setErr]   = useState<string | null>(null);
 
   async function pick(files: FileList | null) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!files?.length) return;
     setBusy(true); setErr(null);
     const next = [...photos];
@@ -100,7 +100,7 @@ function PhotoPicker({ photos, onChange }: { photos: string[]; onChange: (p: str
 }
 
 export default function BorrowOrderClient({ order, backHref }: { order: any; backHref: string }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [msg, setMsg]   = useState<{ ok: boolean; text: string } | null>(null);

@@ -1,6 +1,7 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import type { TrFn } from "@/lib/i18n/phrases";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { formatThaiDate, formatNumber, truncateId } from "../../../_lib/utils";
 import { useState } from "react";
@@ -19,7 +20,7 @@ interface Props {
 }
 
 export default function SystemMetadataCard({ item }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [copied, setCopied] = useState(false);
 
   function copyId() {
@@ -48,14 +49,14 @@ export default function SystemMetadataCard({ item }: Props) {
         {/* Created */}
         <Row label={tr("สร้างเมื่อ")}>
           <span className="text-sm text-[var(--c-ink-1)]">
-            {formatThaiDateWithTime(item.createdAt)}
+            {formatThaiDateWithTime(item.createdAt, tr)}
           </span>
         </Row>
 
         {/* Updated */}
         <Row label={tr("แก้ไขล่าสุด")}>
           <span className="text-sm text-[var(--c-ink-1)]">
-            {formatThaiDateWithTime(item.updatedAt)}
+            {formatThaiDateWithTime(item.updatedAt, tr)}
           </span>
         </Row>
 
@@ -63,7 +64,7 @@ export default function SystemMetadataCard({ item }: Props) {
         <Row label={tr("เข้าชมล่าสุด")}>
           <span className="text-sm text-[var(--c-ink-1)]">
             {item.lastViewedAt
-              ? formatThaiDateWithTime(item.lastViewedAt)
+              ? formatThaiDateWithTime(item.lastViewedAt, tr)
               : tr("ยังไม่มีผู้เข้าชม")}
           </span>
         </Row>
@@ -112,8 +113,7 @@ function StatBox({
   );
 }
 
-function formatThaiDateWithTime(date: string): string {
-  const tr = useLocaleStore((s) => s.tr);
+function formatThaiDateWithTime(date: string, tr: TrFn): string {
   const d = new Date(date);
   const MONTH_TH = [tr("ม.ค."),tr("ก.พ."),tr("มี.ค."),tr("เม.ย."),tr("พ.ค."),tr("มิ.ย."),
                      tr("ก.ค."),tr("ส.ค."),tr("ก.ย."),tr("ต.ค."),tr("พ.ย."),tr("ธ.ค.")];

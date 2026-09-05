@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
@@ -13,7 +13,7 @@ const TABS = [
 ] as const;
 
 export default function StatusGroupTabs({ active }: { active: string }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router   = useRouter();
   const pathname = usePathname();
   const sp       = useSearchParams();

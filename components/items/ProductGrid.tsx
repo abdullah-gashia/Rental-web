@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useT } from "@/lib/i18n/LocaleProvider";
 import type { ItemWithDetails } from "@/lib/types";
 import ProductCard from "./ProductCard";
 import Panel from "@/components/ui/Panel";
@@ -16,7 +16,7 @@ interface ProductGridProps {
 /** Photo-forward grid inside a panel — used for search results. */
 export default function ProductGrid({ title, items, limit = 10, onItemClick }: ProductGridProps) {
   const [expanded, setExpanded] = useState(false);
-  const t = useLocaleStore((s) => s.t);
+  const t = useT();
 
   const visible = expanded ? items : items.slice(0, limit);
 

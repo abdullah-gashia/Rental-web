@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
 
@@ -41,7 +41,7 @@ export function abbreviateBaht(n: number): string {
 }
 
 export default function MoneyValue({ amount }: { amount: number }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [showExact, setShowExact] = useState(false);
 
   const short = abbreviateBaht(amount);

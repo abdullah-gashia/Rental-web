@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 // ─── System-message protocol ──────────────────────────────────────────────────
 //
@@ -58,7 +58,7 @@ export function parseSystemMessage(content: string): ParsedSystem | null {
 // ─── Shipping Receipt Card ────────────────────────────────────────────────────
 
 function ShippingCard({ data }: { data: ShippingPayload }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const shippedDate = new Date(data.shippedAt).toLocaleString("th-TH", {
     day: "numeric", month: "short", year: "numeric",
     hour: "2-digit", minute: "2-digit",
@@ -146,7 +146,7 @@ function ShippingCard({ data }: { data: ShippingPayload }) {
 // ─── Purchase Receipt Card ────────────────────────────────────────────────────
 
 function ReceiptCard({ data }: { data: ReceiptPayload }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const completedDate = new Date(data.completedAt).toLocaleString("th-TH", {
     day: "numeric", month: "long", year: "numeric",
     hour: "2-digit", minute: "2-digit",
@@ -213,7 +213,7 @@ function ReceiptCard({ data }: { data: ReceiptPayload }) {
 // ─── Default export ───────────────────────────────────────────────────────────
 
 export default function SystemMessage({ content }: { content: string }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const parsed = parseSystemMessage(content);
   if (!parsed) {
     // Graceful fallback — show as muted system notice

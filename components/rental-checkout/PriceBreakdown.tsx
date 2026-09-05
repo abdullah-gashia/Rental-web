@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import type { RentalPricing } from "./useRentalCheckoutReducer";
 
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function PriceBreakdown({ pricing, lateFeePerDay, compact }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const { rentalDays, rentalFee, platformFee, securityDeposit, totalPaid } = pricing;
 
   if (compact) {

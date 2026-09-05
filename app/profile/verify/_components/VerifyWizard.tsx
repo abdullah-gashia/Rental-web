@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -34,7 +34,7 @@ const INITIAL: FormState = {
 // ─── Progress bar ─────────────────────────────────────────────────────────────
 
 function StepBar({ current }: { current: Step }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const labels = [tr("ข้อมูล PSU ID"), tr("อัปโหลดบัตร"), tr("ยืนยันใบหน้า"), tr("ตรวจสอบ & ส่ง")];
   return (
     <div className="flex items-center gap-0 mb-8">
@@ -72,7 +72,7 @@ function PsuIdStep({ form, onChange, onNext }: {
   onChange: (patch: Partial<FormState>) => void;
   onNext:   () => void;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [err,              setErr]              = useState("");
   const [explicitlyChosen, setExplicitlyChosen] = useState(false);
 
@@ -103,7 +103,7 @@ function PsuIdStep({ form, onChange, onNext }: {
   }
 
   function validate(): boolean {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!form.psuIdType) { setErr(tr("กรุณาเลือกประเภท (นักศึกษา / บุคลากร)")); return false; }
     const n = form.psuIdNumber;
     if (!n) { setErr(tr("กรุณากรอกรหัสประจำตัว")); return false; }
@@ -236,13 +236,13 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
   onNext:   () => void;
   onBack:   () => void;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const fileRef  = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [err,       setErr]       = useState("");
 
   async function handleFile(file: File) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!file.type.startsWith("image/")) { setErr(tr("กรุณาเลือกไฟล์รูปภาพ")); return; }
 
     setUploading(true);
@@ -368,7 +368,7 @@ function FaceLivenessStep({ form, onChange, onNext, onBack }: {
   onNext:   () => void;
   onBack:   () => void;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   // If frames were already captured in a previous visit, start as done
   const alreadyDone = !!form.frames.front;
   const [done, setDone] = useState(alreadyDone);
@@ -406,7 +406,7 @@ function FaceLivenessStep({ form, onChange, onNext, onBack }: {
 // ─── Step 4: Review & Submit ──────────────────────────────────────────────────
 
 function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error,      setError]      = useState<string | null>(null);
@@ -417,7 +417,7 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
   const canSubmit      = !missingIdCard && !missingSelfie;
 
   async function handleSubmit() {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!canSubmit) {
       setError(tr("ข้อมูลไม่ครบ กรุณากลับไปตรวจสอบ"));
       return;

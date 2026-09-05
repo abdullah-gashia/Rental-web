@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { updatePreferences } from "../actions";
 import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 import { useThemeStore } from "@/lib/stores/theme-store";
 
 interface Props {
@@ -14,7 +15,7 @@ interface Props {
 }
 
 export default function DisplayTab({ preferences, showToast }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const setLocale    = useLocaleStore((s) => s.setLocale);
   const applyTheme   = useThemeStore((s) => s.setTheme);
   const currentTheme = useThemeStore((s) => s.theme);

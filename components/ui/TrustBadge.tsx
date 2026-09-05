@@ -1,6 +1,7 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import type { TrFn } from "@/lib/i18n/phrases";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 interface TrustBadgeProps {
   score: number;
@@ -17,8 +18,7 @@ interface Tier {
   tooltip: string;
 }
 
-function getTier(score: number): Tier {
-  const tr = useLocaleStore((s) => s.tr);
+function getTier(score: number, tr: TrFn): Tier {
   if (score >= 90) {
     return {
       label:   tr("น่าเชื่อถือสูง"),
@@ -50,8 +50,8 @@ function getTier(score: number): Tier {
 }
 
 export default function TrustBadge({ score, size = "md" }: TrustBadgeProps) {
-  const tr = useLocaleStore((s) => s.tr);
-  const tier = getTier(score);
+  const tr = useTr();
+  const tier = getTier(score, tr);
 
   return (
     <span

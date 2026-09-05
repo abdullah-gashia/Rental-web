@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
@@ -14,7 +14,7 @@ import Footer from "@/components/layout/Footer";
  * office, which has its own sidebar and must not render the marketplace one.
  */
 export default function BorrowOrderShell({ children }: { children: React.ReactNode }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
   const go = (c: string) => router.push(c === "all" ? "/" : `/?cat=${c}`);
 

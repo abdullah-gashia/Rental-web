@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr, useT, useLocale } from "@/lib/i18n/LocaleProvider";
 import Brand from "@/components/layout/Brand";
 import { useWishlistStore } from "@/lib/stores/wishlist-store";
 import { useModalStore } from "@/lib/stores/modal-store";
@@ -73,8 +74,10 @@ export default function Navbar({
   searchQuery, onSearchChange, activeCat, onCatChange, onChatOpen,
   searchPlaceholder, hideCategories = false,
 }: NavbarProps) {
-  const tr = useLocaleStore((s) => s.tr);
-  const { t, locale, toggleLocale } = useLocaleStore();
+  const tr = useTr();
+  const t = useT();
+  const locale = useLocale();
+  const toggleLocale = useLocaleStore((s) => s.toggleLocale);
   const wishlistCount = useWishlistStore((s) => s.count);
   const openModal = useModalStore((s) => s.open);
   const { user, isAuthenticated } = useAuthStore();

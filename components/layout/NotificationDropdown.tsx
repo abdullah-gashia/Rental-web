@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 import type { TrFn } from "@/lib/i18n/phrases";
 
 import { useState, useRef, useEffect } from "react";
@@ -41,7 +41,7 @@ function typeIcon(type: string): string {
 }
 
 export default function NotificationDropdown({ onClose }: NotificationDropdownProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);

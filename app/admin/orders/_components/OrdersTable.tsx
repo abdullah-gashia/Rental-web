@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import Image                        from "next/image";
 import type { OrderRow }            from "../../_lib/types";
 import { formatThaiDate, formatRelativeDate, formatCurrency, truncateId } from "../../_lib/utils";
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useLocale, useT, useTr } from "@/lib/i18n/LocaleProvider";
 import { orderStatus } from "@/lib/i18n/labels";
 import StatusBadge                  from "../../_components/StatusBadge";
 import ConfirmDialog                from "../../_components/ConfirmDialog";
@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function OrdersTable({ rows }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [pending, startTransition] = useTransition();
 
   type DialogKind = "complete" | "cancel";
@@ -26,8 +26,8 @@ export default function OrdersTable({ rows }: Props) {
   } | null>(null);
   const [cancelReason, setCancelReason] = useState("");
   const [toast, setToast] = useState<{ ok: boolean; msg: string } | null>(null);
-  const t      = useLocaleStore((st) => st.t);
-  const locale = useLocaleStore((st) => st.locale);
+  const t      = useT();
+  const locale = useLocale();
   const [expanded, setExpanded] = useState<string | null>(null);
 
   function showToast(ok: boolean, msg: string) {
@@ -312,7 +312,7 @@ function OrderActionsDropdown({
   onComplete: () => void;
   onCancel:   () => void;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [open, setOpen] = useState(false);
 
   // Statuses where admin can force-complete (release funds to seller)
@@ -377,7 +377,7 @@ function DeliveryMethodBadge({
   delivery: string | null;
   payment:  string | null;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   if (!delivery && !payment) {
     return <span className="text-xs text-[var(--c-faint-2)]">—</span>;
   }

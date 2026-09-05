@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
@@ -56,7 +56,7 @@ export default function CheckoutWizard({
   onClose,
   item,
 }: CheckoutWizardProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router    = useRouter();
   const showToast = useToastStore((s) => s.show);
   const { state, dispatch, reset } = useCheckoutReducer();
@@ -115,7 +115,7 @@ export default function CheckoutWizard({
   const canAdvance = canAdvanceFromStep(state, state.currentStep, hasSufficientBalance);
 
   async function handleSubmit() {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!state.deliveryMethod || !state.paymentMethod) return;
     dispatch({ type: "SUBMIT_START" });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useRef } from "react";
 
@@ -28,7 +28,7 @@ interface Props {
 }
 
 export default function ReceiptModal({ data, onClose }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const printRef = useRef<HTMLDivElement>(null);
 
   const shortId     = data.orderId.slice(-10).toUpperCase();
@@ -50,7 +50,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
     : null;
 
   function handlePrint() {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!printRef.current) return;
 
     const html = `<!DOCTYPE html>

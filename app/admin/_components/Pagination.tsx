@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import type { PaginationMeta } from "../_lib/types";
@@ -10,7 +10,7 @@ interface PaginationProps {
 }
 
 export default function Pagination({ meta }: PaginationProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router     = useRouter();
   const sp         = useSearchParams();
   const pathname   = usePathname();

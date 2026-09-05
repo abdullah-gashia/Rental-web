@@ -2,7 +2,7 @@
 
 import { useWishlistStore } from "@/lib/stores/wishlist-store";
 import { useToastStore } from "@/lib/stores/toast-store";
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useT } from "@/lib/i18n/LocaleProvider";
 import { useAuthStore } from "@/lib/stores/auth-store";
 
 interface WishlistButtonProps {
@@ -19,7 +19,7 @@ export default function WishlistButton({
   const has = useWishlistStore((s) => s.has);
   const toggle = useWishlistStore((s) => s.toggle);
   const showToast = useToastStore((s) => s.show);
-  const t = useLocaleStore((s) => s.t);
+  const t = useT();
   const userRole = useAuthStore((s) => s.user?.role);
 
   const isWished = has(itemId);

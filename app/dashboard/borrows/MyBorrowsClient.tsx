@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useMemo } from "react";
 import {
@@ -40,7 +40,7 @@ export default function MyBorrowsClient({
   suspendedUntil: string | null;
   tier: string;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [tab, setTab] = useState<(typeof TABS)[number]["key"]>("open");
 
   const shown = useMemo(() => {

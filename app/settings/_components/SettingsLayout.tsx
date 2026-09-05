@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useCallback } from "react";
@@ -30,7 +30,7 @@ interface SettingsLayoutProps {
 }
 
 export default function SettingsLayout({ userData, activeTab }: SettingsLayoutProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router     = useRouter();
   const tab        = TABS.some((t) => t.key === activeTab) ? (activeTab as TabKey) : "profile";
 

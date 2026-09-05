@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
@@ -120,7 +120,7 @@ const STATUS_META: Record<EscrowStatus, { label: string; bg: string; text: strin
 };
 
 function StatusBadge({ status }: { status: EscrowStatus }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const m = STATUS_META[status] ?? STATUS_META.FUNDS_HELD;
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${m.bg} ${m.text}`}>
@@ -147,7 +147,7 @@ function Thumb({ item }: { item: OrderItem }) {
 // ─── Shipping Details ─────────────────────────────────────────────────────────
 
 function ShippingDetails({ order }: { order: BaseOrder }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   if (!order.shippingMethod) return null;
   const methodName = tr(METHOD_LABELS[order.shippingMethod] ?? order.shippingMethod);
   return (
@@ -181,7 +181,7 @@ function ShippingDetails({ order }: { order: BaseOrder }) {
 // ─── Meetup Details ───────────────────────────────────────────────────────────
 
 function MeetupDetails({ order }: { order: BaseOrder }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   if (!order.meetupLocation) return null;
   const dt = order.meetupDateTime
     ? new Date(order.meetupDateTime).toLocaleString("th-TH", {
@@ -238,7 +238,7 @@ function OrderCard({
   onReview:         (order: BuyOrder | SellOrder) => void;
   pending:          boolean;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const counterparty = role === "buyer"
     ? (order as BuyOrder).seller
     : (order as SellOrder).buyer;
@@ -440,7 +440,7 @@ function OrderCard({
 export default function OrdersClient({
   buying, selling, walletBalance, escrowBalance, currentUserId, initialTab = "buying",
 }: Props & { initialTab?: "buying" | "selling" }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
 
   // The tab lives in the URL so the sidebar can link straight to tr("การขาย")
@@ -485,7 +485,7 @@ export default function OrdersClient({
   }
 
   function handleReceipt(order: BuyOrder | SellOrder) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     const bo = order as BuyOrder;
     const so = order as SellOrder;
     setReceiptData({

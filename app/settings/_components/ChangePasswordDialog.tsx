@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useEffect, useTransition } from "react";
 import { changePassword } from "../actions";
@@ -29,7 +29,7 @@ function PasswordField({
   disabled?: boolean;
   autoComplete: string;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [visible, setVisible] = useState(false);
 
   return (
@@ -72,7 +72,7 @@ function PasswordField({
 }
 
 export default function ChangePasswordDialog({ open, onClose, showToast }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [current, setCurrent] = useState("");
   const [next, setNext]       = useState("");
   const [confirm, setConfirm] = useState("");

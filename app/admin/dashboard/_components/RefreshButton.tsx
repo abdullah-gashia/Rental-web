@@ -1,12 +1,12 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 export default function RefreshButton() {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 

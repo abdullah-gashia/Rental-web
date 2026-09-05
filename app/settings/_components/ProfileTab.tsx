@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -31,7 +31,7 @@ interface ProfileTabProps {
 }
 
 export default function ProfileTab({ userData, showToast }: ProfileTabProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [name, setName]   = useState(userData.name ?? "");
   const [phone, setPhone] = useState(userData.phone ?? "");
   const [bio, setBio]     = useState(userData.bio ?? "");

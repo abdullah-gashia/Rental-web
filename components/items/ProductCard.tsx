@@ -1,6 +1,7 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useT } from "@/lib/i18n/LocaleProvider";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 import type { ItemWithDetails } from "@/lib/types";
 import Badge from "@/components/ui/Badge";
 import WishlistButton from "@/components/ui/WishlistButton";
@@ -19,8 +20,8 @@ function getBadgeType(item: ItemWithDetails): { type: "sale" | "rent" | "ship" |
 }
 
 export default function ProductCard({ item, index = 0, onClick }: ProductCardProps) {
-  const tr = useLocaleStore((s) => s.tr);
-  const { t } = useLocaleStore();
+  const tr = useTr();
+  const t = useT();
 
   const badgeInfo = getBadgeType(item);
   const isRent    = item.listingType === "RENT";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useMemo, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -34,7 +34,7 @@ export default function OfficeItemsClient({
   items: any[];
   purchases: { id: string; label: string }[];
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
@@ -91,7 +91,7 @@ export default function OfficeItemsClient({
   }
 
   async function addPhotos(files: FileList | null) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!files?.length) return;
     setUploading(true);
     const next = [...form.images];

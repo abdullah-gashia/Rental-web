@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
 import type { RentalCheckoutState, RentalPricing } from "./useRentalCheckoutReducer";
@@ -21,7 +21,7 @@ interface Props {
 }
 
 export default function AgreementStep({ state, item, pricing, onSetAgreement, onGotoStep }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [expanded, setExpanded] = useState(false);
 
   const startLabel = state.startDate

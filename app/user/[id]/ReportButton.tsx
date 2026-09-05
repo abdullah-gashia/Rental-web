@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { submitReport } from "@/lib/actions/report-actions";
@@ -24,7 +24,7 @@ interface Props {
 export default function ReportButton({
   reportedId, reportedName, signedIn, isSelf, alreadyReported,
 }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [open, setOpen]         = useState(false);
   const [category, setCategory] = useState("");
   const [reason, setReason]     = useState("");
@@ -42,7 +42,7 @@ export default function ReportButton({
   }
 
   function handleSubmit() {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     setError(null);
     if (!category) { setError(tr("กรุณาเลือกหัวข้อการรายงาน")); return; }
     if (reason.trim().length < 10) { setError(tr("กรุณาอธิบายเหตุผลอย่างน้อย 10 ตัวอักษร")); return; }

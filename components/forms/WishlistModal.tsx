@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useT } from "@/lib/i18n/LocaleProvider";
 import { useWishlistStore } from "@/lib/stores/wishlist-store";
 import { useModalStore } from "@/lib/stores/modal-store";
 import type { ItemWithDetails } from "@/lib/types";
@@ -14,7 +14,7 @@ interface WishlistModalProps {
 }
 
 export default function WishlistModal({ isOpen, onClose, items, onItemClick }: WishlistModalProps) {
-  const t = useLocaleStore((s) => s.t);
+  const t = useT();
   const wishlistStore = useWishlistStore();
 
   const wishedItems = items.filter((i) => wishlistStore.has(i.id));

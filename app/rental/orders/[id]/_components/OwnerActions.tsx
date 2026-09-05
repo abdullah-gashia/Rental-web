@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function OwnerActions({ orderId, status }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [rejectOpen, setRejectOpen]  = useState(false);
@@ -32,7 +32,7 @@ export default function OwnerActions({ orderId, status }: Props) {
   }
 
   function handleReject() {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!reason.trim()) { setError(tr("กรุณาระบุเหตุผล")); return; }
     setError(null);
     startTransition(async () => {

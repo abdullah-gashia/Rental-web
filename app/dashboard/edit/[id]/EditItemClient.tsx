@@ -1,6 +1,7 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import type { TrFn } from "@/lib/i18n/phrases";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
@@ -68,8 +69,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 // ─── Upload helper ────────────────────────────────────
 
-async function uploadFile(file: File): Promise<string> {
-  const tr = useLocaleStore((s) => s.tr);
+async function uploadFile(file: File, tr: TrFn): Promise<string> {
   const { file: prepared } = await prepareImageForUpload(file);
   const body = new FormData();
   body.append("file", prepared);
@@ -94,7 +94,7 @@ function Thumb({
   error?: string | null;
   onRemove: () => void;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   return (
     <div className="relative group w-[88px] h-[88px] rounded-xl overflow-hidden border border-[var(--c-line)] bg-[var(--c-line-soft)] flex-shrink-0">
       <img src={src} alt="" className="w-full h-full object-contain bg-[var(--c-subtle-2)]" />
@@ -143,7 +143,7 @@ function Thumb({
 // ─── Main component ───────────────────────────────────
 
 export default function EditItemClient({ item }: { item: EditableItem }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   // Form fields
   const [title, setTitle]             = useState(item.title);
   const [price, setPrice]             = useState(String(item.price));
@@ -221,7 +221,7 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
       // Fire uploads in parallel — each updates its own entry
       files.forEach((file, i) => {
         const { localId } = entries[i];
-        uploadFile(file)
+        uploadFile(file, tr)
           .then((url) => {
             setPendingImages((prev) =>
               prev.map((p) =>
@@ -247,7 +247,7 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
 
   // ── Form submit ──────────────────────────────────────
   function handleSubmit(e: React.FormEvent) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     e.preventDefault();
     setFormError("");
 

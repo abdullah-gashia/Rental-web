@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -35,7 +35,7 @@ export default function ProfileReviewSection({
   sellerId,
   sellerName,
 }: ProfileReviewSectionProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
   const [formVisible, setFormVisible] = useState(false);
   const [submitted,   setSubmitted]   = useState(false);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
 import Image from "next/image";
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function ImageGallery({ images }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [activeIdx, setActiveIdx] = useState(0);
   const [lightbox, setLightbox] = useState(false);
 

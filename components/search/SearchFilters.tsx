@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -34,7 +34,7 @@ export default function SearchFilters({
   initialCondition = "",
   initialSort      = "newest",
 }: SearchFiltersProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router     = useRouter();
   // useSearchParams() is always in sync with the live URL — no stale reads
   const urlParams  = useSearchParams();

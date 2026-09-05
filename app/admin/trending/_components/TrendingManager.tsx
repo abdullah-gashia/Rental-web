@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition, useCallback } from "react";
 import Image from "next/image";
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export default function TrendingManager({ initialItems }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [items, setItems]           = useState<AdminFeaturedItem[]>(initialItems);
   const [pending, startTransition]  = useTransition();
   const [toast, setToast]           = useState<{ ok: boolean; msg: string } | null>(null);
@@ -295,7 +295,7 @@ function FeaturedRow({
   isDragging:    boolean;
   pending:       boolean;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [editingLabel, setEditingLabel] = useState(false);
   const [labelVal, setLabelVal]         = useState(item.customLabel ?? "");
   const img = item.item.images[0];
@@ -398,7 +398,7 @@ function SearchResultRow({
   onAdd:    () => void;
   disabled: boolean;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const img = item.images[0];
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 import type { TrFn } from "@/lib/i18n/phrases";
 
 import { useState, useRef, useEffect } from "react";
@@ -38,7 +38,7 @@ function timeAgo(dateStr: string, tr: TrFn): string {
 }
 
 export default function ChatDropdown({ onClose, onOpenChat }: ChatDropdownProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [conversations, setConversations] = useState<ConversationPreview[]>([]);
   const [loading, setLoading] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);

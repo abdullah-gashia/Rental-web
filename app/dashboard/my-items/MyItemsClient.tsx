@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { deleteItem, cancelDeletion } from "@/lib/actions/item-actions";
@@ -80,7 +80,7 @@ const FILTERS: { key: FilterKey; label: string }[] = [
 ];
 
 function StatusBadge({ status }: { status: ItemStatus }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const cfg = STATUS_CONFIG[status] ?? {
     label: status, bg: "bg-[var(--c-line-soft)]", text: "text-[var(--c-ink-3)]", dot: "bg-gray-400",
   };
@@ -102,7 +102,7 @@ function DeleteModal({
   onConfirm: () => void;
   isPending: boolean;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   return (
     <div className="fixed inset-0 z-[300] flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
@@ -143,7 +143,7 @@ function DeleteModal({
 // ─── Main component ───────────────────────────────────
 
 export default function MyItemsClient({ items, userName, reputation }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [deleteTarget, setDeleteTarget] = useState<MyItem | null>(null);
   const [filter, setFilter]             = useState<FilterKey>("ALL");
   const [isPending, startTransition]    = useTransition();
@@ -161,7 +161,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
   }
 
   function matches(i: MyItem, key: FilterKey) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (key === "ALL")      return true;
     if (key === "DELETING") return isDeleting(i);
     // A listing waiting to be deleted still carries its old status, so it would

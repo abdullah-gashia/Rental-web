@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useRef, useTransition } from "react";
 import { createPortal } from "react-dom";
@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function UsersTable({ rows }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [pending, startTransition] = useTransition();
 
   // ── Dialog state ────────────────────────────────────────────────────────────
@@ -227,7 +227,7 @@ function ActionsDropdown({
   onUnban: () => void;
   onRole:  (r: "ADMIN" | "STUDENT" | "PATTARA") => void;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [open, setOpen] = useState(false);
   const [pos, setPos]   = useState<{ top: number; right: number } | null>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -336,7 +336,7 @@ function ActionsDropdown({
 
 /** Five stars with the fractional part shown as a half-filled last star. */
 function Stars({ rating }: { rating: number }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const rounded = Math.round(rating * 2) / 2;
   return (
     <span className="inline-flex text-[13px] leading-none" aria-label={tr("{0} ดาว", [rating.toFixed(1)])}>

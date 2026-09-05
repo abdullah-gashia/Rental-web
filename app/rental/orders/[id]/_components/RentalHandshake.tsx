@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 import type { TrFn } from "@/lib/i18n/phrases";
 
 import { useState, useTransition } from "react";
@@ -68,7 +68,7 @@ export default function RentalHandshake({
   orderId, type, role, myConfirmed, otherConfirmed,
   itemTitle = "สินค้า", rentalDays = 1, securityDeposit = 0, lateFeePerDay = 0, userName = "—",
 }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -118,7 +118,7 @@ export default function RentalHandshake({
   }
 
   function handleConfirm() {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!agreed) { setError(tr("กรุณายืนยันว่าข้อมูลถูกต้อง")); return; }
     if (needsSignature && !signature) { setError(tr("กรุณาลงลายเซ็นดิจิทัลก่อน")); return; }
     setError(null);

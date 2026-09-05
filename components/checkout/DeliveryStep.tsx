@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
 import type { CheckoutState, CheckoutAction } from "./useCheckoutReducer";
@@ -41,7 +41,7 @@ function ShippingAddressForm({
   dispatch: React.Dispatch<CheckoutAction>;
   savedAddresses: SavedAddr[];
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const addr = state.shippingAddress;
   const [provinceSearch, setProvinceSearch] = useState("");
   const [showProvinces, setShowProvinces] = useState(false);
@@ -237,7 +237,7 @@ function MeetupForm({
   state: CheckoutState;
   dispatch: React.Dispatch<CheckoutAction>;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [useCustom, setUseCustom] = useState(false);
 
   // Min datetime: 1 hour from now
@@ -342,7 +342,7 @@ export default function DeliveryStep({
   allowShipping,
   allowMeetup,
 }: DeliveryStepProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   // Auto-select if only one method available
   const autoMethod = !allowShipping && allowMeetup
     ? "MEETUP"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Modal from "@/components/ui/Modal";
@@ -72,7 +72,7 @@ function ItemContextCard({
   onSendGreeting: () => void;
   hasMessages:    boolean;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [copied, setCopied] = useState(false);
 
   function handleCopy() {
@@ -213,7 +213,7 @@ export default function ChatModal({
   convLoading,
   itemContext,
 }: ChatModalProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [messages,     setMessages]     = useState<ChatMessage[]>([]);
   const [msgLoading,   setMsgLoading]   = useState(false);
   const [input,        setInput]        = useState("");
@@ -275,7 +275,7 @@ export default function ChatModal({
 
   // ── File → upload ─────────────────────────────────────────────
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = "";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { requestAccountDeletion } from "../actions";
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function DeleteAccountDialog({ open, onClose, showToast }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [confirmText, setConfirmText] = useState("");
   const [pending, startTransition] = useTransition();
 

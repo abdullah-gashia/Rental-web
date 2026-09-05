@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useT, useTr } from "@/lib/i18n/LocaleProvider";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { useModalStore } from "@/lib/stores/modal-store";
 import type { ItemWithDetails } from "@/lib/types";
@@ -27,8 +27,8 @@ interface ProductDetailProps {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function ProductDetail({ item, isOpen, onClose, onChatClick }: ProductDetailProps) {
-  const tr = useLocaleStore((s) => s.tr);
-  const t = useLocaleStore((s) => s.t);
+  const tr = useTr();
+  const t = useT();
   // Two separate selectors — avoids returning a new object literal on every call,
   // which would break useSyncExternalStore's stable-snapshot requirement.
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);

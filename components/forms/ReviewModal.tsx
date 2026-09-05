@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { submitOrderReview } from "@/lib/actions/escrow-actions";
@@ -23,7 +23,7 @@ export default function ReviewModal({
   onClose,
   onSuccess,
 }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const roleLabel = counterpartyRole === "seller" ? tr("ผู้ขาย") : tr("ผู้ซื้อ");
   const [rating,    setRating]    = useState(0);
   const [hovered,   setHovered]   = useState(0);
@@ -36,7 +36,7 @@ export default function ReviewModal({
   const STAR_LABELS = ["", tr("แย่มาก"), tr("พอใช้"), tr("ปานกลาง"), tr("ดี"), tr("ยอดเยี่ยม")];
 
   function handleSubmit() {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (rating === 0) { setError(tr("กรุณาเลือกคะแนนดาวก่อน")); return; }
     setError(null);
     startTransition(async () => {

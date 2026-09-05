@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import Image                        from "next/image";
@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function ItemsTable({ rows }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [pending, startTransition] = useTransition();
 
   type DialogKind = "approve" | "reject" | "delete";
@@ -218,7 +218,7 @@ function ItemActionsDropdown({
   onDelete:  () => void;
   onTrendingToggle: () => void;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [open, setOpen] = useState(false);
   const isPending = item.status === "PENDING";
 

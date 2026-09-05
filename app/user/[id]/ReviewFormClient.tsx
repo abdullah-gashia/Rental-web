@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
 import { submitDirectReview } from "@/lib/actions/trust-actions";
@@ -18,7 +18,7 @@ export default function ReviewFormClient({
   sellerName,
   onSuccess,
 }: ReviewFormClientProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [hovered,  setHovered]  = useState(0);
   const [selected, setSelected] = useState(0);
   const [comment,  setComment]  = useState("");
@@ -28,7 +28,7 @@ export default function ReviewFormClient({
   const display = hovered || selected;
 
   async function handleSubmit(e: { preventDefault(): void }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     e.preventDefault();
     if (selected === 0) { setError(tr("กรุณาเลือกคะแนนก่อน")); return; }
     setError("");

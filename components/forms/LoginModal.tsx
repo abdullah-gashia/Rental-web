@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useT, useTr } from "@/lib/i18n/LocaleProvider";
 import { useToastStore } from "@/lib/stores/toast-store";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { loginWithCredentials, loginWithGoogle } from "@/lib/actions/auth-actions";
@@ -15,8 +15,8 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose, initialError = "" }: LoginModalProps) {
-  const tr = useLocaleStore((s) => s.tr);
-  const t = useLocaleStore((s) => s.t);
+  const tr = useTr();
+  const t = useT();
   const showToast = useToastStore((s) => s.show);
   const setUser = useAuthStore((s) => s.setUser);
   const [email, setEmail] = useState("");
@@ -29,7 +29,7 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
   useEffect(() => { if (initialError) setError(initialError); }, [initialError]);
 
   const handleGoogle = async () => {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     setError("");
     setGoogleLoading(true);
     try {

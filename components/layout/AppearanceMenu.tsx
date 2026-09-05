@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useLocale, useTr } from "@/lib/i18n/LocaleProvider";
 import { useThemeStore, type ThemeChoice } from "@/lib/stores/theme-store";
 
 /**
@@ -19,8 +20,8 @@ const THEMES: { key: ThemeChoice; th: string; en: string; icon: string }[] = [
 ];
 
 export default function AppearanceMenu() {
-  const tr = useLocaleStore((s) => s.tr);
-  const locale     = useLocaleStore((s) => s.locale);
+  const tr = useTr();
+  const locale     = useLocale();
   const setLocale  = useLocaleStore((s) => s.setLocale);
   const theme      = useThemeStore((s) => s.theme);
   const setTheme   = useThemeStore((s) => s.setTheme);

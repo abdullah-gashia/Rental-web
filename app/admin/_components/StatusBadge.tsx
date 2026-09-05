@@ -3,7 +3,7 @@
 // A client component: it is rendered from inside client tables, and one of
 // those cannot render an async server component.
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 type BadgeSpec = { label: string; cls: string };
 
@@ -62,7 +62,7 @@ interface StatusBadgeProps {
 }
 
 export default function StatusBadge({ status, type }: StatusBadgeProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const spec = MAPS[type][status] ?? {
     label: status,
     cls:   "bg-[var(--c-subtle)] text-[var(--c-ink-3)] border-[var(--c-line)]",

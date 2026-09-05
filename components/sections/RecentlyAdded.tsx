@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useT } from "@/lib/i18n/LocaleProvider";
 import type { ItemWithDetails } from "@/lib/types";
 import ProductCard from "@/components/items/ProductCard";
 import Panel from "@/components/ui/Panel";
@@ -15,7 +15,7 @@ interface RecentlyAddedProps {
 /** The one photo-forward block on the home view, so the page isn't all rows. */
 export default function RecentlyAdded({ items, perPage = 5, onItemClick }: RecentlyAddedProps) {
   const [page, setPage] = useState(0);
-  const t = useLocaleStore((s) => s.t);
+  const t = useT();
 
   if (items.length === 0) return null;
 

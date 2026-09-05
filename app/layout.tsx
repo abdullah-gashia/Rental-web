@@ -6,6 +6,7 @@ import "./globals.css";
 import ToastContainer from "@/components/ui/Toast";
 import AuthInitializer from "@/components/auth/AuthInitializer";
 import { getLocale, getTheme } from "@/lib/i18n/server";
+import { LocaleProvider } from "@/lib/i18n/LocaleProvider";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -52,9 +53,13 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-sans">
-        <AuthInitializer />
-        {children}
-        <ToastContainer />
+        {/* The locale the server just read, handed to the client components so
+            both renders agree and there is no hydration mismatch. */}
+        <LocaleProvider locale={locale}>
+          <AuthInitializer />
+          {children}
+          <ToastContainer />
+        </LocaleProvider>
       </body>
     </html>
   );

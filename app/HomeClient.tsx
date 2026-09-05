@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -68,7 +68,7 @@ export default function HomeClient({
   avgRating       = 0,
   reviewCount     = 0,
 }: HomeClientProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router    = useRouter();
   const urlParams = useSearchParams(); // always-current URL params
 
@@ -404,7 +404,7 @@ export default function HomeClient({
 // ── Empty state ──────────────────────────────────────────────────────────────
 
 function EmptyState({ query }: { query: string }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
 
   function clearAll() {

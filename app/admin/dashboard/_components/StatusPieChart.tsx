@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
@@ -63,7 +63,7 @@ function legendFormatter(value: string) {
 }
 
 export default function StatusPieChart({ data }: StatusPieChartProps) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   // Filter out zero-count statuses to keep the chart clean
   const filtered = data.filter((d) => d.count > 0);
   const total    = filtered.reduce((s, d) => s + d.count, 0);

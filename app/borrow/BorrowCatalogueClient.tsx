@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import SideRail from "@/components/layout/SideRail";
 import Footer from "@/components/layout/Footer";
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useLocale, useT, useTr } from "@/lib/i18n/LocaleProvider";
 import { borrowCategory, lendItemStatus } from "@/lib/i18n/labels";
 import type { CatalogueItem } from "@/lib/actions/borrow-items";
 
@@ -27,10 +27,10 @@ function baht(n: number) {
 }
 
 export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
-  const t      = useLocaleStore((s) => s.t);
-  const locale = useLocaleStore((s) => s.locale);
+  const t      = useT();
+  const locale = useLocale();
   const [query, setQuery]   = useState("");
   const [cat, setCat]       = useState("all");
   const [onlyFree, setFree] = useState(false);

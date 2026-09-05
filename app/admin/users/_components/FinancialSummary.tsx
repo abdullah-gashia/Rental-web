@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import type { UserDetail } from "../../_lib/types";
 import StatusBadge          from "../../_components/StatusBadge";
@@ -17,7 +17,7 @@ function fmt(n: number): string {
 }
 
 export default function FinancialSummary({ data }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const hasEscrow = data.escrowOrders.length > 0;
 
   return (

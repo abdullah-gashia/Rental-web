@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export default function VerificationTable({ requests, filter }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   if (requests.length === 0) {
     return (
       <div className="text-center py-16 text-[var(--c-muted)]">

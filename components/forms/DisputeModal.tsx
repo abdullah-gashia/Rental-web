@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useRef, useTransition } from "react";
 import { fileDispute } from "@/lib/actions/escrow-actions";
@@ -34,7 +34,7 @@ async function uploadFile(file: File): Promise<string> {
 }
 
 export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSuccess }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const fileInputRef                    = useRef<HTMLInputElement>(null);
   const [reason, setReason]             = useState("");
   const [images, setImages]             = useState<PendingImage[]>([]);
@@ -44,7 +44,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
   // ─── Image Upload ───────────────────────────────────────────────────────────
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     const files = Array.from(e.target.files ?? []);
     e.target.value = "";           // reset so same file can be re-selected
     if (!files.length) return;
@@ -100,7 +100,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
   // ─── Submit ─────────────────────────────────────────────────────────────────
 
   function handleSubmit(e: React.FormEvent) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     e.preventDefault();
     setSubmitError(null);
 

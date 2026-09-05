@@ -1,11 +1,11 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useT, useTr } from "@/lib/i18n/LocaleProvider";
 import Brand from "@/components/layout/Brand";
 
 export default function Footer() {
-  const tr = useLocaleStore((s) => s.tr);
-  const t = useLocaleStore((s) => s.t);
+  const tr = useTr();
+  const t = useT();
 
   const columns: { heading: string; links: { label: string; href: string }[] }[] = [
     {

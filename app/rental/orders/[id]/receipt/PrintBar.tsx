@@ -1,13 +1,13 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 interface Props {
   title: string;
 }
 
 export default function PrintBar({ title }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   return (
     <div className="no-print fixed top-0 left-0 right-0 bg-[var(--c-surface)] border-b border-[var(--c-line)] px-6 py-3
                     flex items-center justify-between z-50 shadow-sm print:hidden">

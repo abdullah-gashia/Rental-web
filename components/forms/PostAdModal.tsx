@@ -1,7 +1,8 @@
 "use client";
 
+import type { TrFn } from "@/lib/i18n/phrases";
 import { useState, useRef, useCallback } from "react";
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useT, useTr } from "@/lib/i18n/LocaleProvider";
 import { useToastStore } from "@/lib/stores/toast-store";
 import Modal from "@/components/ui/Modal";
 import { createItem } from "@/lib/actions/item-actions";
@@ -22,8 +23,7 @@ interface PendingImage {
 
 const MAX_IMAGES = 5;
 
-async function uploadFile(file: File): Promise<string> {
-  const tr = useLocaleStore((s) => s.tr);
+async function uploadFile(file: File, tr: TrFn): Promise<string> {
   const { file: prepared } = await prepareImageForUpload(file);
   const body = new FormData();
   body.append("file", prepared);
@@ -39,7 +39,7 @@ function Thumb({
   src: string; isMain?: boolean; uploading?: boolean;
   error?: string | null; onRemove: () => void;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   return (
     <div className="relative group w-[80px] h-[80px] rounded-xl overflow-hidden border border-[var(--c-line)] bg-[var(--c-line-soft)] flex-shrink-0 shadow-[var(--shadow-xs)]">
       <img src={src} alt="" className="w-full h-full object-contain bg-[var(--c-subtle-2)]" />
@@ -91,8 +91,8 @@ function Spinner() {
 }
 
 export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
-  const tr = useLocaleStore((s) => s.tr);
-  const t         = useLocaleStore((s) => s.t);
+  const tr = useTr();
+  const t         = useT();
   const showToast = useToastStore((s) => s.show);
 
   const [step,          setStep]          = useState(1);
@@ -187,7 +187,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
 
       files.forEach((file, i) => {
         const { localId } = entries[i];
-        uploadFile(file)
+        uploadFile(file, tr)
           .then((url) => setPendingImages((prev) => prev.map((p) => p.localId === localId ? { ...p, uploading: false, uploadedUrl: url } : p)))
           .catch((err: Error) => setPendingImages((prev) => prev.map((p) => p.localId === localId ? { ...p, uploading: false, uploadError: tr(err.message) } : p)));
       });
@@ -196,13 +196,13 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
   );
 
   const handleNextFromStep1 = () => {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!category) { showToast(tr("⚠️ กรุณาเลือกหมวดหมู่ก่อน")); return; }
     setStep(2);
   };
 
   const handleNextFromStep2 = () => {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!name.trim()) { showToast(t("post_error_name")); return; }
     if (pendingImages.some((p) => p.uploading)) { showToast(tr("⚠️ กรุณารอให้รูปภาพอัปโหลดเสร็จก่อน")); return; }
     if (pendingImages.some((p) => p.uploadError)) { showToast(tr("⚠️ มีรูปภาพที่อัปโหลดไม่สำเร็จ กรุณาลบออกแล้วลองใหม่")); return; }
@@ -210,7 +210,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
   };
 
   const handleSubmit = async () => {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     if (!name.trim()) { showToast(t("post_error_name")); setStep(2); return; }
 
     const isRent = adType === "rent";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import { confirmMeetupWithProof } from "@/lib/actions/order-transitions";
@@ -27,7 +27,7 @@ function SignaturePad({
   isEmpty:     boolean;
   setIsEmpty:  (v: boolean) => void;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const isDrawing = useRef(false);
   const lastPos   = useRef<{ x: number; y: number } | null>(null);
 
@@ -151,7 +151,7 @@ function PhotoUpload({
   uploading:    boolean;
   setUploading: (v: boolean) => void;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleFile(file: File) {
@@ -251,7 +251,7 @@ export default function MeetupHandoverModal({
   onClose,
   onSuccess,
 }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const canvasRef       = useRef<HTMLCanvasElement>(null);
   const [sigEmpty, setSigEmpty]         = useState(true);
   const [photoUrl, setPhotoUrl]         = useState<string | null>(null);

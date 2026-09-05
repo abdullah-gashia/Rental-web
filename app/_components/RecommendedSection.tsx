@@ -1,6 +1,7 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import type { TrFn } from "@/lib/i18n/phrases";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
 import ProductRow from "@/components/items/ProductRow";
@@ -8,8 +9,7 @@ import Panel from "@/components/ui/Panel";
 import type { RecommendedItem, RecommendationReason } from "@/lib/actions/recommendations";
 import type { ItemWithDetails } from "@/lib/types";
 
-function reasonBadge(reason: RecommendationReason): string | null {
-  const tr = useLocaleStore((s) => s.tr);
+function reasonBadge(reason: RecommendationReason, tr: TrFn): string | null {
   switch (reason) {
     case "CATEGORY_MATCH": return tr("ตรงใจคุณ");
     case "PRICE_MATCH":    return tr("งบพอดี");
@@ -28,7 +28,7 @@ interface Props {
 const PER_PAGE = 6;
 
 export default function RecommendedSection({ items, strategy, onItemClick }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [page, setPage] = useState(0);
 
   if (items.length === 0) return null;
@@ -49,7 +49,7 @@ export default function RecommendedSection({ items, strategy, onItemClick }: Pro
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2 gap-x-5 gap-y-1 -mx-2">
         {visible.map((item) => {
-          const badge = reasonBadge(item.reason);
+          const badge = reasonBadge(item.reason, tr);
           return (
             <div key={item.id} className="relative">
               <ProductRow item={item} onClick={() => onItemClick(item)} />

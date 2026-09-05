@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 import type { TrFn } from "@/lib/i18n/phrases";
 
 import { useState, useTransition } from "react";
@@ -46,7 +46,7 @@ function relativeTime(iso: string, tr: TrFn): string {
 }
 
 export default function HistoryClient({ initialHistory, trackingEnabled: initialTracking }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [history,  setHistory]  = useState<HistoryResult>(initialHistory);
   const [tracking, setTracking] = useState(initialTracking);
   const [pending,  start]       = useTransition();
@@ -64,7 +64,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
   }
 
   function handleDelete(id: string) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     start(async () => {
       const res = await deleteInteraction(id);
       if (res.success) {
@@ -79,7 +79,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
   }
 
   function handleClearAll() {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     start(async () => {
       const res = await clearAllHistory();
       if (res.success) {
@@ -91,7 +91,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
   }
 
   function handleToggleTracking() {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
     const next = !tracking;
     start(async () => {
       const res = await toggleTracking(next);

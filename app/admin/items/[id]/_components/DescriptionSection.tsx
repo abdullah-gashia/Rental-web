@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
 
@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function DescriptionSection({ description }: Props) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const [expanded, setExpanded] = useState(false);
 
   if (!description) {

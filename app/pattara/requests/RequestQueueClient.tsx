@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,7 @@ export default function RequestQueueClient({
   orders: any[];
   history: History;
 }) {
-  const tr = useLocaleStore((s) => s.tr);
+  const tr = useTr();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [open, setOpen]   = useState<string | null>(null);
