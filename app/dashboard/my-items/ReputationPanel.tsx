@@ -45,6 +45,7 @@ function formatDate(iso: string) {
 }
 
 function ReviewList({ reviews, empty }: { reviews: ReviewRow[]; empty: string }) {
+  const tr = useLocaleStore((s) => s.tr);
   if (reviews.length === 0) {
     return <p className="text-sm text-[var(--c-muted)] py-8 text-center">{empty}</p>;
   }
@@ -61,14 +62,14 @@ function ReviewList({ reviews, empty }: { reviews: ReviewRow[]; empty: string })
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm font-semibold text-[var(--c-ink-1)]">{r.reviewer.name ?? "ผู้ใช้"}</span>
+              <span className="text-sm font-semibold text-[var(--c-ink-1)]">{r.reviewer.name ?? tr("ผู้ใช้")}</span>
               <Stars rating={r.rating} className="text-xs" />
               <span className="text-[11px] text-[var(--c-faint)]">{formatDate(r.createdAt)}</span>
             </div>
 
             {r.itemTitle && (
               <p className="text-[11px] text-[var(--c-muted)] mt-0.5 truncate">
-                {r.role === "seller" ? "ในฐานะผู้ขาย" : "ในฐานะผู้ซื้อ"} · {r.itemTitle}
+                {r.role === "seller" ? tr("ในฐานะผู้ขาย") : tr("ในฐานะผู้ซื้อ")} · {r.itemTitle}
               </p>
             )}
 

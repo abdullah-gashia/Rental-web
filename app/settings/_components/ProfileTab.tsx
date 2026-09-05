@@ -57,8 +57,7 @@ export default function ProfileTab({ userData, showToast }: ProfileTabProps) {
     <>
     <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-6">
       <h2 className="text-lg font-bold text-[var(--c-ink)] flex items-center gap-2">
-        <span>👤</span> ข้อมูลส่วนตัว
-      </h2>
+        <span>👤</span>{tr("ข้อมูลส่วนตัว")}</h2>
 
       {/* Avatar section */}
       <div className="flex items-center gap-4 p-4 bg-[var(--c-subtle)] rounded-xl border border-[var(--c-line)]">
@@ -211,7 +210,7 @@ export default function ProfileTab({ userData, showToast }: ProfileTabProps) {
           <div>
             <span className="text-[11px] text-[var(--c-muted)] uppercase tracking-wider">{tr("บทบาท")}</span>
             <p className="text-sm font-medium text-[var(--c-ink-1)] mt-0.5">
-              {userData.role === "ADMIN" ? "แอดมิน" : "นักศึกษา"}
+              {userData.role === "ADMIN" ? tr("แอดมิน") : tr("นักศึกษา")}
             </p>
           </div>
         </div>

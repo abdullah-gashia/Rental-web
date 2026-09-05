@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 const TABS = [
@@ -11,6 +13,7 @@ const TABS = [
 ] as const;
 
 export default function StatusGroupTabs({ active }: { active: string }) {
+  const tr = useLocaleStore((s) => s.tr);
   const router   = useRouter();
   const pathname = usePathname();
   const sp       = useSearchParams();
@@ -42,7 +45,7 @@ export default function StatusGroupTabs({ active }: { active: string }) {
                 : "bg-[var(--c-surface)] text-[var(--c-ink-2)] border-[var(--c-line)] hover:border-[var(--c-ink)] hover:text-[var(--c-ink)]"
             }`}
           >
-            {tab.label}
+            {tr(tab.label)}
           </button>
         );
       })}

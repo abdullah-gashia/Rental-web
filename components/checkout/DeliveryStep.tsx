@@ -108,7 +108,7 @@ function ShippingAddressForm({
             type="text"
             value={addr?.recipientName ?? ""}
             onChange={(e) => updateField("recipientName", e.target.value)}
-            placeholder="ชื่อ-นามสกุล"
+            placeholder={tr("ชื่อ-นามสกุล")}
             className="checkout-input"
           />
         </div>
@@ -130,7 +130,7 @@ function ShippingAddressForm({
           type="text"
           value={addr?.addressLine1 ?? ""}
           onChange={(e) => updateField("addressLine1", e.target.value)}
-          placeholder="บ้านเลขที่, ซอย, ถนน"
+          placeholder={tr("บ้านเลขที่, ซอย, ถนน")}
           className="checkout-input"
         />
       </div>
@@ -141,7 +141,7 @@ function ShippingAddressForm({
           type="text"
           value={addr?.addressLine2 ?? ""}
           onChange={(e) => updateField("addressLine2", e.target.value)}
-          placeholder="ตำบล/แขวง (ถ้ามี)"
+          placeholder={tr("ตำบล/แขวง (ถ้ามี)")}
           className="checkout-input"
         />
       </div>
@@ -153,7 +153,7 @@ function ShippingAddressForm({
             type="text"
             value={addr?.district ?? ""}
             onChange={(e) => updateField("district", e.target.value)}
-            placeholder="อำเภอ/เขต"
+            placeholder={tr("อำเภอ/เขต")}
             className="checkout-input"
           />
         </div>
@@ -169,7 +169,7 @@ function ShippingAddressForm({
             }}
             onFocus={() => setShowProvinces(true)}
             onBlur={() => setTimeout(() => setShowProvinces(false), 200)}
-            placeholder="พิมพ์เพื่อค้นหา..."
+            placeholder={tr("พิมพ์เพื่อค้นหา...")}
             className="checkout-input"
           />
           {showProvinces && filteredProvinces.length > 0 && (
@@ -210,7 +210,7 @@ function ShippingAddressForm({
             type="text"
             value={addr?.note ?? ""}
             onChange={(e) => updateField("note", e.target.value)}
-            placeholder="เช่น ห้อง 305 ตึก B"
+            placeholder={tr("เช่น ห้อง 305 ตึก B")}
             className="checkout-input"
           />
         </div>
@@ -299,7 +299,7 @@ function MeetupForm({
             type="text"
             value={state.meetupLocation ?? ""}
             onChange={(e) => dispatch({ type: "SET_MEETUP_LOCATION", payload: e.target.value })}
-            placeholder="ระบุสถานที่นัดรับ"
+            placeholder={tr("ระบุสถานที่นัดรับ")}
             className="checkout-input"
           />
         </div>
@@ -324,7 +324,7 @@ function MeetupForm({
             type="text"
             value={state.meetupNote ?? ""}
             onChange={(e) => dispatch({ type: "SET_MEETUP_NOTE", payload: e.target.value })}
-            placeholder='เช่น "ใส่เสื้อสีแดง"'
+            placeholder='เช่น tr("ใส่เสื้อสีแดง")'
             className="checkout-input"
           />
         </div>

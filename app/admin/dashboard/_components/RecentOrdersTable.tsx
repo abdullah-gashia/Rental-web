@@ -34,7 +34,7 @@ function formatBaht(v: number): string {
 function relativeTime(iso: string, tr: TrFn): string {
   const diff = Date.now() - new Date(iso).getTime();
   const mins  = Math.floor(diff / 60_000);
-  if (mins < 1)   return "เมื่อกี้";
+  if (mins < 1)   return tr("เมื่อกี้");
   if (mins < 60)  return tr("{0} นาทีที่แล้ว", [mins]);
   const hrs = Math.floor(mins / 60);
   if (hrs < 24)   return tr("{0} ชม. ที่แล้ว", [hrs]);

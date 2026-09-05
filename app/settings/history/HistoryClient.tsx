@@ -36,12 +36,12 @@ interface Props {
 function relativeTime(iso: string, tr: TrFn): string {
   const diff  = Date.now() - new Date(iso).getTime();
   const mins  = Math.floor(diff / 60_000);
-  if (mins < 1)  return "เมื่อกี้";
+  if (mins < 1)  return tr("เมื่อกี้");
   if (mins < 60) return tr("{0} นาทีที่แล้ว", [mins]);
   const hrs = Math.floor(mins / 60);
   if (hrs < 24)  return tr("{0} ชม. ที่แล้ว", [hrs]);
   const days = Math.floor(hrs / 24);
-  if (days === 1) return "เมื่อวาน";
+  if (days === 1) return tr("เมื่อวาน");
   return tr("{0} วันที่แล้ว", [days]);
 }
 
@@ -112,7 +112,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
     const diffDays = Math.floor((now.getTime() - d.getTime()) / 86_400_000);
     const label =
       diffDays === 0 ? tr("วันนี้") :
-      diffDays === 1 ? "เมื่อวาน" :
+      diffDays === 1 ? tr("เมื่อวาน") :
       d.toLocaleDateString("th-TH", { day: "numeric", month: "long", year: "numeric" });
 
     const idx = seen.get(label);
@@ -176,9 +176,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
                 <button
                   onClick={() => setShowClearConfirm(false)}
                   className="flex-1 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
-                >
-                  ยกเลิก
-                </button>
+                >{tr("ยกเลิก")}</button>
                 <button
                   onClick={handleClearAll}
                   disabled={pending}

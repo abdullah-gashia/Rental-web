@@ -118,15 +118,13 @@ export default function ReportButton({
                 onClick={() => setOpen(false)}
                 disabled={pending}
                 className="flex-1 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
-              >
-                ยกเลิก
-              </button>
+              >{tr("ยกเลิก")}</button>
               <button
                 onClick={handleSubmit}
                 disabled={pending}
                 className="flex-1 py-2.5 rounded-xl bg-[var(--c-danger)] text-sm font-bold text-white hover:bg-[var(--c-danger)] transition disabled:opacity-50"
               >
-                {pending ? "กำลังส่ง…" : tr("ส่งรายงาน")}
+                {pending ? tr("กำลังส่ง…") : tr("ส่งรายงาน")}
               </button>
             </div>
           </div>

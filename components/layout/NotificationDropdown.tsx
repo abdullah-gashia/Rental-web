@@ -22,7 +22,7 @@ interface NotificationDropdownProps {
 function timeAgo(dateStr: string, tr: TrFn): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "ตอนนี้";
+  if (mins < 1) return tr("ตอนนี้");
   if (mins < 60) return tr("{0} นาที", [mins]);
   const hrs = Math.floor(mins / 60);
   if (hrs < 24) return tr("{0} ชม.", [hrs]);
@@ -85,7 +85,7 @@ export default function NotificationDropdown({ onClose }: NotificationDropdownPr
       {/* Header */}
       <div className="px-4 pt-4 pb-3 border-b border-[var(--c-line)]">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-bold text-[var(--c-ink)]">การแจ้งเตือน</h3>
+          <h3 className="text-base font-bold text-[var(--c-ink)]">{tr("การแจ้งเตือน")}</h3>
           <button className="text-xs text-[var(--c-accent)] font-medium hover:underline">{tr("อ่านทั้งหมด")}</button>
         </div>
       </div>

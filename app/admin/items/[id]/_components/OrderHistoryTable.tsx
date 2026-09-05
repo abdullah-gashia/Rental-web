@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import Link from "next/link";
 import StatusBadge from "../../../_components/StatusBadge";
 import { formatThaiDate, formatCurrency, truncateId } from "../../../_lib/utils";
@@ -26,7 +27,8 @@ interface Props {
   }>;
 }
 
-export default function OrderHistoryTable({ orders }: Props) {
+export default async function OrderHistoryTable({ orders }: Props) {
+  const tr = await getTr();
   return (
     <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
       <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-4">
@@ -38,21 +40,19 @@ export default function OrderHistoryTable({ orders }: Props) {
 
       {orders.length === 0 ? (
         <div className="text-center py-8 text-[var(--c-faint)] text-sm">
-          <span className="text-3xl block mb-2">📦</span>
-          ยังไม่มีคำสั่งซื้อสำหรับสินค้านี้
-        </div>
+          <span className="text-3xl block mb-2">📦</span>{tr("ยังไม่มีคำสั่งซื้อสำหรับสินค้านี้")}</div>
       ) : (
         <div className="overflow-x-auto -mx-6 px-6">
           <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr className="border-b border-[var(--c-line)]">
-                <th className="text-left py-2 text-[var(--c-faint)] font-medium text-xs">รหัส</th>
-                <th className="text-left py-2 text-[var(--c-faint)] font-medium text-xs">ผู้ซื้อ</th>
-                <th className="text-right py-2 text-[var(--c-faint)] font-medium text-xs">จำนวนเงิน</th>
-                <th className="text-center py-2 text-[var(--c-faint)] font-medium text-xs">ชำระ</th>
-                <th className="text-center py-2 text-[var(--c-faint)] font-medium text-xs">จัดส่ง</th>
-                <th className="text-center py-2 text-[var(--c-faint)] font-medium text-xs">สถานะ</th>
-                <th className="text-right py-2 text-[var(--c-faint)] font-medium text-xs">วันที่</th>
+                <th className="text-left py-2 text-[var(--c-faint)] font-medium text-xs">{tr("รหัส")}</th>
+                <th className="text-left py-2 text-[var(--c-faint)] font-medium text-xs">{tr("ผู้ซื้อ")}</th>
+                <th className="text-right py-2 text-[var(--c-faint)] font-medium text-xs">{tr("จำนวนเงิน")}</th>
+                <th className="text-center py-2 text-[var(--c-faint)] font-medium text-xs">{tr("ชำระ")}</th>
+                <th className="text-center py-2 text-[var(--c-faint)] font-medium text-xs">{tr("จัดส่ง")}</th>
+                <th className="text-center py-2 text-[var(--c-faint)] font-medium text-xs">{tr("สถานะ")}</th>
+                <th className="text-right py-2 text-[var(--c-faint)] font-medium text-xs">{tr("วันที่")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--c-line-soft)]">
@@ -84,7 +84,7 @@ export default function OrderHistoryTable({ orders }: Props) {
                     <td className="py-2.5 text-center">
                       {payment ? (
                         <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${payment.cls}`}>
-                          {payment.label}
+                          {tr(payment.label)}
                         </span>
                       ) : (
                         <span className="text-[var(--c-faint)]">—</span>
@@ -93,7 +93,7 @@ export default function OrderHistoryTable({ orders }: Props) {
                     <td className="py-2.5 text-center">
                       {delivery ? (
                         <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${delivery.cls}`}>
-                          {delivery.label}
+                          {tr(delivery.label)}
                         </span>
                       ) : (
                         <span className="text-[var(--c-faint)]">—</span>

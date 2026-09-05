@@ -130,7 +130,7 @@ export default function BorrowItemClient({ item }: { item: any }) {
               <div className="bw-panel">
                 <h2 className="bw-h">{tr("ผู้ให้ยืม")}</h2>
                 <p className="text-[14px] font-semibold text-[var(--psu-navy)]">
-                  {office.officeName ?? office.name ?? "งานภัทร"}
+                  {office.officeName ?? office.name ?? tr("งานภัทร")}
                 </p>
                 {office.officeDescription && (
                   <p className="text-[13px] text-[var(--bw-ink-2)] leading-[1.9] mt-1.5">
@@ -220,7 +220,7 @@ export default function BorrowItemClient({ item }: { item: any }) {
                     )}
 
                     <button onClick={submit} disabled={pending} className="bw-btn bw-btn-primary w-full">
-                      {pending ? "กำลังส่ง…" : tr("ขอยืมชิ้นนี้")}
+                      {pending ? tr("กำลังส่ง…") : tr("ขอยืมชิ้นนี้")}
                     </button>
 
                     <p className="text-[11.5px] text-[var(--bw-muted)] text-center leading-[1.8]">{tr("ยืมพร้อมกันได้สูงสุด {0} ชิ้น", [MAX_CONCURRENT_BORROWS])}</p>

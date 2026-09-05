@@ -24,7 +24,7 @@ export default function ReviewModal({
   onSuccess,
 }: Props) {
   const tr = useLocaleStore((s) => s.tr);
-  const roleLabel = counterpartyRole === "seller" ? "ผู้ขาย" : "ผู้ซื้อ";
+  const roleLabel = counterpartyRole === "seller" ? tr("ผู้ขาย") : tr("ผู้ซื้อ");
   const [rating,    setRating]    = useState(0);
   const [hovered,   setHovered]   = useState(0);
   const [comment,   setComment]   = useState("");
@@ -33,7 +33,7 @@ export default function ReviewModal({
 
   const displayRating = hovered || rating;
 
-  const STAR_LABELS = ["", "แย่มาก", "พอใช้", tr("ปานกลาง"), "ดี", tr("ยอดเยี่ยม")];
+  const STAR_LABELS = ["", tr("แย่มาก"), tr("พอใช้"), tr("ปานกลาง"), tr("ดี"), tr("ยอดเยี่ยม")];
 
   function handleSubmit() {
   const tr = useLocaleStore((s) => s.tr);
@@ -58,7 +58,7 @@ export default function ReviewModal({
         <div className="bg-gradient-to-r from-amber-400 to-orange-400 px-6 py-5 text-center">
           <p className="text-3xl mb-1">⭐</p>
           <h3 className="text-base font-extrabold text-white">
-            {counterpartyRole === "seller" ? tr("ให้คะแนนสินค้าและผู้ขาย") : "ให้คะแนนผู้ซื้อ"}
+            {counterpartyRole === "seller" ? tr("ให้คะแนนสินค้าและผู้ขาย") : tr("ให้คะแนนผู้ซื้อ")}
           </h3>
           <p className="text-amber-100 text-xs mt-0.5 truncate">"{itemTitle}"</p>
         </div>
@@ -135,7 +135,7 @@ export default function ReviewModal({
               {isPending && (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               )}
-              {isPending ? "กำลังส่ง…" : tr("ส่งรีวิว ⭐")}
+              {isPending ? tr("กำลังส่ง…") : tr("ส่งรีวิว ⭐")}
             </button>
           </div>
         </div>

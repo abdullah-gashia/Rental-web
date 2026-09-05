@@ -50,6 +50,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
   // ─── Proof image upload ───────────────────────────────────────────────────
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const tr = useLocaleStore((s) => s.tr);
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
@@ -65,7 +66,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
       const url = await uploadFile(file);
       setProofUrl(url);
     } catch (err) {
-      setProofError(err instanceof Error ? err.message : "อัปโหลดไม่สำเร็จ");
+      setProofError(err instanceof Error ? err.message : tr("อัปโหลดไม่สำเร็จ"));
     } finally {
       setProofUploading(false);
     }
@@ -248,9 +249,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
               onClick={onClose}
               disabled={isPending}
               className="flex-1 py-3 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
-            >
-              ยกเลิก
-            </button>
+            >{tr("ยกเลิก")}</button>
             <button
               type="submit"
               disabled={isPending || proofUploading}

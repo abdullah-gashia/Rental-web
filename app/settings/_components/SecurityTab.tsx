@@ -74,8 +74,7 @@ export default function SecurityTab({ userData, showToast }: Props) {
   return (
     <div className="p-5 sm:p-6 space-y-6">
       <h2 className="text-lg font-bold text-[var(--c-ink)] flex items-center gap-2">
-        <span>🔒</span> บัญชีและความปลอดภัย
-      </h2>
+        <span>🔒</span>{tr("บัญชีและความปลอดภัย")}</h2>
 
       {/* Login info */}
       <div className="space-y-2">

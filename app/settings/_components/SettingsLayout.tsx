@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useCallback } from "react";
 import ProfileTab       from "./ProfileTab";
@@ -28,6 +30,7 @@ interface SettingsLayoutProps {
 }
 
 export default function SettingsLayout({ userData, activeTab }: SettingsLayoutProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const router     = useRouter();
   const tab        = TABS.some((t) => t.key === activeTab) ? (activeTab as TabKey) : "profile";
 
@@ -70,7 +73,7 @@ export default function SettingsLayout({ userData, activeTab }: SettingsLayoutPr
                 }`}
               >
                 <span className="text-base">{t.icon}</span>
-                {t.label}
+                {tr(t.label)}
               </button>
             ))}
           </div>
@@ -90,7 +93,7 @@ export default function SettingsLayout({ userData, activeTab }: SettingsLayoutPr
                 }`}
               >
                 <span>{t.icon}</span>
-                {t.label}
+                {tr(t.label)}
               </button>
             ))}
           </div>

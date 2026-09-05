@@ -71,7 +71,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
   const run = (fn: () => Promise<{ success: boolean; message?: string; error?: string }>) => {
     startTransition(async () => {
       const res = await fn();
-      showToast(res.success, res.success ? tr(tr(res.message ?? "")) : tr(tr(res.error ?? "")));
+      showToast(res.success, res.success ? tr(res.message ?? "") : tr(res.error ?? ""));
       if (res.success) await refresh();
     });
   };
@@ -120,17 +120,13 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            ปิด
-          </button>
+            </svg>{tr("ปิด")}</button>
           <h2 className="text-sm font-bold text-[var(--c-ink)]">{tr("รายละเอียดผู้ใช้")}</h2>
           <div className="flex gap-2">
             <button
               onClick={onClose}
               className="px-3 py-1.5 text-xs font-medium text-[var(--c-ink-2)] border border-[var(--c-line)] rounded-lg hover:bg-[var(--c-canvas)] transition"
-            >
-              ยกเลิก
-            </button>
+            >{tr("ยกเลิก")}</button>
             <button
               onClick={handleSave}
               disabled={pending || loading}
@@ -170,10 +166,10 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
 
             {/* ── Status badges row ────────────────────────────────────── */}
             <div className="grid grid-cols-4 gap-2">
-              <StatCard label={tr("สถานะ")} val={data.isBanned ? "ถูกแบน" : "ปกติ"} color={data.isBanned ? "red" : "green"} />
+              <StatCard label={tr("สถานะ")} val={data.isBanned ? tr("ถูกแบน") : tr("ปกติ")} color={data.isBanned ? "red" : "green"} />
               <StatCard label={tr("ยืนยัน")} val={tr(VERIFICATION_LABELS[data.verificationStatus] ?? data.verificationStatus)} color={data.verificationStatus === "APPROVED" ? "green" : "yellow"} />
               <StatCard label="Trust" val={String(data.trustScore)} color={data.trustScore >= 80 ? "green" : data.trustScore >= 50 ? "yellow" : "red"} />
-              <StatCard label={tr("บทบาท")} val={data.role === "ADMIN" ? "แอดมิน" : "นักศึกษา"} color={data.role === "ADMIN" ? "purple" : "gray"} />
+              <StatCard label={tr("บทบาท")} val={data.role === "ADMIN" ? tr("แอดมิน") : tr("นักศึกษา")} color={data.role === "ADMIN" ? "purple" : "gray"} />
             </div>
 
             {/* ── Financial summary ────────────────────────────────────── */}
@@ -332,7 +328,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
                           <PanelStars rating={r.rating} />
-                          <span className="text-xs font-medium text-[var(--c-ink-1)]">{r.reviewer.name ?? "ผู้ใช้"}</span>
+                          <span className="text-xs font-medium text-[var(--c-ink-1)]">{r.reviewer.name ?? tr("ผู้ใช้")}</span>
                           <span className="text-[10px] text-[var(--c-faint)]">{formatShort(r.createdAt)}</span>
                         </div>
                         {r.itemTitle && <p className="text-[11px] text-[var(--c-muted)] truncate">{r.itemTitle}</p>}
@@ -375,14 +371,14 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                     >
                       <div className="flex items-center justify-between gap-2 flex-wrap">
                         <span className="text-xs font-bold text-[var(--c-ink-1)]">
-                          {tr(CATEGORY_LABEL[rep.category ?? ""] ?? rep.category) ?? "อื่นๆ"}
+                          {tr(CATEGORY_LABEL[rep.category ?? ""] ?? rep.category) ?? tr("อื่นๆ")}
                         </span>
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                           rep.status === "OPEN"       ? "bg-[var(--c-danger-soft)] text-[var(--c-danger)]"
                           : rep.status === "REVIEWED" ? "bg-[var(--c-ok-soft)] text-[var(--c-ok)]"
                           :                             "bg-gray-200 text-[var(--c-ink-3)]"
                         }`}>
-                          {rep.status === "OPEN" ? "รอตรวจสอบ" : rep.status === "REVIEWED" ? tr("ตรวจแล้ว") : "ยกเลิก"}
+                          {rep.status === "OPEN" ? tr("รอตรวจสอบ") : rep.status === "REVIEWED" ? tr("ตรวจแล้ว") : tr("ยกเลิก")}
                         </span>
                       </div>
                       <p className="text-xs text-[var(--c-ink-2)] mt-1.5 whitespace-pre-wrap">{rep.reason}</p>
@@ -430,7 +426,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                   disabled={pending || !mailSubject.trim() || !mailBody.trim()}
                   className="px-4 py-2 rounded-xl bg-[var(--c-accent)] text-white text-sm font-bold hover:bg-[var(--c-accent-str)] transition disabled:opacity-40"
                 >
-                  {pending ? "กำลังส่ง…" : tr("ส่งอีเมล")}
+                  {pending ? tr("กำลังส่ง…") : tr("ส่งอีเมล")}
                 </button>
               </div>
             </div>
@@ -448,9 +444,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
               <button
                 onClick={onClose}
                 className="px-5 py-2.5 text-sm font-medium text-[var(--c-ink-2)] border border-[var(--c-line)] rounded-xl hover:bg-[var(--c-canvas)] transition"
-              >
-                ยกเลิก
-              </button>
+              >{tr("ยกเลิก")}</button>
               <button
                 onClick={handleSave}
                 disabled={pending}

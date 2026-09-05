@@ -52,7 +52,7 @@ export default function ReviewPanel({ request }: Props) {
     );
   }
 
-  const finalReason = rejectionReason === "อื่นๆ" ? customReason : rejectionReason;
+  const finalReason = rejectionReason === tr("อื่นๆ") ? customReason : rejectionReason;
 
   function handleSubmit() {
   const tr = useLocaleStore((s) => s.tr);
@@ -123,7 +123,7 @@ export default function ReviewPanel({ request }: Props) {
               </label>
             ))}
           </div>
-          {rejectionReason === "อื่นๆ" && (
+          {rejectionReason === tr("อื่นๆ") && (
             <textarea
               value={customReason}
               onChange={(e) => setCustomReason(e.target.value)}

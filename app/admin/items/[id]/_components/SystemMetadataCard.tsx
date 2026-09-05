@@ -113,9 +113,10 @@ function StatBox({
 }
 
 function formatThaiDateWithTime(date: string): string {
+  const tr = useLocaleStore((s) => s.tr);
   const d = new Date(date);
-  const MONTH_TH = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.",
-                     "ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+  const MONTH_TH = [tr("ม.ค."),tr("ก.พ."),tr("มี.ค."),tr("เม.ย."),tr("พ.ค."),tr("มิ.ย."),
+                     tr("ก.ค."),tr("ส.ค."),tr("ก.ย."),tr("ต.ค."),tr("พ.ย."),tr("ธ.ค.")];
   const hours = d.getHours().toString().padStart(2, "0");
   const mins = d.getMinutes().toString().padStart(2, "0");
   return `${d.getDate()} ${MONTH_TH[d.getMonth()]} ${d.getFullYear() + 543} ${hours}:${mins}`;

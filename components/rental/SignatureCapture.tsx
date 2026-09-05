@@ -9,7 +9,7 @@ interface Props {
   onCancel?: () => void;
   agreementText: string;
   signerName: string;
-  signerRole: "ผู้เช่า" | "เจ้าของ";
+  signerRole: "renter" | "owner";
 }
 
 export default function SignatureCapture({ onComplete, onCancel, agreementText, signerName, signerRole }: Props) {
@@ -88,7 +88,7 @@ export default function SignatureCapture({ onComplete, onCancel, agreementText, 
       {/* Agreement text */}
       <div className="bg-[var(--c-subtle)] border border-[var(--c-line)] rounded-xl p-4 text-sm text-[var(--c-ink-1)] leading-relaxed max-h-48 overflow-y-auto">
         <p className="font-semibold mb-2">{tr("ข้าพเจ้า")}<span className="text-[var(--c-accent)]">{signerName}</span>{" "}
-          ในฐานะ <span className="text-[var(--c-accent)]">{signerRole}</span>
+          {tr("ในฐานะ")} <span className="text-[var(--c-accent)]">{signerRole === "renter" ? tr("ผู้เช่า") : tr("เจ้าของ")}</span>
         </p>
         <pre className="whitespace-pre-wrap font-sans text-xs text-[var(--c-ink-2)]">{agreementText}</pre>
         <p className="text-[11px] text-[var(--c-faint)] mt-3">{tr("วันที่: {0} เวลา: {1} น.", [dateStr, timeStr])}</p>
@@ -121,9 +121,7 @@ export default function SignatureCapture({ onComplete, onCancel, agreementText, 
             type="button"
             onClick={onCancel}
             className="px-4 py-2.5 border border-[var(--c-line)] rounded-xl text-sm text-[var(--c-ink-2)] hover:bg-[var(--c-line-soft)] transition"
-          >
-            ยกเลิก
-          </button>
+          >{tr("ยกเลิก")}</button>
         )}
         <button
           type="button"

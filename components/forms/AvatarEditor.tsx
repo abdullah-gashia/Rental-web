@@ -89,7 +89,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
     setError(null);
 
     if (!file.type.startsWith("image/")) {
-      setError("กรุณาเลือกไฟล์รูปภาพ");
+      setError(tr("กรุณาเลือกไฟล์รูปภาพ"));
       return;
     }
 
@@ -171,7 +171,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
       fd.append("file", new File([blob], "avatar.webp", { type: "image/webp" }));
       const json = await fetch("/api/upload", { method: "POST", body: fd }).then((r) => r.json());
 
-      if (!json.url) throw new Error(tr(json.error ?? "อัปโหลดไม่สำเร็จ"));
+      if (!json.url) throw new Error(tr(json.error ?? tr("อัปโหลดไม่สำเร็จ")));
       releaseUrl();
       onSaved(json.url);
     } catch (e) {
@@ -250,7 +250,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
               className="hidden"
               onChange={(e) => pick(e.target.files?.[0])}
             />
-            {img ? "เลือกรูปอื่น" : "เลือกรูปจากเครื่อง"}
+            {img ? tr("เลือกรูปอื่น") : tr("เลือกรูปจากเครื่อง")}
           </label>
           {fileName && (
             <p className="ui-hint truncate">
@@ -267,11 +267,9 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
             onClick={() => { releaseUrl(); onCancel(); }}
             disabled={busy}
             className="ui-btn ui-btn-ghost flex-1"
-          >
-            ยกเลิก
-          </button>
+          >{tr("ยกเลิก")}</button>
           <button onClick={save} disabled={busy || !img} className="ui-btn ui-btn-primary flex-1">
-            {busy ? tr("กำลังบันทึก…") : "ใช้รูปนี้"}
+            {busy ? tr("กำลังบันทึก…") : tr("ใช้รูปนี้")}
           </button>
         </div>
       </div>

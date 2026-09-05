@@ -211,7 +211,7 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
           value={state.pickupNote}
           onChange={(e) => patch({ pickupNote: e.target.value })}
           rows={2}
-          placeholder='เช่น "ใส่เสื้อสีแดง" หรือ tr("จะโทรก่อนถึง 10 นาที")'
+          placeholder='เช่น tr("ใส่เสื้อสีแดง") หรือ tr("จะโทรก่อนถึง 10 นาที")'
           className="w-full px-3 py-2.5 border border-[var(--c-line)] rounded-xl text-sm resize-none
                      focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30"
         />

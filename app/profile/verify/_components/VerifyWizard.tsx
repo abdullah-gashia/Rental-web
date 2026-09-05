@@ -34,7 +34,8 @@ const INITIAL: FormState = {
 // ─── Progress bar ─────────────────────────────────────────────────────────────
 
 function StepBar({ current }: { current: Step }) {
-  const labels = ["ข้อมูล PSU ID", "อัปโหลดบัตร", "ยืนยันใบหน้า", "ตรวจสอบ & ส่ง"];
+  const tr = useLocaleStore((s) => s.tr);
+  const labels = [tr("ข้อมูล PSU ID"), tr("อัปโหลดบัตร"), tr("ยืนยันใบหน้า"), tr("ตรวจสอบ & ส่ง")];
   return (
     <div className="flex items-center gap-0 mb-8">
       {labels.map((label, i) => {
@@ -102,11 +103,12 @@ function PsuIdStep({ form, onChange, onNext }: {
   }
 
   function validate(): boolean {
-    if (!form.psuIdType) { setErr("กรุณาเลือกประเภท (นักศึกษา / บุคลากร)"); return false; }
+  const tr = useLocaleStore((s) => s.tr);
+    if (!form.psuIdType) { setErr(tr("กรุณาเลือกประเภท (นักศึกษา / บุคลากร)")); return false; }
     const n = form.psuIdNumber;
-    if (!n) { setErr("กรุณากรอกรหัสประจำตัว"); return false; }
-    if (form.psuIdType === "STAFF"   && n.length !== 5)  { setErr("รหัสบุคลากรต้องมี 5 หลัก");   return false; }
-    if (form.psuIdType === "STUDENT" && n.length !== 10) { setErr("รหัสนักศึกษาต้องมี 10 หลัก"); return false; }
+    if (!n) { setErr(tr("กรุณากรอกรหัสประจำตัว")); return false; }
+    if (form.psuIdType === "STAFF"   && n.length !== 5)  { setErr(tr("รหัสบุคลากรต้องมี 5 หลัก"));   return false; }
+    if (form.psuIdType === "STUDENT" && n.length !== 10) { setErr(tr("รหัสนักศึกษาต้องมี 10 หลัก")); return false; }
 
     // Strict year prefix check for students
     if (form.psuIdType === "STUDENT") {
@@ -146,7 +148,7 @@ function PsuIdStep({ form, onChange, onNext }: {
             }`}
           >
             <span className="text-2xl">🎓</span>
-            <span>นักศึกษา</span>
+            <span>{tr("นักศึกษา")}</span>
           </button>
           <button
             type="button"
@@ -158,14 +160,14 @@ function PsuIdStep({ form, onChange, onNext }: {
             }`}
           >
             <span className="text-2xl">👨‍💼</span>
-            <span>บุคลากร</span>
+            <span>{tr("บุคลากร")}</span>
           </button>
         </div>
 
         {/* Auto-detect hint (shown only when system guessed, not when user chose) */}
         {!explicitlyChosen && form.psuIdType && (
           <p className="text-xs text-blue-500 mt-1.5">
-            ✨ ระบบตรวจพบว่าเป็นรหัส{form.psuIdType === "STUDENT" ? "นักศึกษา" : "บุคลากร"} (สามารถเปลี่ยนได้)
+            ✨ ระบบตรวจพบว่าเป็นรหัส{form.psuIdType === "STUDENT" ? tr("นักศึกษา") : tr("บุคลากร")} (สามารถเปลี่ยนได้)
           </p>
         )}
       </div>
@@ -183,9 +185,9 @@ function PsuIdStep({ form, onChange, onNext }: {
           onChange={(e) => handleIdChange(e.target.value)}
           onBlur={handleIdBlur}
           placeholder={
-            form.psuIdType === "STUDENT" ? "เช่น 6610110001" :
-            form.psuIdType === "STAFF"   ? "เช่น 50001" :
-            "เลือกประเภทก่อน"
+            form.psuIdType === "STUDENT" ? tr("เช่น 6610110001") :
+            form.psuIdType === "STAFF"   ? tr("เช่น 50001") :
+            tr("เลือกประเภทก่อน")
           }
           disabled={!form.psuIdType}
           className="w-full border border-[var(--c-line)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition font-mono disabled:opacity-40 disabled:cursor-not-allowed"
@@ -213,7 +215,7 @@ function PsuIdStep({ form, onChange, onNext }: {
           type="text"
           value={form.facultyOrDepartment}
           onChange={(e) => onChange({ facultyOrDepartment: e.target.value })}
-          placeholder="เช่น คณะวิศวกรรมศาสตร์"
+          placeholder={tr("เช่น คณะวิศวกรรมศาสตร์")}
           className="w-full border border-[var(--c-line)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
         />
       </div>
@@ -240,7 +242,8 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
   const [err,       setErr]       = useState("");
 
   async function handleFile(file: File) {
-    if (!file.type.startsWith("image/")) { setErr("กรุณาเลือกไฟล์รูปภาพ"); return; }
+  const tr = useLocaleStore((s) => s.tr);
+    if (!file.type.startsWith("image/")) { setErr(tr("กรุณาเลือกไฟล์รูปภาพ")); return; }
 
     setUploading(true);
     setErr("");
@@ -267,11 +270,11 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
       if (res.ok && data.url) {
         onChange({ idCardImageUrl: data.url });
       } else {
-        setErr(tr(data.error ?? "อัปโหลดไม่สำเร็จ กรุณาลองใหม่"));
+        setErr(tr(data.error ?? tr("อัปโหลดไม่สำเร็จ กรุณาลองใหม่")));
         onChange({ idCardImageUrl: "", idCardImagePreview: "" });
       }
     } catch {
-      setErr("เกิดข้อผิดพลาดในการอัปโหลด");
+      setErr(tr("เกิดข้อผิดพลาดในการอัปโหลด"));
       onChange({ idCardImageUrl: "", idCardImagePreview: "" });
     } finally {
       setUploading(false);
@@ -331,10 +334,10 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
       {err && <p className="text-xs text-[var(--c-danger)] text-center">{err}</p>}
 
       <div className="bg-[var(--c-accent-soft)] border border-blue-100 rounded-xl px-4 py-3 text-xs text-[var(--c-accent-str)] space-y-1">
-        <p className="font-semibold">💡 เคล็ดลับ:</p>
-        <p>• ถ่ายในที่สว่าง ไม่มีเงาทับ</p>
-        <p>• ให้เห็นชื่อ-นามสกุล และรหัสชัดเจน</p>
-        <p>• ไม่ต้องถือบัตรคู่กับหน้า (ทำในขั้นตอนถัดไป)</p>
+        <p className="font-semibold">{tr("💡 เคล็ดลับ:")}</p>
+        <p>{tr("• ถ่ายในที่สว่าง ไม่มีเงาทับ")}</p>
+        <p>{tr("• ให้เห็นชื่อ-นามสกุล และรหัสชัดเจน")}</p>
+        <p>{tr("• ไม่ต้องถือบัตรคู่กับหน้า (ทำในขั้นตอนถัดไป)")}</p>
       </div>
 
       <div className="flex gap-3">
@@ -344,7 +347,7 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
         >{tr("← ย้อนกลับ")}</button>
         <button
           onClick={() => {
-            if (!form.idCardImageUrl) { setErr("กรุณาอัปโหลดรูปบัตรก่อน"); return; }
+            if (!form.idCardImageUrl) { setErr(tr("กรุณาอัปโหลดรูปบัตรก่อน")); return; }
             onNext();
           }}
           disabled={uploading}
@@ -379,8 +382,8 @@ function FaceLivenessStep({ form, onChange, onNext, onBack }: {
     <div className="space-y-5">
       <div className="text-center space-y-1">
         <div className="text-4xl">🤳</div>
-        <h2 className="text-lg font-extrabold text-[var(--c-ink)]">ยืนยันใบหน้า</h2>
-        <p className="text-sm text-[var(--c-muted)]">ถ่ายภาพ 4 มุมเพื่อยืนยันว่าเป็นตัวคุณเอง</p>
+        <h2 className="text-lg font-extrabold text-[var(--c-ink)]">{tr("ยืนยันใบหน้า")}</h2>
+        <p className="text-sm text-[var(--c-muted)]">{tr("ถ่ายภาพ 4 มุมเพื่อยืนยันว่าเป็นตัวคุณเอง")}</p>
       </div>
 
       <FaceLivenessCapture onComplete={handleComplete} />
@@ -416,11 +419,11 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
   async function handleSubmit() {
   const tr = useLocaleStore((s) => s.tr);
     if (!canSubmit) {
-      setError("ข้อมูลไม่ครบ กรุณากลับไปตรวจสอบ");
+      setError(tr("ข้อมูลไม่ครบ กรุณากลับไปตรวจสอบ"));
       return;
     }
     if (!form.psuIdType) {
-      setError("กรุณากลับไปเลือกประเภทใน ขั้นตอน 1");
+      setError(tr("กรุณากลับไปเลือกประเภทใน ขั้นตอน 1"));
       return;
     }
 
@@ -450,7 +453,7 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
     <div className="space-y-5">
       <div className="text-center space-y-1">
         <div className="text-4xl">📋</div>
-        <h2 className="text-lg font-extrabold text-[var(--c-ink)]">ตรวจสอบก่อนส่ง</h2>
+        <h2 className="text-lg font-extrabold text-[var(--c-ink)]">{tr("ตรวจสอบก่อนส่ง")}</h2>
       </div>
 
       {/* Summary */}
@@ -458,7 +461,7 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
         <div className="flex justify-between">
           <span className="text-[var(--c-muted)]">{tr("ประเภท")}</span>
           <span className="font-semibold">
-            {form.psuIdType === "STUDENT" ? "นักศึกษา" : form.psuIdType === "STAFF" ? "บุคลากร" : "—"}
+            {form.psuIdType === "STUDENT" ? tr("นักศึกษา") : form.psuIdType === "STAFF" ? tr("บุคลากร") : "—"}
           </span>
         </div>
         <div className="flex justify-between">
@@ -532,7 +535,7 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
           {submitting && (
             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
           )}
-          {submitting ? "กำลังส่ง…" : "📤 ส่งเพื่อตรวจสอบ"}
+          {submitting ? tr("กำลังส่ง…") : tr("📤 ส่งเพื่อตรวจสอบ")}
         </button>
       </div>
     </div>

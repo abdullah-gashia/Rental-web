@@ -32,7 +32,8 @@ export default function OwnerActions({ orderId, status }: Props) {
   }
 
   function handleReject() {
-    if (!reason.trim()) { setError("กรุณาระบุเหตุผล"); return; }
+  const tr = useLocaleStore((s) => s.tr);
+    if (!reason.trim()) { setError(tr("กรุณาระบุเหตุผล")); return; }
     setError(null);
     startTransition(async () => {
       const res = await rejectRentalOrder(orderId, reason);
@@ -82,9 +83,7 @@ export default function OwnerActions({ orderId, status }: Props) {
               onClick={() => { setRejectOpen(false); setReason(""); }}
               disabled={isPending}
               className="flex-1 py-2.5 border border-[var(--c-line)] text-sm rounded-xl hover:bg-[var(--c-line-soft)]"
-            >
-              ยกเลิก
-            </button>
+            >{tr("ยกเลิก")}</button>
             <button
               onClick={handleReject}
               disabled={isPending}

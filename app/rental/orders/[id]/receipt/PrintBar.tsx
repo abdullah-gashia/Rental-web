@@ -21,9 +21,7 @@ export default function PrintBar({ title }: Props) {
         <button
           onClick={() => window.close()}
           className="px-4 py-1.5 border border-[var(--c-line)] text-[var(--c-ink-3)] text-sm rounded-lg hover:bg-[var(--c-subtle)]"
-        >
-          ปิด
-        </button>
+        >{tr("ปิด")}</button>
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 interface ConfirmDialogProps {
   open:          boolean;
   title:         string;
@@ -23,6 +25,7 @@ export default function ConfirmDialog({
   onCancel,
   children,
 }: ConfirmDialogProps) {
+  const tr = useLocaleStore((s) => s.tr);
   if (!open) return null;
 
   return (
@@ -54,9 +57,7 @@ export default function ConfirmDialog({
             onClick={onCancel}
             disabled={loading}
             className="flex-1 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
-          >
-            ยกเลิก
-          </button>
+          >{tr("ยกเลิก")}</button>
           <button
             type="button"
             onClick={onConfirm}

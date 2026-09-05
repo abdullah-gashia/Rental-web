@@ -109,7 +109,7 @@ async function RejectedBanner({
       <div className="flex items-start gap-3">
         <span className="text-2xl mt-0.5">❌</span>
         <div>
-          <p className="font-semibold text-[var(--c-danger)]">คำขอถูกปฏิเสธ</p>
+          <p className="font-semibold text-[var(--c-danger)]">{tr("คำขอถูกปฏิเสธ")}</p>
           {reason && (
             <p className="text-sm text-[var(--c-danger)] mt-1">{tr("เหตุผล: {0}", [reason])}</p>
           )}

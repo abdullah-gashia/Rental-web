@@ -112,7 +112,7 @@ export default function ItemsTable({ rows }: Props) {
           <thead>
             <tr className="border-b border-[var(--c-line)] bg-[var(--c-subtle)]">
               <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)] w-[280px]">{tr("สินค้า")}</th>
-              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">ผู้ขาย</th>
+              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("ผู้ขาย")}</th>
               <th className="text-right px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("ราคา")}</th>
               <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("ประเภท")}</th>
               <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("สถานะ")}</th>

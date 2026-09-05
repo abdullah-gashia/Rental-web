@@ -100,9 +100,7 @@ export default function DeleteDialog({
             onClick={handleClose}
             disabled={loading}
             className="flex-1 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
-          >
-            ยกเลิก
-          </button>
+          >{tr("ยกเลิก")}</button>
           <button
             type="button"
             onClick={handleConfirm}

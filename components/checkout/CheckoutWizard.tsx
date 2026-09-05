@@ -139,7 +139,7 @@ export default function CheckoutWizard({
         meetupNote:     state.meetupNote ?? undefined,
       };
     } else {
-      dispatch({ type: "SUBMIT_ERROR", payload: "ข้อมูลไม่ครบถ้วน" });
+      dispatch({ type: "SUBMIT_ERROR", payload: tr("ข้อมูลไม่ครบถ้วน") });
       return;
     }
 
@@ -187,7 +187,7 @@ export default function CheckoutWizard({
           <button
             onClick={handleClose}
             disabled={state.isSubmitting}
-            aria-label="ปิด"
+            aria-label={tr("ปิด")}
             className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-[var(--c-line-soft)] hover:bg-[var(--c-line)] flex items-center justify-center text-[var(--c-ink-3)] hover:text-[var(--c-ink)] transition disabled:opacity-40"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -280,9 +280,7 @@ export default function CheckoutWizard({
                       <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                      </svg>
-                      กำลังดำเนินการ…
-                    </>
+                      </svg>{tr("กำลังดำเนินการ…")}</>
                   ) : (
                     tr("ยืนยันการซื้อ ฿{0}", [breakdown.totalAmount.toLocaleString()])
                   )}

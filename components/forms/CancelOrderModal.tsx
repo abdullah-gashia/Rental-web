@@ -58,7 +58,7 @@ export default function CancelOrderModal({
   const [isPending, startTransition] = useTransition();
 
   const isEscrow  = paymentMethod === "ESCROW" || paymentMethod == null;
-  const finalReason = selected === "อื่นๆ" ? custom.trim() : selected;
+  const finalReason = selected === tr("อื่นๆ") ? custom.trim() : selected;
 
   // Compute hint for how long until seller CAN cancel (30-min grace period)
   const sellerGraceHint = (() => {
@@ -76,7 +76,7 @@ export default function CancelOrderModal({
     setFormError(null);
 
     if (!selected)                               { setFormError(tr("กรุณาเลือกเหตุผล")); return; }
-    if (selected === "อื่นๆ" && !custom.trim()) { setFormError("กรุณาระบุเหตุผล"); return; }
+    if (selected === tr("อื่นๆ") && !custom.trim()) { setFormError(tr("กรุณาระบุเหตุผล")); return; }
 
     startTransition(async () => {
       const res = await cancelOrderNew(
@@ -170,7 +170,7 @@ export default function CancelOrderModal({
               ))}
             </div>
 
-            {selected === "อื่นๆ" && (
+            {selected === tr("อื่นๆ") && (
               <textarea
                 value={custom}
                 onChange={(e) => { setCustom(e.target.value); setFormError(null); }}
@@ -211,7 +211,7 @@ export default function CancelOrderModal({
               className="flex-1 py-3 rounded-xl bg-red-600 text-white text-sm font-bold hover:bg-red-700 transition disabled:opacity-40 flex items-center justify-center gap-2"
             >
               {isPending && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-              {isPending ? "กำลังดำเนินการ…" : tr("ยืนยันยกเลิก")}
+              {isPending ? tr("กำลังดำเนินการ…") : tr("ยืนยันยกเลิก")}
             </button>
           </div>
         </form>

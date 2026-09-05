@@ -169,7 +169,7 @@ function ShippingDetails({ order }: { order: BaseOrder }) {
         <a href={order.shippingProofImage} target="_blank" rel="noopener noreferrer">
           <img
             src={order.shippingProofImage}
-            alt="หลักฐานจัดส่ง"
+            alt={tr("หลักฐานจัดส่ง")}
             className="w-full max-h-24 object-contain rounded-lg border border-[var(--c-line-str)] mt-1 hover:opacity-90 transition"
           />
         </a>
@@ -320,7 +320,7 @@ function OrderCard({
           <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--c-muted)]">
             <span className="font-bold text-[var(--c-ink)] text-sm">฿{order.amount.toLocaleString()}</span>
             <span>·</span>
-            <span>{role === "buyer" ? "ขายโดย" : "ซื้อโดย"} {counterparty?.name ?? "ไม่ระบุชื่อ"}</span>
+            <span>{role === "buyer" ? tr("ขายโดย") : tr("ซื้อโดย")} {counterparty?.name ?? tr("ไม่ระบุชื่อ")}</span>
             {isMeetup && <span className="px-2 py-0.5 rounded-full bg-[var(--c-accent-soft)] text-sky-600 font-semibold">{tr("🤝 นัดพบ")}</span>}
             {isCOD    && <span className="px-2 py-0.5 rounded-full bg-[var(--c-warn-soft)] text-[var(--c-warn)] font-semibold">💵 COD</span>}
             <span>·</span>
@@ -366,7 +366,7 @@ function OrderCard({
                   disabled={pending}
                   className="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700 transition disabled:opacity-40"
                 >
-                  {pending ? "กำลังดำเนินการ…" : "✅ ยืนยันรับสินค้าแล้ว"}
+                  {pending ? tr("กำลังดำเนินการ…") : tr("✅ ยืนยันรับสินค้าแล้ว")}
                 </button>
               )}
 
@@ -383,9 +383,7 @@ function OrderCard({
                   onClick={() => onCancel(order)}
                   disabled={pending}
                   className="px-4 py-2 rounded-xl text-xs font-bold bg-[var(--c-canvas)] text-[var(--c-ink-3)] border border-[var(--c-line)] hover:bg-[var(--c-line-soft)] transition disabled:opacity-40"
-                >
-                  ยกเลิก
-                </button>
+                >{tr("ยกเลิก")}</button>
               )}
 
               {/* Seller meetup — show locked hint until 30-min grace period passes */}
@@ -417,7 +415,7 @@ function OrderCard({
                   onClick={() => onReview(order)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-[var(--c-warn-soft)] text-[var(--c-warn)] border border-[var(--c-warn-line)] hover:bg-[var(--c-warn-soft)] transition"
                 >
-                  ⭐ {isSeller ? "ให้คะแนนผู้ซื้อ" : "ให้คะแนนผู้ขาย"}
+                  ⭐ {isSeller ? tr("ให้คะแนนผู้ซื้อ") : tr("ให้คะแนนผู้ขาย")}
                 </button>
               )}
               {isCompleted && order.myReview && (
@@ -487,6 +485,7 @@ export default function OrdersClient({
   }
 
   function handleReceipt(order: BuyOrder | SellOrder) {
+  const tr = useLocaleStore((s) => s.tr);
     const bo = order as BuyOrder;
     const so = order as SellOrder;
     setReceiptData({
@@ -494,8 +493,8 @@ export default function OrdersClient({
       itemTitle:            order.item.title,
       amount:               order.amount,
       completedAt:          order.updatedAt,
-      buyerName:            bo.buyer?.name  ?? so.buyer?.name  ?? "ไม่ระบุ",
-      sellerName:           bo.seller?.name ?? so.seller?.name ?? "ไม่ระบุ",
+      buyerName:            bo.buyer?.name  ?? so.buyer?.name  ?? tr("ไม่ระบุ"),
+      sellerName:           bo.seller?.name ?? so.seller?.name ?? tr("ไม่ระบุ"),
       deliveryMethod:       order.deliveryMethod   ?? undefined,
       shippingMethod:       order.shippingMethod   ?? undefined,
       trackingNumber:       order.trackingNumber   ?? undefined,
@@ -635,7 +634,7 @@ export default function OrdersClient({
           itemTitle={meetupHandoverTarget.item.title}
           buyerName={
             (meetupHandoverTarget as SellOrder).buyer?.name ??
-            (meetupHandoverTarget as BuyOrder).buyer?.name  ?? "ผู้ซื้อ"
+            (meetupHandoverTarget as BuyOrder).buyer?.name  ?? tr("ผู้ซื้อ")
           }
           onClose={() => setMeetupHandoverTarget(null)}
           onSuccess={() => {
@@ -696,8 +695,8 @@ export default function OrdersClient({
           counterpartyRole={reviewTarget.seller?.id === currentUserId ? "buyer" : "seller"}
           counterpartyName={
             reviewTarget.seller?.id === currentUserId
-              ? (reviewTarget.buyer?.name  ?? "ผู้ซื้อ")
-              : (reviewTarget.seller?.name ?? "ผู้ขาย")
+              ? (reviewTarget.buyer?.name  ?? tr("ผู้ซื้อ"))
+              : (reviewTarget.seller?.name ?? tr("ผู้ขาย"))
           }
           onClose={() => { setReviewTarget(null); router.refresh(); }}
           onSuccess={() => { setReviewTarget(null); router.refresh(); }}

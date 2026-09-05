@@ -29,6 +29,7 @@ function PasswordField({
   disabled?: boolean;
   autoComplete: string;
 }) {
+  const tr = useLocaleStore((s) => s.tr);
   const [visible, setVisible] = useState(false);
 
   return (
@@ -51,7 +52,7 @@ function PasswordField({
           type="button"
           onClick={() => setVisible((v) => !v)}
           tabIndex={-1}
-          aria-label={visible ? "ซ่อนรหัสผ่าน" : "แสดงรหัสผ่าน"}
+          aria-label={visible ? tr("ซ่อนรหัสผ่าน") : tr("แสดงรหัสผ่าน")}
           className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center text-[var(--c-muted)] hover:text-[var(--c-ink-1)] transition"
         >
           {visible ? (
@@ -199,9 +200,7 @@ export default function ChangePasswordDialog({ open, onClose, showToast }: Props
             onClick={onClose}
             disabled={pending}
             className="flex-1 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
-          >
-            ยกเลิก
-          </button>
+          >{tr("ยกเลิก")}</button>
           <button
             type="submit"
             disabled={!canSubmit}

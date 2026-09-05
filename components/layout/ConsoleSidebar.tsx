@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
@@ -76,6 +78,7 @@ interface Props {
 export default function ConsoleSidebar({
   title, groups, user, backHref = "/", backLabel = "กลับหน้าร้าน", userFallback = "ผู้ใช้",
 }: Props) {
+  const tr = useLocaleStore((s) => s.tr);
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -96,7 +99,7 @@ export default function ConsoleSidebar({
               className={`ui-nav-item ${isOn(e) ? "is-on" : ""}`}
             >
               <Icon name={e.icon} />
-              <span className="flex-1 truncate">{e.label}</span>
+              <span className="flex-1 truncate">{tr(e.label)}</span>
               {!!e.badge && e.badge > 0 && (
                 <span className={`ui-nav-badge ${e.danger ? "is-bad" : ""}`}>
                   {e.badge > 99 ? "99+" : e.badge}

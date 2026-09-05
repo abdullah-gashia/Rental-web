@@ -133,7 +133,7 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
               type="button"
               onClick={() => setLightbox(false)}
               className="absolute -top-3 -right-3 w-9 h-9 bg-[var(--c-surface)] hover:bg-[var(--c-line-soft)] text-[var(--c-ink)] rounded-full shadow-lg flex items-center justify-center transition text-lg font-bold leading-none"
-              aria-label="ปิด"
+              aria-label={tr("ปิด")}
             >
               ✕
             </button>

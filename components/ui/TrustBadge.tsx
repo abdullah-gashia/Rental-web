@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 interface TrustBadgeProps {
   score: number;
   /** "sm" shows only the icon+score; "md" (default) adds the label */
@@ -16,37 +18,39 @@ interface Tier {
 }
 
 function getTier(score: number): Tier {
+  const tr = useLocaleStore((s) => s.tr);
   if (score >= 90) {
     return {
-      label:   "น่าเชื่อถือสูง",
+      label:   tr("น่าเชื่อถือสูง"),
       icon:    "✦",
       bg:      "bg-[var(--c-ok-soft)]",
       text:    "text-[var(--c-ok)]",
       border:  "border-[var(--c-ok-line)]",
-      tooltip: `คะแนน ${score} — ผู้ใช้คนนี้ผ่านธุรกรรมสำเร็จหลายครั้งและมีรีวิวดีเยี่ยม`,
+      tooltip: tr("คะแนน {0} — ผู้ใช้คนนี้ผ่านธุรกรรมสำเร็จหลายครั้งและมีรีวิวดีเยี่ยม", [score]),
     };
   }
   if (score >= 50) {
     return {
-      label:   "มาตรฐาน",
+      label:   tr("มาตรฐาน"),
       icon:    "●",
       bg:      "bg-[var(--c-warn-soft)]",
       text:    "text-[var(--c-warn)]",
       border:  "border-[var(--c-warn-line)]",
-      tooltip: `คะแนน ${score} — ผู้ใช้ทั่วไป ควรตรวจสอบก่อนทำธุรกรรม`,
+      tooltip: tr("คะแนน {0} — ผู้ใช้ทั่วไป ควรตรวจสอบก่อนทำธุรกรรม", [score]),
     };
   }
   return {
-    label:   "ความน่าเชื่อถือต่ำ",
+    label:   tr("ความน่าเชื่อถือต่ำ"),
     icon:    "▼",
     bg:      "bg-[var(--c-danger-soft)]",
     text:    "text-[var(--c-danger)]",
     border:  "border-[var(--c-danger-line)]",
-    tooltip: `คะแนน ${score} — ระวัง! ผู้ใช้คนนี้มีประวัติยกเลิกธุรกรรมหรือรีวิวแย่`,
+    tooltip: tr("คะแนน {0} — ระวัง! ผู้ใช้คนนี้มีประวัติยกเลิกธุรกรรมหรือรีวิวแย่", [score]),
   };
 }
 
 export default function TrustBadge({ score, size = "md" }: TrustBadgeProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const tier = getTier(score);
 
   return (
@@ -60,7 +64,7 @@ export default function TrustBadge({ score, size = "md" }: TrustBadgeProps) {
     >
       <span className="leading-none">{tier.icon}</span>
       <span>{score}</span>
-      {size === "md" && <span className="opacity-75">· {tier.label}</span>}
+      {size === "md" && <span className="opacity-75">· {tr(tier.label)}</span>}
     </span>
   );
 }

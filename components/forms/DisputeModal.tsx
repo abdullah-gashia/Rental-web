@@ -44,6 +44,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
   // ─── Image Upload ───────────────────────────────────────────────────────────
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const tr = useLocaleStore((s) => s.tr);
     const files = Array.from(e.target.files ?? []);
     e.target.value = "";           // reset so same file can be re-selected
     if (!files.length) return;
@@ -78,7 +79,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
             next[startIdx + i] = {
               ...next[startIdx + i],
               uploading: false,
-              error: err instanceof Error ? err.message : "อัปโหลดไม่สำเร็จ",
+              error: err instanceof Error ? err.message : tr("อัปโหลดไม่สำเร็จ"),
             };
             return next;
           });
@@ -103,7 +104,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
     e.preventDefault();
     setSubmitError(null);
 
-    if (!reason.trim()) { setSubmitError("กรุณาระบุเหตุผล"); return; }
+    if (!reason.trim()) { setSubmitError(tr("กรุณาระบุเหตุผล")); return; }
     if (images.some((i) => i.uploading)) { setSubmitError(tr("กรุณารอให้อัปโหลดภาพเสร็จสิ้น")); return; }
 
     const uploadedUrls = images.filter((i) => i.url).map((i) => i.url!);
@@ -204,7 +205,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
                   {/* Upload error overlay */}
                   {img.error && (
                     <div className="absolute inset-0 bg-red-600/80 flex items-center justify-center p-1">
-                      <span className="text-white text-[10px] text-center leading-tight">อัปโหลดไม่สำเร็จ</span>
+                      <span className="text-white text-[10px] text-center leading-tight">{tr("อัปโหลดไม่สำเร็จ")}</span>
                     </div>
                   )}
 
@@ -269,9 +270,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
               onClick={onClose}
               disabled={isPending}
               className="flex-1 py-3 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
-            >
-              ยกเลิก
-            </button>
+            >{tr("ยกเลิก")}</button>
             <button
               type="submit"
               disabled={isPending || stillUploading}
@@ -279,9 +278,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
             >
               {isPending ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  กำลังส่ง…
-                </>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />{tr("กำลังส่ง…")}</>
               ) : stillUploading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />{tr("กำลังอัปโหลด…")}</>

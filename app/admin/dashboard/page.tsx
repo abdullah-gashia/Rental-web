@@ -1,4 +1,5 @@
 // Server Component — no "use client"
+import { getTr } from "@/lib/i18n/server";
 import { prisma }                 from "@/lib/prisma";
 import { getAdminDashboardStats } from "./actions";
 import { getAdminRevenueStats }   from "@/lib/actions/admin-revenue";
@@ -23,6 +24,7 @@ import { getI18n } from "@/lib/i18n/server";
 const fmt = (n: number, nf: string) => new Intl.NumberFormat(nf).format(n);
 
 export default async function AdminDashboardPage() {
+  const tr = await getTr();
   const { locale, t } = await getI18n();
   const nf = locale === "en" ? "en-US" : "th-TH";
   const [stats, revenue, pendingItems, pendingKyc, openDisputes, openReports, waitingRentals, waitingBorrows] =
@@ -65,7 +67,7 @@ export default async function AdminDashboardPage() {
           {live.map((q) => (
             <a key={q.href} href={q.href} className={`ui-stat ${q.bad ? "is-bad" : "is-warn"}`}>
               <p className="ui-stat-v !text-[24px]">{q.n}</p>
-              <p className="ui-stat-k mt-1 leading-snug">{q.label}</p>
+              <p className="ui-stat-k mt-1 leading-snug">{tr(q.label)}</p>
             </a>
           ))}
         </section>

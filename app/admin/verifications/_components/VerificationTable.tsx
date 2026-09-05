@@ -33,7 +33,7 @@ export default function VerificationTable({ requests, filter }: Props) {
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-[var(--c-line)] text-left text-[var(--c-muted)]">
-            <th className="pb-3 font-medium pr-4">ผู้ใช้</th>
+            <th className="pb-3 font-medium pr-4">{tr("ผู้ใช้")}</th>
             <th className="pb-3 font-medium pr-4">{tr("รหัส PSU")}</th>
             <th className="pb-3 font-medium pr-4">{tr("ประเภท")}</th>
             <th className="pb-3 font-medium pr-4">{tr("ส่งเมื่อ")}</th>
@@ -71,7 +71,7 @@ export default function VerificationTable({ requests, filter }: Props) {
                   {r.psuIdNumber.slice(0, 3)}{"•".repeat(r.psuIdNumber.length - 3)}
                 </td>
                 <td className="py-3 pr-4 text-[var(--c-ink-2)]">
-                  {r.psuIdType === "STUDENT" ? "นักศึกษา" : "บุคลากร"}
+                  {r.psuIdType === "STUDENT" ? tr("นักศึกษา") : tr("บุคลากร")}
                 </td>
                 <td className="py-3 pr-4 text-[var(--c-muted)]">{date}</td>
                 <td className="py-3 pr-4">

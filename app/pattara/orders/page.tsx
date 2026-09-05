@@ -104,7 +104,7 @@ export default async function OfficeOrdersPage({
                           <>
                             <p className="bw-num">{new Date(o.dueDate).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "2-digit" })}</p>
                             <p className={`text-[11px] ${left !== null && left < 0 ? "text-[var(--c-danger)] font-semibold" : "text-[var(--bw-muted)]"}`}>
-                              {left === null ? "" : left < 0 ? tr("เลย {0} วัน", [Math.abs(left)]) : left === 0 ? "วันนี้" : tr("อีก {0} วัน", [left])}
+                              {left === null ? "" : left < 0 ? tr("เลย {0} วัน", [Math.abs(left)]) : left === 0 ? tr("วันนี้") : tr("อีก {0} วัน", [left])}
                             </p>
                           </>
                         ) : <span className="text-[var(--bw-muted)]">—</span>}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 interface Option {
@@ -13,6 +15,7 @@ interface FilterSelectProps {
 }
 
 export default function FilterSelect({ name, options }: FilterSelectProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const router   = useRouter();
   const sp       = useSearchParams();
   const pathname = usePathname();
@@ -32,7 +35,7 @@ export default function FilterSelect({ name, options }: FilterSelectProps) {
       className="text-sm border border-[var(--c-line)] rounded-xl px-3 py-2 bg-[var(--c-surface)] focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/20 cursor-pointer"
     >
       {options.map((o) => (
-        <option key={o.value} value={o.value}>{o.label}</option>
+        <option key={o.value} value={o.value}>{tr(o.label)}</option>
       ))}
     </select>
   );

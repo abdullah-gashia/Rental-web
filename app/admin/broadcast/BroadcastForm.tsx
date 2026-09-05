@@ -215,15 +215,13 @@ export default function BroadcastForm({ counts, adminEmail, mailReady }: Props) 
                 onClick={() => setConfirm(false)}
                 disabled={pending}
                 className="flex-1 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
-              >
-                ยกเลิก
-              </button>
+              >{tr("ยกเลิก")}</button>
               <button
                 onClick={() => run(false)}
                 disabled={pending}
                 className="flex-1 py-2.5 rounded-xl bg-[var(--c-accent)] text-sm font-bold text-white hover:bg-[var(--c-accent-str)] transition disabled:opacity-50"
               >
-                {pending ? "กำลังส่ง…" : tr("ส่งเลย")}
+                {pending ? tr("กำลังส่ง…") : tr("ส่งเลย")}
               </button>
             </div>
           </div>

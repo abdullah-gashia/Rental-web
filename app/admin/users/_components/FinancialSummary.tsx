@@ -65,7 +65,7 @@ export default function FinancialSummary({ data }: Props) {
           <div className="space-y-0.5 max-h-[200px] overflow-y-auto">
             {data.escrowOrders.map((order) => {
               const isBuyer = order.buyerId === data.id;
-              const role    = isBuyer ? "ผู้ซื้อ" : "ผู้ขาย";
+              const role    = isBuyer ? tr("ผู้ซื้อ") : tr("ผู้ขาย");
               const amount  = isBuyer
                 ? (order.totalAmount ?? order.amount)
                 : (order.sellerPayout ?? order.amount);

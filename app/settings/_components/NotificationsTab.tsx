@@ -49,8 +49,7 @@ export default function NotificationsTab({ preferences, showToast }: Props) {
   return (
     <div className="p-5 sm:p-6 space-y-6">
       <h2 className="text-lg font-bold text-[var(--c-ink)] flex items-center gap-2">
-        <span>🔔</span> การแจ้งเตือน
-      </h2>
+        <span>🔔</span>{tr("การแจ้งเตือน")}</h2>
 
       {/* In-app notifications */}
       <div>

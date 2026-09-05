@@ -198,7 +198,7 @@ function PhotoUpload({
           <div className="relative">
             <img
               src={photoUrl}
-              alt="หลักฐาน"
+              alt={tr("หลักฐาน")}
               className="w-full max-h-40 object-contain"
             />
             <button
@@ -225,7 +225,7 @@ function PhotoUpload({
               </svg>
             )}
             <p className="text-xs text-[var(--c-muted)]">
-              {uploading ? "กำลังอัปโหลด..." : "แตะเพื่อถ่ายภาพ หรือลากไฟล์มาวาง"}
+              {uploading ? tr("กำลังอัปโหลด...") : tr("แตะเพื่อถ่ายภาพ หรือลากไฟล์มาวาง")}
             </p>
           </div>
         )}
@@ -319,7 +319,7 @@ export default function MeetupHandoverModal({
         <button
           onClick={onClose}
           disabled={submitting}
-          aria-label="ปิด"
+          aria-label={tr("ปิด")}
           className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-[var(--c-line-soft)] hover:bg-[var(--c-line)] flex items-center justify-center text-[var(--c-ink-3)] hover:text-[var(--c-ink)] transition disabled:opacity-40"
         >
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -385,9 +385,7 @@ export default function MeetupHandoverModal({
               onClick={onClose}
               disabled={submitting}
               className="flex-1 py-3 rounded-2xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-40"
-            >
-              ยกเลิก
-            </button>
+            >{tr("ยกเลิก")}</button>
             <button
               onClick={handleSubmit}
               disabled={submitting || uploading}
@@ -398,11 +396,9 @@ export default function MeetupHandoverModal({
                   <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
-                  กำลังดำเนินการ…
-                </>
+                  </svg>{tr("กำลังดำเนินการ…")}</>
               ) : (
-                "✅ ยืนยันและส่งมอบสำเร็จ"
+                tr("✅ ยืนยันและส่งมอบสำเร็จ")
               )}
             </button>
           </div>

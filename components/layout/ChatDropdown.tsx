@@ -29,7 +29,7 @@ interface ChatDropdownProps {
 function timeAgo(dateStr: string, tr: TrFn): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "ตอนนี้";
+  if (mins < 1) return tr("ตอนนี้");
   if (mins < 60) return tr("{0} นาที", [mins]);
   const hrs = Math.floor(mins / 60);
   if (hrs < 24) return tr("{0} ชม.", [hrs]);
@@ -96,7 +96,7 @@ export default function ChatDropdown({ onClose, onOpenChat }: ChatDropdownProps)
         </div>
         {/* Filter pills */}
         <div className="flex gap-1.5 mt-2.5">
-          <span className="px-3 py-1 bg-[var(--c-ink)] text-white text-[11px] font-semibold rounded-full">ทั้งหมด</span>
+          <span className="px-3 py-1 bg-[var(--c-ink)] text-white text-[11px] font-semibold rounded-full">{tr("ทั้งหมด")}</span>
           <span className="px-3 py-1 bg-[var(--c-line-soft)] text-[var(--c-ink-2)] text-[11px] font-medium rounded-full hover:bg-[var(--c-line)] cursor-pointer transition">{tr("ยังไม่ได้อ่าน")}</span>
         </div>
       </div>
@@ -141,7 +141,7 @@ export default function ChatDropdown({ onClose, onOpenChat }: ChatDropdownProps)
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <p className="text-[13px] font-semibold text-[var(--c-ink)] truncate">{other?.name || "ผู้ใช้"}</p>
+                    <p className="text-[13px] font-semibold text-[var(--c-ink)] truncate">{other?.name || tr("ผู้ใช้")}</p>
                     <span className="text-[10px] text-[var(--c-muted)] flex-shrink-0 ml-2">
                       {lastMsg ? timeAgo(lastMsg.createdAt, tr) : ""}
                     </span>

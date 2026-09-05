@@ -182,7 +182,7 @@ export default function Navbar({
                 {/* Notifications */}
                 <div className="relative">
                   <IconButton
-                    title="การแจ้งเตือน"
+                    title={tr("การแจ้งเตือน")}
                     active={showNotifications}
                     badge={unreadNotifications}
                     onClick={() => {

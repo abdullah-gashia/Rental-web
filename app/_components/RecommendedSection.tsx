@@ -9,11 +9,12 @@ import type { RecommendedItem, RecommendationReason } from "@/lib/actions/recomm
 import type { ItemWithDetails } from "@/lib/types";
 
 function reasonBadge(reason: RecommendationReason): string | null {
+  const tr = useLocaleStore((s) => s.tr);
   switch (reason) {
-    case "CATEGORY_MATCH": return "ตรงใจคุณ";
-    case "PRICE_MATCH":    return "งบพอดี";
-    case "TRENDING":       return "กำลังฮิต";
-    case "NEW_LISTING":    return "มาใหม่";
+    case "CATEGORY_MATCH": return tr("ตรงใจคุณ");
+    case "PRICE_MATCH":    return tr("งบพอดี");
+    case "TRENDING":       return tr("กำลังฮิต");
+    case "NEW_LISTING":    return tr("มาใหม่");
     case "DISCOVERY":      return null;
   }
 }

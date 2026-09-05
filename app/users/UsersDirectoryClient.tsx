@@ -22,9 +22,10 @@ function Stars({ rating, className = "" }: { rating: number; className?: string 
 }
 
 function trustTone(score: number) {
-  if (score >= 120) return { label: "น่าเชื่อถือสูง", cls: "bg-[var(--c-ok-soft)] text-[var(--c-ok)] border-[var(--c-ok-line)]" };
-  if (score >= 80)  return { label: "ปกติ",          cls: "bg-[var(--hp-subtle)] text-[var(--hp-ink-2)] border-[var(--hp-border)]" };
-  return              { label: "ควรระวัง",      cls: "bg-[#fff7e6] text-[var(--c-warn)] border-[#f5e3b8]" };
+  const tr = useLocaleStore((s) => s.tr);
+  if (score >= 120) return { label: tr("น่าเชื่อถือสูง"), cls: "bg-[var(--c-ok-soft)] text-[var(--c-ok)] border-[var(--c-ok-line)]" };
+  if (score >= 80)  return { label: tr("ปกติ"),          cls: "bg-[var(--hp-subtle)] text-[var(--hp-ink-2)] border-[var(--hp-border)]" };
+  return              { label: tr("ควรระวัง"),      cls: "bg-[#fff7e6] text-[var(--c-warn)] border-[#f5e3b8]" };
 }
 
 export default function UsersDirectoryClient({ users }: { users: DirectoryUser[] }) {
@@ -83,9 +84,9 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
       {/* Who to show */}
       <div className="flex flex-wrap gap-2 mb-4">
         {([
-          { k: "all",     label: th ? "ทั้งหมด"    : "Everyone", n: users.length },
+          { k: "all",     label: th ? tr("ทั้งหมด")    : "Everyone", n: users.length },
           { k: "office",  label: th ? tr("หน่วยงาน")   : "Offices",  n: officeCount  },
-          { k: "student", label: th ? "นักศึกษา"   : "Students", n: studentCount },
+          { k: "student", label: th ? tr("นักศึกษา")   : "Students", n: studentCount },
         ] as const).map((t) => (
           <button
             key={t.k}
@@ -145,7 +146,7 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
                         {th ? tr("หน่วยงาน") : "Office"}
                       </span>
                       <p className="text-[14px] font-semibold text-[var(--hp-ink)] truncate group-hover:text-[var(--psu-indigo)]">
-                        {u.name ?? (th ? "งานภัทร" : "Office")}
+                        {u.name ?? (th ? tr("งานภัทร") : "Office")}
                       </p>
                       <p className="text-[11.5px] text-[var(--hp-muted)] mt-0.5 truncate">
                         {u.officeLocation ?? (th ? tr("ให้ยืมอุปกรณ์ฟรีสำหรับนักศึกษา") : "Free equipment lending")}
@@ -182,7 +183,7 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
                       <p className="text-[14px] font-semibold text-[var(--hp-ink)] truncate group-hover:text-[var(--psu-indigo)]">
-                        {u.name ?? (th ? "ผู้ใช้" : "User")}
+                        {u.name ?? (th ? tr("ผู้ใช้") : "User")}
                       </p>
                       {u.verified && (
                         <svg className="w-3.5 h-3.5 flex-shrink-0 text-[var(--psu-blue)]" fill="currentColor" viewBox="0 0 20 20" aria-label={tr("ยืนยันตัวตนแล้ว")}>

@@ -69,12 +69,13 @@ const STATUS_COLORS: Record<string, string> = {
 // ─── Upload helper ────────────────────────────────────
 
 async function uploadFile(file: File): Promise<string> {
+  const tr = useLocaleStore((s) => s.tr);
   const { file: prepared } = await prepareImageForUpload(file);
   const body = new FormData();
   body.append("file", prepared);
   const res = await fetch("/api/upload", { method: "POST", body });
   const json = await res.json();
-  if (!res.ok) throw new Error(json.error ?? "อัปโหลดไม่สำเร็จ");
+  if (!res.ok) throw new Error(json.error ?? tr("อัปโหลดไม่สำเร็จ"));
   return json.url as string;
 }
 
@@ -129,7 +130,7 @@ function Thumb({
         type="button"
         onClick={onRemove}
         className="absolute top-1 right-1 w-5 h-5 bg-black/60 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition opacity-0 group-hover:opacity-100"
-        aria-label="ลบรูปภาพ"
+        aria-label={tr("ลบรูปภาพ")}
       >
         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -551,9 +552,7 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
           <a
             href="/dashboard/my-items"
             className="flex-1 text-center px-4 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-medium text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
-          >
-            ยกเลิก
-          </a>
+          >{tr("ยกเลิก")}</a>
           <button
             type="submit"
             disabled={isPending || pendingImages.some((p) => p.uploading)}

@@ -115,14 +115,12 @@ function DeleteModal({
         <h3 className="text-lg font-bold text-[var(--c-ink)] text-center mb-2">{tr("กำหนดลบสินค้า?")}</h3>
         <p className="text-sm text-[var(--c-ink-2)] text-center mb-1 px-2">{tr("สินค้า")}<span className="font-semibold">&ldquo;{item.title}&rdquo;</span>{tr("จะถูกลบออกหลังจาก")}</p>
         <p className="text-sm font-bold text-[var(--c-warn)] text-center mb-4">{tr("24 ชั่วโมง")}</p>
-        <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-4 py-3 mb-6 text-xs text-[var(--c-warn)] text-center">{tr("คุณสามารถ")}<span className="font-semibold">ยกเลิก</span>{tr("การลบได้ตลอดระหว่าง 24 ชั่วโมงนี้")}</div>
+        <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-4 py-3 mb-6 text-xs text-[var(--c-warn)] text-center">{tr("คุณสามารถ")}<span className="font-semibold">{tr("ยกเลิก")}</span>{tr("การลบได้ตลอดระหว่าง 24 ชั่วโมงนี้")}</div>
         <div className="flex gap-3">
           <button
             onClick={onClose}
             className="flex-1 px-4 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-medium text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
-          >
-            ยกเลิก
-          </button>
+          >{tr("ยกเลิก")}</button>
           <button
             onClick={onConfirm}
             disabled={isPending}
@@ -134,7 +132,7 @@ function DeleteModal({
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>{tr("กำลังดำเนินการ...")}</>
-            ) : "ยืนยันการลบ"}
+            ) : tr("ยืนยันการลบ")}
           </button>
         </div>
       </div>
@@ -157,16 +155,17 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
     (i) => i.status !== "UNAVAILABLE" && i.status !== "REMOVED"
   );
 
-  /** "รอลบ" means scheduled and still inside the 24-h window it can be undone in. */
+  /** tr("รอลบ") means scheduled and still inside the 24-h window it can be undone in. */
   function isDeleting(i: MyItem) {
     return !!i.scheduledForDeletionAt && !isGraceExpired(i.scheduledForDeletionAt);
   }
 
   function matches(i: MyItem, key: FilterKey) {
+  const tr = useLocaleStore((s) => s.tr);
     if (key === "ALL")      return true;
     if (key === "DELETING") return isDeleting(i);
     // A listing waiting to be deleted still carries its old status, so it would
-    // otherwise show up under "อนุมัติแล้ว" as though nothing were happening.
+    // otherwise show up under tr("อนุมัติแล้ว") as though nothing were happening.
     if (isDeleting(i)) return false;
     return i.status === key;
   }
@@ -323,9 +322,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                     <div className="flex-shrink-0">
                       {isScheduled ? (
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-100 text-[var(--c-warn)]">
-                          <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
-                          รอลบ
-                        </span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />{tr("รอลบ")}</span>
                       ) : (
                         <StatusBadge status={item.status} />
                       )}

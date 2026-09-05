@@ -234,7 +234,7 @@ export default function OrderTrackingClient({
             <span>฿{(order.totalAmount ?? order.amount).toLocaleString()}</span>
           </div>
           <div className="flex justify-between text-xs text-[var(--c-muted)]">
-            <span>การชำระเงิน</span>
+            <span>{tr("การชำระเงิน")}</span>
             <span>{order.paymentMethod === "COD" ? tr("💵 เงินสด") : "💳 Escrow"}</span>
           </div>
         </div>
@@ -245,12 +245,12 @@ export default function OrderTrackingClient({
         <h2 className="text-sm font-bold text-[var(--c-ink)] mb-3">{tr("👤 คู่สัญญา")}</h2>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <p className="text-xs text-[var(--c-muted)] font-semibold mb-1">ผู้ซื้อ</p>
+            <p className="text-xs text-[var(--c-muted)] font-semibold mb-1">{tr("ผู้ซื้อ")}</p>
             <p className="font-bold text-[var(--c-ink)]">{order.buyer.name ?? order.buyer.email}</p>
             {isBuyer && <span className="text-[10px] text-[var(--c-accent)] font-bold">{tr("(คุณ)")}</span>}
           </div>
           <div>
-            <p className="text-xs text-[var(--c-muted)] font-semibold mb-1">ผู้ขาย</p>
+            <p className="text-xs text-[var(--c-muted)] font-semibold mb-1">{tr("ผู้ขาย")}</p>
             <p className="font-bold text-[var(--c-ink)]">{order.seller.name ?? order.seller.email}</p>
             {isSeller && <span className="text-[10px] text-[var(--c-accent)] font-bold">{tr("(คุณ)")}</span>}
           </div>
@@ -315,9 +315,7 @@ export default function OrderTrackingClient({
                   className="checkout-input"
                 />
                 <div className="flex gap-2">
-                  <button onClick={() => setShowShipForm(false)} className="flex-1 py-2.5 rounded-xl border border-[var(--c-line)] text-sm">
-                    ยกเลิก
-                  </button>
+                  <button onClick={() => setShowShipForm(false)} className="flex-1 py-2.5 rounded-xl border border-[var(--c-line)] text-sm">{tr("ยกเลิก")}</button>
                   <button
                     onClick={handleShip}
                     disabled={isPending}
@@ -338,7 +336,7 @@ export default function OrderTrackingClient({
             disabled={isPending}
             className="w-full py-3 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition disabled:opacity-40"
           >
-            {isPending ? "กำลังดำเนินการ…" : tr("📬 ยืนยันรับสินค้า")}
+            {isPending ? tr("กำลังดำเนินการ…") : tr("📬 ยืนยันรับสินค้า")}
           </button>
         )}
 
@@ -349,7 +347,7 @@ export default function OrderTrackingClient({
             disabled={isPending}
             className="w-full py-3 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition disabled:opacity-40"
           >
-            {isPending ? "กำลังดำเนินการ…" : tr("🤝 ยืนยันนัดรับสำเร็จ")}
+            {isPending ? tr("กำลังดำเนินการ…") : tr("🤝 ยืนยันนัดรับสำเร็จ")}
           </button>
         )}
 

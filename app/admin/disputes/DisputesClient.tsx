@@ -101,7 +101,7 @@ function EvidenceGallery({ images }: { images: string[] }) {
         >
           <img
             src={lightbox}
-            alt="หลักฐาน"
+            alt={tr("หลักฐาน")}
             className="max-w-full max-h-[90vh] rounded-2xl shadow-2xl object-contain"
           />
           <button
@@ -190,10 +190,10 @@ function ChatLog({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2 flex-wrap">
                       <span className="text-xs font-semibold text-[var(--c-ink)]">
-                        {msg.sender.name ?? "ไม่ระบุชื่อ"}
+                        {msg.sender.name ?? tr("ไม่ระบุชื่อ")}
                       </span>
                       <span className="text-[10px] text-[var(--c-muted)]">
-                        {isBuyer ? "(ผู้ซื้อ)" : "(ผู้ขาย)"}
+                        {isBuyer ? tr("(ผู้ซื้อ)") : tr("(ผู้ขาย)")}
                       </span>
                       <span className="text-[10px] text-[var(--c-faint-2)] ml-auto">
                         {new Date(msg.createdAt).toLocaleString("th-TH", {
@@ -229,10 +229,10 @@ function DisputeCard({
   const [confirmAction, setConfirmAction] = useState<"REFUND_BUYER" | "RELEASE_TO_SELLER" | null>(null);
 
   const dispute     = order.dispute;
-  const reason      = dispute?.reason ?? order.disputeReason ?? "ไม่ระบุเหตุผล";
+  const reason      = dispute?.reason ?? order.disputeReason ?? tr("ไม่ระบุเหตุผล");
   const evidence    = dispute?.evidenceImages ?? [];
   const reporter    = dispute?.reporter;
-  const reporterLabel = reporter?.id === order.buyer.id ? "ผู้ซื้อ" : reporter?.id === order.seller.id ? "ผู้ขาย" : "ไม่ทราบ";
+  const reporterLabel = reporter?.id === order.buyer.id ? tr("ผู้ซื้อ") : reporter?.id === order.seller.id ? tr("ผู้ขาย") : tr("ไม่ทราบ");
 
   const filedDate   = dispute?.createdAt ?? order.updatedAt;
   const itemImg     = order.item.images[0]?.url;
@@ -276,8 +276,8 @@ function DisputeCard({
         {/* ── Parties ────────────────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 gap-3">
           {[
-            { label: "ผู้ซื้อ", user: order.buyer,  accent: "blue"   },
-            { label: "ผู้ขาย", user: order.seller, accent: "orange" },
+            { label: tr("ผู้ซื้อ"), user: order.buyer,  accent: "blue"   },
+            { label: tr("ผู้ขาย"), user: order.seller, accent: "orange" },
           ].map(({ label, user, accent }) => (
             <div
               key={label}
@@ -290,7 +290,7 @@ function DisputeCard({
                 <p className={`text-[10px] font-bold uppercase tracking-wider ${
                   accent === "blue" ? "text-blue-500" : "text-orange-500"
                 }`}>{label}</p>
-                <p className="text-sm font-semibold text-[var(--c-ink)] truncate">{user.name ?? "ไม่ระบุชื่อ"}</p>
+                <p className="text-sm font-semibold text-[var(--c-ink)] truncate">{user.name ?? tr("ไม่ระบุชื่อ")}</p>
                 <p className="text-[10px] text-[var(--c-muted)] truncate">{user.email}</p>
               </div>
             </div>
@@ -306,7 +306,7 @@ function DisputeCard({
             เหตุผล
             {reporter && (
               <span className="ml-auto font-normal text-[var(--c-muted)] normal-case tracking-normal">
-                รายงานโดย{reporterLabel} ({reporter.name ?? "ไม่ระบุชื่อ"})
+                รายงานโดย{reporterLabel} ({reporter.name ?? tr("ไม่ระบุชื่อ")})
               </span>
             )}
           </div>
@@ -332,17 +332,15 @@ function DisputeCard({
             <p className="text-sm font-bold text-amber-900">
               ยืนยัน:{" "}
               {confirmAction === "REFUND_BUYER"
-                ? "คืนเงิน ฿" + order.amount.toLocaleString() + " ให้ผู้ซื้อ"
-                : "โอนเงิน ฿" + order.amount.toLocaleString() + " ให้ผู้ขาย"}
+                ? tr("คืนเงิน ฿") + order.amount.toLocaleString() + tr("ให้ผู้ซื้อ")
+                : tr("โอนเงิน ฿") + order.amount.toLocaleString() + tr("ให้ผู้ขาย")}
             </p>
             <p className="text-xs text-[var(--c-warn)]">{tr("การกระทำนี้ไม่สามารถยกเลิกได้")}</p>
             <div className="flex gap-2">
               <button
                 onClick={() => setConfirmAction(null)}
                 className="flex-1 py-2.5 rounded-xl border border-amber-300 text-sm font-semibold text-amber-800 hover:bg-[var(--c-warn-soft)] transition"
-              >
-                ยกเลิก
-              </button>
+              >{tr("ยกเลิก")}</button>
               <button
                 onClick={() => { onResolve(order.id, confirmAction); setConfirmAction(null); }}
                 disabled={resolving}

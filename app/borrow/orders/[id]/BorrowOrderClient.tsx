@@ -53,6 +53,7 @@ function PhotoPicker({ photos, onChange }: { photos: string[]; onChange: (p: str
   const [err, setErr]   = useState<string | null>(null);
 
   async function pick(files: FileList | null) {
+  const tr = useLocaleStore((s) => s.tr);
     if (!files?.length) return;
     setBusy(true); setErr(null);
     const next = [...photos];
@@ -64,9 +65,9 @@ function PhotoPicker({ photos, onChange }: { photos: string[]; onChange: (p: str
         const res  = await fetch("/api/upload", { method: "POST", body: fd });
         const json = await res.json();
         if (json.url) next.push(json.url);
-        else setErr(tr(json.error ?? "อัปโหลดไม่สำเร็จ"));
+        else setErr(tr(json.error ?? tr("อัปโหลดไม่สำเร็จ")));
       } catch {
-        setErr("อัปโหลดไม่สำเร็จ");
+        setErr(tr("อัปโหลดไม่สำเร็จ"));
       }
     }
     onChange(next);
@@ -89,7 +90,7 @@ function PhotoPicker({ photos, onChange }: { photos: string[]; onChange: (p: str
         <label className="bw-thumb w-16 h-16 cursor-pointer border-dashed hover:border-[var(--psu-blue)] transition">
           <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => pick(e.target.files)} />
           <span className="text-[11px] text-[var(--bw-muted)] text-center leading-tight px-1">
-            {busy ? "…" : "+ รูป"}
+            {busy ? "…" : tr("+ รูป")}
           </span>
         </label>
       </div>
@@ -175,7 +176,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
             <p className="text-[15px] font-semibold mt-0.5">{fmtDate(order.dueDate)}</p>
           </div>
           <p className={`text-[14px] font-semibold ${left !== null && left < 0 ? "text-[var(--c-danger)]" : "text-[var(--psu-blue)]"}`}>
-            {left === null ? "" : left < 0 ? tr("เลยกำหนดมา {0} วัน", [Math.abs(left)]) : left === 0 ? "ครบกำหนดวันนี้" : tr("เหลืออีก {0} วัน", [left])}
+            {left === null ? "" : left < 0 ? tr("เลยกำหนดมา {0} วัน", [Math.abs(left)]) : left === 0 ? tr("ครบกำหนดวันนี้") : tr("เหลืออีก {0} วัน", [left])}
           </p>
         </div>
       )}
@@ -217,7 +218,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
           <Row k={tr("ส่งคำขอเมื่อ")}   v={fmtDT(order.requestedAt)} />
           <Row k={tr("อนุมัติเมื่อ")}    v={fmtDT(order.approvedAt)} />
           {order.approvedByName && <Row k={tr("อนุมัติโดย")} v={order.approvedByName} />}
-          <Row k="นัดรับ"        v={fmtDT(order.scheduledPickupAt)} />
+          <Row k={tr("นัดรับ")}        v={fmtDT(order.scheduledPickupAt)} />
           <Row k={tr("รับของจริง")}     v={fmtDT(order.actualPickupAt)} />
           <Row k={tr("นัดคืน")}        v={fmtDT(order.scheduledReturnAt)} />
           <Row k={tr("คืนจริง")}        v={fmtDT(order.actualReturnAt)} />
@@ -232,7 +233,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
         {/* ── Parties + private notes ────────────────────────────────── */}
         <div className="bw-panel">
           <h2 className="bw-h">{tr("ผู้เกี่ยวข้อง")}</h2>
-          <Row k={tr("ผู้ให้ยืม")} v={order.office?.name ?? "งานภัทร"} />
+          <Row k={tr("ผู้ให้ยืม")} v={order.office?.name ?? tr("งานภัทร")} />
           {isOffice && order.borrower && (
             <>
               <Row k={tr("ผู้ยืม")} v={order.borrower.name ?? "—"} />
@@ -346,9 +347,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
 
             {/* Cancel */}
             {["REQUESTED", "APPROVED", "PICKUP_SCHEDULED"].includes(st) && (
-              <button onClick={() => setPanel(panel === "cancel" ? null : "cancel")} className="bw-btn bw-btn-ghost !text-[var(--c-danger)] !border-[var(--c-danger-line)]">
-                ยกเลิก
-              </button>
+              <button onClick={() => setPanel(panel === "cancel" ? null : "cancel")} className="bw-btn bw-btn-ghost !text-[var(--c-danger)] !border-[var(--c-danger-line)]">{tr("ยกเลิก")}</button>
             )}
 
             {/* Lost */}

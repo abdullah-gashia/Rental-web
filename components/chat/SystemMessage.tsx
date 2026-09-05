@@ -114,7 +114,7 @@ function ShippingCard({ data }: { data: ShippingPayload }) {
             <button
               onClick={copyTracking}
               className="flex-shrink-0 px-2.5 py-1 rounded-lg bg-[var(--c-accent-soft)] hover:bg-blue-200 text-[var(--c-accent-str)] text-[10px] font-bold transition"
-              title="คัดลอกหมายเลข"
+              title={tr("คัดลอกหมายเลข")}
             >{tr("คัดลอก")}</button>
           </div>
         )}
@@ -126,7 +126,7 @@ function ShippingCard({ data }: { data: ShippingPayload }) {
             <a href={data.proofUrl} target="_blank" rel="noopener noreferrer" className="block">
               <img
                 src={data.proofUrl}
-                alt="หลักฐานการจัดส่ง"
+                alt={tr("หลักฐานการจัดส่ง")}
                 className="w-full max-h-48 object-contain rounded-xl border border-blue-100 hover:opacity-90 transition cursor-zoom-in"
               />
             </a>
@@ -190,12 +190,12 @@ function ReceiptCard({ data }: { data: ReceiptPayload }) {
           </div>
           <div className="grid grid-cols-2 gap-2 pt-2 border-t border-emerald-50">
             <div>
-              <p className="text-[10px] text-[var(--c-muted)]">ผู้ซื้อ</p>
-              <p className="text-xs font-semibold text-[var(--c-ink-1)] truncate">{data.buyerName || "ไม่ระบุ"}</p>
+              <p className="text-[10px] text-[var(--c-muted)]">{tr("ผู้ซื้อ")}</p>
+              <p className="text-xs font-semibold text-[var(--c-ink-1)] truncate">{data.buyerName || tr("ไม่ระบุ")}</p>
             </div>
             <div>
-              <p className="text-[10px] text-[var(--c-muted)]">ผู้ขาย</p>
-              <p className="text-xs font-semibold text-[var(--c-ink-1)] truncate">{data.sellerName || "ไม่ระบุ"}</p>
+              <p className="text-[10px] text-[var(--c-muted)]">{tr("ผู้ขาย")}</p>
+              <p className="text-xs font-semibold text-[var(--c-ink-1)] truncate">{data.sellerName || tr("ไม่ระบุ")}</p>
             </div>
           </div>
         </div>

@@ -107,7 +107,7 @@ export default function UsersTable({ rows }: Props) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-[var(--c-line)] bg-[var(--c-subtle)]">
-              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)] w-[260px]">ผู้ใช้</th>
+              <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)] w-[260px]">{tr("ผู้ใช้")}</th>
               <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("บทบาท")}</th>
               <th className="text-left px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("สถานะ")}</th>
               <th className="text-right px-4 py-3 font-semibold text-[var(--c-ink-2)]">{tr("คะแนน")}</th>

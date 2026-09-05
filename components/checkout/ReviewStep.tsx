@@ -39,7 +39,7 @@ export default function ReviewStep({
       {/* Delivery summary */}
       <div className="rounded-xl border border-[var(--c-line)] p-4">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-sm font-bold text-[var(--c-ink)]">การจัดส่ง</p>
+          <p className="text-sm font-bold text-[var(--c-ink)]">{tr("การจัดส่ง")}</p>
           <button
             onClick={() => dispatch({ type: "GO_TO_STEP", payload: 1 })}
             className="text-xs text-[var(--c-accent)] font-semibold hover:underline"
@@ -86,7 +86,7 @@ export default function ReviewStep({
       {/* Payment summary */}
       <div className="rounded-xl border border-[var(--c-line)] p-4">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-sm font-bold text-[var(--c-ink)]">การชำระเงิน</p>
+          <p className="text-sm font-bold text-[var(--c-ink)]">{tr("การชำระเงิน")}</p>
           <button
             onClick={() => dispatch({ type: "GO_TO_STEP", payload: 2 })}
             className="text-xs text-[var(--c-accent)] font-semibold hover:underline"

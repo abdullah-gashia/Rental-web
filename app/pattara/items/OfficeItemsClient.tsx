@@ -137,7 +137,7 @@ export default function OfficeItemsClient({
             onClick={() => setFilter(s)}
             className={`bw-pill !text-[12px] !px-3 !py-1.5 ${filter === s ? "bw-pill-go" : "bw-pill-done"}`}
           >
-            {s === "all" ? "ทั้งหมด" : tr(ITEM_STATUS_LABEL[s])} <span className="bw-num opacity-60">{counts[s] ?? 0}</span>
+            {s === "all" ? tr("ทั้งหมด") : tr(ITEM_STATUS_LABEL[s])} <span className="bw-num opacity-60">{counts[s] ?? 0}</span>
           </button>
         ))}
         <input
@@ -342,7 +342,7 @@ export default function OfficeItemsClient({
                   {form.images.length < 8 && (
                     <label className="bw-thumb w-20 h-20 cursor-pointer border-dashed hover:border-[var(--psu-blue)] transition">
                       <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => addPhotos(e.target.files)} />
-                      <span className="text-[11px] text-[var(--bw-muted)]">{uploading ? "กำลังอัป…" : "+ รูป"}</span>
+                      <span className="text-[11px] text-[var(--bw-muted)]">{uploading ? tr("กำลังอัป…") : tr("+ รูป")}</span>
                     </label>
                   )}
                 </div>
@@ -357,9 +357,7 @@ export default function OfficeItemsClient({
               )}
 
               <div className="flex gap-3 pt-1">
-                <button onClick={() => setEditing(null)} disabled={pending} className="bw-btn bw-btn-ghost flex-1">
-                  ปิด
-                </button>
+                <button onClick={() => setEditing(null)} disabled={pending} className="bw-btn bw-btn-ghost flex-1">{tr("ปิด")}</button>
                 {editing.id && (
                   <button
                     onClick={() => run(() => deleteBorrowItem(editing.id), true)}
@@ -372,7 +370,7 @@ export default function OfficeItemsClient({
                   disabled={pending || uploading || !form.title.trim()}
                   className="bw-btn bw-btn-primary flex-1"
                 >
-                  {pending ? tr("กำลังบันทึก…") : editing.id ? tr("บันทึก") : "เพิ่มเข้าคลัง"}
+                  {pending ? tr("กำลังบันทึก…") : editing.id ? tr("บันทึก") : tr("เพิ่มเข้าคลัง")}
                 </button>
               </div>
             </div>

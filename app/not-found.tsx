@@ -38,7 +38,7 @@ export default async function NotFound() {
             >
               <div className="min-w-0 flex-1">
                 <p className="text-[14px] font-semibold text-[var(--hp-ink)] group-hover:text-[var(--psu-indigo)]">
-                  {l.label}
+                  {tr(l.label)}
                 </p>
                 <p className="text-[12px] text-[var(--hp-muted)] mt-0.5">{l.hint}</p>
               </div>

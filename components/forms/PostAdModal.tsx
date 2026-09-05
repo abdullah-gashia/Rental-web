@@ -23,12 +23,13 @@ interface PendingImage {
 const MAX_IMAGES = 5;
 
 async function uploadFile(file: File): Promise<string> {
+  const tr = useLocaleStore((s) => s.tr);
   const { file: prepared } = await prepareImageForUpload(file);
   const body = new FormData();
   body.append("file", prepared);
   const res  = await fetch("/api/upload", { method: "POST", body });
   const json = await res.json();
-  if (!res.ok) throw new Error(json.error ?? "อัปโหลดไม่สำเร็จ");
+  if (!res.ok) throw new Error(json.error ?? tr("อัปโหลดไม่สำเร็จ"));
   return json.url as string;
 }
 
@@ -296,9 +297,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
             <button
               onClick={() => { setShowVerifyGate(false); handleClose(); }}
               className="flex-1 py-2.5 border border-[var(--c-line)] rounded-xl text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
-            >
-              ยกเลิก
-            </button>
+            >{tr("ยกเลิก")}</button>
             <a
               href="/profile/verify"
               className="flex-1 py-2.5 bg-[var(--c-accent)] text-white rounded-xl text-sm font-bold text-center hover:bg-[var(--c-accent-str)] transition"
@@ -434,7 +433,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
               )}
             </div>
             <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFileChange} />
-            <p className="text-[11px] text-[var(--c-faint-2)] mt-1.5">รูปภาพทุกชนิด ทุกขนาด · ระบบย่อขนาดให้อัตโนมัติ · รูปแรกเป็นรูปหลัก</p>
+            <p className="text-[11px] text-[var(--c-faint-2)] mt-1.5">{tr("รูปภาพทุกชนิด ทุกขนาด · ระบบย่อขนาดให้อัตโนมัติ · รูปแรกเป็นรูปหลัก")}</p>
           </div>
 
           <div className="space-y-3 mb-3">
@@ -489,7 +488,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
               disabled={pendingImages.some((p) => p.uploading)}
               className="flex-1 bg-[var(--c-ink)] text-white font-bold py-3 rounded-2xl hover:bg-[var(--c-ink-1)] transition disabled:opacity-50 flex items-center justify-center gap-2 text-sm shadow-[var(--shadow-sm)]"
             >
-              {pendingImages.some((p) => p.uploading) ? <><Spinner /> กำลังอัปโหลด...</> : <>{t("post_next")} →</>}
+              {pendingImages.some((p) => p.uploading) ? <><Spinner />{tr("กำลังอัปโหลด...")}</> : <>{t("post_next")} →</>}
             </button>
           </div>
         </div>
@@ -662,7 +661,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                   <option>{tr("อาคาร SC")}</option>
                   <option>{tr("โรงอาหาร")}</option>
                   <option>{tr("หน้า 7-11")}</option>
-                  <option>อื่นๆ</option>
+                  <option>{tr("อื่นๆ")}</option>
                 </select>
                 <svg className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--c-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />

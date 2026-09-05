@@ -79,7 +79,7 @@ export default function OrdersTable({ rows }: Props) {
             ? tr("คำสั่งซื้อ {0} จะถูกทำเครื่องหมายว่าสำเร็จ และเงินจะถูกปล่อยให้ผู้ขาย", [dialog?.ref])
             : tr("คำสั่งซื้อ {0} จะถูกยกเลิก และเงินจะถูกคืนให้ผู้ซื้อ กรุณาระบุเหตุผล", [dialog?.ref])
         }
-        confirmLabel={dialog?.kind === "complete" ? tr("บังคับสำเร็จ") : "ยกเลิก"}
+        confirmLabel={dialog?.kind === "complete" ? tr("บังคับสำเร็จ") : tr("ยกเลิก")}
         danger={dialog?.kind === "cancel"}
         loading={pending}
         onConfirm={handleConfirm}
@@ -261,7 +261,7 @@ export default function OrdersTable({ rows }: Props) {
                       {/* Delivery details */}
                       {order.deliveryMethod === "SHIPPING" && order.shippingAddress && (
                         <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-xl px-4 py-3 text-sm">
-                          <p className="text-[var(--c-faint)] text-xs font-semibold uppercase tracking-wide mb-2">ที่อยู่จัดส่ง</p>
+                          <p className="text-[var(--c-faint)] text-xs font-semibold uppercase tracking-wide mb-2">{tr("ที่อยู่จัดส่ง")}</p>
                           <p className="font-medium text-[var(--c-ink)]">{order.shippingAddress.recipientName}</p>
                           <p className="text-[var(--c-ink-2)]">{order.shippingAddress.phone}</p>
                           <p className="text-[var(--c-ink-2)]">

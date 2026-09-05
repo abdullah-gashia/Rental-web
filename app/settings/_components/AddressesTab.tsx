@@ -132,8 +132,7 @@ export default function AddressesTab({ addresses, showToast }: Props) {
     <div className="p-5 sm:p-6 space-y-5">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-bold text-[var(--c-ink)] flex items-center gap-2">
-          <span>📍</span> ที่อยู่จัดส่ง
-        </h2>
+          <span>📍</span>{tr("ที่อยู่จัดส่ง")}</h2>
         <span className="text-xs text-[var(--c-muted)]">{tr("{0}/5 ที่อยู่", [list.length])}</span>
       </div>
 
@@ -220,7 +219,7 @@ export default function AddressesTab({ addresses, showToast }: Props) {
             <FormField label={tr("เบอร์โทร")} value={form.phone} onChange={(v) => updateField("phone", v.replace(/\D/g, "").slice(0, 10))} placeholder="0812345678" required />
             <FormField label={tr("ที่อยู่บรรทัด 1")} value={form.addressLine1} onChange={(v) => updateField("addressLine1", v)} placeholder={tr("บ้านเลขที่ ซอย ถนน")} required />
             <FormField label={tr("ที่อยู่บรรทัด 2")} value={form.addressLine2} onChange={(v) => updateField("addressLine2", v)} placeholder={tr("(ไม่บังคับ)")} />
-            <FormField label="อำเภอ/เขต" value={form.district} onChange={(v) => updateField("district", v)} placeholder={tr("หาดใหญ่")} required />
+            <FormField label={tr("อำเภอ/เขต")} value={form.district} onChange={(v) => updateField("district", v)} placeholder={tr("หาดใหญ่")} required />
             <FormField label={tr("จังหวัด")} value={form.province} onChange={(v) => updateField("province", v)} placeholder={tr("สงขลา")} required />
             <FormField label={tr("รหัสไปรษณีย์")} value={form.postalCode} onChange={(v) => updateField("postalCode", v.replace(/\D/g, "").slice(0, 5))} placeholder="90110" required />
           </div>
@@ -233,9 +232,7 @@ export default function AddressesTab({ addresses, showToast }: Props) {
               onClick={() => setEditing(null)}
               disabled={pending}
               className="px-4 py-2 text-sm text-[var(--c-ink-2)] hover:text-[var(--c-ink-1)] transition disabled:opacity-50"
-            >
-              ยกเลิก
-            </button>
+            >{tr("ยกเลิก")}</button>
             <button
               type="submit"
               disabled={pending}

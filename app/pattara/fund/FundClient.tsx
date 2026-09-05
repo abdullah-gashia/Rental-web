@@ -45,6 +45,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
   }
 
   async function uploadReceipt(file: File | undefined) {
+  const tr = useLocaleStore((s) => s.tr);
     if (!file) return;
     setUploading(true);
     try {
@@ -53,9 +54,9 @@ export default function FundClient({ summary, entries }: { summary: any; entries
       fd.append("file", prepared.file);
       const json = await fetch("/api/upload", { method: "POST", body: fd }).then((r) => r.json());
       if (json.url) setForm((f) => ({ ...f, receiptUrl: json.url }));
-      else setMsg({ ok: false, text: tr(json.error ?? "อัปโหลดไม่สำเร็จ") });
+      else setMsg({ ok: false, text: tr(json.error ?? tr("อัปโหลดไม่สำเร็จ")) });
     } catch {
-      setMsg({ ok: false, text: "อัปโหลดไม่สำเร็จ" });
+      setMsg({ ok: false, text: tr("อัปโหลดไม่สำเร็จ") });
     }
     setUploading(false);
   }
@@ -223,7 +224,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
                 ) : (
                   <label className="bw-btn bw-btn-ghost cursor-pointer inline-flex">
                     <input type="file" accept="image/*" className="hidden" onChange={(e) => uploadReceipt(e.target.files?.[0])} />
-                    {uploading ? "กำลังอัป…" : "แนบรูปใบเสร็จ"}
+                    {uploading ? tr("กำลังอัป…") : tr("แนบรูปใบเสร็จ")}
                   </label>
                 )}
               </div>
@@ -237,7 +238,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
               )}
 
               <div className="flex gap-3">
-                <button onClick={() => setOpen(false)} disabled={pending} className="bw-btn bw-btn-ghost flex-1">ยกเลิก</button>
+                <button onClick={() => setOpen(false)} disabled={pending} className="bw-btn bw-btn-ghost flex-1">{tr("ยกเลิก")}</button>
                 <button
                   onClick={() => run(() => recordFundEntry(form), true)}
                   disabled={pending || uploading || !form.note.trim() || form.amount <= 0}

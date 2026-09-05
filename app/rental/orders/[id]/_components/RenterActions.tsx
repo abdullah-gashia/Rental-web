@@ -34,7 +34,8 @@ export default function RenterActions({ orderId, status }: Props) {
   }
 
   function handleCancel() {
-    if (!reason.trim()) { setError("กรุณาระบุเหตุผล"); return; }
+  const tr = useLocaleStore((s) => s.tr);
+    if (!reason.trim()) { setError(tr("กรุณาระบุเหตุผล")); return; }
     startTransition(async () => {
       const res = await cancelRentalOrder(orderId, reason);
       if (!res.success) setError(tr(res.error));
@@ -86,9 +87,7 @@ export default function RenterActions({ orderId, status }: Props) {
               onClick={() => { setCancelOpen(false); setReason(""); }}
               disabled={isPending}
               className="flex-1 py-2.5 border border-[var(--c-line)] text-sm rounded-xl hover:bg-[var(--c-line-soft)]"
-            >
-              ยกเลิก
-            </button>
+            >{tr("ยกเลิก")}</button>
             <button
               onClick={handleCancel}
               disabled={isPending}

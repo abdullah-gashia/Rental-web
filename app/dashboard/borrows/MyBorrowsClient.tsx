@@ -66,7 +66,7 @@ export default function MyBorrowsClient({
 
           <header className="mb-6 flex items-end justify-between gap-4 flex-wrap">
             <div>
-              <p className="bw-label mb-1.5">งานภัทร</p>
+              <p className="bw-label mb-1.5">{tr("งานภัทร")}</p>
               <h1 className="text-[24px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] leading-tight">{tr("ของที่ยืม")}</h1>
               <p className="text-[13px] text-[var(--bw-muted)] mt-1.5">{tr("ยืมอยู่ {0} จาก {1} ชิ้น", [holding, MAX_CONCURRENT_BORROWS])}</p>
             </div>
@@ -164,7 +164,7 @@ export default function MyBorrowsClient({
                             {new Date(o.dueDate).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}
                           </p>
                           <p className={`text-[11px] ${left !== null && left < 0 ? "text-[var(--c-danger)]" : "text-[var(--bw-muted)]"}`}>
-                            {left === null ? "" : left < 0 ? tr("เลย {0} วัน", [Math.abs(left)]) : left === 0 ? "วันนี้" : tr("อีก {0} วัน", [left])}
+                            {left === null ? "" : left < 0 ? tr("เลย {0} วัน", [Math.abs(left)]) : left === 0 ? tr("วันนี้") : tr("อีก {0} วัน", [left])}
                           </p>
                         </>
                       ) : (

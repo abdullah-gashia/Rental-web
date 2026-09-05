@@ -35,6 +35,7 @@ const CONDITION_LABELS: Record<string, string> = {
 
 /** Colour tracks the band the score falls in, not the raw number. */
 function SafetyBadge({ score }: { score: number }) {
+  const tr = useLocaleStore((s) => s.tr);
   const tone =
     score >= 95 ? { bg: "var(--c-ok-soft)", fg: "var(--c-ok)", br: "var(--c-ok-line)" } :
     score >= 50 ? { bg: "#fff7e6", fg: "var(--c-warn)", br: "#f5e3b8" } :
@@ -42,7 +43,7 @@ function SafetyBadge({ score }: { score: number }) {
 
   return (
     <span
-      title="คะแนนความปลอดภัยจากการตรวจข้อความอัตโนมัติ"
+      title={tr("คะแนนความปลอดภัยจากการตรวจข้อความอัตโนมัติ")}
       className="flex-shrink-0 inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-[11px] font-bold font-mono"
       style={{ background: tone.bg, color: tone.fg, borderColor: tone.br }}
     >
@@ -69,8 +70,9 @@ function RejectModal({
   const [error, setError]   = useState("");
 
   function handleSubmit(e: React.FormEvent) {
+  const tr = useLocaleStore((s) => s.tr);
     e.preventDefault();
-    if (!reason.trim()) { setError("กรุณาระบุเหตุผล"); return; }
+    if (!reason.trim()) { setError(tr("กรุณาระบุเหตุผล")); return; }
     onSubmit(reason);
   }
 
@@ -118,7 +120,7 @@ function RejectModal({
               onChange={(e) => { setReason(e.target.value); setError(""); }}
               rows={4}
               className="w-full border border-[var(--c-line)] rounded-xl px-4 py-3 text-sm text-[var(--c-ink)] focus:outline-none focus:ring-2 focus:ring-red-400/30 focus:border-red-400 transition resize-none"
-              placeholder="เช่น: รูปภาพไม่ชัด, ราคาไม่เหมาะสม, สินค้าต้องห้าม..."
+              placeholder={tr("เช่น: รูปภาพไม่ชัด, ราคาไม่เหมาะสม, สินค้าต้องห้าม...")}
             />
             {error && <p className="text-xs text-[var(--c-danger)] mt-1.5">{error}</p>}
           </div>
@@ -128,9 +130,7 @@ function RejectModal({
               type="button"
               onClick={onClose}
               className="flex-1 px-4 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-medium text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
-            >
-              ยกเลิก
-            </button>
+            >{tr("ยกเลิก")}</button>
             <button
               type="submit"
               disabled={isPending}
@@ -297,7 +297,7 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
                             {(item.seller.name ?? item.seller.email)[0].toUpperCase()}
                           </div>
                           <div>
-                            <p className="text-xs font-semibold text-[var(--c-ink-1)]">{item.seller.name ?? "ไม่ระบุชื่อ"}</p>
+                            <p className="text-xs font-semibold text-[var(--c-ink-1)]">{item.seller.name ?? tr("ไม่ระบุชื่อ")}</p>
                             <p className="text-[10px] text-[var(--c-faint)]">{item.seller.email}</p>
                           </div>
                         </div>

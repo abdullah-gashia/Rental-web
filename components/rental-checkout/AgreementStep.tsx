@@ -58,7 +58,7 @@ export default function AgreementStep({ state, item, pricing, onSetAgreement, on
         {/* Pickup */}
         <div className="flex items-start justify-between gap-4 bg-[var(--c-subtle)] rounded-xl p-3.5">
           <div>
-            <p className="text-[11px] font-semibold text-[var(--c-faint)] uppercase tracking-wide mb-0.5">นัดรับ</p>
+            <p className="text-[11px] font-semibold text-[var(--c-faint)] uppercase tracking-wide mb-0.5">{tr("นัดรับ")}</p>
             <p className="text-sm font-semibold text-[var(--c-ink)]">
               📍 {state.pickupLocation || "—"}
             </p>

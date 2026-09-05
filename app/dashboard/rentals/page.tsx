@@ -147,7 +147,7 @@ async function OrderRow({ order, counterpartyLabel, counterparty }: { order: any
             daysLeft < 0 ? "text-[var(--c-danger)]" : daysLeft <= 1 ? "text-[var(--c-warn)]" : "text-[var(--c-ink-3)]"
           }`}>
             {daysLeft < 0 ? tr("⚠️ เกิน {0} วัน", [Math.abs(daysLeft)]) :
-             daysLeft === 0 ? "⏰ ครบวันนี้!" :
+             daysLeft === 0 ? tr("⏰ ครบวันนี้!") :
              tr("📅 คืนใน {0} วัน", [daysLeft])}
           </p>
         )}

@@ -46,10 +46,10 @@ function buildPickupAgreement(itemTitle: string, rentalDays: number, deposit: nu
 
 function buildReturnAgreement(itemTitle: string, condition: string, damageFee: number, tr: TrFn) {
   const conditionLabel: Record<string, string> = {
-    SAME: "สภาพเดิม — ไม่มีความเสียหาย",
-    MINOR_DAMAGE: "เสียหายเล็กน้อย",
-    MAJOR_DAMAGE: "เสียหายมาก",
-    LOST: "สูญหาย",
+    SAME: tr("สภาพเดิม — ไม่มีความเสียหาย"),
+    MINOR_DAMAGE: tr("เสียหายเล็กน้อย"),
+    MAJOR_DAMAGE: tr("เสียหายมาก"),
+    LOST: tr("สูญหาย"),
   };
   return [
     tr("ยอมรับว่าได้รับสินค้า \"{0}\" คืนเรียบร้อยแล้ว", [itemTitle]),
@@ -88,15 +88,15 @@ export default function RentalHandshake({
 
   // Signature is required: renter signs at pickup, owner signs at return
   const needsSignature = (type === "pickup" && isRenter) || (type === "return" && isOwner);
-  const signerRole: "ผู้เช่า" | "เจ้าของ" = isRenter ? "ผู้เช่า" : "เจ้าของ";
+  const signerRole: "renter" | "owner" = isRenter ? "renter" : "owner";
 
   const agreementText = type === "pickup"
     ? buildPickupAgreement(itemTitle, rentalDays, securityDeposit, lateFeePerDay, tr)
     : buildReturnAgreement(itemTitle, condition, damageFee, tr);
 
   const title     = type === "pickup" ? tr("📦 ยืนยันการรับของ (Digital Handshake #1)") : tr("🔄 ยืนยันการคืนของ (Digital Handshake #2)");
-  const meLabel   = isRenter ? "ผู้เช่า" : "เจ้าของ";
-  const otherLabel = isRenter ? "เจ้าของ" : "ผู้เช่า";
+  const meLabel   = isRenter ? tr("ผู้เช่า") : tr("เจ้าของ");
+  const otherLabel = isRenter ? tr("เจ้าของ") : tr("ผู้เช่า");
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;
@@ -178,12 +178,12 @@ export default function RentalHandshake({
           <span className={`px-2 py-1 rounded-full border ${
             myConfirmed ? "bg-[var(--c-ok-soft)] border-green-300 text-[var(--c-ok)]" : "bg-[var(--c-subtle)] border-[var(--c-line)] text-[var(--c-muted)]"
           }`}>
-            {meLabel}: {myConfirmed ? "✅ ยืนยันแล้ว" : tr("⏳ รอยืนยัน")}
+            {meLabel}: {myConfirmed ? tr("✅ ยืนยันแล้ว") : tr("⏳ รอยืนยัน")}
           </span>
           <span className={`px-2 py-1 rounded-full border ${
             otherConfirmed ? "bg-[var(--c-ok-soft)] border-green-300 text-[var(--c-ok)]" : "bg-[var(--c-subtle)] border-[var(--c-line)] text-[var(--c-muted)]"
           }`}>
-            {otherLabel}: {otherConfirmed ? "✅ ยืนยันแล้ว" : tr("⏳ รอยืนยัน")}
+            {otherLabel}: {otherConfirmed ? tr("✅ ยืนยันแล้ว") : tr("⏳ รอยืนยัน")}
           </span>
         </div>
       </div>
@@ -197,7 +197,7 @@ export default function RentalHandshake({
                           rounded-xl cursor-pointer hover:border-[var(--c-accent)]/50 transition">
           <span className="text-xl">📷</span>
           <span className="text-sm text-[var(--c-ink-3)]">
-            {uploading ? "กำลังอัปโหลด..." : tr("เลือกรูปภาพ (หลายรูปได้)")}
+            {uploading ? tr("กำลังอัปโหลด...") : tr("เลือกรูปภาพ (หลายรูปได้)")}
           </span>
           <input type="file" accept="image/*" multiple className="hidden" onChange={handleUpload} />
         </label>

@@ -131,7 +131,7 @@ function ItemContextCard({
               ? "bg-[var(--c-ok-soft)] text-[var(--c-ok)]"
               : "bg-[var(--c-line-soft)] text-[var(--c-muted)]"
           }`}>
-            {context.negotiable ? "💬 ต่อราคาได้" : "🔒 ราคาเน็ต/งดต่อ"}
+            {context.negotiable ? tr("💬 ต่อราคาได้") : tr("🔒 ราคาเน็ต/งดต่อ")}
           </span>
 
           {/* Shipping */}
@@ -473,7 +473,7 @@ export default function ChatModal({
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-[var(--c-ink-1)]">{uploading ? "กำลังอัปโหลด..." : tr("พร้อมส่ง")}</p>
+            <p className="text-xs font-medium text-[var(--c-ink-1)]">{uploading ? tr("กำลังอัปโหลด...") : tr("พร้อมส่ง")}</p>
             <p className="text-[10px] text-[var(--c-muted)]">{tr("คุณสามารถพิมพ์ข้อความเพิ่มได้")}</p>
           </div>
           <button
@@ -501,7 +501,7 @@ export default function ChatModal({
           onClick={() => fileRef.current?.click()}
           disabled={uploading || !!imagePreview}
           className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-[var(--c-line)] text-[var(--c-muted)] hover:text-[var(--c-ink)] hover:border-[var(--c-ink)] transition disabled:opacity-30 disabled:cursor-not-allowed"
-          aria-label="แนบรูปภาพ"
+          aria-label={tr("แนบรูปภาพ")}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -512,16 +512,14 @@ export default function ChatModal({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={imagePreview ? "เพิ่มข้อความ (ไม่บังคับ)…" : "พิมพ์ข้อความ…"}
+          placeholder={imagePreview ? tr("เพิ่มข้อความ (ไม่บังคับ)…") : tr("พิมพ์ข้อความ…")}
           className="flex-1 border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--c-ink)]"
         />
         <button
           onClick={() => handleSend()}
           disabled={(!input.trim() && !pendingImage) || !!uploading || !conversationId}
           className="bg-[var(--c-ink)] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[var(--c-ink-1)] transition disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          ส่ง
-        </button>
+        >{tr("ส่ง")}</button>
       </div>
     </Modal>
   );

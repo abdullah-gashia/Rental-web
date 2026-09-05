@@ -19,6 +19,7 @@ interface StatsBarProps {
  * platform far larger and better rated than the real one.
  */
 export default function StatsBar({ totalItems, verifiedSellers, avgRating, reviewCount }: StatsBarProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const t = useLocaleStore((s) => s.t);
 
   const stats = [
@@ -38,7 +39,7 @@ export default function StatsBar({ totalItems, verifiedSellers, avgRating, revie
         {stats.map((s, i) => (
           <div key={s.label} className={`flex flex-col sm:flex-row sm:items-baseline sm:gap-2.5 ${i === 0 ? "pr-4" : "px-4"}`}>
             <span className="hp-stat-value !text-[19px]">{s.value}</span>
-            <span className="hp-stat-label !mt-0">{s.label}</span>
+            <span className="hp-stat-label !mt-0">{tr(s.label)}</span>
           </div>
         ))}
       </div>

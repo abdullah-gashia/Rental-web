@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 interface OrderSummaryCardProps {
   title: string;
   price: number;
@@ -15,6 +17,7 @@ export default function OrderSummaryCard({
   imageUrl,
   emoji,
 }: OrderSummaryCardProps) {
+  const tr = useLocaleStore((s) => s.tr);
   return (
     <div className="flex items-center gap-3 bg-[var(--c-canvas)] rounded-xl px-4 py-3 mb-5 border border-[var(--c-line)]">
       {/* Thumbnail */}
@@ -30,7 +33,7 @@ export default function OrderSummaryCard({
       <div className="flex-1 min-w-0">
         <p className="text-sm font-bold text-[var(--c-ink)] truncate">{title}</p>
         <p className="text-xs text-[var(--c-muted)]">
-          ขายโดย: {sellerName ?? "ไม่ระบุชื่อ"}
+          ขายโดย: {sellerName ?? tr("ไม่ระบุชื่อ")}
         </p>
       </div>
 

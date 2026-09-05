@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocaleStore } from "@/lib/stores/locale-store";
+
 interface WizardProgressBarProps {
   step: 1 | 2 | 3;
 }
@@ -11,6 +13,7 @@ const STEPS = [
 ] as const;
 
 export default function WizardProgressBar({ step }: WizardProgressBarProps) {
+  const tr = useLocaleStore((s) => s.tr);
   return (
     <div className="wizard-progress">
       {STEPS.map((s, i) => (
@@ -39,7 +42,7 @@ export default function WizardProgressBar({ step }: WizardProgressBarProps) {
               step >= s.num ? "text-[var(--c-ink)]" : "text-[var(--c-faint-2)]"
             }`}
           >
-            {s.label}
+            {tr(s.label)}
           </span>
         </div>
       ))}

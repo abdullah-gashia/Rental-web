@@ -55,7 +55,7 @@ function CustomTooltip({
       {payload.map((p) => (
         <p key={p.name} style={{ color: p.color }} className="flex items-center gap-1.5">
           <span className="font-medium">
-            {p.name === "sales" ? "จำนวนขาย:" : "รายได้:"}
+            {p.name === "sales" ? tr("จำนวนขาย:") : tr("รายได้:")}
           </span>{" "}
           {p.name === "sales" ? tr("{0} รายการ", [p.value]) : formatBaht(p.value)}
         </p>

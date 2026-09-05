@@ -38,12 +38,12 @@ export default function ReceiptModal({ data, onClose }: Props) {
   });
 
   const METHOD_LABELS: Record<string, string> = {
-    POST:    "ไปรษณีย์ไทย",
+    POST:    tr("ไปรษณีย์ไทย"),
     KERRY:   "Kerry Express",
     FLASH:   "Flash Express",
     "J&T":   "J&T Express",
-    MEETUP:  "นัดรับด้วยตนเอง",
-    OTHER:   "อื่นๆ",
+    MEETUP:  tr("นัดรับด้วยตนเอง"),
+    OTHER:   tr("อื่นๆ"),
   };
   const methodLabel = data.shippingMethod
     ? (tr(METHOD_LABELS[data.shippingMethod] ?? data.shippingMethod))
@@ -98,8 +98,8 @@ export default function ReceiptModal({ data, onClose }: Props) {
   <div class="section">
     <div class="section-title">${tr("รายละเอียดธุรกรรม")}</div>
     <div class="row"><span class="label">${tr("สินค้า")}</span><span class="value">${data.itemTitle}</span></div>
-    <div class="row"><span class="label">ผู้ซื้อ</span><span class="value">${data.buyerName}</span></div>
-    <div class="row"><span class="label">ผู้ขาย</span><span class="value">${data.sellerName}</span></div>
+    <div class="row"><span class="label">${tr("ผู้ซื้อ")}</span><span class="value">${data.buyerName}</span></div>
+    <div class="row"><span class="label">${tr("ผู้ขาย")}</span><span class="value">${data.sellerName}</span></div>
     <div class="row"><span class="label">${tr("วันที่เสร็จสิ้น")}</span><span class="value">${completedDate}</span></div>
     <div class="row"><span class="label">${tr("สถานะ")}</span><span class="value">✅ PAID via Escrow</span></div>
   </div>
@@ -111,7 +111,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
     <div class="section-title">${tr("ข้อมูลการจัดส่ง")}</div>
     <div class="row"><span class="label">${tr("วิธีจัดส่ง")}</span><span class="value">${methodLabel}</span></div>
     ${data.trackingNumber ? `<div class="row"><span class="label">${tr("หมายเลขพัสดุ")}</span><span class="value">${data.trackingNumber}</span></div>` : ""}
-    ${data.shippingProofImage ? tr("<div class=\"proof\"><img src=\"{0}\" alt=\"หลักฐานจัดส่ง\"/></div>", [data.shippingProofImage]) : ""}
+    ${data.shippingProofImage ? `<div class="proof"><img src="${data.shippingProofImage}" alt="${tr("หลักฐานจัดส่ง")}"/></div>` : ""}
   </div>` : ""}
 
   ${data.deliveryMethod === "MEETUP" && (data.handoverSignature || data.handoverPhotoUrl) ? `
@@ -184,8 +184,8 @@ export default function ReceiptModal({ data, onClose }: Props) {
             <p className="text-[10px] font-bold text-[var(--c-muted)] uppercase tracking-wider mb-3">{tr("รายละเอียดธุรกรรม")}</p>
             {[
               { label: tr("สินค้า"),         value: data.itemTitle },
-              { label: "ผู้ซื้อ",         value: data.buyerName  || "ไม่ระบุ" },
-              { label: "ผู้ขาย",         value: data.sellerName || "ไม่ระบุ" },
+              { label: tr("ผู้ซื้อ"),         value: data.buyerName  || tr("ไม่ระบุ") },
+              { label: tr("ผู้ขาย"),         value: data.sellerName || tr("ไม่ระบุ") },
               { label: tr("วันที่เสร็จสิ้น"), value: completedDate },
               { label: tr("สถานะ"),          value: "✅ PAID via Escrow" },
             ].map(({ label, value }) => (
@@ -220,7 +220,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
                 <a href={data.shippingProofImage} target="_blank" rel="noopener noreferrer" className="block mt-2">
                   <img
                     src={data.shippingProofImage}
-                    alt="หลักฐานจัดส่ง"
+                    alt={tr("หลักฐานจัดส่ง")}
                     className="w-full max-h-36 object-contain rounded-xl border border-[var(--c-line-str)] hover:opacity-90 transition cursor-zoom-in"
                   />
                 </a>
@@ -289,9 +289,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
           <button
             onClick={onClose}
             className="flex-1 py-3 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
-          >
-            ปิด
-          </button>
+          >{tr("ปิด")}</button>
           <button
             onClick={handlePrint}
             className="flex-1 py-3 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition flex items-center justify-center gap-2"
