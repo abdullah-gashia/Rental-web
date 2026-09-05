@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { getOfficeStats, getOfficeOrders } from "@/lib/actions/borrow-orders";
 import { getFundSummary } from "@/lib/actions/fund";
 import { BORROW_STATUS_LABEL } from "@/lib/borrow-config";
@@ -18,6 +19,7 @@ const PILL: Record<string, string> = {
 const baht = (n: number) => `฿${n.toLocaleString("th-TH", { maximumFractionDigits: 2 })}`;
 
 export default async function PattaraOverview() {
+  const tr = await getTr();
   const [stats, recent, fund] = await Promise.all([
     getOfficeStats(),
     getOfficeOrders(),
@@ -31,21 +33,19 @@ export default async function PattaraOverview() {
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)]">ภาพรวม</h1>
-        <p className="text-[13px] text-[var(--bw-muted)] mt-1">
-          คลังอุปกรณ์ให้ยืมและสถานะการยืมทั้งหมด
-        </p>
+        <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)]">{tr("ภาพรวม")}</h1>
+        <p className="text-[13px] text-[var(--bw-muted)] mt-1">{tr("คลังอุปกรณ์ให้ยืมและสถานะการยืมทั้งหมด")}</p>
       </header>
 
       {/* ── Numbers ──────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
         {[
-          { k: "อุปกรณ์ทั้งหมด", v: stats.items,     href: "/pattara/items" },
-          { k: "ว่างให้ยืม",      v: stats.available,  href: "/pattara/items" },
-          { k: "ถูกยืมอยู่",       v: stats.lentOut,    href: "/pattara/orders?f=active" },
-          { k: "รออนุมัติ",       v: stats.waiting,    href: "/pattara/requests", hot: stats.waiting > 0 },
-          { k: "เกินกำหนดคืน",    v: stats.overdue,    href: "/pattara/orders?f=overdue", bad: stats.overdue > 0 },
-          { k: "ให้ยืมสำเร็จ",     v: stats.completed,  href: "/pattara/orders?f=done" },
+          { k: tr("อุปกรณ์ทั้งหมด"), v: stats.items,     href: "/pattara/items" },
+          { k: tr("ว่างให้ยืม"),      v: stats.available,  href: "/pattara/items" },
+          { k: tr("ถูกยืมอยู่"),       v: stats.lentOut,    href: "/pattara/orders?f=active" },
+          { k: tr("รออนุมัติ"),       v: stats.waiting,    href: "/pattara/requests", hot: stats.waiting > 0 },
+          { k: tr("เกินกำหนดคืน"),    v: stats.overdue,    href: "/pattara/orders?f=overdue", bad: stats.overdue > 0 },
+          { k: tr("ให้ยืมสำเร็จ"),     v: stats.completed,  href: "/pattara/orders?f=done" },
         ].map((s) => (
           <a
             key={s.k}
@@ -67,17 +67,15 @@ export default async function PattaraOverview() {
       {/* ── Fund ─────────────────────────────────────────────────────── */}
       <section className="bw-panel">
         <div className="flex items-center justify-between gap-3 mb-4">
-          <h2 className="text-[15px] font-semibold text-[var(--psu-navy)]">กองทุน</h2>
-          <a href="/pattara/fund" className="text-[12px] font-semibold text-[var(--psu-blue)] hover:underline">
-            จัดการ →
-          </a>
+          <h2 className="text-[15px] font-semibold text-[var(--psu-navy)]">{tr("กองทุน")}</h2>
+          <a href="/pattara/fund" className="text-[12px] font-semibold text-[var(--psu-blue)] hover:underline">{tr("จัดการ →")}</a>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
-            ["ค่าธรรมเนียมที่ได้", baht(fund.incomeTotal + fund.otherIn)],
-            ["ใช้ไปแล้ว",         baht(fund.spentTotal)],
-            ["คงเหลือ",           baht(fund.balance)],
-            ["ซื้ออุปกรณ์แล้ว",     `${fund.itemsBought} ชิ้น`],
+            [tr("ค่าธรรมเนียมที่ได้"), baht(fund.incomeTotal + fund.otherIn)],
+            [tr("ใช้ไปแล้ว"),         baht(fund.spentTotal)],
+            [tr("คงเหลือ"),           baht(fund.balance)],
+            [tr("ซื้ออุปกรณ์แล้ว"),     `${fund.itemsBought} ชิ้น`],
           ].map(([k, v]) => (
             <div key={k}>
               <p className="bw-label">{k}</p>
@@ -98,15 +96,11 @@ export default async function PattaraOverview() {
               </span>
             )}
           </h2>
-          <a href="/pattara/orders" className="text-[12px] font-semibold text-[var(--psu-blue)] hover:underline">
-            ดูทั้งหมด →
-          </a>
+          <a href="/pattara/orders" className="text-[12px] font-semibold text-[var(--psu-blue)] hover:underline">{tr("ดูทั้งหมด →")}</a>
         </div>
 
         {needsAction.length === 0 ? (
-          <p className="text-[13px] text-[var(--bw-muted)] py-8 text-center">
-            ไม่มีรายการที่รอคุณอยู่ตอนนี้
-          </p>
+          <p className="text-[13px] text-[var(--bw-muted)] py-8 text-center">{tr("ไม่มีรายการที่รอคุณอยู่ตอนนี้")}</p>
         ) : (
           <div className="flex flex-col">
             {needsAction.slice(0, 8).map((o) => (

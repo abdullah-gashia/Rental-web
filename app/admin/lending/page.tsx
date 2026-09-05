@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -24,6 +25,7 @@ export default async function AdminLendingPage({
 }: {
   searchParams: Promise<{ f?: string }>;
 }) {
+  const tr = await getTr();
   const session = await auth();
   const user = session?.user as any;
   if (!user || user.role !== "ADMIN") redirect("/");
@@ -85,19 +87,17 @@ export default async function AdminLendingPage({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-[var(--c-ink)] flex items-center gap-2">
-          🔑 ระบบปล่อยเช่า
-        </h1>
-        <p className="text-sm text-[var(--c-muted)] mt-1">ภาพรวม Rental System — สินค้าเช่าในตลาด</p>
+        <h1 className="text-xl font-bold text-[var(--c-ink)] flex items-center gap-2">{tr("🔑 ระบบปล่อยเช่า")}</h1>
+        <p className="text-sm text-[var(--c-muted)] mt-1">{tr("ภาพรวม Rental System — สินค้าเช่าในตลาด")}</p>
       </div>
 
       {/* KPI — row 1 */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: "รายการเช่าทั้งหมด",  value: totalRentalItems, color: "text-[var(--c-accent)]"  },
-          { label: "คำสั่งเช่าทั้งหมด",  value: totalOrders,      color: "text-[var(--c-ink)]"   },
-          { label: "กำลังดำเนินการ",      value: activeOrders,     color: "text-[var(--c-ok)]"},
-          { label: "เกินกำหนดคืน",        value: overdueOrders,    color: "text-[var(--c-danger)]"  },
+          { label: tr("รายการเช่าทั้งหมด"),  value: totalRentalItems, color: "text-[var(--c-accent)]"  },
+          { label: tr("คำสั่งเช่าทั้งหมด"),  value: totalOrders,      color: "text-[var(--c-ink)]"   },
+          { label: tr("กำลังดำเนินการ"),      value: activeOrders,     color: "text-[var(--c-ok)]"},
+          { label: tr("เกินกำหนดคืน"),        value: overdueOrders,    color: "text-[var(--c-danger)]"  },
         ].map(({ label, value, color }) => (
           <div key={label} className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-4">
             <p className="text-xs text-[var(--c-muted)] mb-1">{label}</p>
@@ -109,9 +109,9 @@ export default async function AdminLendingPage({
       {/* KPI — row 2 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {[
-          { label: "รอเจ้าของอนุมัติ",    value: pendingApprovals,                      color: "text-[var(--c-warn)]" },
-          { label: "มัดจำค้างในระบบ",      value: `฿${depositsHeld.toLocaleString()}`,   color: "text-purple-600"},
-          { label: "ค่าธรรมเนียมสะสม",    value: `฿${totalRevenue.toLocaleString()}`,   color: "text-[var(--c-ok)]"},
+          { label: tr("รอเจ้าของอนุมัติ"),    value: pendingApprovals,                      color: "text-[var(--c-warn)]" },
+          { label: tr("มัดจำค้างในระบบ"),      value: `฿${depositsHeld.toLocaleString()}`,   color: "text-purple-600"},
+          { label: tr("ค่าธรรมเนียมสะสม"),    value: `฿${totalRevenue.toLocaleString()}`,   color: "text-[var(--c-ok)]"},
         ].map(({ label, value, color }) => (
           <div key={label} className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-4">
             <p className="text-xs text-[var(--c-muted)] mb-1">{label}</p>
@@ -123,7 +123,7 @@ export default async function AdminLendingPage({
       {/* Recent orders */}
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <h2 className="text-sm font-bold text-[var(--c-ink-1)]">คำสั่งเช่าล่าสุด</h2>
+          <h2 className="text-sm font-bold text-[var(--c-ink-1)]">{tr("คำสั่งเช่าล่าสุด")}</h2>
           <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
             {FILTERS.map((x) => (
               <Link
@@ -165,9 +165,7 @@ export default async function AdminLendingPage({
                 <Link
                   href={`/admin/lending/${order.id}`}
                   className="text-xs font-semibold text-[var(--c-accent)] hover:underline flex-shrink-0"
-                >
-                  ดูรายละเอียด →
-                </Link>
+                >{tr("ดูรายละเอียด →")}</Link>
               </div>
             ))}
           </div>

@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { auth }     from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import Link          from "next/link";
@@ -103,6 +104,7 @@ export default async function AdminLendingDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const tr = await getTr();
   const session = await auth();
   const admin = session?.user as { role?: string } | undefined;
   if (!admin || admin.role !== "ADMIN") redirect("/");
@@ -144,9 +146,7 @@ export default async function AdminLendingDetailPage({
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <Link href="/admin/lending" className="text-xs text-[var(--c-muted)] hover:text-[var(--c-ink-2)] transition">
-            ← ระบบปล่อยเช่า
-          </Link>
+          <Link href="/admin/lending" className="text-xs text-[var(--c-muted)] hover:text-[var(--c-ink-2)] transition">{tr("← ระบบปล่อยเช่า")}</Link>
           <h1 className="text-xl font-bold text-[var(--c-ink)] mt-1 flex items-center gap-2 flex-wrap">
             🔑 {order.item.title}
             <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${statusColor(order.status)}`}>
@@ -160,9 +160,7 @@ export default async function AdminLendingDetailPage({
           href={`/rental/orders/${order.id}`}
           target="_blank"
           className="text-xs font-semibold text-[var(--c-accent)] border border-[var(--c-accent)]/30 bg-[var(--c-accent)]/5 rounded-xl px-3.5 py-2 hover:bg-[var(--c-accent)]/10 transition"
-        >
-          เปิดหน้าที่ผู้ใช้เห็น ↗
-        </Link>
+        >{tr("เปิดหน้าที่ผู้ใช้เห็น ↗")}</Link>
       </div>
 
       {/* ── Stale-request warning ──────────────────────────────────────── */}
@@ -171,19 +169,17 @@ export default async function AdminLendingDetailPage({
           (waitingDays ?? 0) >= 5
             ? "bg-[var(--c-danger-soft)] border-[var(--c-danger-line)] text-[var(--c-danger)]"
             : "bg-[var(--c-warn-soft)] border-[var(--c-warn-line)] text-amber-800"
-        }`}>
-          ⏳ เจ้าของยังไม่ตอบรับ — รอมาแล้ว <span className="font-bold">{waitingDays} วัน</span>
+        }`}>{tr("⏳ เจ้าของยังไม่ตอบรับ — รอมาแล้ว")}<span className="font-bold">{waitingDays} วัน</span>
           {order.expiresAt && (
-            <> · ระบบจะยกเลิกและคืนเงินอัตโนมัติเมื่อ <span className="font-semibold">{dt(order.expiresAt)}</span></>
+            <>{tr("· ระบบจะยกเลิกและคืนเงินอัตโนมัติเมื่อ")}<span className="font-semibold">{dt(order.expiresAt)}</span></>
           )}
         </div>
       )}
 
       {/* ── Progress rail ──────────────────────────────────────────────── */}
-      <Card title="ขั้นตอนการเช่า">
+      <Card title={tr("ขั้นตอนการเช่า")}>
         {isBadEnd ? (
-          <div className={`rounded-xl border px-4 py-3 text-sm ${statusColor(order.status)}`}>
-            รายการนี้จบลงที่สถานะ <span className="font-bold">{statusLabel(order.status)}</span>
+          <div className={`rounded-xl border px-4 py-3 text-sm ${statusColor(order.status)}`}>{tr("รายการนี้จบลงที่สถานะ")}<span className="font-bold">{statusLabel(order.status)}</span>
             {order.cancelReason && <> — {order.cancelReason}</>}
           </div>
         ) : (
@@ -220,14 +216,12 @@ export default async function AdminLendingDetailPage({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* ── The item itself ──────────────────────────────────────────── */}
         <Card
-          title="สินค้าที่ปล่อยเช่า"
+          title={tr("สินค้าที่ปล่อยเช่า")}
           right={
             // There is no standalone item route — the marketplace opens the
             // listing from a search on its exact title.
             <Link href={`/?q=${encodeURIComponent(order.item.title)}`} target="_blank"
-                  className="text-[11px] text-[var(--c-accent)] hover:underline">
-              ดูประกาศ ↗
-            </Link>
+                  className="text-[11px] text-[var(--c-accent)] hover:underline">{tr("ดูประกาศ ↗")}</Link>
           }
         >
           <div className="flex gap-4">
@@ -250,19 +244,19 @@ export default async function AdminLendingDetailPage({
           </div>
 
           <div className="mt-4">
-            <Row label="สถานะสินค้าในตลาด" value={order.item.status} />
-            <Row label="ประเภทประกาศ"      value={order.item.listingType === "RENT" ? "ให้เช่า" : "ขาย"} />
-            <Row label="สภาพ"              value={order.item.condition ?? "—"} />
-            <Row label="ค่าปรับคืนช้า/วัน"  value={baht(order.item.lateFeePerDay)} />
+            <Row label={tr("สถานะสินค้าในตลาด")} value={order.item.status} />
+            <Row label={tr("ประเภทประกาศ")}      value={order.item.listingType === "RENT" ? tr("ให้เช่า") : tr("ขาย")} />
+            <Row label={tr("สภาพ")}              value={order.item.condition ?? "—"} />
+            <Row label={tr("ค่าปรับคืนช้า/วัน")}  value={baht(order.item.lateFeePerDay)} />
           </div>
         </Card>
 
         {/* ── Parties ──────────────────────────────────────────────────── */}
-        <Card title="คู่สัญญา">
+        <Card title={tr("คู่สัญญา")}>
           <div className="space-y-4">
             {[
-              { role: "ผู้เช่า",  u: order.renter, tint: "bg-[var(--c-accent-soft)] text-[var(--c-accent-str)] border-[var(--c-line-str)]"    },
-              { role: "เจ้าของ", u: order.owner,  tint: "bg-purple-50 text-purple-700 border-purple-200" },
+              { role: tr("ผู้เช่า"),  u: order.renter, tint: "bg-[var(--c-accent-soft)] text-[var(--c-accent-str)] border-[var(--c-line-str)]"    },
+              { role: tr("เจ้าของ"), u: order.owner,  tint: "bg-purple-50 text-purple-700 border-purple-200" },
             ].map(({ role, u, tint }) => (
               <div key={role} className="rounded-xl border border-[var(--c-line)] p-3.5">
                 <div className="flex items-center justify-between gap-2 mb-2">
@@ -270,14 +264,12 @@ export default async function AdminLendingDetailPage({
                     {role}
                   </span>
                   <Link href={`/user/${u.id}`} target="_blank"
-                        className="text-[11px] text-[var(--c-accent)] hover:underline">
-                    โปรไฟล์ ↗
-                  </Link>
+                        className="text-[11px] text-[var(--c-accent)] hover:underline">{tr("โปรไฟล์ ↗")}</Link>
                 </div>
                 <p className="text-sm font-semibold text-[var(--c-ink)]">{u.name ?? "—"}</p>
                 <p className="text-xs text-[var(--c-muted)] break-all">{u.email ?? "—"}</p>
                 <p className="text-xs text-[var(--c-muted)]">
-                  {u.phone ?? "ไม่ระบุเบอร์"} · คะแนนความน่าเชื่อถือ {u.trustScore}
+                  {u.phone ?? tr("ไม่ระบุเบอร์")} · คะแนนความน่าเชื่อถือ {u.trustScore}
                 </p>
               </div>
             ))}
@@ -285,71 +277,71 @@ export default async function AdminLendingDetailPage({
         </Card>
 
         {/* ── Money ────────────────────────────────────────────────────── */}
-        <Card title="การเงิน">
-          <Row label="ค่าเช่า"                value={`${baht(order.dailyRate)}/วัน × ${order.rentalDays} วัน = ${baht(order.rentalFee)}`} />
-          <Row label="ค่าธรรมเนียมแพลตฟอร์ม" value={baht(order.platformFee)} />
-          <Row label="เงินมัดจำ"              value={baht(order.securityDeposit)} />
-          <Row label="ยอดชำระรวม"            value={baht(order.totalPaid)} strong />
-          <Row label="ค่าปรับคืนช้าสะสม"      value={order.lateFees   ? <span className="text-[var(--c-danger)] font-semibold">{baht(order.lateFees)}</span>   : "—"} />
-          <Row label="ค่าเสียหาย"            value={order.damageFees ? <span className="text-[var(--c-danger)] font-semibold">{baht(order.damageFees)}</span> : "—"} />
-          <Row label="คืนมัดจำแล้ว"           value={baht(order.depositRefund)} />
-          <Row label="จ่ายเจ้าของแล้ว"         value={baht(order.ownerPayout)} />
+        <Card title={tr("การเงิน")}>
+          <Row label={tr("ค่าเช่า")}                value={`${baht(order.dailyRate)}/วัน × ${order.rentalDays} วัน = ${baht(order.rentalFee)}`} />
+          <Row label={tr("ค่าธรรมเนียมแพลตฟอร์ม")} value={baht(order.platformFee)} />
+          <Row label={tr("เงินมัดจำ")}              value={baht(order.securityDeposit)} />
+          <Row label={tr("ยอดชำระรวม")}            value={baht(order.totalPaid)} strong />
+          <Row label={tr("ค่าปรับคืนช้าสะสม")}      value={order.lateFees   ? <span className="text-[var(--c-danger)] font-semibold">{baht(order.lateFees)}</span>   : "—"} />
+          <Row label={tr("ค่าเสียหาย")}            value={order.damageFees ? <span className="text-[var(--c-danger)] font-semibold">{baht(order.damageFees)}</span> : "—"} />
+          <Row label={tr("คืนมัดจำแล้ว")}           value={baht(order.depositRefund)} />
+          <Row label={tr("จ่ายเจ้าของแล้ว")}         value={baht(order.ownerPayout)} />
         </Card>
 
         {/* ── Schedule ─────────────────────────────────────────────────── */}
-        <Card title="กำหนดเวลา">
-          <Row label="สร้างคำขอเมื่อ"  value={dt(order.createdAt)} />
-          <Row label="คำขอหมดอายุ"     value={dt(order.expiresAt)} />
-          <Row label="เริ่มเช่า"        value={day(order.rentalStartDate)} />
-          <Row label="ครบกำหนดคืน"     value={day(order.rentalEndDate)} strong />
-          <Row label="คืนจริงเมื่อ"     value={dt(order.actualReturnDate)} />
-          <Row label="ต่ออายุแล้ว"      value={`${order.renewalCount} ครั้ง`} />
-          <Row label="ยอมรับข้อตกลง"   value={dt(order.agreementAcceptedAt)} />
-          {order.cancelledAt && <Row label="ยกเลิกเมื่อ" value={dt(order.cancelledAt)} />}
-          {order.cancelReason && <Row label="เหตุผลที่ยกเลิก" value={order.cancelReason} />}
-          <Row label="เสร็จสิ้นเมื่อ"    value={dt(order.completedAt)} />
+        <Card title={tr("กำหนดเวลา")}>
+          <Row label={tr("สร้างคำขอเมื่อ")}  value={dt(order.createdAt)} />
+          <Row label={tr("คำขอหมดอายุ")}     value={dt(order.expiresAt)} />
+          <Row label={tr("เริ่มเช่า")}        value={day(order.rentalStartDate)} />
+          <Row label={tr("ครบกำหนดคืน")}     value={day(order.rentalEndDate)} strong />
+          <Row label={tr("คืนจริงเมื่อ")}     value={dt(order.actualReturnDate)} />
+          <Row label={tr("ต่ออายุแล้ว")}      value={`${order.renewalCount} ครั้ง`} />
+          <Row label={tr("ยอมรับข้อตกลง")}   value={dt(order.agreementAcceptedAt)} />
+          {order.cancelledAt && <Row label={tr("ยกเลิกเมื่อ")} value={dt(order.cancelledAt)} />}
+          {order.cancelReason && <Row label={tr("เหตุผลที่ยกเลิก")} value={order.cancelReason} />}
+          <Row label={tr("เสร็จสิ้นเมื่อ")}    value={dt(order.completedAt)} />
         </Card>
 
         {/* ── Handshake #1 ─────────────────────────────────────────────── */}
         <Card
-          title="การส่งมอบ (นัดรับ)"
+          title={tr("การส่งมอบ (นัดรับ)")}
           right={
             <span className="flex gap-1.5">
-              <Confirm ok={order.pickupRenterConfirm} label="ผู้เช่า" />
-              <Confirm ok={order.pickupOwnerConfirm}  label="เจ้าของ" />
+              <Confirm ok={order.pickupRenterConfirm} label={tr("ผู้เช่า")} />
+              <Confirm ok={order.pickupOwnerConfirm}  label={tr("เจ้าของ")} />
             </span>
           }
         >
-          <Row label="สถานที่"      value={order.pickupLocation ?? "—"} />
-          <Row label="วันเวลานัด"    value={dt(order.pickupDateTime)} />
-          <Row label="ส่งมอบจริง"    value={dt(order.actualPickupAt)} />
-          <Row label="หมายเหตุ"     value={order.pickupNote ?? "—"} />
-          <Row label="สภาพตอนรับ"   value={order.pickupConditionNote ?? "—"} />
-          <Photos urls={order.pickupPhotos} label="รูปตอนส่งมอบ" />
+          <Row label={tr("สถานที่")}      value={order.pickupLocation ?? "—"} />
+          <Row label={tr("วันเวลานัด")}    value={dt(order.pickupDateTime)} />
+          <Row label={tr("ส่งมอบจริง")}    value={dt(order.actualPickupAt)} />
+          <Row label={tr("หมายเหตุ")}     value={order.pickupNote ?? "—"} />
+          <Row label={tr("สภาพตอนรับ")}   value={order.pickupConditionNote ?? "—"} />
+          <Photos urls={order.pickupPhotos} label={tr("รูปตอนส่งมอบ")} />
         </Card>
 
         {/* ── Handshake #2 ─────────────────────────────────────────────── */}
         <Card
-          title="การคืน (นัดคืน)"
+          title={tr("การคืน (นัดคืน)")}
           right={
             <span className="flex gap-1.5">
-              <Confirm ok={order.returnRenterConfirm} label="ผู้เช่า" />
-              <Confirm ok={order.returnOwnerConfirm}  label="เจ้าของ" />
+              <Confirm ok={order.returnRenterConfirm} label={tr("ผู้เช่า")} />
+              <Confirm ok={order.returnOwnerConfirm}  label={tr("เจ้าของ")} />
             </span>
           }
         >
-          <Row label="สถานที่"     value={order.returnLocation ?? "—"} />
-          <Row label="วันเวลานัด"   value={dt(order.returnDateTime)} />
-          <Row label="สภาพที่คืน"   value={order.returnCondition ?? "—"} />
-          <Row label="หมายเหตุ"    value={order.returnConditionNote ?? order.returnNote ?? "—"} />
-          <Photos urls={order.returnPhotos} label="รูปตอนคืน" />
+          <Row label={tr("สถานที่")}     value={order.returnLocation ?? "—"} />
+          <Row label={tr("วันเวลานัด")}   value={dt(order.returnDateTime)} />
+          <Row label={tr("สภาพที่คืน")}   value={order.returnCondition ?? "—"} />
+          <Row label={tr("หมายเหตุ")}    value={order.returnConditionNote ?? order.returnNote ?? "—"} />
+          <Photos urls={order.returnPhotos} label={tr("รูปตอนคืน")} />
         </Card>
       </div>
 
       {/* ── Timeline ───────────────────────────────────────────────────── */}
       <Card title={`ประวัติสถานะทั้งหมด (${history.length})`}>
         {history.length === 0 ? (
-          <p className="text-xs text-[var(--c-faint)] py-4 text-center">ยังไม่มีประวัติ</p>
+          <p className="text-xs text-[var(--c-faint)] py-4 text-center">{tr("ยังไม่มีประวัติ")}</p>
         ) : (
           <ol className="space-y-0">
             {[...history].reverse().map((h, i) => (
@@ -377,7 +369,7 @@ export default async function AdminLendingDetailPage({
 
       {/* ── The agreement text both sides accepted ─────────────────────── */}
       {order.agreementText && (
-        <Card title="ข้อตกลงการเช่าที่ทั้งสองฝ่ายยอมรับ">
+        <Card title={tr("ข้อตกลงการเช่าที่ทั้งสองฝ่ายยอมรับ")}>
           <pre className="text-[11.5px] leading-6 text-[var(--c-ink-2)] whitespace-pre-wrap font-sans bg-[var(--c-subtle)] border border-[var(--c-line-soft)] rounded-xl p-4 max-h-72 overflow-y-auto">
             {order.agreementText}
           </pre>

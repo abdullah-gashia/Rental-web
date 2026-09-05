@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
 import Brand from "@/components/layout/Brand";
 import { BORROW_CATEGORY_LABEL, ITEM_STATUS_LABEL } from "@/lib/borrow-config";
@@ -14,6 +15,7 @@ import { BORROW_CATEGORY_LABEL, ITEM_STATUS_LABEL } from "@/lib/borrow-config";
  * apply. What matters here is what it has, where it is, and when it is open.
  */
 export default async function OfficeProfile({ user }: { user: any }) {
+  const tr = await getTr();
   const [items, lentCount, activeCount] = await Promise.all([
     prisma.lendingItem.findMany({
       where: {
@@ -40,9 +42,7 @@ export default async function OfficeProfile({ user }: { user: any }) {
       <header className="sticky top-0 z-50 bg-[var(--c-surface)] border-b border-[var(--bw-line)]">
         <div className="max-w-3xl mx-auto px-5 h-14 flex items-center justify-between">
           <Brand size={26} />
-          <a href="/borrow" className="text-[13px] font-semibold text-[var(--psu-blue)] hover:underline">
-            อุปกรณ์ให้ยืมทั้งหมด →
-          </a>
+          <a href="/borrow" className="text-[13px] font-semibold text-[var(--psu-blue)] hover:underline">{tr("อุปกรณ์ให้ยืมทั้งหมด →")}</a>
         </div>
       </header>
 
@@ -63,9 +63,9 @@ export default async function OfficeProfile({ user }: { user: any }) {
             </div>
 
             <div className="min-w-0 flex-1">
-              <p className="bw-label">หน่วยงาน</p>
+              <p className="bw-label">{tr("หน่วยงาน")}</p>
               <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] leading-tight mt-0.5">
-                {user.officeName ?? user.name ?? "งานภัทร"}
+                {user.officeName ?? user.name ?? tr("งานภัทร")}
               </h1>
               <p className="text-[12.5px] text-[var(--bw-muted)] mt-1">
                 ให้บริการตั้งแต่ {since}
@@ -81,12 +81,12 @@ export default async function OfficeProfile({ user }: { user: any }) {
 
           <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-[var(--bw-line)]">
             <div>
-              <dt className="bw-label">จุดรับ–คืนของ</dt>
-              <dd className="text-[13px] mt-1">{user.officeLocation ?? "ติดต่อเจ้าหน้าที่"}</dd>
+              <dt className="bw-label">{tr("จุดรับ–คืนของ")}</dt>
+              <dd className="text-[13px] mt-1">{user.officeLocation ?? tr("ติดต่อเจ้าหน้าที่")}</dd>
             </div>
             <div>
-              <dt className="bw-label">เวลาทำการ</dt>
-              <dd className="text-[13px] mt-1">{user.officeHours ?? "ติดต่อเจ้าหน้าที่"}</dd>
+              <dt className="bw-label">{tr("เวลาทำการ")}</dt>
+              <dd className="text-[13px] mt-1">{user.officeHours ?? tr("ติดต่อเจ้าหน้าที่")}</dd>
             </div>
           </dl>
         </section>
@@ -95,9 +95,9 @@ export default async function OfficeProfile({ user }: { user: any }) {
         <section className="bw-panel !p-0 overflow-hidden">
           <div className="grid grid-cols-3 divide-x divide-[var(--bw-line)]">
             {[
-              { k: "อุปกรณ์ทั้งหมด", v: items.length >= 12 ? "12+" : String(items.length) },
-              { k: "ว่างให้ยืมตอนนี้", v: String(activeCount) },
-              { k: "ให้ยืมไปแล้ว",   v: `${lentCount} ครั้ง` },
+              { k: tr("อุปกรณ์ทั้งหมด"), v: items.length >= 12 ? "12+" : String(items.length) },
+              { k: tr("ว่างให้ยืมตอนนี้"), v: String(activeCount) },
+              { k: tr("ให้ยืมไปแล้ว"),   v: `${lentCount} ครั้ง` },
             ].map((s) => (
               <div key={s.k} className="px-4 py-4 text-center">
                 <p className="bw-num text-[22px] font-semibold text-[var(--psu-navy)] leading-none">{s.v}</p>
@@ -110,17 +110,13 @@ export default async function OfficeProfile({ user }: { user: any }) {
         {/* ── The shelf ────────────────────────────────────────────────── */}
         <section>
           <div className="flex items-center justify-between gap-3 mb-3">
-            <h2 className="text-[15px] font-semibold text-[var(--psu-navy)]">อุปกรณ์ที่ให้ยืม</h2>
-            <a href="/borrow" className="text-[12px] font-semibold text-[var(--psu-blue)] hover:underline">
-              ดูทั้งหมด →
-            </a>
+            <h2 className="text-[15px] font-semibold text-[var(--psu-navy)]">{tr("อุปกรณ์ที่ให้ยืม")}</h2>
+            <a href="/borrow" className="text-[12px] font-semibold text-[var(--psu-blue)] hover:underline">{tr("ดูทั้งหมด →")}</a>
           </div>
 
           {items.length === 0 ? (
             <div className="bw-panel text-center py-12">
-              <p className="text-[13.5px] text-[var(--bw-muted)]">
-                ยังไม่มีอุปกรณ์ให้ยืมในตอนนี้
-              </p>
+              <p className="text-[13.5px] text-[var(--bw-muted)]">{tr("ยังไม่มีอุปกรณ์ให้ยืมในตอนนี้")}</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -152,20 +148,12 @@ export default async function OfficeProfile({ user }: { user: any }) {
 
         {/* ── Where the equipment comes from ───────────────────────────── */}
         <section className="bw-panel">
-          <h2 className="bw-h">อุปกรณ์เหล่านี้มาจากไหน</h2>
-          <p className="text-[13px] text-[var(--bw-ink-2)] leading-[1.95]">
-            PSU Store เก็บค่าธรรมเนียม 5% จากการซื้อขายและการเช่าในระบบ
-            เงินทั้งหมดเข้ากองทุนงานภัทรเพื่อซื้ออุปกรณ์ให้นักศึกษายืมฟรี
-            ทุกครั้งที่คุณซื้อของในเว็บนี้ คุณช่วยเติมของเข้าคลังนี้ไปด้วย
-          </p>
-          <a href="/borrow" className="bw-btn bw-btn-primary mt-4">ดูอุปกรณ์ที่ยืมได้</a>
+          <h2 className="bw-h">{tr("อุปกรณ์เหล่านี้มาจากไหน")}</h2>
+          <p className="text-[13px] text-[var(--bw-ink-2)] leading-[1.95]">{tr("PSU Store เก็บค่าธรรมเนียม 5% จากการซื้อขายและการเช่าในระบบ เงินทั้งหมดเข้ากองทุนงานภัทรเพื่อซื้ออุปกรณ์ให้นักศึกษายืมฟรี ทุกครั้งที่คุณซื้อของในเว็บนี้ คุณช่วยเติมของเข้าคลังนี้ไปด้วย")}</p>
+          <a href="/borrow" className="bw-btn bw-btn-primary mt-4">{tr("ดูอุปกรณ์ที่ยืมได้")}</a>
         </section>
 
-        <p className="text-[11.5px] text-[var(--bw-muted)] text-center leading-[1.8]">
-          บัญชีหน่วยงานไม่มีคะแนนดาวหรือรีวิว เพราะไม่ได้ซื้อขายกับนักศึกษา
-          <br />
-          หากพบปัญหาการใช้บริการ กรุณาติดต่อผู้ดูแลระบบ
-        </p>
+        <p className="text-[11.5px] text-[var(--bw-muted)] text-center leading-[1.8]">{tr("บัญชีหน่วยงานไม่มีคะแนนดาวหรือรีวิว เพราะไม่ได้ซื้อขายกับนักศึกษา")}<br />{tr("หากพบปัญหาการใช้บริการ กรุณาติดต่อผู้ดูแลระบบ")}</p>
       </main>
     </div>
   );

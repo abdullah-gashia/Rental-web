@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -50,6 +51,7 @@ const STATUS_COLOR: Record<string, string> = {
 interface Props { params: Promise<{ id: string }> }
 
 export default async function RentalOrderDetailPage({ params }: Props) {
+  const tr = await getTr();
   const { id } = await params;
   const order  = await getRentalOrderDetail(id);
   if (!order) notFound();
@@ -85,7 +87,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
 
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 text-xs text-[var(--c-faint)] mb-5">
-          <Link href="/dashboard/rentals" className="hover:text-[var(--c-ink-2)]">การเช่าของฉัน</Link>
+          <Link href="/dashboard/rentals" className="hover:text-[var(--c-ink-2)]">{tr("การเช่าของฉัน")}</Link>
           <span>/</span>
           <span className="text-[var(--c-ink-2)] font-medium truncate max-w-[200px]">{item.title}</span>
         </nav>
@@ -97,7 +99,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
             <p className="text-sm text-[var(--c-ink-3)] mt-1">
               รหัส: {order.refCode.slice(0, 8).toUpperCase()}
               {" · "}
-              {isRenter ? "คุณเป็นผู้เช่า" : "คุณเป็นเจ้าของ"}
+              {isRenter ? tr("คุณเป็นผู้เช่า") : tr("คุณเป็นเจ้าของ")}
             </p>
           </div>
           <span className={`text-xs font-semibold px-3 py-1.5 rounded-full border ${
@@ -121,8 +123,8 @@ export default async function RentalOrderDetailPage({ params }: Props) {
               }`}>
                 <p className="font-semibold text-sm">
                   {daysLeft < 0 ? `⚠️ เกินกำหนดคืน ${Math.abs(daysLeft)} วัน!` :
-                   daysLeft === 0 ? "⏰ วันนี้ครบกำหนดคืน!" :
-                   daysLeft === 1 ? "⏰ พรุ่งนี้ครบกำหนดคืน!" :
+                   daysLeft === 0 ? tr("⏰ วันนี้ครบกำหนดคืน!") :
+                   daysLeft === 1 ? tr("⏰ พรุ่งนี้ครบกำหนดคืน!") :
                    `📅 กำหนดคืนอีก ${daysLeft} วัน`}
                 </p>
                 <p className="text-xs mt-0.5 opacity-80">
@@ -133,7 +135,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
 
             {order.status === "OVERDUE" && (
               <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-2xl px-5 py-4">
-                <p className="text-[var(--c-danger)] font-semibold text-sm">⚠️ เกินกำหนดคืนแล้ว!</p>
+                <p className="text-[var(--c-danger)] font-semibold text-sm">{tr("⚠️ เกินกำหนดคืนแล้ว!")}</p>
                 <p className="text-[var(--c-danger)] text-xs mt-1">
                   กำหนดคืน: {fmtDate(order.rentalEndDate)} — ค่าปรับกำลังถูกคิด
                 </p>
@@ -182,7 +184,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
             {["ACTIVE", "OVERDUE", "RETURN_SCHEDULED", "RETURNED",
               "COMPLETED", "COMPLETED_WITH_DEDUCTION"].includes(order.status) && (
               <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
-                <h3 className="text-sm font-bold text-[var(--c-ink)] mb-3">📄 เอกสาร</h3>
+                <h3 className="text-sm font-bold text-[var(--c-ink)] mb-3">{tr("📄 เอกสาร")}</h3>
                 <div className="flex flex-col gap-2">
                   <a
                     href={`/rental/orders/${order.id}/receipt?type=contract`}
@@ -193,7 +195,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
                   >
                     <span className="text-base">📜</span>
                     <div>
-                      <p className="font-semibold">สัญญาเช่า</p>
+                      <p className="font-semibold">{tr("สัญญาเช่า")}</p>
                       <p className="text-xs text-[var(--c-faint)]">Rental Contract Agreement</p>
                     </div>
                     <span className="ml-auto text-xs text-[var(--c-faint)]">PDF ↗</span>
@@ -208,7 +210,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
                     >
                       <span className="text-base">🧾</span>
                       <div>
-                        <p className="font-semibold">ใบเสร็จคืนสินค้า</p>
+                        <p className="font-semibold">{tr("ใบเสร็จคืนสินค้า")}</p>
                         <p className="text-xs text-[var(--c-faint)]">Return Receipt</p>
                       </div>
                       <span className="ml-auto text-xs text-[var(--c-faint)]">PDF ↗</span>
@@ -221,7 +223,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
             {/* Return photos evidence */}
             {order.returnPhotos.length > 0 && (
               <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
-                <h3 className="text-sm font-bold text-[var(--c-ink)] mb-3">หลักฐานตอนคืนของ</h3>
+                <h3 className="text-sm font-bold text-[var(--c-ink)] mb-3">{tr("หลักฐานตอนคืนของ")}</h3>
                 <div className="flex gap-2 flex-wrap mb-2">
                   {order.returnPhotos.map((url: string, i: number) => (
                     <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-[var(--c-line)]">
@@ -239,7 +241,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
             {/* Status history */}
             {order.statusHistory.length > 0 && (
               <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
-                <h3 className="text-sm font-bold text-[var(--c-ink)] mb-3">ประวัติสถานะ</h3>
+                <h3 className="text-sm font-bold text-[var(--c-ink)] mb-3">{tr("ประวัติสถานะ")}</h3>
                 <div className="space-y-3">
                   {order.statusHistory.map((h: any, i: number) => (
                     <div key={i} className="flex items-start gap-3 text-xs">
@@ -286,57 +288,57 @@ export default async function RentalOrderDetailPage({ params }: Props) {
 
             {/* Rental period */}
             <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
-              <h3 className="text-xs font-bold text-[var(--c-faint)] uppercase tracking-wide mb-3">ระยะเวลาเช่า</h3>
+              <h3 className="text-xs font-bold text-[var(--c-faint)] uppercase tracking-wide mb-3">{tr("ระยะเวลาเช่า")}</h3>
               <div className="space-y-1.5 text-sm">
-                <Row label="วันเริ่มเช่า"  value={fmtDate(order.rentalStartDate)} />
-                <Row label="วันสิ้นสุดเช่า" value={fmtDate(order.rentalEndDate)} />
-                <Row label="จำนวนวัน"      value={`${order.rentalDays} วัน`} />
-                {order.actualPickupAt && <Row label="รับของจริง"    value={fmt(order.actualPickupAt)} />}
-                {order.actualReturnDate && <Row label="คืนของจริง" value={fmt(order.actualReturnDate)} />}
+                <Row label={tr("วันเริ่มเช่า")}  value={fmtDate(order.rentalStartDate)} />
+                <Row label={tr("วันสิ้นสุดเช่า")} value={fmtDate(order.rentalEndDate)} />
+                <Row label={tr("จำนวนวัน")}      value={`${order.rentalDays} วัน`} />
+                {order.actualPickupAt && <Row label={tr("รับของจริง")}    value={fmt(order.actualPickupAt)} />}
+                {order.actualReturnDate && <Row label={tr("คืนของจริง")} value={fmt(order.actualReturnDate)} />}
               </div>
             </div>
 
             {/* Financial */}
             <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
-              <h3 className="text-xs font-bold text-[var(--c-faint)] uppercase tracking-wide mb-3">สรุปการเงิน</h3>
+              <h3 className="text-xs font-bold text-[var(--c-faint)] uppercase tracking-wide mb-3">{tr("สรุปการเงิน")}</h3>
               <div className="space-y-1.5 text-sm">
                 <Row label={`ค่าเช่า (฿${order.dailyRate}/วัน × ${order.rentalDays})`} value={`฿${order.rentalFee.toLocaleString()}`} />
-                <Row label="ค่าธรรมเนียม (5%)"  value={`฿${order.platformFee.toLocaleString()}`} />
-                <Row label="เงินมัดจำ"           value={`฿${order.securityDeposit.toLocaleString()}`} />
+                <Row label={tr("ค่าธรรมเนียม (5%)")}  value={`฿${order.platformFee.toLocaleString()}`} />
+                <Row label={tr("เงินมัดจำ")}           value={`฿${order.securityDeposit.toLocaleString()}`} />
                 <div className="border-t border-[var(--c-line-soft)] pt-1.5 flex justify-between font-bold text-[var(--c-ink)]">
-                  <span>ยอดที่หักไป</span>
+                  <span>{tr("ยอดที่หักไป")}</span>
                   <span>฿{order.totalPaid.toLocaleString()}</span>
                 </div>
-                {order.lateFees > 0 && <Row label="ค่าปรับล่าช้า" value={`฿${order.lateFees.toLocaleString()}`} color="text-[var(--c-danger)]" />}
-                {order.damageFees > 0 && <Row label="ค่าเสียหาย"   value={`฿${order.damageFees.toLocaleString()}`} color="text-[var(--c-danger)]" />}
+                {order.lateFees > 0 && <Row label={tr("ค่าปรับล่าช้า")} value={`฿${order.lateFees.toLocaleString()}`} color="text-[var(--c-danger)]" />}
+                {order.damageFees > 0 && <Row label={tr("ค่าเสียหาย")}   value={`฿${order.damageFees.toLocaleString()}`} color="text-[var(--c-danger)]" />}
                 {order.depositRefund !== null && isRenter && (
-                  <Row label="มัดจำที่คืน" value={`฿${order.depositRefund?.toLocaleString()}`} color="text-[var(--c-ok)]" />
+                  <Row label={tr("มัดจำที่คืน")} value={`฿${order.depositRefund?.toLocaleString()}`} color="text-[var(--c-ok)]" />
                 )}
                 {order.ownerPayout !== null && isOwner && (
-                  <Row label="คุณได้รับ" value={`฿${order.ownerPayout?.toLocaleString()}`} color="text-[var(--c-ok)]" />
+                  <Row label={tr("คุณได้รับ")} value={`฿${order.ownerPayout?.toLocaleString()}`} color="text-[var(--c-ok)]" />
                 )}
               </div>
             </div>
 
             {/* Pickup info */}
             <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
-              <h3 className="text-xs font-bold text-[var(--c-faint)] uppercase tracking-wide mb-3">นัดรับ / คืน</h3>
+              <h3 className="text-xs font-bold text-[var(--c-faint)] uppercase tracking-wide mb-3">{tr("นัดรับ / คืน")}</h3>
               <div className="space-y-1.5 text-sm">
-                {order.pickupLocation && <Row label="ที่นัดรับ"   value={`📍 ${order.pickupLocation}`} />}
-                {order.pickupDateTime && <Row label="เวลานัดรับ"  value={fmt(order.pickupDateTime)} />}
+                {order.pickupLocation && <Row label={tr("ที่นัดรับ")}   value={`📍 ${order.pickupLocation}`} />}
+                {order.pickupDateTime && <Row label={tr("เวลานัดรับ")}  value={fmt(order.pickupDateTime)} />}
                 {order.returnLocation && order.returnLocation !== order.pickupLocation && (
-                  <Row label="ที่นัดคืน" value={`📍 ${order.returnLocation}`} />
+                  <Row label={tr("ที่นัดคืน")} value={`📍 ${order.returnLocation}`} />
                 )}
-                {order.pickupNote && <Row label="หมายเหตุ" value={order.pickupNote} />}
+                {order.pickupNote && <Row label={tr("หมายเหตุ")} value={order.pickupNote} />}
               </div>
             </div>
 
             {/* Parties */}
             <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
-              <h3 className="text-xs font-bold text-[var(--c-faint)] uppercase tracking-wide mb-3">คู่สัญญา</h3>
-              <PartyRow label="เจ้าของ" user={order.owner} />
+              <h3 className="text-xs font-bold text-[var(--c-faint)] uppercase tracking-wide mb-3">{tr("คู่สัญญา")}</h3>
+              <PartyRow label={tr("เจ้าของ")} user={order.owner} />
               <div className="border-t border-[var(--c-line-soft)] my-3" />
-              <PartyRow label="ผู้เช่า" user={order.renter} />
+              <PartyRow label={tr("ผู้เช่า")} user={order.renter} />
             </div>
           </div>
         </div>

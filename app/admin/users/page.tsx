@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { Suspense }    from "react";
 import { getUsers }    from "./actions";
 import UsersTable      from "./_components/UsersTable";
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export default async function AdminUsersPage({ searchParams }: Props) {
+  const tr = await getTr();
   const sp = await searchParams;
 
   const params = {
@@ -32,10 +34,8 @@ export default async function AdminUsersPage({ searchParams }: Props) {
       {/* Page heading */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold text-[var(--c-ink)]">ผู้ใช้งาน</h1>
-          <p className="text-sm text-[var(--c-ink-3)] mt-0.5">
-            จัดการบัญชีผู้ใช้ บทบาท และการแบน
-          </p>
+          <h1 className="text-xl font-bold text-[var(--c-ink)]">{tr("ผู้ใช้งาน")}</h1>
+          <p className="text-sm text-[var(--c-ink-3)] mt-0.5">{tr("จัดการบัญชีผู้ใช้ บทบาท และการแบน")}</p>
         </div>
       </div>
 
@@ -43,7 +43,7 @@ export default async function AdminUsersPage({ searchParams }: Props) {
       <div className="flex flex-wrap gap-3 items-center">
         <div className="w-64">
           <Suspense fallback={null}>
-            <SearchInput placeholder="ค้นหาชื่อ / อีเมล..." />
+            <SearchInput placeholder={tr("ค้นหาชื่อ / อีเมล...")} />
           </Suspense>
         </div>
 
@@ -52,10 +52,10 @@ export default async function AdminUsersPage({ searchParams }: Props) {
           <FilterSelect
             name="role"
             options={[
-              { value: "",        label: "ทุกบทบาท" },
-              { value: "ADMIN",   label: "แอดมิน"   },
-              { value: "STUDENT", label: "นักศึกษา" },
-              { value: "PATTARA", label: "งานภัทร"  },
+              { value: "",        label: tr("ทุกบทบาท") },
+              { value: "ADMIN",   label: tr("แอดมิน")   },
+              { value: "STUDENT", label: tr("นักศึกษา") },
+              { value: "PATTARA", label: tr("งานภัทร")  },
             ]}
           />
         </Suspense>
@@ -65,9 +65,9 @@ export default async function AdminUsersPage({ searchParams }: Props) {
           <FilterSelect
             name="banned"
             options={[
-              { value: "",      label: "ทุกสถานะ" },
-              { value: "false", label: "ปกติ"      },
-              { value: "true",  label: "ถูกแบน"   },
+              { value: "",      label: tr("ทุกสถานะ") },
+              { value: "false", label: tr("ปกติ")      },
+              { value: "true",  label: tr("ถูกแบน")   },
             ]}
           />
         </Suspense>

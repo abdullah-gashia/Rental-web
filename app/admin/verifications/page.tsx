@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -22,6 +23,7 @@ export default async function AdminVerificationsPage({
 }: {
   searchParams: Promise<{ filter?: string }>;
 }) {
+  const tr = await getTr();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
@@ -49,8 +51,8 @@ export default async function AdminVerificationsPage({
     <div className="p-6 max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[var(--c-ink)]">ยืนยันตัวตน KYC</h1>
-        <p className="text-sm text-[var(--c-muted)] mt-1">ตรวจสอบคำขอยืนยันตัวตนของผู้ใช้</p>
+        <h1 className="text-2xl font-bold text-[var(--c-ink)]">{tr("ยืนยันตัวตน KYC")}</h1>
+        <p className="text-sm text-[var(--c-muted)] mt-1">{tr("ตรวจสอบคำขอยืนยันตัวตนของผู้ใช้")}</p>
       </div>
 
       {/* Tabs */}

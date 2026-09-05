@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -58,6 +59,7 @@ export default async function VerificationDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const tr = await getTr();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
@@ -88,18 +90,16 @@ export default async function VerificationDetailPage({
       <Link
         href="/admin/verifications"
         className="inline-flex items-center gap-1.5 text-sm text-[var(--c-muted)] hover:text-[var(--c-ink)] transition"
-      >
-        ← กลับรายการ
-      </Link>
+      >{tr("← กลับรายการ")}</Link>
 
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-[var(--c-ink)]">ตรวจสอบคำขอยืนยันตัวตน</h1>
+          <h1 className="text-xl font-bold text-[var(--c-ink)]">{tr("ตรวจสอบคำขอยืนยันตัวตน")}</h1>
           <p className="text-sm text-[var(--c-muted)] mt-0.5 font-mono">{request.id}</p>
         </div>
         <span className={`px-3 py-1.5 rounded-full text-sm font-semibold ${STATUS_BADGE[request.status] ?? "bg-[var(--c-line-soft)] text-[var(--c-ink-2)]"}`}>
-          {request.status === "PENDING" ? "รอตรวจสอบ" : request.status === "APPROVED" ? "อนุมัติแล้ว" : "ปฏิเสธแล้ว"}
+          {request.status === "PENDING" ? tr("รอตรวจสอบ") : request.status === "APPROVED" ? tr("อนุมัติแล้ว") : tr("ปฏิเสธแล้ว")}
         </span>
       </div>
 
@@ -108,10 +108,10 @@ export default async function VerificationDetailPage({
         <div className="lg:col-span-2 space-y-6">
           {/* ID Card */}
           <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 space-y-4">
-            <h2 className="font-semibold text-[var(--c-ink)]">บัตรประจำตัว</h2>
+            <h2 className="font-semibold text-[var(--c-ink)]">{tr("บัตรประจำตัว")}</h2>
             <div className="grid grid-cols-2 gap-4">
-              <ImageCard label="ด้านหน้า" url={request.idCardImageUrl} />
-              <ImageCard label="ด้านหลัง" url={request.idCardBackUrl} />
+              <ImageCard label={tr("ด้านหน้า")} url={request.idCardImageUrl} />
+              <ImageCard label={tr("ด้านหลัง")} url={request.idCardBackUrl} />
             </div>
           </div>
 
@@ -126,7 +126,7 @@ export default async function VerificationDetailPage({
         <div className="space-y-4">
           {/* Applicant info */}
           <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 space-y-3">
-            <h2 className="font-semibold text-[var(--c-ink)]">ข้อมูลผู้สมัคร</h2>
+            <h2 className="font-semibold text-[var(--c-ink)]">{tr("ข้อมูลผู้สมัคร")}</h2>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2.5">
                 {request.user.image ? (
@@ -147,11 +147,11 @@ export default async function VerificationDetailPage({
               <hr className="border-[var(--c-line)]" />
 
               {[
-                { label: "ประเภท", value: request.psuIdType === "STUDENT" ? "นักศึกษา" : "บุคลากร" },
-                { label: "รหัส PSU", value: request.psuIdNumber, mono: true },
-                { label: "คณะ/ภาควิชา", value: request.facultyOrDepartment ?? "—" },
+                { label: tr("ประเภท"), value: request.psuIdType === "STUDENT" ? tr("นักศึกษา") : tr("บุคลากร") },
+                { label: tr("รหัส PSU"), value: request.psuIdNumber, mono: true },
+                { label: tr("คณะ/ภาควิชา"), value: request.facultyOrDepartment ?? "—" },
                 { label: "Trust Score", value: String(request.user.trustScore) },
-                { label: "ส่งเมื่อ", value: submittedDate },
+                { label: tr("ส่งเมื่อ"), value: submittedDate },
               ].map(({ label, value, mono }) => (
                 <div key={label} className="flex justify-between gap-2">
                   <span className="text-[var(--c-muted)]">{label}</span>
@@ -169,7 +169,7 @@ export default async function VerificationDetailPage({
           {/* Previous rejection */}
           {request.status === "REJECTED" && request.rejectionReason && (
             <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-2xl p-4 text-sm text-[var(--c-danger)]">
-              <p className="font-semibold mb-1">เหตุผลที่ปฏิเสธก่อนหน้า</p>
+              <p className="font-semibold mb-1">{tr("เหตุผลที่ปฏิเสธก่อนหน้า")}</p>
               <p>{request.rejectionReason}</p>
             </div>
           )}

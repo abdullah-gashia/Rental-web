@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { notFound } from "next/navigation";
 import Brand from "@/components/layout/Brand";
 import { getUserProfile, getMyPendingTransaction } from "@/lib/actions/trust-actions";
@@ -26,6 +27,7 @@ function Stars({ rating }: { rating: number }) {
 }
 
 export default async function UserProfilePage({ params }: PageProps) {
+  const tr = await getTr();
   const { id } = await params;
 
   // An office is a different kind of thing from a person, so it gets its own
@@ -69,9 +71,7 @@ export default async function UserProfilePage({ params }: PageProps) {
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            กลับหน้าหลัก
-          </a>
+            </svg>{tr("กลับหน้าหลัก")}</a>
         </div>
       </header>
 
@@ -95,7 +95,7 @@ export default async function UserProfilePage({ params }: PageProps) {
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2 mb-1">
                 <h1 className="text-xl font-bold text-[var(--c-ink)] truncate">
-                  {user.name ?? "ผู้ใช้ไม่ระบุชื่อ"}
+                  {user.name ?? tr("ผู้ใช้ไม่ระบุชื่อ")}
                 </h1>
                 <TrustBadge score={user.trustScore} />
               </div>
@@ -113,7 +113,7 @@ export default async function UserProfilePage({ params }: PageProps) {
                     </span>
                   </>
                 ) : (
-                  <span className="text-sm text-[var(--c-muted)]">ยังไม่มีรีวิว</span>
+                  <span className="text-sm text-[var(--c-muted)]">{tr("ยังไม่มีรีวิว")}</span>
                 )}
               </div>
 
@@ -121,17 +121,17 @@ export default async function UserProfilePage({ params }: PageProps) {
               <div className="flex flex-wrap gap-4 text-sm">
                 <div className="flex flex-col">
                   <span className="font-bold text-[var(--c-ink)] text-base">{user.totalSold}</span>
-                  <span className="text-[var(--c-muted)] text-xs">ธุรกรรมสำเร็จ</span>
+                  <span className="text-[var(--c-muted)] text-xs">{tr("ธุรกรรมสำเร็จ")}</span>
                 </div>
                 <div className="w-px bg-[var(--c-line)] self-stretch" />
                 <div className="flex flex-col">
                   <span className="font-bold text-[var(--c-ink)] text-base">{user.trustScore}</span>
-                  <span className="text-[var(--c-muted)] text-xs">คะแนนความน่าเชื่อถือ</span>
+                  <span className="text-[var(--c-muted)] text-xs">{tr("คะแนนความน่าเชื่อถือ")}</span>
                 </div>
                 <div className="w-px bg-[var(--c-line)] self-stretch" />
                 <div className="flex flex-col">
                   <span className="font-bold text-[var(--c-ink)] text-base">{memberSince}</span>
-                  <span className="text-[var(--c-muted)] text-xs">สมาชิกตั้งแต่</span>
+                  <span className="text-[var(--c-muted)] text-xs">{tr("สมาชิกตั้งแต่")}</span>
                 </div>
               </div>
 
@@ -139,7 +139,7 @@ export default async function UserProfilePage({ params }: PageProps) {
               <div className="pt-1">
                 <ReportButton
                   reportedId={user.id}
-                  reportedName={user.name ?? "ผู้ใช้รายนี้"}
+                  reportedName={user.name ?? tr("ผู้ใช้รายนี้")}
                   signedIn={reportState.signedIn}
                   isSelf={!!reportState.isSelf}
                   alreadyReported={reportState.reported}
@@ -152,9 +152,7 @@ export default async function UserProfilePage({ params }: PageProps) {
         {/* ── What this person has for sale ───────────────────────────────── */}
         {publicItems.length > 0 && (
           <section className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 sm:p-6 mb-6">
-            <h2 className="text-base font-bold text-[var(--c-ink)] mb-4">
-              สินค้าของผู้ใช้รายนี้
-              <span className="ml-2 text-xs font-normal text-[var(--c-muted)]">{publicItems.length} รายการ</span>
+            <h2 className="text-base font-bold text-[var(--c-ink)] mb-4">{tr("สินค้าของผู้ใช้รายนี้")}<span className="ml-2 text-xs font-normal text-[var(--c-muted)]">{publicItems.length} รายการ</span>
             </h2>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -192,7 +190,7 @@ export default async function UserProfilePage({ params }: PageProps) {
         <ProfileReviewSection
           reviews={reviews}
           sellerId={user.id}
-          sellerName={user.name ?? "ผู้ขาย"}
+          sellerName={user.name ?? tr("ผู้ขาย")}
         />
 
       </main>

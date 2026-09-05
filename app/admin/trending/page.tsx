@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { auth }    from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getAdminFeaturedItems } from "@/lib/actions/featured";
@@ -7,6 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "จัดการสินค้ามาแรง | Admin" };
 
 export default async function AdminTrendingPage() {
+  const tr = await getTr();
   const session = await auth();
   const user = session?.user as any;
   if (!user || user.role !== "ADMIN") redirect("/");
@@ -16,12 +18,8 @@ export default async function AdminTrendingPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-[var(--c-ink)] flex items-center gap-2">
-          🔥 จัดการสินค้ามาแรง
-        </h1>
-        <p className="text-sm text-[var(--c-muted)] mt-1">
-          เลือกสินค้าที่จะแสดงในหน้าแรก (สูงสุด 10 รายการ)
-        </p>
+        <h1 className="text-xl font-bold text-[var(--c-ink)] flex items-center gap-2">{tr("🔥 จัดการสินค้ามาแรง")}</h1>
+        <p className="text-sm text-[var(--c-muted)] mt-1">{tr("เลือกสินค้าที่จะแสดงในหน้าแรก (สูงสุด 10 รายการ)")}</p>
       </div>
 
       <TrendingManager initialItems={featuredItems} />

@@ -1,8 +1,10 @@
+import { getTr } from "@/lib/i18n/server";
 import { auth, signOut } from "@/lib/auth";
 
 export const metadata = { title: "บัญชีถูกระงับ | PSU Store" };
 
 export default async function BannedPage() {
+  const tr = await getTr();
   const session = await auth();
 
   return (
@@ -11,16 +13,13 @@ export default async function BannedPage() {
         <div className="text-7xl">🚫</div>
 
         <div>
-          <h1 className="text-2xl font-bold text-[var(--c-ink)]">บัญชีถูกระงับการใช้งาน</h1>
-          <p className="text-[var(--c-ink-2)] mt-2 leading-relaxed">
-            บัญชีของคุณถูกระงับเนื่องจากละเมิดกฎของแพลตฟอร์ม
-            <br />หากคุณคิดว่าเกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ
-          </p>
+          <h1 className="text-2xl font-bold text-[var(--c-ink)]">{tr("บัญชีถูกระงับการใช้งาน")}</h1>
+          <p className="text-[var(--c-ink-2)] mt-2 leading-relaxed">{tr("บัญชีของคุณถูกระงับเนื่องจากละเมิดกฎของแพลตฟอร์ม")}<br />{tr("หากคุณคิดว่าเกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ")}</p>
         </div>
 
         {session?.user && (
           <div className="bg-[var(--c-line-soft)] rounded-2xl px-5 py-4 text-sm text-[var(--c-ink-2)]">
-            <p>บัญชี: <span className="font-semibold text-[var(--c-ink)]">{session.user.email}</span></p>
+            <p>{tr("บัญชี:")}<span className="font-semibold text-[var(--c-ink)]">{session.user.email}</span></p>
           </div>
         )}
 
@@ -28,9 +27,7 @@ export default async function BannedPage() {
           <a
             href="mailto:admin@psu.ac.th"
             className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-[var(--c-accent)] text-white rounded-xl font-semibold hover:bg-[var(--c-accent-str)] transition"
-          >
-            📧 ติดต่อผู้ดูแลระบบ
-          </a>
+          >{tr("📧 ติดต่อผู้ดูแลระบบ")}</a>
 
           <form
             action={async () => {
@@ -41,9 +38,7 @@ export default async function BannedPage() {
             <button
               type="submit"
               className="w-full px-4 py-3 border border-[var(--c-line)] text-[var(--c-ink-2)] rounded-xl font-semibold hover:bg-[var(--c-line-soft)] transition"
-            >
-              ออกจากระบบ
-            </button>
+            >{tr("ออกจากระบบ")}</button>
           </form>
         </div>
 

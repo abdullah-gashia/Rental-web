@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { Suspense }   from "react";
 import { getOrders }  from "./actions";
 import OrdersTable    from "./_components/OrdersTable";
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default async function AdminOrdersPage({ searchParams }: Props) {
+  const tr = await getTr();
   const sp = await searchParams;
 
   const params = {
@@ -33,8 +35,8 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
     <div className="space-y-5">
       {/* Heading */}
       <div>
-        <h1 className="text-xl font-bold text-[var(--c-ink)]">รายการสั่งซื้อ</h1>
-        <p className="text-sm text-[var(--c-ink-3)] mt-0.5">ติดตามและจัดการคำสั่งซื้อทั้งหมด</p>
+        <h1 className="text-xl font-bold text-[var(--c-ink)]">{tr("รายการสั่งซื้อ")}</h1>
+        <p className="text-sm text-[var(--c-ink-3)] mt-0.5">{tr("ติดตามและจัดการคำสั่งซื้อทั้งหมด")}</p>
       </div>
 
       {/* Quick-filter tabs */}
@@ -46,34 +48,34 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
       <div className="flex flex-wrap gap-3 items-center">
         <div className="w-64">
           <Suspense fallback={null}>
-            <SearchInput placeholder="ค้นหาผู้ซื้อ / ผู้ขาย / สินค้า..." />
+            <SearchInput placeholder={tr("ค้นหาผู้ซื้อ / ผู้ขาย / สินค้า...")} />
           </Suspense>
         </div>
         <Suspense fallback={null}>
           <FilterSelect
             name="status"
             options={[
-              { value: "",                      label: "ทุกสถานะ"               },
+              { value: "",                      label: tr("ทุกสถานะ")               },
               // ── Checkout wizard ──
-              { value: "PENDING_CONFIRMATION",  label: "รอยืนยัน"               },
-              { value: "AWAITING_SHIPMENT",     label: "รอจัดส่ง"               },
-              { value: "MEETUP_ARRANGED",       label: "นัดพบ (COD)"            },
+              { value: "PENDING_CONFIRMATION",  label: tr("รอยืนยัน")               },
+              { value: "AWAITING_SHIPMENT",     label: tr("รอจัดส่ง")               },
+              { value: "MEETUP_ARRANGED",       label: tr("นัดพบ (COD)")            },
               // ── In-progress ──
-              { value: "FUNDS_HELD",            label: "กักเงินแล้ว"            },
-              { value: "SHIPPED",               label: "จัดส่งแล้ว"             },
-              { value: "COD_SHIPPED",           label: "จัดส่งแล้ว (COD)"       },
-              { value: "MEETUP_SCHEDULED",      label: "นัดพบแล้ว"              },
-              { value: "DELIVERED",             label: "รับสินค้าแล้ว"          },
+              { value: "FUNDS_HELD",            label: tr("กักเงินแล้ว")            },
+              { value: "SHIPPED",               label: tr("จัดส่งแล้ว")             },
+              { value: "COD_SHIPPED",           label: tr("จัดส่งแล้ว (COD)")       },
+              { value: "MEETUP_SCHEDULED",      label: tr("นัดพบแล้ว")              },
+              { value: "DELIVERED",             label: tr("รับสินค้าแล้ว")          },
               // ── Completed ──
-              { value: "COMPLETED",             label: "สำเร็จ"                  },
-              { value: "MEETUP_COMPLETED",      label: "พบกันสำเร็จ"            },
-              { value: "COD_DELIVERED",         label: "รับ COD แล้ว"           },
-              { value: "MEETUP_CASH_COMPLETED", label: "พบกัน + รับเงิน"        },
-              { value: "REFUNDED",              label: "คืนเงินแล้ว"            },
+              { value: "COMPLETED",             label: tr("สำเร็จ")                  },
+              { value: "MEETUP_COMPLETED",      label: tr("พบกันสำเร็จ")            },
+              { value: "COD_DELIVERED",         label: tr("รับ COD แล้ว")           },
+              { value: "MEETUP_CASH_COMPLETED", label: tr("พบกัน + รับเงิน")        },
+              { value: "REFUNDED",              label: tr("คืนเงินแล้ว")            },
               // ── Problem ──
-              { value: "DISPUTED",              label: "มีข้อพิพาท"             },
-              { value: "CANCELLED",             label: "ยกเลิก"                 },
-              { value: "CANCELLED_BY_ADMIN",    label: "ยกเลิกโดยแอดมิน"       },
+              { value: "DISPUTED",              label: tr("มีข้อพิพาท")             },
+              { value: "CANCELLED",             label: tr("ยกเลิก")                 },
+              { value: "CANCELLED_BY_ADMIN",    label: tr("ยกเลิกโดยแอดมิน")       },
             ]}
           />
         </Suspense>

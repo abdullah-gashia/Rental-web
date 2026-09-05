@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import Link from "next/link";
 import { getOfficeOrders } from "@/lib/actions/borrow-orders";
 import { BORROW_STATUS_LABEL, BORROW_CATEGORY_LABEL } from "@/lib/borrow-config";
@@ -28,16 +29,15 @@ export default async function OfficeOrdersPage({
 }: {
   searchParams: Promise<{ f?: string }>;
 }) {
+  const tr = await getTr();
   const { f } = await searchParams;
   const orders = await getOfficeOrders(f);
 
   return (
     <div className="flex flex-col gap-5">
       <header>
-        <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)]">รายการยืม</h1>
-        <p className="text-[13px] text-[var(--bw-muted)] mt-1">
-          ทุกรายการที่งานภัทรให้ยืม พร้อมสถานะและกำหนดคืน
-        </p>
+        <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)]">{tr("รายการยืม")}</h1>
+        <p className="text-[13px] text-[var(--bw-muted)] mt-1">{tr("ทุกรายการที่งานภัทรให้ยืม พร้อมสถานะและกำหนดคืน")}</p>
       </header>
 
       <div className="flex flex-wrap gap-2">
@@ -54,7 +54,7 @@ export default async function OfficeOrdersPage({
 
       {orders.length === 0 ? (
         <div className="bw-panel text-center py-16">
-          <p className="text-[14px] text-[var(--bw-muted)]">ไม่มีรายการในหมวดนี้</p>
+          <p className="text-[14px] text-[var(--bw-muted)]">{tr("ไม่มีรายการในหมวดนี้")}</p>
         </div>
       ) : (
         <div className="bw-panel !p-0 overflow-hidden">
@@ -62,10 +62,10 @@ export default async function OfficeOrdersPage({
             <table className="w-full text-[13px]">
               <thead>
                 <tr className="bg-[var(--bw-ground)] border-b border-[var(--bw-line)]">
-                  <th className="text-left px-4 py-3 font-semibold text-[var(--bw-ink-2)]">อุปกรณ์</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[var(--bw-ink-2)]">ผู้ยืม</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[var(--bw-ink-2)]">สถานะ</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[var(--bw-ink-2)]">กำหนดคืน</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[var(--bw-ink-2)]">{tr("อุปกรณ์")}</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[var(--bw-ink-2)]">{tr("ผู้ยืม")}</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[var(--bw-ink-2)]">{tr("สถานะ")}</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[var(--bw-ink-2)]">{tr("กำหนดคืน")}</th>
                   <th className="text-right px-4 py-3 font-semibold text-[var(--bw-ink-2)]"></th>
                 </tr>
               </thead>
@@ -109,9 +109,7 @@ export default async function OfficeOrdersPage({
                         ) : <span className="text-[var(--bw-muted)]">—</span>}
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <Link href={`/pattara/orders/${o.id}`} className="text-[12px] font-semibold text-[var(--psu-blue)] hover:underline whitespace-nowrap">
-                          จัดการ →
-                        </Link>
+                        <Link href={`/pattara/orders/${o.id}`} className="text-[12px] font-semibold text-[var(--psu-blue)] hover:underline whitespace-nowrap">{tr("จัดการ →")}</Link>
                       </td>
                     </tr>
                   );

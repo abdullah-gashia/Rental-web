@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { getMyVerificationStatus } from "./actions";
@@ -122,6 +123,7 @@ export default async function VerifyPage({
 }: {
   searchParams: Promise<{ submitted?: string }>;
 }) {
+  const tr = await getTr();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
@@ -167,10 +169,8 @@ export default async function VerifyPage({
       <div className="max-w-lg mx-auto px-4 py-10">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-[var(--c-ink)]">ยืนยันตัวตน PSU</h1>
-          <p className="text-sm text-[var(--c-muted)] mt-1">
-            กรุณายืนยันตัวตนก่อนลงขายสินค้า
-          </p>
+          <h1 className="text-2xl font-bold text-[var(--c-ink)]">{tr("ยืนยันตัวตน PSU")}</h1>
+          <p className="text-sm text-[var(--c-muted)] mt-1">{tr("กรุณายืนยันตัวตนก่อนลงขายสินค้า")}</p>
         </div>
 
         {/* Rejection banner */}

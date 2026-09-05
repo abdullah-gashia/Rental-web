@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getAdminItemDetail } from "./actions";
@@ -21,6 +22,7 @@ interface Props {
 }
 
 export default async function AdminItemDetailPage({ params }: Props) {
+  const tr = await getTr();
   const { id } = await params;
   const item = await getAdminItemDetail(id);
 
@@ -28,10 +30,10 @@ export default async function AdminItemDetailPage({ params }: Props) {
 
   // Condition display mapping
   const CONDITION_TH: Record<string, string> = {
-    LIKE_NEW:     "สภาพเหมือนใหม่",
-    GOOD:         "สภาพดี",
-    FAIR:         "สภาพพอใช้",
-    NEEDS_REPAIR: "ต้องซ่อม",
+    LIKE_NEW:     tr("สภาพเหมือนใหม่"),
+    GOOD:         tr("สภาพดี"),
+    FAIR:         tr("สภาพพอใช้"),
+    NEEDS_REPAIR: tr("ต้องซ่อม"),
   };
 
   return (
@@ -41,7 +43,7 @@ export default async function AdminItemDetailPage({ params }: Props) {
         <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-2xl px-5 py-3.5 flex items-center gap-3 text-[var(--c-danger)]">
           <span className="text-xl">🗑️</span>
           <div>
-            <p className="font-semibold text-sm">สินค้านี้ถูกลบแล้ว</p>
+            <p className="font-semibold text-sm">{tr("สินค้านี้ถูกลบแล้ว")}</p>
             {item.rejectReason && (
               <p className="text-xs mt-0.5">เหตุผล: {item.rejectReason}</p>
             )}
@@ -56,9 +58,7 @@ export default async function AdminItemDetailPage({ params }: Props) {
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-        กลับไปรายการสินค้า
-      </Link>
+        </svg>{tr("กลับไปรายการสินค้า")}</Link>
 
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-xs text-[var(--c-faint)] flex-wrap">
@@ -66,9 +66,7 @@ export default async function AdminItemDetailPage({ params }: Props) {
           Admin Panel
         </Link>
         <span>/</span>
-        <Link href="/admin/items" className="hover:text-[var(--c-ink-2)] transition-colors">
-          สินค้า
-        </Link>
+        <Link href="/admin/items" className="hover:text-[var(--c-ink-2)] transition-colors">{tr("สินค้า")}</Link>
         <span>/</span>
         <span className="text-[var(--c-ink-2)] font-medium truncate max-w-[200px]">{item.title}</span>
       </nav>
@@ -86,7 +84,7 @@ export default async function AdminItemDetailPage({ params }: Props) {
             {" · "}
             {CONDITION_TH[item.condition] || item.condition}
             {" · "}
-            {item.listingType === "SELL" ? "ขาย" : "เช่า"}
+            {item.listingType === "SELL" ? tr("ขาย") : tr("เช่า")}
             {" · "}
             โพสต์เมื่อ {formatThaiDate(item.createdAt)}
           </p>

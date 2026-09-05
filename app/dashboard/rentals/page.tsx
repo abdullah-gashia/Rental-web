@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
@@ -38,6 +39,7 @@ const STATUS_COLOR: Record<string, string> = {
 const ACTIVE_STATUSES = ["REQUESTED","APPROVED","PICKUP_SCHEDULED","ACTIVE","OVERDUE","RETURN_SCHEDULED"];
 
 export default async function RentalDashboardPage() {
+  const tr = await getTr();
   const session = await auth();
   if (!session?.user?.id) redirect("/auth/signin");
 
@@ -55,15 +57,13 @@ export default async function RentalDashboardPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
           <div>
-            <h1 className="text-xl font-extrabold text-[var(--c-ink)]">🔑 การเช่าของฉัน</h1>
-            <p className="text-sm text-[var(--c-ink-3)] mt-0.5">ติดตามการเช่าและให้เช่าทั้งหมดของคุณ</p>
+            <h1 className="text-xl font-extrabold text-[var(--c-ink)]">{tr("🔑 การเช่าของฉัน")}</h1>
+            <p className="text-sm text-[var(--c-ink-3)] mt-0.5">{tr("ติดตามการเช่าและให้เช่าทั้งหมดของคุณ")}</p>
           </div>
           <Link
             href="/rental"
             className="px-4 py-2 bg-[var(--c-accent)] text-white text-sm font-bold rounded-xl hover:bg-[var(--c-accent-str)] transition"
-          >
-            ค้นหาสินค้าเช่า
-          </Link>
+          >{tr("ค้นหาสินค้าเช่า")}</Link>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -79,11 +79,11 @@ export default async function RentalDashboardPage() {
               )}
             </h2>
             {asRenter.length === 0 ? (
-              <EmptyCard msg="ยังไม่มีประวัติการเช่า" href="/rental" linkLabel="ค้นหาสินค้าเช่า" />
+              <EmptyCard msg={tr("ยังไม่มีประวัติการเช่า")} href="/rental" linkLabel={tr("ค้นหาสินค้าเช่า")} />
             ) : (
               <div className="space-y-2">
                 {[...activeAsRenter, ...pastAsRenter].map((order: any) => (
-                  <OrderRow key={order.id} order={order} counterpartyLabel="เจ้าของ" counterparty={order.owner} />
+                  <OrderRow key={order.id} order={order} counterpartyLabel={tr("เจ้าของ")} counterparty={order.owner} />
                 ))}
               </div>
             )}
@@ -100,11 +100,11 @@ export default async function RentalDashboardPage() {
               )}
             </h2>
             {asOwner.length === 0 ? (
-              <EmptyCard msg="ยังไม่มีสินค้าถูกเช่า" href="/dashboard/my-items" linkLabel="จัดการสินค้าของฉัน" />
+              <EmptyCard msg={tr("ยังไม่มีสินค้าถูกเช่า")} href="/dashboard/my-items" linkLabel={tr("จัดการสินค้าของฉัน")} />
             ) : (
               <div className="space-y-2">
                 {[...activeAsOwner, ...pastAsOwner].map((order: any) => (
-                  <OrderRow key={order.id} order={order} counterpartyLabel="ผู้เช่า" counterparty={order.renter} />
+                  <OrderRow key={order.id} order={order} counterpartyLabel={tr("ผู้เช่า")} counterparty={order.renter} />
                 ))}
               </div>
             )}

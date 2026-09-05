@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { Suspense }   from "react";
 import { getItems }   from "./actions";
 import ItemsTable     from "./_components/ItemsTable";
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export default async function AdminItemsPage({ searchParams }: Props) {
+  const tr = await getTr();
   const sp = await searchParams;
 
   const params = {
@@ -31,30 +33,30 @@ export default async function AdminItemsPage({ searchParams }: Props) {
     <div className="space-y-5">
       {/* Heading */}
       <div>
-        <h1 className="text-xl font-bold text-[var(--c-ink)]">สินค้า</h1>
-        <p className="text-sm text-[var(--c-ink-3)] mt-0.5">จัดการรายการสินค้าทั้งหมด</p>
+        <h1 className="text-xl font-bold text-[var(--c-ink)]">{tr("สินค้า")}</h1>
+        <p className="text-sm text-[var(--c-ink-3)] mt-0.5">{tr("จัดการรายการสินค้าทั้งหมด")}</p>
       </div>
 
       {/* Toolbar */}
       <div className="flex flex-wrap gap-3 items-center">
         <div className="w-64">
           <Suspense fallback={null}>
-            <SearchInput placeholder="ค้นหาชื่อสินค้า / ผู้ขาย..." />
+            <SearchInput placeholder={tr("ค้นหาชื่อสินค้า / ผู้ขาย...")} />
           </Suspense>
         </div>
         <Suspense fallback={null}>
           <FilterSelect
             name="status"
             options={[
-              { value: "",            label: "ทุกสถานะ"     },
-              { value: "PENDING",     label: "รออนุมัติ"    },
-              { value: "APPROVED",    label: "อนุมัติแล้ว"  },
-              { value: "ACTIVE",      label: "กำลังขาย"    },
-              { value: "SOLD",        label: "ขายแล้ว"     },
-              { value: "RENTED",      label: "ให้เช่าแล้ว" },
-              { value: "REJECTED",    label: "ถูกปฏิเสธ"   },
-              { value: "REMOVED",     label: "ถูกลบ"       },
-              { value: "EXPIRED",     label: "หมดอายุ"     },
+              { value: "",            label: tr("ทุกสถานะ")     },
+              { value: "PENDING",     label: tr("รออนุมัติ")    },
+              { value: "APPROVED",    label: tr("อนุมัติแล้ว")  },
+              { value: "ACTIVE",      label: tr("กำลังขาย")    },
+              { value: "SOLD",        label: tr("ขายแล้ว")     },
+              { value: "RENTED",      label: tr("ให้เช่าแล้ว") },
+              { value: "REJECTED",    label: tr("ถูกปฏิเสธ")   },
+              { value: "REMOVED",     label: tr("ถูกลบ")       },
+              { value: "EXPIRED",     label: tr("หมดอายุ")     },
             ]}
           />
         </Suspense>
@@ -62,9 +64,9 @@ export default async function AdminItemsPage({ searchParams }: Props) {
           <FilterSelect
             name="listingType"
             options={[
-              { value: "",     label: "ทุกประเภท" },
-              { value: "SELL", label: "ขาย"       },
-              { value: "RENT", label: "เช่า"      },
+              { value: "",     label: tr("ทุกประเภท") },
+              { value: "SELL", label: tr("ขาย")       },
+              { value: "RENT", label: tr("เช่า")      },
             ]}
           />
         </Suspense>
