@@ -142,7 +142,26 @@ function Thumb({
 
 // ─── Main component ───────────────────────────────────
 
-export default function EditItemClient({ item }: { item: EditableItem }) {
+/**
+ * The edit form, on its own page or inside a dialog.
+ *
+ * Editing used to mean leaving the list, and with fifty listings that is a lot
+ * of navigating just to add a photo. So the seller's list opens this in a
+ * dialog instead; `onDone` and `onCancel` are what it calls in place of
+ * navigating, and `embedded` drops the page's own heading and back link, which
+ * a dialog supplies for itself.
+ */
+export default function EditItemClient({
+  item,
+  embedded = false,
+  onDone,
+  onCancel,
+}: {
+  item: EditableItem;
+  embedded?: boolean;
+  onDone?: () => void;
+  onCancel?: () => void;
+}) {
   const tr = useTr();
   // Form fields
   const [title, setTitle]             = useState(item.title);
@@ -299,24 +318,32 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
         setFormError(tr(result.error));
       } else {
         showToast(tr("✅ บันทึกสำเร็จ! สินค้าจะถูกส่งรอการอนุมัติอีกครั้ง"));
-        router.push("/dashboard/my-items");
+        if (onDone) {
+          onDone();
+        } else {
+          router.push("/dashboard/my-items");
+        }
         router.refresh();
       }
     });
   }
 
   return (
-    <div className="max-w-xl mx-auto">
-      {/* Back link */}
-      <a
-        href="/dashboard/my-items"
-        className="inline-flex items-center gap-1.5 text-sm text-[var(--c-ink-3)] hover:text-[var(--c-ink)] transition mb-6"
-      >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>{tr("กลับไปสินค้าของฉัน")}</a>
+    <div className={embedded ? "" : "max-w-xl mx-auto"}>
+      {!embedded && (
+        <>
+          {/* Back link */}
+          <a
+            href="/dashboard/my-items"
+            className="inline-flex items-center gap-1.5 text-sm text-[var(--c-ink-3)] hover:text-[var(--c-ink)] transition mb-6"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>{tr("กลับไปสินค้าของฉัน")}</a>
 
-      <h1 className="text-xl font-bold text-[var(--c-ink)] mb-6">{tr("แก้ไขสินค้า")}</h1>
+          <h1 className="text-xl font-bold text-[var(--c-ink)] mb-6">{tr("แก้ไขสินค้า")}</h1>
+        </>
+      )}
 
       {/* Item header card */}
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-4 mb-6 flex gap-4 items-center">
@@ -548,10 +575,18 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
 
         {/* Buttons */}
         <div className="flex gap-3 pt-1">
-          <a
-            href="/dashboard/my-items"
-            className="flex-1 text-center px-4 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-medium text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
-          >{tr("ยกเลิก")}</a>
+          {onCancel ? (
+            <button
+              type="button"
+              onClick={onCancel}
+              className="flex-1 text-center px-4 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-medium text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
+            >{tr("ยกเลิก")}</button>
+          ) : (
+            <a
+              href="/dashboard/my-items"
+              className="flex-1 text-center px-4 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-medium text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
+            >{tr("ยกเลิก")}</a>
+          )}
           <button
             type="submit"
             disabled={isPending || pendingImages.some((p) => p.uploading)}

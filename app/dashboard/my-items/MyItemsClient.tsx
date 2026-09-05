@@ -4,6 +4,8 @@ import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { deleteItem, cancelDeletion } from "@/lib/actions/item-actions";
+import { getItemForEdit } from "@/lib/actions/moderation-actions";
+import EditItemClient from "@/app/dashboard/edit/[id]/EditItemClient";
 import { useToastStore } from "@/lib/stores/toast-store";
 import { useRouter } from "next/navigation";
 import CountdownTimer from "@/components/ui/CountdownTimer";
@@ -145,10 +147,26 @@ function DeleteModal({
 export default function MyItemsClient({ items, userName, reputation }: Props) {
   const tr = useTr();
   const [deleteTarget, setDeleteTarget] = useState<MyItem | null>(null);
+  // Editing happens in a dialog on this page. The list rows do not carry
+  // everything the form needs — the images, the rental terms — so the full
+  // record is fetched when one is opened rather than loaded fifty times over.
+  const [editing, setEditing]   = useState<any | null>(null);
+  const [loadingId, setLoading] = useState<string | null>(null);
   const [filter, setFilter]             = useState<FilterKey>("ALL");
   const [isPending, startTransition]    = useTransition();
   const showToast = useToastStore((s) => s.show);
   const router    = useRouter();
+
+  async function openEditor(id: string) {
+    setLoading(id);
+    const res = await getItemForEdit(id);
+    setLoading(null);
+    if (res.error || !res.item) {
+      showToast(tr("โหลดข้อมูลสินค้าไม่สำเร็จ"));
+      return;
+    }
+    setEditing(res.item);
+  }
 
   // Items to show: exclude hard-deleted; soft-deleted ones stay visible
   const activeItems = items.filter(
@@ -411,13 +429,22 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                       /* Normal item: Edit + Delete — only for mutable statuses */
                       !["SOLD", "RENTED", "EXPIRED"].includes(item.status) && (
                         <>
-                          <a
-                            href={`/dashboard/edit/${item.id}`}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--c-line)] text-xs font-medium text-[var(--c-ink-1)] hover:bg-[var(--c-canvas)] transition"
+                          <button
+                            type="button"
+                            onClick={() => openEditor(item.id)}
+                            disabled={loadingId === item.id}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--c-line)] text-xs font-medium text-[var(--c-ink-1)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
                           >
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>{tr("แก้ไข")}</a>
+                            {loadingId === item.id ? (
+                              <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                              </svg>
+                            ) : (
+                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                              </svg>
+                            )}{tr("แก้ไข")}</button>
                           <button
                             onClick={() => setDeleteTarget(item)}
                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--c-warn-line)] text-xs font-medium text-[var(--c-warn)] hover:bg-[var(--c-warn-soft)] transition"
@@ -433,6 +460,39 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Edit dialog — the same form the edit page uses, without leaving here */}
+      {editing && (
+        <div
+          className="fixed inset-0 z-[500] flex items-start justify-center p-4 overflow-y-auto bg-black/40"
+          role="dialog"
+          aria-modal
+          onClick={(e) => { if (e.target === e.currentTarget) setEditing(null); }}
+        >
+          <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] w-full max-w-xl my-8 p-5 sm:p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg font-bold text-[var(--c-ink)]">{tr("แก้ไขสินค้า")}</h2>
+              <button
+                type="button"
+                onClick={() => setEditing(null)}
+                aria-label={tr("ปิด")}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--c-ink-3)] hover:bg-[var(--c-canvas)] transition"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <EditItemClient
+              item={editing}
+              embedded
+              onDone={() => setEditing(null)}
+              onCancel={() => setEditing(null)}
+            />
+          </div>
         </div>
       )}
 
