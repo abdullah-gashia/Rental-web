@@ -112,10 +112,10 @@ export default function ChangePasswordDialog({ open, onClose, showToast }: Props
       });
 
       if (res.success) {
-        showToast(true, res.message);
+        showToast(true, tr(res.message));
         onClose();
       } else {
-        setError(res.error);
+        setError(tr(res.error));
       }
     });
   };

@@ -37,7 +37,7 @@ export default function SecurityTab({ userData, showToast }: Props) {
     setTracking(newVal);
     startTransition(async () => {
       const res = await updateTrackingPreference(newVal);
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
       if (!res.success) setTracking(!newVal); // revert on failure
     });
   };
@@ -45,7 +45,7 @@ export default function SecurityTab({ userData, showToast }: Props) {
   const handleClearHistory = () => {
     startTransition(async () => {
       const res = await clearViewHistory();
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
     });
   };
 
@@ -66,7 +66,7 @@ export default function SecurityTab({ userData, showToast }: Props) {
         URL.revokeObjectURL(url);
         showToast(true, tr("ดาวน์โหลดข้อมูลเรียบร้อยแล้ว"));
       } else {
-        showToast(false, res.error);
+        showToast(false, tr(res.error));
       }
     });
   };

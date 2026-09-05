@@ -35,7 +35,7 @@ export default function ReviewFormClient({
     setLoading(true);
     const result = await submitDirectReview(revieweeId, selected, comment);
     setLoading(false);
-    if (result.error) { setError(result.error); return; }
+    if (result.error) { setError(tr(result.error)); return; }
     onSuccess();
   }
 

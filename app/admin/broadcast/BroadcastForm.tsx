@@ -166,7 +166,7 @@ export default function BroadcastForm({ counts, adminEmail, mailReady }: Props) 
                 : "bg-[var(--c-danger-soft)] border-[var(--c-danger-line)] text-[var(--c-danger)]"
             }`}
           >
-            {result.success ? result.message : result.error}
+            {result.success ? tr(result.message) : tr(result.error)}
           </div>
         )}
 

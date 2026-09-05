@@ -46,7 +46,7 @@ export default function UsersTable({ rows }: Props) {
       else if (dialog.kind === "unban") res = await unbanUser(dialog.userId);
       else res = await updateUserRole(dialog.userId, dialog.newRole!);
       setDialog(null);
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
     });
   }
 

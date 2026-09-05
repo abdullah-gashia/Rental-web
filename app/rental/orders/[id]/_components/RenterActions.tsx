@@ -28,7 +28,7 @@ export default function RenterActions({ orderId, status }: Props) {
   function handleReturn() {
     startTransition(async () => {
       const res = await requestRentalReturn(orderId);
-      if (!res.success) setError(res.error);
+      if (!res.success) setError(tr(res.error));
       else router.refresh();
     });
   }
@@ -37,7 +37,7 @@ export default function RenterActions({ orderId, status }: Props) {
     if (!reason.trim()) { setError("กรุณาระบุเหตุผล"); return; }
     startTransition(async () => {
       const res = await cancelRentalOrder(orderId, reason);
-      if (!res.success) setError(res.error);
+      if (!res.success) setError(tr(res.error));
       else router.refresh();
     });
   }

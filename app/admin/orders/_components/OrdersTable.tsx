@@ -47,7 +47,7 @@ export default function OrdersTable({ rows }: Props) {
       }
       setDialog(null);
       setCancelReason("");
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
     });
   }
 

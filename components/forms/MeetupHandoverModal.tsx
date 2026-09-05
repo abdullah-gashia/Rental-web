@@ -291,7 +291,7 @@ export default function MeetupHandoverModal({
     setSubmitting(false);
 
     if ("error" in res && res.error) {
-      setError(res.error);
+      setError(tr(res.error));
     } else {
       onSuccess();
     }

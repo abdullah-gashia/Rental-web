@@ -25,17 +25,20 @@ const TABLE: Record<string, string> = phrases;
 
 /** The shape of `tr`, for helpers that take one as an argument. */
 export type TrFn = (
-  source: string,
+  source: string | null | undefined,
   params?: readonly (string | number | null | undefined)[],
 ) => string;
 
 export function translatePhrase(
   locale: Locale,
-  source: string,
+  source: string | null | undefined,
   params?: readonly (string | number | null | undefined)[],
 ): string {
   const filled = (s: string) =>
     params ? s.replace(/\{(\d+)\}/g, (m, i) => String(params[Number(i)] ?? "")) : s;
+  // Messages handed back by an action are often optional; an absent one is
+  // an absent message, not the word "undefined".
+  if (source == null) return "";
   if (locale !== "en") return filled(source);
   const hit = TABLE[source];
   if (hit) return filled(hit);

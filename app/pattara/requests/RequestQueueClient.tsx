@@ -31,7 +31,7 @@ export default function RequestQueueClient({
     setMsg(null);
     startTransition(async () => {
       const res = await fn();
-      setMsg({ ok: !!res.success, text: res.success ? res.message : res.error });
+      setMsg({ ok: !!res.success, text: res.success ? tr(res.message) : tr(res.error) });
       if (res.success) {
         setOpen(null); setWhen(""); setWhere(""); setNote("");
         router.refresh();

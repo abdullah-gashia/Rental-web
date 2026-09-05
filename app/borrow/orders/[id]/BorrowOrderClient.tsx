@@ -64,7 +64,7 @@ function PhotoPicker({ photos, onChange }: { photos: string[]; onChange: (p: str
         const res  = await fetch("/api/upload", { method: "POST", body: fd });
         const json = await res.json();
         if (json.url) next.push(json.url);
-        else setErr(json.error ?? "อัปโหลดไม่สำเร็จ");
+        else setErr(tr(json.error ?? "อัปโหลดไม่สำเร็จ"));
       } catch {
         setErr("อัปโหลดไม่สำเร็จ");
       }
@@ -124,7 +124,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
     setMsg(null);
     startTransition(async () => {
       const res = await fn();
-      setMsg({ ok: !!res.success, text: res.success ? res.message : res.error });
+      setMsg({ ok: !!res.success, text: res.success ? tr(res.message) : tr(res.error) });
       if (res.success) {
         setPanel(null); setPhotos([]); setNote(""); setReason("");
         router.refresh();

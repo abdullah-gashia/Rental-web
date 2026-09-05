@@ -234,7 +234,7 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
             setPendingImages((prev) =>
               prev.map((p) =>
                 p.localId === localId
-                  ? { ...p, uploading: false, uploadError: err.message }
+                  ? { ...p, uploading: false, uploadError: tr(err.message) }
                   : p
               )
             );
@@ -296,7 +296,7 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
       });
 
       if (result.error) {
-        setFormError(result.error);
+        setFormError(tr(result.error));
       } else {
         showToast(tr("✅ บันทึกสำเร็จ! สินค้าจะถูกส่งรอการอนุมัติอีกครั้ง"));
         router.push("/dashboard/my-items");

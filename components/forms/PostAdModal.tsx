@@ -188,7 +188,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
         const { localId } = entries[i];
         uploadFile(file)
           .then((url) => setPendingImages((prev) => prev.map((p) => p.localId === localId ? { ...p, uploading: false, uploadedUrl: url } : p)))
-          .catch((err: Error) => setPendingImages((prev) => prev.map((p) => p.localId === localId ? { ...p, uploading: false, uploadError: err.message } : p)));
+          .catch((err: Error) => setPendingImages((prev) => prev.map((p) => p.localId === localId ? { ...p, uploading: false, uploadError: tr(err.message) } : p)));
       });
     },
     [totalImages, showToast]

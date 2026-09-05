@@ -41,7 +41,7 @@ export default function BorrowItemClient({ item }: { item: any }) {
         setDone(true);
         router.refresh();
       } else {
-        setError(res.error);
+        setError(tr(res.error));
       }
     });
   }

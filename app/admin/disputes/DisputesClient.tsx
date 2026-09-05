@@ -394,7 +394,7 @@ export default function DisputesClient({ orders: initialOrders }: Props) {
       const res = await resolveDispute(orderId, resolution);
       setResolvingId(null);
       if (res.error) {
-        alert(res.error);
+        alert(tr(res.error));
       } else {
         setOrders((prev) => prev.filter((o) => o.id !== orderId));
         router.refresh();

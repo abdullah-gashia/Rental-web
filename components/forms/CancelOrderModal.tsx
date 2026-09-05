@@ -85,7 +85,7 @@ export default function CancelOrderModal({
         finalReason
       );
       if ("error" in res && res.error) {
-        setFormError(res.error);
+        setFormError(tr(res.error));
       } else {
         onSuccess();
       }

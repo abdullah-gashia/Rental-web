@@ -92,7 +92,7 @@ export default function AddressesTab({ addresses, showToast }: Props) {
       } else {
         res = await updateSavedAddress(editing!, payload);
       }
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
       if (res.success) setEditing(null);
     });
   };
@@ -102,7 +102,7 @@ export default function AddressesTab({ addresses, showToast }: Props) {
     startTransition(async () => {
       const res = await deleteSavedAddress(id);
       if (res.error) {
-        showToast(false, res.error);
+        showToast(false, tr(res.error));
       } else {
         showToast(true, tr("ลบที่อยู่เรียบร้อยแล้ว"));
         setList((prev) => prev.filter((a) => a.id !== id));
@@ -115,7 +115,7 @@ export default function AddressesTab({ addresses, showToast }: Props) {
     startTransition(async () => {
       const res = await setDefaultAddress(id);
       if (res.error) {
-        showToast(false, res.error);
+        showToast(false, tr(res.error));
       } else {
         showToast(true, tr("ตั้งเป็นค่าเริ่มต้นเรียบร้อยแล้ว"));
         setList((prev) =>

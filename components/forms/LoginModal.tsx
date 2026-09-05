@@ -36,7 +36,7 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
       // Redirects away to Google; returns a value only when misconfigured
       const res = await loginWithGoogle();
       if (res?.error) {
-        setError(res.error);
+        setError(tr(res.error));
         setGoogleLoading(false);
       }
     } catch (e: any) {
@@ -55,7 +55,7 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
     const result = await loginWithCredentials(email, password);
 
     if (result.error) {
-      setError(result.error);
+      setError(tr(result.error));
       setLoading(false);
       return;
     }

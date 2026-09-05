@@ -1,5 +1,9 @@
-import { getTr } from "@/lib/i18n/server";
-// Server Component — no interactivity needed.
+"use client";
+
+// A client component: it is rendered from inside client tables, and one of
+// those cannot render an async server component.
+
+import { useLocaleStore } from "@/lib/stores/locale-store";
 
 type BadgeSpec = { label: string; cls: string };
 
@@ -57,8 +61,8 @@ interface StatusBadgeProps {
   type:   "user" | "role" | "item" | "order";
 }
 
-export default async function StatusBadge({ status, type }: StatusBadgeProps) {
-  const tr = await getTr();
+export default function StatusBadge({ status, type }: StatusBadgeProps) {
+  const tr = useLocaleStore((s) => s.tr);
   const spec = MAPS[type][status] ?? {
     label: status,
     cls:   "bg-[var(--c-subtle)] text-[var(--c-ink-3)] border-[var(--c-line)]",

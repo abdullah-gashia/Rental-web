@@ -267,7 +267,7 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
       if (res.ok && data.url) {
         onChange({ idCardImageUrl: data.url });
       } else {
-        setErr(data.error ?? "อัปโหลดไม่สำเร็จ กรุณาลองใหม่");
+        setErr(tr(data.error ?? "อัปโหลดไม่สำเร็จ กรุณาลองใหม่"));
         onChange({ idCardImageUrl: "", idCardImagePreview: "" });
       }
     } catch {

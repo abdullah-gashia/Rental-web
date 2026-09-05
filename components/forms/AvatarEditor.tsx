@@ -171,7 +171,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
       fd.append("file", new File([blob], "avatar.webp", { type: "image/webp" }));
       const json = await fetch("/api/upload", { method: "POST", body: fd }).then((r) => r.json());
 
-      if (!json.url) throw new Error(json.error ?? "อัปโหลดไม่สำเร็จ");
+      if (!json.url) throw new Error(tr(json.error ?? "อัปโหลดไม่สำเร็จ"));
       releaseUrl();
       onSaved(json.url);
     } catch (e) {

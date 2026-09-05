@@ -45,21 +45,21 @@ export default function AdminActionPanel({ item }: Props) {
   function handleApprove() {
     startTransition(async () => {
       const res = await approveItemDetail(item.id);
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
     });
   }
 
   function handleReapprove() {
     startTransition(async () => {
       const res = await reapproveItemDetail(item.id);
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
     });
   }
 
   function handleUnsuspend() {
     startTransition(async () => {
       const res = await unsuspendItemDetail(item.id);
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
     });
   }
 
@@ -67,7 +67,7 @@ export default function AdminActionPanel({ item }: Props) {
     startTransition(async () => {
       const res = await rejectItemDetail(item.id, reason);
       setRejectOpen(false);
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
     });
   }
 
@@ -75,7 +75,7 @@ export default function AdminActionPanel({ item }: Props) {
     startTransition(async () => {
       const res = await suspendItemDetail(item.id, reason);
       setSuspendOpen(false);
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
     });
   }
 
@@ -84,7 +84,7 @@ export default function AdminActionPanel({ item }: Props) {
       const res = await deleteItemDetail(item.id, reason);
       if (res) {
         setDeleteOpen(false);
-        showToast(res.success, res.success ? res.message : res.error);
+        showToast(res.success, res.success ? tr(res.message) : tr(res.error));
       }
       // If redirect happened, this code won't execute
     });
@@ -187,8 +187,8 @@ export default function AdminActionPanel({ item }: Props) {
                 <button
                   onClick={() => startTransition(async () => {
                     const res = await removeFromFeatured(trending.featuredId);
-                    if (res.success) { setTrending(null); showToast(true, res.message); }
-                    else showToast(false, res.error);
+                    if (res.success) { setTrending(null); showToast(true, tr(res.message)); }
+                    else showToast(false, tr(res.error));
                   })}
                   disabled={pending}
                   className="text-xs text-[var(--c-danger)] hover:text-[var(--c-danger)] font-medium disabled:opacity-40"
@@ -200,11 +200,11 @@ export default function AdminActionPanel({ item }: Props) {
               onClick={() => startTransition(async () => {
                 const res = await addToFeatured({ itemId: item.id, section: "trending" });
                 if (res.success) {
-                  showToast(true, res.message);
+                  showToast(true, tr(res.message));
                   // Refresh to get the new featuredId — simple page reload
                   window.location.reload();
                 } else {
-                  showToast(false, res.error);
+                  showToast(false, tr(res.error));
                 }
               })}
               disabled={pending || item.status !== "APPROVED"}

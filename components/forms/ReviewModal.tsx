@@ -42,7 +42,7 @@ export default function ReviewModal({
     startTransition(async () => {
       const res = await submitOrderReview(orderId, rating, comment || undefined);
       if (res.error) {
-        setError(res.error);
+        setError(tr(res.error));
       } else {
         onSuccess();
       }

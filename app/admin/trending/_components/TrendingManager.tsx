@@ -57,7 +57,7 @@ export default function TrendingManager({ initialItems }: Props) {
   function handleAdd(itemId: string) {
     startTransition(async () => {
       const res = await addToFeatured({ itemId, section: "trending" });
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
       if (res.success) {
         // Refetch
         const { getAdminFeaturedItems } = await import("@/lib/actions/featured");
@@ -73,7 +73,7 @@ export default function TrendingManager({ initialItems }: Props) {
   function handleRemove(featuredId: string) {
     startTransition(async () => {
       const res = await removeFromFeatured(featuredId);
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
       if (res.success) {
         setItems((prev) => prev.filter((i) => i.id !== featuredId));
       }
@@ -120,7 +120,7 @@ export default function TrendingManager({ initialItems }: Props) {
     startTransition(async () => {
       const orderedIds = items.map((i) => i.id);
       const res = await reorderFeatured("trending", orderedIds);
-      if (!res.success) showToast(false, res.error);
+      if (!res.success) showToast(false, tr(res.error));
     });
   }
 

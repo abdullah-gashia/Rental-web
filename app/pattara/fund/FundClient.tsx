@@ -36,7 +36,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
     setMsg(null);
     startTransition(async () => {
       const res = await fn();
-      setMsg({ ok: !!res.success, text: res.success ? res.message : res.error });
+      setMsg({ ok: !!res.success, text: res.success ? tr(res.message) : tr(res.error) });
       if (res.success) {
         if (close) { setOpen(false); setForm(blank); }
         router.refresh();
@@ -53,7 +53,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
       fd.append("file", prepared.file);
       const json = await fetch("/api/upload", { method: "POST", body: fd }).then((r) => r.json());
       if (json.url) setForm((f) => ({ ...f, receiptUrl: json.url }));
-      else setMsg({ ok: false, text: json.error ?? "อัปโหลดไม่สำเร็จ" });
+      else setMsg({ ok: false, text: tr(json.error ?? "อัปโหลดไม่สำเร็จ") });
     } catch {
       setMsg({ ok: false, text: "อัปโหลดไม่สำเร็จ" });
     }

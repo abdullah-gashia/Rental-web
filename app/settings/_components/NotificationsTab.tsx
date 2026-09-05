@@ -42,7 +42,7 @@ export default function NotificationsTab({ preferences, showToast }: Props) {
   const handleSave = () => {
     startTransition(async () => {
       const res = await updatePreferences(state);
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
     });
   };
 

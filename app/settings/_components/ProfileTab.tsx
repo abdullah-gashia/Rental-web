@@ -49,7 +49,7 @@ export default function ProfileTab({ userData, showToast }: ProfileTabProps) {
         phone: phone.trim() || null,
         bio: bio.trim() || null,
       });
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
     });
   };
 
@@ -249,7 +249,7 @@ export default function ProfileTab({ userData, showToast }: ProfileTabProps) {
             startTransition(async () => {
               const res = await updateAvatar(url);
               if (res.success) setAvatar(url);
-              showToast(res.success, res.success ? res.message : res.error);
+              showToast(res.success, res.success ? tr(res.message) : tr(res.error));
               router.refresh();
             });
           }}

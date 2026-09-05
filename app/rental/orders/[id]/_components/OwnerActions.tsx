@@ -26,7 +26,7 @@ export default function OwnerActions({ orderId, status }: Props) {
     setError(null);
     startTransition(async () => {
       const res = await approveRentalOrder(orderId);
-      if (!res.success) setError(res.error);
+      if (!res.success) setError(tr(res.error));
       else router.refresh();
     });
   }
@@ -36,7 +36,7 @@ export default function OwnerActions({ orderId, status }: Props) {
     setError(null);
     startTransition(async () => {
       const res = await rejectRentalOrder(orderId, reason);
-      if (!res.success) setError(res.error);
+      if (!res.success) setError(tr(res.error));
       else router.refresh();
     });
   }

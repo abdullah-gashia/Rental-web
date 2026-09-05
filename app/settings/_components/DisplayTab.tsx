@@ -37,7 +37,7 @@ export default function DisplayTab({ preferences, showToast }: Props) {
         language: language as "th" | "en",
         theme:    theme as "light" | "dark" | "system",
       });
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
 
       if (res.success) {
         applyTheme(theme as "light" | "dark" | "system");

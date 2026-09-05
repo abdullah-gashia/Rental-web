@@ -101,7 +101,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
         shippingProofImage: proofUrl ?? undefined,
       });
       if (res.error) {
-        setFormError(res.error);
+        setFormError(tr(res.error));
       } else {
         onSuccess();
       }

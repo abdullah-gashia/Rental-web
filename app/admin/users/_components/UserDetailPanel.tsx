@@ -71,7 +71,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
   const run = (fn: () => Promise<{ success: boolean; message?: string; error?: string }>) => {
     startTransition(async () => {
       const res = await fn();
-      showToast(res.success, res.success ? (res.message ?? "") : (res.error ?? ""));
+      showToast(res.success, res.success ? tr(tr(res.message ?? "")) : tr(tr(res.error ?? "")));
       if (res.success) await refresh();
     });
   };
@@ -96,7 +96,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
         verificationStatus: kyc as any,
         adminNote: note.trim() || undefined,
       });
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
       if (res.success) {
         // Refresh data
         const detail = await getUserDetail(userId);

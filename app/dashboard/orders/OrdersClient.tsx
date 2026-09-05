@@ -478,7 +478,7 @@ export default function OrdersClient({
       const res = await confirmReceipt(orderId);
       setActionId(null);
       if (res.error) {
-        alert(res.error);
+        alert(tr(res.error));
       } else {
         router.refresh();
         if (order) setReviewTarget(order);

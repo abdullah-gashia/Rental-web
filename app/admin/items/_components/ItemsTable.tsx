@@ -47,7 +47,7 @@ export default function ItemsTable({ rows }: Props) {
       }
       setDialog(null);
       setRejectReason("");
-      showToast(res.success, res.success ? res.message : res.error);
+      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
     });
   }
 
@@ -193,7 +193,7 @@ export default function ItemsTable({ rows }: Props) {
                         const res = item.isTrending && item.featuredTrendingId
                           ? await removeFromFeatured(item.featuredTrendingId)
                           : await addToFeatured({ itemId: item.id, section: "trending" });
-                        showToast(res.success, res.success ? res.message : res.error);
+                        showToast(res.success, res.success ? tr(res.message) : tr(res.error));
                       });
                     }}
                   />

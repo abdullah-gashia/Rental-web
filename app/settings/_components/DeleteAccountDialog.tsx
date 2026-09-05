@@ -26,14 +26,14 @@ export default function DeleteAccountDialog({ open, onClose, showToast }: Props)
     startTransition(async () => {
       const res = await requestAccountDeletion();
       if (res.success) {
-        showToast(true, res.message);
+        showToast(true, tr(res.message));
         // Sign out after short delay so user sees the message
         setTimeout(async () => {
           await logout();
           window.location.href = "/";
         }, 2000);
       } else {
-        showToast(false, res.error);
+        showToast(false, tr(res.error));
       }
     });
   };

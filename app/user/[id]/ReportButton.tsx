@@ -50,7 +50,7 @@ export default function ReportButton({
     startTransition(async () => {
       const res = await submitReport({ reportedId, category, reason });
       if (res.success) { setOpen(false); setDone(true); }
-      else setError(res.error);
+      else setError(tr(res.error));
     });
   }
 
