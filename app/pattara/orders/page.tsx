@@ -4,7 +4,10 @@ import { getOfficeOrders } from "@/lib/actions/borrow-orders";
 import { BORROW_STATUS_LABEL, BORROW_CATEGORY_LABEL } from "@/lib/borrow-config";
 
 export const dynamic  = "force-dynamic";
-export const metadata = { title: "รายการยืม | งานภัทร" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("รายการยืม | งานภัทร"),};
+}
 
 const PILL: Record<string, string> = {
   REQUESTED: "bw-pill-wait", RENEWAL_REQUESTED: "bw-pill-wait", RETURN_REQUESTED: "bw-pill-wait",
@@ -83,9 +86,7 @@ export default async function OfficeOrdersPage({
                           </div>
                           <div className="min-w-0">
                             <p className="font-medium truncate max-w-[200px]">{o.item.title}</p>
-                            <p className="text-[11px] text-[var(--bw-muted)]">
-                              {tr(BORROW_CATEGORY_LABEL[o.item.category] ?? o.item.category)} · {o.requestedDays} วัน
-                            </p>
+                            <p className="text-[11px] text-[var(--bw-muted)]">{tr("{0} · {1} วัน", [tr(BORROW_CATEGORY_LABEL[o.item.category] ?? o.item.category), o.requestedDays])}</p>
                           </div>
                         </div>
                       </td>

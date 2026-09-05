@@ -1,10 +1,14 @@
+import { getTr } from "@/lib/i18n/server";
 import { notFound } from "next/navigation";
 import { getBorrowOrder } from "@/lib/actions/borrow-orders";
 import BorrowOrderClient from "./BorrowOrderClient";
 import BorrowOrderShell from "./BorrowOrderShell";
 
 export const dynamic  = "force-dynamic";
-export const metadata = { title: "ติดตามการยืม | PSU Store" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("ติดตามการยืม | PSU Store"),};
+}
 
 export default async function BorrowOrderPage({
   params,

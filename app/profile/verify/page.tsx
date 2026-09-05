@@ -5,7 +5,10 @@ import { getMyVerificationStatus } from "./actions";
 import VerifyWizard from "./_components/VerifyWizard";
 import Link from "next/link";
 
-export const metadata = { title: "ยืนยันตัวตน | PSU Store" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("ยืนยันตัวตน | PSU Store"),};
+}
 
 // ─── Status Display Components ────────────────────────────────────────────────
 
@@ -89,13 +92,14 @@ function ApprovedCard({
   );
 }
 
-function RejectedBanner({
+async function RejectedBanner({
   reason,
   submittedAt,
 }: {
   reason: string | null;
   submittedAt: Date | string;
 }) {
+  const tr = await getTr();
   const date = new Date(submittedAt).toLocaleDateString("th-TH", {
     year: "numeric", month: "long", day: "numeric",
   });
@@ -107,9 +111,9 @@ function RejectedBanner({
         <div>
           <p className="font-semibold text-[var(--c-danger)]">คำขอถูกปฏิเสธ</p>
           {reason && (
-            <p className="text-sm text-[var(--c-danger)] mt-1">เหตุผล: {reason}</p>
+            <p className="text-sm text-[var(--c-danger)] mt-1">{tr("เหตุผล: {0}", [reason])}</p>
           )}
-          <p className="text-xs text-[var(--c-danger)] mt-1">ส่งคำขอเมื่อ {date} — คุณสามารถส่งคำขอใหม่ได้</p>
+          <p className="text-xs text-[var(--c-danger)] mt-1">{tr("ส่งคำขอเมื่อ {0} — คุณสามารถส่งคำขอใหม่ได้", [date])}</p>
         </div>
       </div>
     </div>

@@ -183,9 +183,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
           <div>
             <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-0.5">{tr("หลักฐาน (รูปภาพ)")}<span className="text-[var(--c-danger)]">*</span>
             </label>
-            <p className="text-xs text-[var(--c-muted)] mb-3">
-              อย่างน้อย 1 ภาพ · สูงสุด {MAX_IMAGES} ภาพ · รูปภาพทุกชนิด ทุกขนาด
-            </p>
+            <p className="text-xs text-[var(--c-muted)] mb-3">{tr("อย่างน้อย 1 ภาพ · สูงสุด {0} ภาพ · รูปภาพทุกชนิด ทุกขนาด", [MAX_IMAGES])}</p>
 
             <div className="flex flex-wrap gap-2">
               {/* Preview thumbnails */}

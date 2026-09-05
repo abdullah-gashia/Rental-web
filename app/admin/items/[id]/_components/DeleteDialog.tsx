@@ -46,9 +46,7 @@ export default function DeleteDialog({
 
       {/* Panel */}
       <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
-        <h3 className="text-base font-bold text-[var(--c-ink)] flex items-center gap-2">
-          🗑️ ลบสินค้า &ldquo;{itemTitle}&rdquo; ถาวร
-        </h3>
+        <h3 className="text-base font-bold text-[var(--c-ink)] flex items-center gap-2">{tr("🗑️ ลบสินค้า &ldquo;{0}&rdquo; ถาวร", [itemTitle])}</h3>
 
         {/* Danger warning */}
         <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-3 py-2.5 text-sm text-[var(--c-danger)] flex items-start gap-2">

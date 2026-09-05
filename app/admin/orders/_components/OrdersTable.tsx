@@ -272,7 +272,7 @@ export default function OrdersTable({ rows }: Props) {
                             {order.shippingAddress.district} {order.shippingAddress.province} {order.shippingAddress.postalCode}
                           </p>
                           {order.shippingAddress.note && (
-                            <p className="text-xs text-[var(--c-muted)] mt-1">หมายเหตุ: {order.shippingAddress.note}</p>
+                            <p className="text-xs text-[var(--c-muted)] mt-1">{tr("หมายเหตุ: {0}", [order.shippingAddress.note])}</p>
                           )}
                         </div>
                       )}

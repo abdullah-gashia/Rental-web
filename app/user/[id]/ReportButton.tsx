@@ -71,7 +71,7 @@ export default function ReportButton({
 
           <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
             <div>
-              <h3 className="text-base font-bold text-[var(--c-ink)]">รายงาน {reportedName}</h3>
+              <h3 className="text-base font-bold text-[var(--c-ink)]">{tr("รายงาน {0}", [reportedName])}</h3>
               <p className="text-xs text-[var(--c-muted)] mt-1">{tr("เฉพาะผู้ดูแลระบบเท่านั้นที่เห็นรายงานนี้ ผู้ถูกรายงานจะไม่รู้ว่าใครเป็นคนรายงาน")}</p>
             </div>
 
@@ -96,7 +96,7 @@ export default function ReportButton({
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[var(--c-ink-1)] mb-1.5">{tr("รายละเอียด")}<span className="text-[var(--c-faint)]">({reason.trim().length}/10 ขั้นต่ำ)</span>
+              <label className="block text-xs font-medium text-[var(--c-ink-1)] mb-1.5">{tr("รายละเอียด")}<span className="text-[var(--c-faint)]">{tr("({0}/10 ขั้นต่ำ)", [reason.trim().length])}</span>
               </label>
               <textarea
                 value={reason}

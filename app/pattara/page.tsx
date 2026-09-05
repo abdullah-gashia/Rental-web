@@ -4,7 +4,10 @@ import { getFundSummary } from "@/lib/actions/fund";
 import { BORROW_STATUS_LABEL } from "@/lib/borrow-config";
 
 export const dynamic  = "force-dynamic";
-export const metadata = { title: "ภาพรวม | งานภัทร" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("ภาพรวม | งานภัทร"),};
+}
 
 const PILL: Record<string, string> = {
   REQUESTED: "bw-pill-wait", RENEWAL_REQUESTED: "bw-pill-wait", RETURN_REQUESTED: "bw-pill-wait",
@@ -91,9 +94,7 @@ export default async function PattaraOverview() {
           <h2 className="text-[15px] font-semibold text-[var(--psu-navy)]">
             ต้องดำเนินการ
             {needsAction.length > 0 && (
-              <span className="ml-2 text-[12px] font-normal text-[var(--bw-muted)]">
-                {needsAction.length} รายการ
-              </span>
+              <span className="ml-2 text-[12px] font-normal text-[var(--bw-muted)]">{tr("{0} รายการ", [needsAction.length])}</span>
             )}
           </h2>
           <a href="/pattara/orders" className="text-[12px] font-semibold text-[var(--psu-blue)] hover:underline">{tr("ดูทั้งหมด →")}</a>

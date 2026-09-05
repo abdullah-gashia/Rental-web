@@ -164,9 +164,7 @@ export default function OrderTrackingClient({
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="text-lg font-extrabold text-[var(--c-ink)]">{order.item.title}</h1>
-            <p className="text-sm text-[var(--c-muted)] mt-0.5">
-              คำสั่งซื้อ #{order.id.slice(-8).toUpperCase()}
-            </p>
+            <p className="text-sm text-[var(--c-muted)] mt-0.5">{tr("คำสั่งซื้อ #{0}", [order.id.slice(-8).toUpperCase()])}</p>
             <div className={`inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full text-xs font-bold border ${st.color}`}>
               <span>{st.emoji}</span>
               <span>{tr(st.label)}</span>

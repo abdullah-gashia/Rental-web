@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -5,7 +6,10 @@ import type { EscrowStatus, ItemStatus } from "@prisma/client";
 import { getI18n } from "@/lib/i18n/server";
 
 export const dynamic  = "force-dynamic";
-export const metadata = { title: "ภาพรวม | บัญชีของฉัน" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("ภาพรวม | บัญชีของฉัน"),};
+}
 
 /**
  * The seller's landing page.

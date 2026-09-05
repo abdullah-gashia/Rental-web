@@ -91,9 +91,7 @@ export default function SignatureCapture({ onComplete, onCancel, agreementText, 
           ในฐานะ <span className="text-[var(--c-accent)]">{signerRole}</span>
         </p>
         <pre className="whitespace-pre-wrap font-sans text-xs text-[var(--c-ink-2)]">{agreementText}</pre>
-        <p className="text-[11px] text-[var(--c-faint)] mt-3">
-          วันที่: {dateStr} เวลา: {timeStr} น.
-        </p>
+        <p className="text-[11px] text-[var(--c-faint)] mt-3">{tr("วันที่: {0} เวลา: {1} น.", [dateStr, timeStr])}</p>
       </div>
 
       {/* Canvas */}

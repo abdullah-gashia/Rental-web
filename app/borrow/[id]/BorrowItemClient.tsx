@@ -190,9 +190,7 @@ export default function BorrowItemClient({ item }: { item: any }) {
                           onChange={(e) => setDays(Number(e.target.value))}
                           className="flex-1 accent-[var(--psu-blue)]"
                         />
-                        <span className="bw-num text-[15px] font-semibold w-16 text-right">
-                          {days} วัน
-                        </span>
+                        <span className="bw-num text-[15px] font-semibold w-16 text-right">{tr("{0} วัน", [days])}</span>
                       </div>
                       <p className="text-[11.5px] text-[var(--bw-muted)] mt-2">
                         ครบกำหนดคืน{" "}
@@ -225,9 +223,7 @@ export default function BorrowItemClient({ item }: { item: any }) {
                       {pending ? "กำลังส่ง…" : tr("ขอยืมชิ้นนี้")}
                     </button>
 
-                    <p className="text-[11.5px] text-[var(--bw-muted)] text-center leading-[1.8]">
-                      ยืมพร้อมกันได้สูงสุด {MAX_CONCURRENT_BORROWS} ชิ้น
-                    </p>
+                    <p className="text-[11.5px] text-[var(--bw-muted)] text-center leading-[1.8]">{tr("ยืมพร้อมกันได้สูงสุด {0} ชิ้น", [MAX_CONCURRENT_BORROWS])}</p>
                   </div>
                 )}
               </div>

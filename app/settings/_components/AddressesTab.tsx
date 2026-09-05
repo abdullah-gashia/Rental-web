@@ -134,9 +134,7 @@ export default function AddressesTab({ addresses, showToast }: Props) {
         <h2 className="text-lg font-bold text-[var(--c-ink)] flex items-center gap-2">
           <span>📍</span> ที่อยู่จัดส่ง
         </h2>
-        <span className="text-xs text-[var(--c-muted)]">
-          {list.length}/5 ที่อยู่
-        </span>
+        <span className="text-xs text-[var(--c-muted)]">{tr("{0}/5 ที่อยู่", [list.length])}</span>
       </div>
 
       {/* Address cards */}
@@ -174,9 +172,7 @@ export default function AddressesTab({ addresses, showToast }: Props) {
                   {addr.addressLine1}
                   {addr.addressLine2 ? `, ${addr.addressLine2}` : ""}
                 </p>
-                <p className="text-xs text-[var(--c-ink-3)]">
-                  อ.{addr.district} จ.{addr.province} {addr.postalCode}
-                </p>
+                <p className="text-xs text-[var(--c-ink-3)]">{tr("อ.{0} จ.{1} {2}", [addr.district, addr.province, addr.postalCode])}</p>
                 {addr.note && (
                   <p className="text-[11px] text-[var(--c-muted)] mt-1">📝 {addr.note}</p>
                 )}

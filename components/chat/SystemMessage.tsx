@@ -135,7 +135,7 @@ function ShippingCard({ data }: { data: ShippingPayload }) {
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-1 border-t border-blue-100">
-          <span className="text-[10px] text-[var(--c-muted)]">จัดส่งเมื่อ {shippedDate}</span>
+          <span className="text-[10px] text-[var(--c-muted)]">{tr("จัดส่งเมื่อ {0}", [shippedDate])}</span>
           <span className="text-[10px] bg-[var(--c-accent-soft)] text-[var(--c-accent-str)] font-semibold px-2 py-0.5 rounded-full">{tr("🔒 ข้อมูลอย่างเป็นทางการ")}</span>
         </div>
       </div>
@@ -202,7 +202,7 @@ function ReceiptCard({ data }: { data: ReceiptPayload }) {
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-1 border-t border-emerald-100">
-          <span className="text-[10px] text-[var(--c-muted)]">เสร็จสิ้น {completedDate}</span>
+          <span className="text-[10px] text-[var(--c-muted)]">{tr("เสร็จสิ้น {0}", [completedDate])}</span>
           <span className="text-[10px] bg-emerald-100 text-[var(--c-ok)] font-semibold px-2 py-0.5 rounded-full">{tr("🔒 ข้อมูลอย่างเป็นทางการ")}</span>
         </div>
       </div>

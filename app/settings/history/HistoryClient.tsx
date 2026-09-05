@@ -161,9 +161,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
               onClick={() => setShowClearConfirm(true)}
               disabled={pending}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border border-[var(--c-danger-line)] text-[var(--c-danger)] bg-[var(--c-surface)] hover:bg-[var(--c-danger-soft)] transition disabled:opacity-50"
-            >
-              🗑 ล้างประวัติทั้งหมด ({history.total})
-            </button>
+            >{tr("🗑 ล้างประวัติทั้งหมด ({0})", [history.total])}</button>
           )}
         </div>
 
@@ -249,9 +247,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
         {/* Pagination */}
         {history.totalPages > 1 && (
           <div className="flex items-center justify-between">
-            <p className="text-sm text-[var(--c-ink-3)]">
-              หน้า {history.page} / {history.totalPages}
-            </p>
+            <p className="text-sm text-[var(--c-ink-3)]">{tr("หน้า {0} / {1}", [history.page, history.totalPages])}</p>
             <div className="flex gap-2">
               <button
                 onClick={() => refreshPage(history.page - 1)}

@@ -183,9 +183,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
       {st === "OVERDUE" && (
         <div className="bw-panel !border-[var(--c-danger-line)] !bg-[var(--c-danger-soft)]">
           <p className="text-[13px] text-[var(--c-danger)] leading-[1.9]">
-            <strong>{tr("เลยกำหนดคืนแล้ว")}</strong> — ไม่มีค่าปรับเป็นเงิน แต่ถ้าเกิน {OVERDUE_GRACE_DAYS} วัน
-            สิทธิ์การยืมจะถูกระงับจนกว่าจะคืนของ กรุณาติดต่องานภัทรเพื่อนัดคืน
-          </p>
+            <strong>{tr("เลยกำหนดคืนแล้ว")}</strong>{tr("— ไม่มีค่าปรับเป็นเงิน แต่ถ้าเกิน {0} วัน สิทธิ์การยืมจะถูกระงับจนกว่าจะคืนของ กรุณาติดต่องานภัทรเพื่อนัดคืน", [OVERDUE_GRACE_DAYS])}</p>
         </div>
       )}
 
@@ -500,7 +498,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
 
       {/* ── History ──────────────────────────────────────────────────── */}
       <div className="bw-panel">
-        <h2 className="bw-h">ประวัติสถานะ ({order.statusHistory.length})</h2>
+        <h2 className="bw-h">{tr("ประวัติสถานะ ({0})", [order.statusHistory.length])}</h2>
         {order.statusHistory.length === 0 ? (
           <p className="text-[12.5px] text-[var(--bw-muted)]">{tr("ยังไม่มีประวัติ")}</p>
         ) : (

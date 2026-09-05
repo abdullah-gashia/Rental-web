@@ -115,7 +115,7 @@ export default function PaymentStep({
             sufficient ? (
               <div className="flex items-center gap-2 text-xs text-[var(--c-ok)] font-semibold">
                 <span>✅</span>
-                <span>ยอดเงินเพียงพอ — คงเหลือหลังชำระ ฿{(walletBalance - breakdown.totalAmount).toLocaleString()}</span>
+                <span>{tr("ยอดเงินเพียงพอ — คงเหลือหลังชำระ ฿{0}", [(walletBalance - breakdown.totalAmount).toLocaleString()])}</span>
               </div>
             ) : (
               <div className="rounded-lg bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] p-3 space-y-2">

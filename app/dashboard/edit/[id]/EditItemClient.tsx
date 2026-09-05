@@ -424,9 +424,7 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
             onChange={handleFileChange}
           />
 
-          <p className="text-[11px] text-[var(--c-faint)] mt-2">
-            รูปภาพทุกชนิด ทุกขนาด · ระบบย่อขนาดให้อัตโนมัติ · สูงสุด {MAX_IMAGES} รูป · รูปแรกจะเป็นรูปหลัก
-          </p>
+          <p className="text-[11px] text-[var(--c-faint)] mt-2">{tr("รูปภาพทุกชนิด ทุกขนาด · ระบบย่อขนาดให้อัตโนมัติ · สูงสุด {0} รูป · รูปแรกจะเป็นรูปหลัก", [MAX_IMAGES])}</p>
         </div>
 
         {/* Divider */}

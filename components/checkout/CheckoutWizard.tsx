@@ -198,7 +198,7 @@ export default function CheckoutWizard({
           {/* Header */}
           <div className="px-6 pt-5 pb-2 pr-14">
             <h2 className="text-lg font-extrabold text-[var(--c-ink)] tracking-tight">{tr("สั่งซื้อสินค้า")}</h2>
-            <p className="text-xs text-[var(--c-muted)] mt-0.5">ขั้นตอน {state.currentStep}/3</p>
+            <p className="text-xs text-[var(--c-muted)] mt-0.5">{tr("ขั้นตอน {0}/3", [state.currentStep])}</p>
           </div>
 
           {/* ── Content — natural height, no overflow scroll ─────────────────── */}

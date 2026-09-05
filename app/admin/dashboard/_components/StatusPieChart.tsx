@@ -83,7 +83,7 @@ export default function StatusPieChart({ data }: StatusPieChartProps) {
     >
       <h3 className="text-sm font-semibold text-[var(--c-ink-1)] mb-4">
         สัดส่วนสถานะสินค้า{" "}
-        <span className="text-xs font-normal text-[var(--c-muted)]">({total} รายการ)</span>
+        <span className="text-xs font-normal text-[var(--c-muted)]">{tr("({0} รายการ)", [total])}</span>
       </h3>
 
       <div style={{ minHeight: 280 }}>

@@ -1,7 +1,10 @@
 import { getTr } from "@/lib/i18n/server";
 import { auth, signOut } from "@/lib/auth";
 
-export const metadata = { title: "บัญชีถูกระงับ | PSU Store" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("บัญชีถูกระงับ | PSU Store"),};
+}
 
 export default async function BannedPage() {
   const tr = await getTr();

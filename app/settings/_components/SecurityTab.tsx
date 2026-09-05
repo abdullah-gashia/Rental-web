@@ -175,9 +175,7 @@ export default function SecurityTab({ userData, showToast }: Props) {
               <li>{tr("ไม่สามารถกู้คืนได้")}</li>
             </ul>
             {userData.escrowBalance > 0 && (
-              <p className="text-xs text-[var(--c-warn)] mt-2 flex items-center gap-1">
-                ⚠️ คุณมียอด Escrow ค้าง ฿{userData.escrowBalance.toFixed(2)} — ต้องรอให้เสร็จสิ้นก่อนลบบัญชี
-              </p>
+              <p className="text-xs text-[var(--c-warn)] mt-2 flex items-center gap-1">{tr("⚠️ คุณมียอด Escrow ค้าง ฿{0} — ต้องรอให้เสร็จสิ้นก่อนลบบัญชี", [userData.escrowBalance.toFixed(2)])}</p>
             )}
           </div>
 

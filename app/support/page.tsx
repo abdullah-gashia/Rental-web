@@ -2,10 +2,12 @@
 import type { Metadata } from "next";
 import { getTr } from "@/lib/i18n/server";
 
-export const metadata: Metadata = {
-  title: "ศูนย์ช่วยเหลือ | PSU.STORE",
-  description: "คำถามที่พบบ่อยและข้อมูลติดต่อสำหรับแพลตฟอร์ม PSU.STORE",
-};
+export async function generateMetadata() {
+  const tr = await getTr();
+  return {
+  title: tr("ศูนย์ช่วยเหลือ | PSU.STORE"),
+  description: tr("คำถามที่พบบ่อยและข้อมูลติดต่อสำหรับแพลตฟอร์ม PSU.STORE"),};
+}
 
 // ─── FAQ Data ─────────────────────────────────────────────────────────────────
 
@@ -123,9 +125,7 @@ export default async function SupportPage() {
               { step: "4", icon: "💸", label: tr("โอนเงินให้ผู้ขาย"), sub: tr("Escrow ปลดล็อคเงินทันที") },
             ].map(({ step, icon, label, sub }) => (
               <div key={step} className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-2xl p-4 text-center space-y-2 relative">
-                <div className="absolute -top-2.5 left-4 bg-[var(--c-accent)] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                  ขั้นตอนที่ {step}
-                </div>
+                <div className="absolute -top-2.5 left-4 bg-[var(--c-accent)] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{tr("ขั้นตอนที่ {0}", [step])}</div>
                 <div className="text-3xl pt-2">{icon}</div>
                 <p className="text-sm font-bold text-[var(--c-ink)]">{label}</p>
                 <p className="text-xs text-[var(--c-muted)]">{sub}</p>

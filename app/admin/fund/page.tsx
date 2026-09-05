@@ -7,7 +7,10 @@ import { getFundSummary, getFundEntries } from "@/lib/actions/fund";
 import MoneyValue from "../dashboard/_components/MoneyValue";
 
 export const dynamic  = "force-dynamic";
-export const metadata = { title: "กองทุนงานภัทร | Admin" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("กองทุนงานภัทร | Admin"),};
+}
 
 const SOURCE_LABEL: Record<string, string> = {
   PURCHASE: "ซื้ออุปกรณ์", MAINTENANCE: "ซ่อมบำรุง",
@@ -65,16 +68,13 @@ export default async function AdminFundPage() {
             </div>
           ))}
         </div>
-        <p className="text-[11.5px] text-[var(--c-muted)] mt-4 leading-relaxed">
-          รายรับคำนวณสดจากคำสั่งซื้อและการเช่าที่จบสมบูรณ์แล้ว จึงตรงกับความจริงเสมอ
-          และไม่มีการบันทึกซ้ำซ้อน · มีบัญชีเจ้าหน้าที่งานภัทร {officeCount} บัญชี
-        </p>
+        <p className="text-[11.5px] text-[var(--c-muted)] mt-4 leading-relaxed">{tr("รายรับคำนวณสดจากคำสั่งซื้อและการเช่าที่จบสมบูรณ์แล้ว จึงตรงกับความจริงเสมอ และไม่มีการบันทึกซ้ำซ้อน · มีบัญชีเจ้าหน้าที่งานภัทร {0} บัญชี", [officeCount])}</p>
       </div>
 
       {/* Ledger */}
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
         <div className="flex items-center justify-between gap-3 mb-4">
-          <h2 className="text-sm font-bold text-[var(--c-ink-1)]">รายการใช้จ่าย ({entries.length})</h2>
+          <h2 className="text-sm font-bold text-[var(--c-ink-1)]">{tr("รายการใช้จ่าย ({0})", [entries.length])}</h2>
           <Link href="/pattara/fund" className="text-xs font-semibold text-[var(--c-accent)] hover:underline">{tr("เปิดหน้าจัดการของงานภัทร →")}</Link>
         </div>
 

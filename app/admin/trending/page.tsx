@@ -5,7 +5,10 @@ import { getAdminFeaturedItems } from "@/lib/actions/featured";
 import TrendingManager from "./_components/TrendingManager";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "จัดการสินค้ามาแรง | Admin" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("จัดการสินค้ามาแรง | Admin"),};
+}
 
 export default async function AdminTrendingPage() {
   const tr = await getTr();

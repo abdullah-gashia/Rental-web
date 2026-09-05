@@ -57,7 +57,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title>ใบเสร็จ #${shortId}</title>
+  <title>${tr("ใบเสร็จ #{0}", [shortId])}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #fff; color: #0f1e35; padding: 40px; font-size: 14px; }
@@ -92,7 +92,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
     <div class="logo">PSU<span>.</span>STORE</div>
     <div class="badge">${tr("✅ ชำระเงินแล้ว (PAID via Escrow)")}</div>
     <div class="title">${tr("ใบเสร็จรับเงิน")}</div>
-    <div class="ref">หมายเลขอ้างอิง: #${shortId}</div>
+    <div class="ref">${tr("หมายเลขอ้างอิง: #{0}", [shortId])}</div>
   </div>
 
   <div class="section">

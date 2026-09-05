@@ -42,7 +42,7 @@ export default function ReviewFormClient({
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <p className="text-sm font-bold text-[var(--c-ink)]">ให้คะแนน {sellerName}</p>
+        <p className="text-sm font-bold text-[var(--c-ink)]">{tr("ให้คะแนน {0}", [sellerName])}</p>
         <p className="text-xs text-[var(--c-muted)] mt-0.5">{tr("รีวิวของคุณจะช่วยให้ชุมชนปลอดภัยขึ้น")}</p>
       </div>
 

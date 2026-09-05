@@ -26,7 +26,7 @@ export default function PriceBreakdown({ pricing, lateFeePerDay, compact }: Prop
   return (
     <div className="bg-[var(--c-subtle)] rounded-xl p-4 space-y-2 text-sm border border-[var(--c-line-soft)]">
       <div className="flex justify-between text-[var(--c-ink-2)]">
-        <span>ค่าเช่า (฿{rentalFee / rentalDays} × {rentalDays} วัน)</span>
+        <span>{tr("ค่าเช่า (฿{0} × {1} วัน)", [rentalFee / rentalDays, rentalDays])}</span>
         <span>฿{rentalFee.toLocaleString()}</span>
       </div>
       <div className="flex justify-between text-[var(--c-ink-2)]">
@@ -46,12 +46,12 @@ export default function PriceBreakdown({ pricing, lateFeePerDay, compact }: Prop
 
       {/* Info footnotes */}
       <div className="pt-1 space-y-1 text-[11px] text-[var(--c-faint)]">
-        <p>• ค่าเช่า ฿{rentalFee} + ค่าธรรมเนียม ฿{platformFee} → จ่ายให้เจ้าของเมื่อคืนของ</p>
+        <p>{tr("• ค่าเช่า ฿{0} + ค่าธรรมเนียม ฿{1} → จ่ายให้เจ้าของเมื่อคืนของ", [rentalFee, platformFee])}</p>
         {securityDeposit > 0 && (
-          <p>• มัดจำ ฿{securityDeposit.toLocaleString()} → คืนให้คุณเมื่อของสภาพเดิม</p>
+          <p>{tr("• มัดจำ ฿{0} → คืนให้คุณเมื่อของสภาพเดิม", [securityDeposit.toLocaleString()])}</p>
         )}
         {(lateFeePerDay ?? 0) > 0 ? (
-          <p className="text-[var(--c-warn)]">• ค่าปรับหากคืนช้า: ฿{lateFeePerDay}/วัน</p>
+          <p className="text-[var(--c-warn)]">{tr("• ค่าปรับหากคืนช้า: ฿{0}/วัน", [lateFeePerDay])}</p>
         ) : (
           <p>{tr("• ไม่มีค่าปรับคืนช้า")}</p>
         )}

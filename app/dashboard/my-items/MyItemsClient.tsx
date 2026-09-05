@@ -233,7 +233,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
       {/* Deletion-pending warning strip */}
       {deletingCount > 0 && (
         <div className="ui-note ui-note-warn mb-5 flex items-center justify-between gap-3 flex-wrap">
-          <span>{tr("คุณมี")}<strong>{deletingCount} ประกาศ</strong>{tr("ที่อยู่ในช่วงรอลบ ยกเลิกได้ก่อนหมดเวลา")}</span>
+          <span>{tr("คุณมี")}<strong>{tr("{0} ประกาศ", [deletingCount])}</strong>{tr("ที่อยู่ในช่วงรอลบ ยกเลิกได้ก่อนหมดเวลา")}</span>
           <button onClick={() => setFilter("DELETING")} className="ui-btn ui-btn-ghost ui-btn-sm">{tr("ดูรายการ")}</button>
         </div>
       )}
@@ -272,7 +272,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
             </>
           ) : (
             <>
-              <h3>ไม่มีประกาศในหมวด &ldquo;{FILTERS.find((f) => f.key === filter)?.label}&rdquo;</h3>
+              <h3>{tr("ไม่มีประกาศในหมวด &ldquo;{0}&rdquo;", [FILTERS.find((f) => f.key === filter)?.label])}</h3>
               <p>{tr("ลองเลือกหมวดอื่น หรือดูประกาศทั้งหมดของคุณ")}</p>
               <button onClick={() => setFilter("ALL")} className="ui-btn ui-btn-ghost mt-4">{tr("ดูทั้งหมด")}</button>
             </>

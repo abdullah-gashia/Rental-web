@@ -328,7 +328,7 @@ export default function OfficeItemsClient({
               )}
 
               <div>
-                <label className="bw-label block mb-1.5">รูปภาพ ({form.images.length}/8)</label>
+                <label className="bw-label block mb-1.5">{tr("รูปภาพ ({0}/8)", [form.images.length])}</label>
                 <div className="flex gap-2 flex-wrap">
                   {form.images.map((u) => (
                     <div key={u} className="bw-thumb w-20 h-20 relative group">

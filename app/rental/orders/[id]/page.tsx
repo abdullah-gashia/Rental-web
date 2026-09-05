@@ -127,18 +127,14 @@ export default async function RentalOrderDetailPage({ params }: Props) {
                    daysLeft === 1 ? tr("⏰ พรุ่งนี้ครบกำหนดคืน!") :
                    tr("📅 กำหนดคืนอีก {0} วัน", [daysLeft])}
                 </p>
-                <p className="text-xs mt-0.5 opacity-80">
-                  วันคืน: {fmtDate(order.rentalEndDate)}
-                </p>
+                <p className="text-xs mt-0.5 opacity-80">{tr("วันคืน: {0}", [fmtDate(order.rentalEndDate)])}</p>
               </div>
             )}
 
             {order.status === "OVERDUE" && (
               <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-2xl px-5 py-4">
                 <p className="text-[var(--c-danger)] font-semibold text-sm">{tr("⚠️ เกินกำหนดคืนแล้ว!")}</p>
-                <p className="text-[var(--c-danger)] text-xs mt-1">
-                  กำหนดคืน: {fmtDate(order.rentalEndDate)} — ค่าปรับกำลังถูกคิด
-                </p>
+                <p className="text-[var(--c-danger)] text-xs mt-1">{tr("กำหนดคืน: {0} — ค่าปรับกำลังถูกคิด", [fmtDate(order.rentalEndDate)])}</p>
               </div>
             )}
 
@@ -233,7 +229,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
                   ))}
                 </div>
                 {order.returnConditionNote && (
-                  <p className="text-xs text-[var(--c-ink-2)]">หมายเหตุ: {order.returnConditionNote}</p>
+                  <p className="text-xs text-[var(--c-ink-2)]">{tr("หมายเหตุ: {0}", [order.returnConditionNote])}</p>
                 )}
               </div>
             )}

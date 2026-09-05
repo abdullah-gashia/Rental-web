@@ -110,7 +110,7 @@ export default function ReputationPanel({ reputation }: { reputation: Reputation
                 <span className="text-sm text-[var(--c-muted)]">/ 5</span>
               </div>
               <Stars rating={Math.round(avgRating)} className="text-lg mt-0.5" />
-              <p className="text-xs text-[var(--c-muted)] mt-1">จาก {reviewCount} รีวิว</p>
+              <p className="text-xs text-[var(--c-muted)] mt-1">{tr("จาก {0} รีวิว", [reviewCount])}</p>
             </>
           ) : (
             <>
@@ -128,7 +128,7 @@ export default function ReputationPanel({ reputation }: { reputation: Reputation
                 const pct = reviewCount > 0 ? (b.count / reviewCount) * 100 : 0;
                 return (
                   <div key={b.stars} className="flex items-center gap-2">
-                    <span className="text-[11px] text-[var(--c-muted)] w-8 flex-shrink-0">{b.stars} ดาว</span>
+                    <span className="text-[11px] text-[var(--c-muted)] w-8 flex-shrink-0">{tr("{0} ดาว", [b.stars])}</span>
                     <div className="flex-1 h-2 rounded-full bg-[var(--c-line-soft)] overflow-hidden">
                       <div className="h-full bg-amber-400 rounded-full" style={{ width: `${pct}%` }} />
                     </div>

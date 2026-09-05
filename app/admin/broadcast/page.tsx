@@ -6,7 +6,10 @@ import { getAudienceCounts } from "./actions";
 import BroadcastForm       from "./BroadcastForm";
 
 export const dynamic  = "force-dynamic";
-export const metadata = { title: "ส่งอีเมลถึงทุกคน | Admin" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("ส่งอีเมลถึงทุกคน | Admin"),};
+}
 
 export default async function AdminBroadcastPage() {
   const tr = await getTr();

@@ -144,7 +144,7 @@ export default function RentalHandshake({
           <span>คุณยืนยันแล้ว{otherConfirmed ? "" : tr(" — รอ{0}ยืนยัน", [otherLabel])}</span>
         </div>
         {!otherConfirmed && (
-          <p className="text-xs text-[var(--c-faint)] mt-2">เมื่อ{otherLabel}ยืนยันด้วย สถานะจะเปลี่ยนอัตโนมัติ</p>
+          <p className="text-xs text-[var(--c-faint)] mt-2">{tr("เมื่อ{0}ยืนยันด้วย สถานะจะเปลี่ยนอัตโนมัติ", [otherLabel])}</p>
         )}
       </div>
     );

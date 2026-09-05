@@ -130,7 +130,7 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
         <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-[var(--c-line-soft)] flex-shrink-0">
           <div>
             <h2 className="text-sm font-bold text-[var(--c-ink)]">{tr("🔑 ทำรายการเช่าสินค้า")}</h2>
-            <p className="text-[11px] text-[var(--c-faint)]">ขั้นตอน {state.step}/4</p>
+            <p className="text-[11px] text-[var(--c-faint)]">{tr("ขั้นตอน {0}/4", [state.step])}</p>
           </div>
           <button
             onClick={() => !isPending && onClose()}

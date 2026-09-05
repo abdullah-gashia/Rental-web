@@ -6,7 +6,10 @@ import { getVerificationRequests } from "./actions";
 import VerificationTable from "./_components/VerificationTable";
 import Link from "next/link";
 
-export const metadata = { title: "ยืนยันตัวตน | Admin" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("ยืนยันตัวตน | Admin"),};
+}
 export const dynamic = "force-dynamic";
 
 type Filter = "PENDING" | "APPROVED" | "REJECTED" | "ALL";

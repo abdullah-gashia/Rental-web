@@ -176,9 +176,7 @@ export default function ProfileTab({ userData, showToast }: ProfileTabProps) {
             className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-surface)] text-sm text-[var(--c-ink)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
             placeholder={tr("เล่าเกี่ยวกับตัวคุณ...")}
           />
-          <p className="text-[11px] text-[var(--c-muted)] text-right">
-            {bio.length}/200 ตัวอักษร
-          </p>
+          <p className="text-[11px] text-[var(--c-muted)] text-right">{tr("{0}/200 ตัวอักษร", [bio.length])}</p>
         </div>
       </div>
 

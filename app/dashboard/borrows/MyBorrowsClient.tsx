@@ -68,9 +68,7 @@ export default function MyBorrowsClient({
             <div>
               <p className="bw-label mb-1.5">งานภัทร</p>
               <h1 className="text-[24px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] leading-tight">{tr("ของที่ยืม")}</h1>
-              <p className="text-[13px] text-[var(--bw-muted)] mt-1.5">
-                ยืมอยู่ {holding} จาก {MAX_CONCURRENT_BORROWS} ชิ้น
-              </p>
+              <p className="text-[13px] text-[var(--bw-muted)] mt-1.5">{tr("ยืมอยู่ {0} จาก {1} ชิ้น", [holding, MAX_CONCURRENT_BORROWS])}</p>
             </div>
             <a href="/borrow" className="bw-btn bw-btn-primary">{tr("ยืมของเพิ่ม")}</a>
           </header>

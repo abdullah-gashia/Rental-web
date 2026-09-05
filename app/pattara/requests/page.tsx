@@ -1,9 +1,13 @@
+import { getTr } from "@/lib/i18n/server";
 import { getOfficeOrders } from "@/lib/actions/borrow-orders";
 import { prisma } from "@/lib/prisma";
 import RequestQueueClient from "./RequestQueueClient";
 
 export const dynamic  = "force-dynamic";
-export const metadata = { title: "คำขอยืม | งานภัทร" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("คำขอยืม | งานภัทร"),};
+}
 
 export default async function RequestsPage() {
   const orders = await getOfficeOrders("waiting");

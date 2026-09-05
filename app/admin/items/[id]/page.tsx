@@ -45,7 +45,7 @@ export default async function AdminItemDetailPage({ params }: Props) {
           <div>
             <p className="font-semibold text-sm">{tr("สินค้านี้ถูกลบแล้ว")}</p>
             {item.rejectReason && (
-              <p className="text-xs mt-0.5">เหตุผล: {item.rejectReason}</p>
+              <p className="text-xs mt-0.5">{tr("เหตุผล: {0}", [item.rejectReason])}</p>
             )}
           </div>
         </div>

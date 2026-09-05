@@ -78,13 +78,9 @@ export default function RequestQueueClient({
                     <div className="flex items-start justify-between gap-3 flex-wrap">
                       <div className="min-w-0">
                         <p className="text-[14.5px] font-semibold truncate">{o.item.title}</p>
-                        <p className="text-[11.5px] text-[var(--bw-muted)] mt-0.5">
-                          {tr(BORROW_CATEGORY_LABEL[o.item.category] ?? o.item.category)} · ขอยืม {o.requestedDays} วัน
-                        </p>
+                        <p className="text-[11.5px] text-[var(--bw-muted)] mt-0.5">{tr("{0} · ขอยืม {1} วัน", [tr(BORROW_CATEGORY_LABEL[o.item.category] ?? o.item.category), o.requestedDays])}</p>
                       </div>
-                      <span className={`bw-pill ${waited >= 5 ? "bw-pill-late" : "bw-pill-wait"}`}>
-                        รอมา {waited} วัน
-                      </span>
+                      <span className={`bw-pill ${waited >= 5 ? "bw-pill-late" : "bw-pill-wait"}`}>{tr("รอมา {0} วัน", [waited])}</span>
                     </div>
 
                     {/* Who is asking, and how they have behaved before */}
@@ -95,10 +91,10 @@ export default function RequestQueueClient({
                           {o.borrower.name ?? o.borrower.email}
                         </a>
                       </span>
-                      <span className="text-[var(--bw-muted)]">คะแนน {o.borrower.trustScore}</span>
-                      <span className="text-[var(--bw-muted)]">เคยยืมสำเร็จ {h.completed} ครั้ง</span>
-                      {h.late > 0 && <span className="text-[var(--c-danger)] font-medium">เคยคืนช้า {h.late} ครั้ง</span>}
-                      {h.open > 1 && <span className="text-[var(--bw-muted)]">กำลังยืมอยู่ {h.open - 1} ชิ้น</span>}
+                      <span className="text-[var(--bw-muted)]">{tr("คะแนน {0}", [o.borrower.trustScore])}</span>
+                      <span className="text-[var(--bw-muted)]">{tr("เคยยืมสำเร็จ {0} ครั้ง", [h.completed])}</span>
+                      {h.late > 0 && <span className="text-[var(--c-danger)] font-medium">{tr("เคยคืนช้า {0} ครั้ง", [h.late])}</span>}
+                      {h.open > 1 && <span className="text-[var(--bw-muted)]">{tr("กำลังยืมอยู่ {0} ชิ้น", [h.open - 1])}</span>}
                     </div>
 
                     {o.purposeNote && (

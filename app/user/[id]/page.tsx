@@ -108,9 +108,7 @@ export default async function UserProfilePage({ params }: PageProps) {
                     <span className="text-sm font-semibold text-[var(--c-ink-2)]">
                       {avgRating.toFixed(1)}
                     </span>
-                    <span className="text-sm text-[var(--c-muted)]">
-                      ({reviewCount} รีวิว)
-                    </span>
+                    <span className="text-sm text-[var(--c-muted)]">{tr("({0} รีวิว)", [reviewCount])}</span>
                   </>
                 ) : (
                   <span className="text-sm text-[var(--c-muted)]">{tr("ยังไม่มีรีวิว")}</span>
@@ -152,7 +150,7 @@ export default async function UserProfilePage({ params }: PageProps) {
         {/* ── What this person has for sale ───────────────────────────────── */}
         {publicItems.length > 0 && (
           <section className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 sm:p-6 mb-6">
-            <h2 className="text-base font-bold text-[var(--c-ink)] mb-4">{tr("สินค้าของผู้ใช้รายนี้")}<span className="ml-2 text-xs font-normal text-[var(--c-muted)]">{publicItems.length} รายการ</span>
+            <h2 className="text-base font-bold text-[var(--c-ink)] mb-4">{tr("สินค้าของผู้ใช้รายนี้")}<span className="ml-2 text-xs font-normal text-[var(--c-muted)]">{tr("{0} รายการ", [publicItems.length])}</span>
             </h2>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">

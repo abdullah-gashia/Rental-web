@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { redirect } from "next/navigation";
 import AppearanceMenu from "@/components/layout/AppearanceMenu";
 import Brand from "@/components/layout/Brand";
@@ -6,7 +7,10 @@ import { prisma } from "@/lib/prisma";
 import ConsoleSidebar, { type NavGroup } from "@/components/layout/ConsoleSidebar";
 import { getT } from "@/lib/i18n/server";
 
-export const metadata = { title: "งานภัทร | PSU Store" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("งานภัทร | PSU Store"),};
+}
 
 export default async function PattaraLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();

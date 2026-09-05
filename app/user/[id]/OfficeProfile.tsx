@@ -67,9 +67,7 @@ export default async function OfficeProfile({ user }: { user: any }) {
               <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] leading-tight mt-0.5">
                 {user.officeName ?? user.name ?? tr("งานภัทร")}
               </h1>
-              <p className="text-[12.5px] text-[var(--bw-muted)] mt-1">
-                ให้บริการตั้งแต่ {since}
-              </p>
+              <p className="text-[12.5px] text-[var(--bw-muted)] mt-1">{tr("ให้บริการตั้งแต่ {0}", [since])}</p>
             </div>
           </div>
 

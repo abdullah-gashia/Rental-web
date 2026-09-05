@@ -182,7 +182,7 @@ export default function AdminActionPanel({ item }: Props) {
               <div className="flex items-center justify-between text-xs text-[var(--c-ink-2)] bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-3 py-2.5">
                 <div>
                   <p className="font-semibold text-[var(--c-warn)]">{tr("🔥 อยู่ในรายการมาแรง")}</p>
-                  <p className="text-[var(--c-warn)] mt-0.5">ตำแหน่ง #{trending.position}</p>
+                  <p className="text-[var(--c-warn)] mt-0.5">{tr("ตำแหน่ง #{0}", [trending.position])}</p>
                 </div>
                 <button
                   onClick={() => startTransition(async () => {

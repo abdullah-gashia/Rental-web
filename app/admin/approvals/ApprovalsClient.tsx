@@ -105,7 +105,7 @@ function RejectModal({
           </div>
           <div className="min-w-0">
             <p className="text-sm font-semibold text-[var(--c-ink)] truncate">{item.title}</p>
-            <p className="text-xs text-[var(--c-ink-3)]">ผู้ขาย: {item.seller.name ?? item.seller.email}</p>
+            <p className="text-xs text-[var(--c-ink-3)]">{tr("ผู้ขาย: {0}", [item.seller.name ?? item.seller.email])}</p>
           </div>
         </div>
 
@@ -218,7 +218,7 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
           </div>
           <div className="flex items-center gap-2 bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] px-4 py-2 rounded-xl">
             <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
-            <span className="text-sm font-semibold text-[var(--c-warn)]">{items.length} รายการรอตรวจสอบ</span>
+            <span className="text-sm font-semibold text-[var(--c-warn)]">{tr("{0} รายการรอตรวจสอบ", [items.length])}</span>
           </div>
         </div>
       </div>
@@ -304,9 +304,7 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
                         <div className="flex items-center gap-1 text-[10px] text-[var(--c-faint)]">
                           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          ส่งเมื่อ {formatDate(item.createdAt)}
-                        </div>
+                          </svg>{tr("ส่งเมื่อ {0}", [formatDate(item.createdAt)])}</div>
                       </div>
                     </div>
                   </div>

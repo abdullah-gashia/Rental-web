@@ -390,9 +390,7 @@ function OrderCard({
               {/* Seller meetup — show locked hint until 30-min grace period passes */}
               {sellerMeetupWaiting && meetupCutoffTime && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] text-xs font-semibold text-[var(--c-warn)]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                  ยกเลิกได้หลัง {meetupCutoffTime} น.
-                </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />{tr("ยกเลิกได้หลัง {0} น.", [meetupCutoffTime])}</span>
               )}
 
               {/* Seller waiting notice — shipped, no actions for seller */}
@@ -565,9 +563,7 @@ export default function OrdersClient({
               <p className="font-bold text-amber-400 mb-1">{tr("ระบบ Escrow คืออะไร?")}</p>
               <p className="text-[var(--c-line-str)]">{tr("เมื่อคุณซื้อสินค้า เงินจะถูกพักไว้กับ PSU.Store อย่างปลอดภัย และจะโอนให้ผู้ขายก็ต่อเมื่อคุณยืนยันว่าได้รับสินค้าแล้วเท่านั้น")}</p>
               {activeEscrowOrderCount > 0 && (
-                <p className="mt-1.5 text-amber-300 font-semibold">
-                  ขณะนี้มีเงินค้างอยู่ใน {activeEscrowOrderCount} คำสั่งซื้อ
-                </p>
+                <p className="mt-1.5 text-amber-300 font-semibold">{tr("ขณะนี้มีเงินค้างอยู่ใน {0} คำสั่งซื้อ", [activeEscrowOrderCount])}</p>
               )}
               {/* Arrow pointer */}
               <div className="absolute top-full left-6 -translate-y-px w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-[#1a1a1a]" />

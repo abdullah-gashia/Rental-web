@@ -147,9 +147,7 @@ function ChatLog({
         <span className="flex items-center gap-2">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-          </svg>
-          บันทึกแชท ({messages.length} ข้อความล่าสุด)
-        </span>
+          </svg>{tr("บันทึกแชท ({0} ข้อความล่าสุด)", [messages.length])}</span>
         <svg
           className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`}
           fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -317,9 +315,7 @@ function DisputeCard({
 
         {/* ── Evidence images ───────────────────────────────────────────────── */}
         <div className="space-y-2">
-          <p className="text-xs font-bold text-[var(--c-ink-2)] uppercase tracking-wider">
-            หลักฐาน ({evidence.length} ภาพ)
-          </p>
+          <p className="text-xs font-bold text-[var(--c-ink-2)] uppercase tracking-wider">{tr("หลักฐาน ({0} ภาพ)", [evidence.length])}</p>
           <EvidenceGallery images={evidence} />
         </div>
 

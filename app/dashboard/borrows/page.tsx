@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -5,7 +6,10 @@ import { getMyBorrows } from "@/lib/actions/borrow-orders";
 import MyBorrowsClient from "./MyBorrowsClient";
 
 export const dynamic  = "force-dynamic";
-export const metadata = { title: "ของที่ยืม | PSU Store" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("ของที่ยืม | PSU Store"),};
+}
 
 export default async function MyBorrowsPage() {
   const session = await auth();

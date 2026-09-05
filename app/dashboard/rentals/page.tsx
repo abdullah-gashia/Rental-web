@@ -5,7 +5,10 @@ import { auth } from "@/lib/auth";
 import { getMyRentalOrders } from "@/lib/actions/rental-checkout";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "การเช่าของฉัน | PSU Store" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("การเช่าของฉัน | PSU Store"),};
+}
 
 const STATUS_LABEL: Record<string, string> = {
   REQUESTED:                "รอตอบรับ",
@@ -73,9 +76,7 @@ export default async function RentalDashboardPage() {
             <h2 className="text-sm font-bold text-[var(--c-ink-1)] mb-3 flex items-center gap-2">
               📥 ฉันเป็นผู้เช่า
               {activeAsRenter.length > 0 && (
-                <span className="px-2 py-0.5 bg-[var(--c-accent)] text-white text-[10px] font-bold rounded-full">
-                  {activeAsRenter.length} กำลังดำเนิน
-                </span>
+                <span className="px-2 py-0.5 bg-[var(--c-accent)] text-white text-[10px] font-bold rounded-full">{tr("{0} กำลังดำเนิน", [activeAsRenter.length])}</span>
               )}
             </h2>
             {asRenter.length === 0 ? (
@@ -94,9 +95,7 @@ export default async function RentalDashboardPage() {
             <h2 className="text-sm font-bold text-[var(--c-ink-1)] mb-3 flex items-center gap-2">
               📤 ฉันเป็นเจ้าของ
               {activeAsOwner.length > 0 && (
-                <span className="px-2 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded-full">
-                  {activeAsOwner.length} กำลังดำเนิน
-                </span>
+                <span className="px-2 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded-full">{tr("{0} กำลังดำเนิน", [activeAsOwner.length])}</span>
               )}
             </h2>
             {asOwner.length === 0 ? (

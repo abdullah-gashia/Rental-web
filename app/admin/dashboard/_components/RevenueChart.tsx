@@ -35,14 +35,15 @@ function baht(n: number) {
 
 // Custom tooltip
 function CustomTooltip({ active, payload, label }: any) {
+  const tr = useLocaleStore((s) => s.tr);
   if (!active || !payload?.length) return null;
   const fee    = payload[0]?.value ?? 0;
   const orders = payload[1]?.value ?? 0;
   return (
     <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-xl px-3 py-2 shadow-lg text-xs space-y-0.5">
       <p className="font-bold text-[var(--c-ink)] mb-1">{fmtDate(label)}</p>
-      <p className="text-purple-700 font-semibold">รายได้แพลตฟอร์ม: {baht(fee)}</p>
-      <p className="text-[var(--c-muted)]">คำสั่งซื้อ: {orders} รายการ</p>
+      <p className="text-purple-700 font-semibold">{tr("รายได้แพลตฟอร์ม: {0}", [baht(fee)])}</p>
+      <p className="text-[var(--c-muted)]">{tr("คำสั่งซื้อ: {0} รายการ", [orders])}</p>
     </div>
   );
 }

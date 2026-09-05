@@ -88,9 +88,7 @@ export default function DateSelectionStep({ state, item, onChange }: Props) {
           className="w-full px-3 py-2.5 border border-[var(--c-line)] rounded-xl text-sm
                      focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)]"
         />
-        <p className="text-[11px] text-[var(--c-faint)] mt-1">
-          เช่าได้ {item.minRentalDays}–{item.maxRentalDays} วัน
-        </p>
+        <p className="text-[11px] text-[var(--c-faint)] mt-1">{tr("เช่าได้ {0}–{1} วัน", [item.minRentalDays, item.maxRentalDays])}</p>
         {daysError && (
           <p className="text-xs text-[var(--c-danger)] mt-1">
             {rentalDays < item.minRentalDays
@@ -103,7 +101,7 @@ export default function DateSelectionStep({ state, item, onChange }: Props) {
       {rentalDays > 0 && !daysError && (
         <>
           <div className="flex items-center gap-2 bg-[var(--c-accent-soft)] border border-blue-100 rounded-xl px-3 py-2 text-sm">
-            <span className="text-[var(--c-accent)] font-bold">📅 {rentalDays} วัน</span>
+            <span className="text-[var(--c-accent)] font-bold">{tr("📅 {0} วัน", [rentalDays])}</span>
             <span className="text-blue-500 text-xs">
               ({new Date(startDate).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}
               {" – "}

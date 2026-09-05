@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import type { Metadata } from "next";
 import { DM_Sans, DM_Mono } from "next/font/google";
 import { Sarabun } from "next/font/google";
@@ -26,11 +27,14 @@ const sarabun = Sarabun({
   variable: "--font-thai",
 });
 
-export const metadata: Metadata = {
-  title: "PSU Store — University Marketplace",
-  description: "ตลาดซื้อขายสินค้าของนักศึกษา PSU ปลอดภัย ง่าย ไว",
+export async function generateMetadata() {
+  const tr = await getTr();
+  return {
+  title: tr("PSU Store — University Marketplace"),
+  description: tr("ตลาดซื้อขายสินค้าของนักศึกษา PSU ปลอดภัย ง่าย ไว"),
   icons: { icon: "/brand/psu-store-logo.png" },
 };
+}
 
 export default async function RootLayout({
   children,

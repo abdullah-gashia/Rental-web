@@ -315,9 +315,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
       <div className="flex justify-between items-start mb-5">
         <div>
           <h2 className="text-xl font-extrabold text-[var(--c-ink)] tracking-tight">{t("post_title")}</h2>
-          <p className="text-[12px] text-[var(--c-muted)] mt-0.5 font-medium">
-            ขั้นตอน {step}/3 — {stepLabels[step - 1]}
-          </p>
+          <p className="text-[12px] text-[var(--c-muted)] mt-0.5 font-medium">{tr("ขั้นตอน {0}/3 — {1}", [step, stepLabels[step - 1]])}</p>
         </div>
         <button
           onClick={handleClose}
@@ -570,9 +568,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                   const perMonth = perDay * 30;
                   const perYear = perDay * 365;
                   return (
-                    <p className="text-[11px] text-[var(--c-accent)] mt-1.5 bg-[var(--c-accent-soft)] rounded-lg px-2.5 py-1.5">
-                      💡 เทียบเท่า: ฿{perDay.toFixed(1)}/วัน · ฿{Math.round(perMonth)}/เดือน · ฿{Math.round(perYear)}/ปี
-                    </p>
+                    <p className="text-[11px] text-[var(--c-accent)] mt-1.5 bg-[var(--c-accent-soft)] rounded-lg px-2.5 py-1.5">{tr("💡 เทียบเท่า: ฿{0}/วัน · ฿{1}/เดือน · ฿{2}/ปี", [perDay.toFixed(1), Math.round(perMonth), Math.round(perYear)])}</p>
                   );
                 })()}
               </div>

@@ -50,7 +50,7 @@ export default function PaymentStep({ state, pricing, walletBalance, onSetPaymen
         <p className="text-xs text-[var(--c-ink-3)]">{tr("ชำระผ่านระบบกักเงิน — เงินจะถูกโอนให้เจ้าของเมื่อคืนของสำเร็จ")}</p>
         <p className="text-xs text-[var(--c-ok)] font-semibold mt-1">{tr("🏆 แนะนำสำหรับการเช่า")}</p>
         {!canAffordEscrow && (
-          <p className="text-xs text-[var(--c-danger)] mt-1">ยอดเงินไม่พอ (ต้องการ ฿{escrowRequired.toLocaleString()})</p>
+          <p className="text-xs text-[var(--c-danger)] mt-1">{tr("ยอดเงินไม่พอ (ต้องการ ฿{0})", [escrowRequired.toLocaleString()])}</p>
         )}
       </button>
 
@@ -74,7 +74,7 @@ export default function PaymentStep({ state, pricing, walletBalance, onSetPaymen
         <p className="text-xs text-[var(--c-ink-3)]">{tr("จ่ายค่าเช่าสดตอนรับของ — มัดจำยังต้องผ่านระบบเสมอ")}</p>
         <p className="text-xs text-[var(--c-warn)] mt-1">{tr("⚠️ ไม่มีการคุ้มครองค่าเช่า")}</p>
         {!canAffordCOD && (
-          <p className="text-xs text-[var(--c-danger)] mt-1">ยอดเงินมัดจำไม่พอ (ต้องการ ฿{codRequiredFromWallet.toLocaleString()})</p>
+          <p className="text-xs text-[var(--c-danger)] mt-1">{tr("ยอดเงินมัดจำไม่พอ (ต้องการ ฿{0})", [codRequiredFromWallet.toLocaleString()])}</p>
         )}
       </button>
 

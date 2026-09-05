@@ -6,7 +6,10 @@ import { prisma } from "@/lib/prisma";
 import { statusLabel, statusColor } from "./_lib/status";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "ระบบปล่อยเช่า | Admin" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("ระบบปล่อยเช่า | Admin"),};
+}
 
 const FILTERS = [
   { key: "all",       label: "ทั้งหมด",       statuses: null                                              },
@@ -142,9 +145,7 @@ export default async function AdminLendingPage({
         </div>
 
         {recentOrders.length === 0 ? (
-          <div className="py-10 text-center text-[var(--c-faint)] text-sm">
-            ไม่มีคำสั่งเช่าในหมวด &ldquo;{activeFilter.label}&rdquo;
-          </div>
+          <div className="py-10 text-center text-[var(--c-faint)] text-sm">{tr("ไม่มีคำสั่งเช่าในหมวด &ldquo;{0}&rdquo;", [activeFilter.label])}</div>
         ) : (
           <div className="space-y-1">
             {recentOrders.map((order) => (

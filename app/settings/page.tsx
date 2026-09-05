@@ -7,10 +7,12 @@ import SettingsLayout  from "./_components/SettingsLayout";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "การตั้งค่า — PSU Store",
-  description: "จัดการโปรไฟล์ ที่อยู่จัดส่ง การแจ้งเตือน และความเป็นส่วนตัวของคุณ",
-};
+export async function generateMetadata() {
+  const tr = await getTr();
+  return {
+  title: tr("การตั้งค่า — PSU Store"),
+  description: tr("จัดการโปรไฟล์ ที่อยู่จัดส่ง การแจ้งเตือน และความเป็นส่วนตัวของคุณ"),};
+}
 
 interface Props {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

@@ -122,9 +122,7 @@ function ItemContextCard({
         <div className="px-4 pb-3 flex flex-wrap gap-1.5">
           {/* Condition */}
           {context.condition && (
-            <span className="inline-flex items-center gap-1 bg-[var(--c-line-soft)] text-[var(--c-ink-3)] text-xs font-medium px-2.5 py-1 rounded-full">
-              ✨ สภาพ: {tr(CONDITION_LABEL[context.condition] ?? context.condition)}
-            </span>
+            <span className="inline-flex items-center gap-1 bg-[var(--c-line-soft)] text-[var(--c-ink-3)] text-xs font-medium px-2.5 py-1 rounded-full">{tr("✨ สภาพ: {0}", [tr(CONDITION_LABEL[context.condition] ?? context.condition)])}</span>
           )}
 
           {/* Negotiable */}

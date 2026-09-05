@@ -122,7 +122,7 @@ export default function CancelOrderModal({
               <span className="text-amber-500 text-lg leading-none mt-0.5">⏳</span>
               <div>
                 <p className="text-sm font-semibold text-amber-800">{tr("ยังไม่ถึงเวลายกเลิก")}</p>
-                <p className="text-xs text-[var(--c-warn)] mt-0.5 leading-relaxed">{tr("กรุณารอจนถึง")}<span className="font-bold">{sellerGraceHint} น.</span>{tr("(30 นาทีหลังเวลานัดรับ) เพื่อให้ผู้ซื้อมีเวลาเดินทาง")}</p>
+                <p className="text-xs text-[var(--c-warn)] mt-0.5 leading-relaxed">{tr("กรุณารอจนถึง")}<span className="font-bold">{tr("{0} น.", [sellerGraceHint])}</span>{tr("(30 นาทีหลังเวลานัดรับ) เพื่อให้ผู้ซื้อมีเวลาเดินทาง")}</p>
               </div>
             </div>
           )}
@@ -133,7 +133,7 @@ export default function CancelOrderModal({
               <span className="text-[var(--c-ok)] text-lg">💰</span>
               <div>
                 <p className="text-sm font-semibold text-emerald-800">{tr("คืนเงินอัตโนมัติ")}</p>
-                <p className="text-xs text-[var(--c-ok)]">฿{amount.toLocaleString()} จะคืนเข้ากระเป๋าผู้ซื้อทันที</p>
+                <p className="text-xs text-[var(--c-ok)]">{tr("฿{0} จะคืนเข้ากระเป๋าผู้ซื้อทันที", [amount.toLocaleString()])}</p>
               </div>
             </div>
           ) : (

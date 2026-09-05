@@ -145,9 +145,7 @@ export default function TrendingManager({ initialItems }: Props) {
                 items.length >= 10
                   ? "bg-[var(--c-danger-soft)] text-[var(--c-danger)]"
                   : "bg-[var(--c-line-soft)] text-[var(--c-ink-2)]"
-              }`}>
-                {items.length}/10 รายการ
-              </span>
+              }`}>{tr("{0}/10 รายการ", [items.length])}</span>
             </div>
 
             {items.length === 0 ? (

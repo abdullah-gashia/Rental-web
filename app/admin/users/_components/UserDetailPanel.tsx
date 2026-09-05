@@ -164,7 +164,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
               <div className="min-w-0 flex-1">
                 <p className="font-semibold text-[var(--c-ink)] truncate">{data.name ?? "—"}</p>
                 <p className="text-xs text-[var(--c-muted)] truncate">{data.email}</p>
-                <p className="text-[11px] text-[var(--c-faint)] mt-0.5">สมัครเมื่อ: {formatThaiDate(data.createdAt)}</p>
+                <p className="text-[11px] text-[var(--c-faint)] mt-0.5">{tr("สมัครเมื่อ: {0}", [formatThaiDate(data.createdAt)])}</p>
               </div>
             </div>
 
@@ -299,7 +299,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                   <span className="text-sm">
                     <PanelStars rating={data.avgRating ?? 0} />
                     <span className="ml-1.5 font-bold text-[var(--c-ink)]">{(data.avgRating ?? 0).toFixed(1)}</span>
-                    <span className="ml-1 text-xs text-[var(--c-muted)]">({data.reviewCount} รีวิว)</span>
+                    <span className="ml-1 text-xs text-[var(--c-muted)]">{tr("({0} รีวิว)", [data.reviewCount])}</span>
                   </span>
                 ) : (
                   <span className="text-xs text-[var(--c-muted)]">{tr("ยังไม่มีรีวิว")}</span>
@@ -322,7 +322,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                     {d > 0 ? `+${d}` : d}
                   </button>
                 ))}
-                <span className="text-xs text-[var(--c-muted)]">ปัจจุบัน {data.trustScore}</span>
+                <span className="text-xs text-[var(--c-muted)]">{tr("ปัจจุบัน {0}", [data.trustScore])}</span>
               </div>
 
               {data.reviews.length > 0 && (
@@ -356,9 +356,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                 <h4 className="text-sm font-bold text-[var(--c-ink-1)]">
                   🚩 รายงานจากผู้ใช้
                   {data.openReportCount > 0 && (
-                    <span className="ml-2 px-2 py-0.5 rounded-full bg-[var(--c-danger-soft)] text-[var(--c-danger)] text-[11px] font-bold">
-                      ใหม่ {data.openReportCount}
-                    </span>
+                    <span className="ml-2 px-2 py-0.5 rounded-full bg-[var(--c-danger-soft)] text-[var(--c-danger)] text-[11px] font-bold">{tr("ใหม่ {0}", [data.openReportCount])}</span>
                   )}
                 </h4>
                 <span className="text-[10px] text-[var(--c-faint)]">{tr("ผู้ถูกรายงานไม่เห็นข้อมูลนี้")}</span>
@@ -388,9 +386,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                         </span>
                       </div>
                       <p className="text-xs text-[var(--c-ink-2)] mt-1.5 whitespace-pre-wrap">{rep.reason}</p>
-                      <p className="text-[10px] text-[var(--c-muted)] mt-1.5">
-                        โดย {rep.reporter.name ?? rep.reporter.email} · {formatShort(rep.createdAt)}
-                      </p>
+                      <p className="text-[10px] text-[var(--c-muted)] mt-1.5">{tr("โดย {0} · {1}", [rep.reporter.name ?? rep.reporter.email, formatShort(rep.createdAt)])}</p>
                       {rep.status === "OPEN" && (
                         <div className="flex gap-2 mt-2">
                           <button
@@ -414,7 +410,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
             {/* -- Send the user an e-mail ------------------------------- */}
             <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-2xl p-4 space-y-2.5">
               <h4 className="text-sm font-bold text-[var(--c-ink-1)]">{tr("✉️ ส่งอีเมลถึงผู้ใช้")}</h4>
-              <p className="text-[11px] text-[var(--c-muted)]">ส่งไปที่ {data.email}</p>
+              <p className="text-[11px] text-[var(--c-muted)]">{tr("ส่งไปที่ {0}", [data.email])}</p>
               <input
                 value={mailSubject}
                 onChange={(e) => setMailSubject(e.target.value.slice(0, 150))}

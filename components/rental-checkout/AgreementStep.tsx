@@ -49,7 +49,7 @@ export default function AgreementStep({ state, item, pricing, onSetAgreement, on
             <p className="text-[11px] font-semibold text-[var(--c-faint)] uppercase tracking-wide mb-0.5">{tr("ระยะเวลาเช่า")}</p>
             <p className="text-sm font-semibold text-[var(--c-ink)]">
               {startLabel} – {endLabel}
-              <span className="text-[var(--c-ink-3)] font-normal ml-1.5">({pricing.rentalDays} วัน)</span>
+              <span className="text-[var(--c-ink-3)] font-normal ml-1.5">{tr("({0} วัน)", [pricing.rentalDays])}</span>
             </p>
           </div>
           <button onClick={() => onGotoStep(1)} className="text-xs text-[var(--c-accent)] hover:underline flex-shrink-0">{tr("แก้ไข")}</button>
@@ -71,7 +71,7 @@ export default function AgreementStep({ state, item, pricing, onSetAgreement, on
         <div className="bg-[var(--c-subtle)] rounded-xl p-3.5 space-y-1.5 text-sm">
           <p className="text-[11px] font-semibold text-[var(--c-faint)] uppercase tracking-wide mb-2">{tr("รายละเอียดค่าใช้จ่าย")}</p>
           <div className="flex justify-between text-[var(--c-ink-2)]">
-            <span>ค่าเช่า (฿{item.lateFeePerDay ?? pricing.rentalFee / pricing.rentalDays} × {pricing.rentalDays} วัน)</span>
+            <span>{tr("ค่าเช่า (฿{0} × {1} วัน)", [item.lateFeePerDay ?? pricing.rentalFee / pricing.rentalDays, pricing.rentalDays])}</span>
             <span>฿{pricing.rentalFee.toLocaleString()}</span>
           </div>
           <div className="flex justify-between text-[var(--c-ink-2)]">
@@ -107,7 +107,7 @@ export default function AgreementStep({ state, item, pricing, onSetAgreement, on
           <p>{tr("3. หากสินค้าชำรุดเสียหาย ผู้เช่ายินยอมให้หักค่าเสียหายจากเงินมัดจำ")}</p>
           <p>{tr("4. หากสินค้าสูญหาย ยินยอมให้ริบเงินมัดจำทั้งจำนวน และอาจถูกเรียกค่าเสียหายเพิ่มเติม")}</p>
           {(item.lateFeePerDay ?? 0) > 0 && (
-            <p>5. หากคืนช้า จะถูกคิดค่าปรับ ฿{item.lateFeePerDay}/วัน นับตั้งแต่วันครบกำหนดคืน</p>
+            <p>{tr("5. หากคืนช้า จะถูกคิดค่าปรับ ฿{0}/วัน นับตั้งแต่วันครบกำหนดคืน", [item.lateFeePerDay])}</p>
           )}
           <p>{tr("6. ทั้งสองฝ่ายยืนยันตัวตนผ่านระบบ KYC — ข้อตกลงนี้มีผลผูกพันตามกฎหมายแพ่งและพาณิชย์ ว่าด้วยการเช่าทรัพย์ (มาตรา 537–571)")}</p>
           <p>{tr("7. หากเกิดข้อพิพาท แพลตฟอร์มจะใช้หลักฐาน Digital Handshake (ภาพถ่ายสภาพสินค้า) ในการตัดสิน")}</p>

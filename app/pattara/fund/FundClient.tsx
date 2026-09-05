@@ -101,7 +101,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
       {/* ── Ledger ─────────────────────────────────────────────────────── */}
       <div className="bw-panel !p-0 overflow-hidden">
         <div className="px-5 py-3.5 border-b border-[var(--bw-line)]">
-          <h2 className="text-[14.5px] font-semibold text-[var(--psu-navy)]">{tr("รายการเคลื่อนไหว")}<span className="ml-2 text-[12px] font-normal text-[var(--bw-muted)]">{entries.length} รายการ</span>
+          <h2 className="text-[14.5px] font-semibold text-[var(--psu-navy)]">{tr("รายการเคลื่อนไหว")}<span className="ml-2 text-[12px] font-normal text-[var(--bw-muted)]">{tr("{0} รายการ", [entries.length])}</span>
           </h2>
         </div>
 
@@ -164,9 +164,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
           <div className="absolute inset-0 bg-black/45 backdrop-blur-sm" onClick={pending ? undefined : () => setOpen(false)} />
           <div className="relative bg-[var(--c-surface)] rounded-2xl w-full max-w-lg p-6 border border-[var(--bw-line)]">
             <h2 className="text-[17px] font-semibold text-[var(--psu-navy)] mb-1">{tr("บันทึกรายการกองทุน")}</h2>
-            <p className="text-[12px] text-[var(--bw-muted)] mb-5">
-              คงเหลือตอนนี้ {baht(summary.balance)}
-            </p>
+            <p className="text-[12px] text-[var(--bw-muted)] mb-5">{tr("คงเหลือตอนนี้ {0}", [baht(summary.balance)])}</p>
 
             <div className="flex flex-col gap-4">
               <div className="grid grid-cols-2 gap-3">

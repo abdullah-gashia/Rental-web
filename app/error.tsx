@@ -40,9 +40,7 @@ export default function GlobalError({
         <p className="text-[13.5px] text-[var(--hp-muted)] mt-2.5 leading-[1.9]">{tr("เกิดข้อผิดพลาดระหว่างเตรียมข้อมูล ลองใหม่อีกครั้งได้เลย — ถ้ายังเป็นเหมือนเดิม ช่วยแจ้งทีมงานพร้อมรหัสด้านล่าง")}</p>
 
         {error.digest && (
-          <p className="ui-num text-[11.5px] text-[var(--hp-muted)] mt-3 font-mono">
-            รหัสอ้างอิง: {error.digest}
-          </p>
+          <p className="ui-num text-[11.5px] text-[var(--hp-muted)] mt-3 font-mono">{tr("รหัสอ้างอิง: {0}", [error.digest])}</p>
         )}
 
         <div className="flex items-center justify-center gap-2.5 mt-6">

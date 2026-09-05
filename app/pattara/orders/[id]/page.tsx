@@ -1,9 +1,13 @@
+import { getTr } from "@/lib/i18n/server";
 import { notFound } from "next/navigation";
 import { getBorrowOrder } from "@/lib/actions/borrow-orders";
 import BorrowOrderClient from "@/app/borrow/orders/[id]/BorrowOrderClient";
 
 export const dynamic  = "force-dynamic";
-export const metadata = { title: "จัดการการยืม | งานภัทร" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("จัดการการยืม | งานภัทร"),};
+}
 
 /**
  * The same order view the student sees, inside the office chrome.

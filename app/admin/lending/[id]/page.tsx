@@ -8,7 +8,10 @@ import {
 } from "../_lib/status";
 
 export const dynamic  = "force-dynamic";
-export const metadata = { title: "รายละเอียดการเช่า | Admin" };
+export async function generateMetadata() {
+  const tr = await getTr();
+  return { title: tr("รายละเอียดการเช่า | Admin"),};
+}
 
 // ─── Formatting helpers ───────────────────────────────────────────────────────
 
@@ -169,7 +172,7 @@ export default async function AdminLendingDetailPage({
           (waitingDays ?? 0) >= 5
             ? "bg-[var(--c-danger-soft)] border-[var(--c-danger-line)] text-[var(--c-danger)]"
             : "bg-[var(--c-warn-soft)] border-[var(--c-warn-line)] text-amber-800"
-        }`}>{tr("⏳ เจ้าของยังไม่ตอบรับ — รอมาแล้ว")}<span className="font-bold">{waitingDays} วัน</span>
+        }`}>{tr("⏳ เจ้าของยังไม่ตอบรับ — รอมาแล้ว")}<span className="font-bold">{tr("{0} วัน", [waitingDays])}</span>
           {order.expiresAt && (
             <>{tr("· ระบบจะยกเลิกและคืนเงินอัตโนมัติเมื่อ")}<span className="font-semibold">{dt(order.expiresAt)}</span></>
           )}

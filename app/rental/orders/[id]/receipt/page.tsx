@@ -68,10 +68,7 @@ export default async function RentalReceiptPage({ params, searchParams }: Props)
               <div className="text-xs text-[var(--c-muted)] mt-0.5">
                 {isReturn ? "Return Receipt" : "Rental Contract Agreement"}
               </div>
-              <div className="text-xs text-[var(--c-faint)] mt-1.5">
-                เลขที่: {refCode}<br />
-                วันที่: {today}
-              </div>
+              <div className="text-xs text-[var(--c-faint)] mt-1.5">{tr("เลขที่: {0}", [refCode])}<br />{tr("วันที่: {0}", [today])}</div>
             </div>
           </div>
 
@@ -171,7 +168,7 @@ export default async function RentalReceiptPage({ params, searchParams }: Props)
                   {tr(STATUS_LABEL[order.returnCondition ?? "SAME"] ?? order.returnCondition) ?? "—"}
                 </p>
                 {order.returnConditionNote && (
-                  <p className="text-[var(--c-ink-3)] mt-1 text-xs">หมายเหตุ: {order.returnConditionNote}</p>
+                  <p className="text-[var(--c-ink-3)] mt-1 text-xs">{tr("หมายเหตุ: {0}", [order.returnConditionNote])}</p>
                 )}
               </div>
             </section>
@@ -213,9 +210,7 @@ export default async function RentalReceiptPage({ params, searchParams }: Props)
           </section>
 
           {/* Footer */}
-          <div className="border-t border-[var(--c-line)] pt-4 text-center text-[10px] text-[var(--c-faint)]">
-            เอกสารนี้ออกโดยระบบ PSU Store — {today} — รหัสอ้างอิง: {refCode}
-            <br />{tr("ข้อมูลยืนยันผ่าน Digital Handshake ระบบ Two-Party Confirmation")}</div>
+          <div className="border-t border-[var(--c-line)] pt-4 text-center text-[10px] text-[var(--c-faint)]">{tr("เอกสารนี้ออกโดยระบบ PSU Store — {0} — รหัสอ้างอิง: {1}", [today, refCode])}<br />{tr("ข้อมูลยืนยันผ่าน Digital Handshake ระบบ Two-Party Confirmation")}</div>
         </div>
       </div>
     </>
@@ -250,13 +245,14 @@ function FinRow({
   );
 }
 
-function SigBlock({ role, name, dateStr }: { role: string; name: string; dateStr: string }) {
+async function SigBlock({ role, name, dateStr }: { role: string; name: string; dateStr: string }) {
+  const tr = await getTr();
   return (
     <div>
       <div className="h-16 border-b-2 border-[var(--c-line-str)] mb-2" />
       <p className="text-xs font-semibold text-[var(--c-ink-2)]">{role}</p>
       <p className="text-xs text-[var(--c-muted)]">{name}</p>
-      <p className="text-[11px] text-[var(--c-faint)] mt-0.5">วันที่: {dateStr}</p>
+      <p className="text-[11px] text-[var(--c-faint)] mt-0.5">{tr("วันที่: {0}", [dateStr])}</p>
     </div>
   );
 }

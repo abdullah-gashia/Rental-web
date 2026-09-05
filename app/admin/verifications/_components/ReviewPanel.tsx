@@ -35,9 +35,7 @@ export default function ReviewPanel({ request }: Props) {
 
   if (request.status !== "PENDING") {
     return (
-      <div className="bg-[var(--c-line-soft)] rounded-2xl p-5 text-sm text-[var(--c-muted)] text-center">
-        คำขอนี้ถูกตรวจสอบแล้ว ({request.status})
-      </div>
+      <div className="bg-[var(--c-line-soft)] rounded-2xl p-5 text-sm text-[var(--c-muted)] text-center">{tr("คำขอนี้ถูกตรวจสอบแล้ว ({0})", [request.status])}</div>
     );
   }
 
