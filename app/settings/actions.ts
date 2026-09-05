@@ -1,6 +1,8 @@
 "use server";
 
 import { z }              from "zod";
+import { LOCALE_COOKIE } from "@/lib/i18n/server";
+import { cookies } from "next/headers";
 import { auth }           from "@/lib/auth";
 import { prisma }         from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
@@ -223,6 +225,18 @@ export async function updatePreferences(
       create: { userId: sessionUser.id, ...parsed },
       update: parsed,
     });
+
+    // The account now says one thing and this browser's cookie another, and
+    // the cookie is what every server render reads. Write it here so the two
+    // cannot drift apart — the client only has to reload.
+    if (parsed.language) {
+      const jar = await cookies();
+      jar.set(LOCALE_COOKIE, parsed.language, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 365,
+        sameSite: "lax",
+      });
+    }
 
     revalidatePath("/settings");
     return { success: true, message: "บันทึกการตั้งค่าเรียบร้อยแล้ว" };

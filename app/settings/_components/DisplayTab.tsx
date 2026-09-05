@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from "react";
 import { updatePreferences } from "../actions";
-import { useLocaleStore } from "@/lib/stores/locale-store";
 import { useTr, useLocale } from "@/lib/i18n/LocaleProvider";
 import { useThemeStore } from "@/lib/stores/theme-store";
 
@@ -16,7 +15,6 @@ interface Props {
 
 export default function DisplayTab({ preferences, showToast }: Props) {
   const tr = useTr();
-  const setLocale    = useLocaleStore((s) => s.setLocale);
   // The locale the page was rendered with — the store's copy is a cookie
   // read from module load and can be behind.
   const current      = useLocale();
@@ -45,11 +43,11 @@ export default function DisplayTab({ preferences, showToast }: Props) {
 
       if (res.success) {
         applyTheme(theme as "light" | "dark" | "system");
-        // setLocale writes the cookie and reloads, so the server re-renders
-        // every page in the chosen language.
-        if (language !== current) {
-          setLocale(language as "th" | "en");
-        }
+        // The action already wrote the language cookie, so the page only has
+        // to come back from the server to be rendered in it. Reloading here
+        // rather than through setLocale, which would see the cookie it is
+        // about to write already in place and decide there was nothing to do.
+        if (language !== current) window.location.reload();
       }
     });
   };

@@ -1,5 +1,6 @@
 import "server-only";
 import { cookies } from "next/headers";
+import { cache } from "react";
 import { type Locale, type DictionaryKey, translate } from "./dictionaries";
 import { translatePhrase } from "./phrases";
 
@@ -13,6 +14,13 @@ import { translatePhrase } from "./phrases";
  *
  * The client store writes the same two cookies; see lib/stores/locale-store.ts
  * and lib/stores/theme-store.ts.
+ *
+ * A signed-in reader also has a saved language on their account. That is the
+ * one they chose, so on a browser with no cookie yet — a new device, or after
+ * clearing site data — it decides, and the cookie is written from it on the
+ * next save. Without that the setting looked disconnected: the radio showed
+ * English because the account said so, and the page came back Thai because
+ * this browser had never been told.
  */
 
 export const LOCALE_COOKIE = "psu-lang";
@@ -20,9 +28,28 @@ export const THEME_COOKIE  = "psu-theme";
 
 export type ThemeChoice = "light" | "dark" | "system";
 
+/** The saved language on the account, looked up at most once per request. */
+const savedLocale = cache(async (): Promise<Locale | null> => {
+  try {
+    const { currentUser } = await import("@/lib/permissions");
+    const user = await currentUser();
+    if (!user) return null;
+    const { prisma } = await import("@/lib/prisma");
+    const prefs = await prisma.userPreferences.findUnique({
+      where:  { userId: user.id },
+      select: { language: true },
+    });
+    return prefs?.language === "en" ? "en" : prefs?.language === "th" ? "th" : null;
+  } catch {
+    return null;                      // never let the language break a page
+  }
+});
+
 export async function getLocale(): Promise<Locale> {
   const jar = await cookies();
-  return jar.get(LOCALE_COOKIE)?.value === "en" ? "en" : "th";
+  const cookie = jar.get(LOCALE_COOKIE)?.value;
+  if (cookie === "en" || cookie === "th") return cookie;
+  return (await savedLocale()) ?? "th";
 }
 
 export async function getTheme(): Promise<ThemeChoice> {

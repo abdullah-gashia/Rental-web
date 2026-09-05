@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { Fragment, useState, useTransition } from "react";
 import Image                        from "next/image";
 import type { OrderRow }            from "../../_lib/types";
 import { formatThaiDate, formatRelativeDate, formatCurrency, truncateId } from "../../_lib/utils";
@@ -123,9 +123,10 @@ export default function OrdersTable({ rows }: Props) {
           </thead>
           <tbody>
             {rows.map((order) => (
-              <>
+              // A shorthand fragment cannot carry a key, so React saw a list of
+              // unkeyed children however well the rows inside were keyed.
+              <Fragment key={order.id}>
                 <tr
-                  key={order.id}
                   className="cursor-pointer"
                   onClick={() => setExpanded(expanded === order.id ? null : order.id)}
                 >
@@ -221,7 +222,7 @@ export default function OrdersTable({ rows }: Props) {
 
                 {/* Expanded detail row */}
                 {expanded === order.id && (
-                  <tr key={`${order.id}-detail`} className="bg-[var(--hp-subtle)]">
+                  <tr className="bg-[var(--hp-subtle)]">
                     <td colSpan={7} className="px-8 py-4 space-y-4">
                       {/* Core IDs + dates */}
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
@@ -294,7 +295,7 @@ export default function OrdersTable({ rows }: Props) {
                     </td>
                   </tr>
                 )}
-              </>
+              </Fragment>
             ))}
           </tbody>
         </table>
