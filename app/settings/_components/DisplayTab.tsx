@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { updatePreferences } from "../actions";
 import { useLocaleStore } from "@/lib/stores/locale-store";
-import { useTr } from "@/lib/i18n/LocaleProvider";
+import { useTr, useLocale } from "@/lib/i18n/LocaleProvider";
 import { useThemeStore } from "@/lib/stores/theme-store";
 
 interface Props {
@@ -17,6 +17,9 @@ interface Props {
 export default function DisplayTab({ preferences, showToast }: Props) {
   const tr = useTr();
   const setLocale    = useLocaleStore((s) => s.setLocale);
+  // The locale the page was rendered with — the store's copy is a cookie
+  // read from module load and can be behind.
+  const current      = useLocale();
   const applyTheme   = useThemeStore((s) => s.setTheme);
   const currentTheme = useThemeStore((s) => s.theme);
 
@@ -44,7 +47,7 @@ export default function DisplayTab({ preferences, showToast }: Props) {
         applyTheme(theme as "light" | "dark" | "system");
         // setLocale writes the cookie and reloads, so the server re-renders
         // every page in the chosen language.
-        if (language !== useLocaleStore.getState().locale) {
+        if (language !== current) {
           setLocale(language as "th" | "en");
         }
       }

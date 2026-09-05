@@ -39,7 +39,10 @@ export const useLocaleStore = create<LocaleState>((set, get) => ({
   locale: readCookie(),
 
   setLocale: (locale) => {
-    if (locale === get().locale) return;
+    // Against the cookie, not the store's copy of it: the store reads the
+    // cookie once at module load, and the page may have been rendered with a
+    // different one since.
+    if (locale === readCookie()) return;
     writeCookie(locale);
     set({ locale });
     // Server components already rendered in the old language, so the page has
