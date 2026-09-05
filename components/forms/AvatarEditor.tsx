@@ -37,6 +37,22 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
 
   const dragging = useRef<{ x: number; y: number } | null>(null);
 
+  // The blob URL has to outlive the <img> that shows it. Revoking it inside
+  // onload — which is where it obviously belongs — invalidated the address
+  // before React had rendered anything with it, so the picker showed the file's
+  // dimensions next to an empty circle. It is released when the picture is
+  // replaced, and when the dialog closes.
+  const objectUrl = useRef<string | null>(null);
+
+  function releaseUrl() {
+    if (objectUrl.current) {
+      URL.revokeObjectURL(objectUrl.current);
+      objectUrl.current = null;
+    }
+  }
+
+  useEffect(() => releaseUrl, []);
+
   /** Smallest zoom that still fills the circle — never allow gaps. */
   const minZoom = img ? Math.max(FRAME / img.width, FRAME / img.height) : 1;
 
@@ -74,15 +90,20 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
     }
 
     setFileName(file.name);
+
+    // Free the previous pick before taking a new one.
+    releaseUrl();
+
     const url = URL.createObjectURL(file);
+    objectUrl.current = url;
+
     const el = new window.Image();
-    el.onload = () => {
-      setImg(el);
-      URL.revokeObjectURL(url);
-    };
+    el.onload  = () => setImg(el);
     el.onerror = () => {
       setError("เปิดไฟล์รูปนี้ไม่ได้ ลองไฟล์อื่นดูครับ");
-      URL.revokeObjectURL(url);
+      releaseUrl();
+      setImg(null);
+      setFileName(null);
     };
     el.src = url;
   }
@@ -146,6 +167,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
       const json = await fetch("/api/upload", { method: "POST", body: fd }).then((r) => r.json());
 
       if (!json.url) throw new Error(json.error ?? "อัปโหลดไม่สำเร็จ");
+      releaseUrl();
       onSaved(json.url);
     } catch (e) {
       setError(e instanceof Error ? e.message : "บันทึกรูปไม่สำเร็จ");
@@ -158,7 +180,7 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
     <div className="fixed inset-0 z-[600] flex items-center justify-center p-4" role="dialog" aria-modal>
       <div
         className="absolute inset-0 bg-[rgba(10,25,47,.5)] backdrop-blur-sm"
-        onClick={busy ? undefined : onCancel}
+        onClick={busy ? undefined : () => { releaseUrl(); onCancel(); }}
       />
 
       <div className="relative w-full max-w-[420px] rounded-2xl bg-[var(--hp-bg)] border border-[var(--hp-border)] p-6">
@@ -241,7 +263,11 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
         {error && <div role="alert" className="ui-note ui-note-bad mt-4">{error}</div>}
 
         <div className="flex gap-3 mt-5">
-          <button onClick={onCancel} disabled={busy} className="ui-btn ui-btn-ghost flex-1">
+          <button
+            onClick={() => { releaseUrl(); onCancel(); }}
+            disabled={busy}
+            className="ui-btn ui-btn-ghost flex-1"
+          >
             ยกเลิก
           </button>
           <button onClick={save} disabled={busy || !img} className="ui-btn ui-btn-primary flex-1">

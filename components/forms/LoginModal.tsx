@@ -89,7 +89,7 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
         </div>
         <button onClick={onClose} className="text-[var(--c-muted)] hover:text-[var(--c-ink)] text-xl leading-none">✕</button>
       </div>
-      <div className="flex flex-col gap-3 mb-6">
+      <div className="mb-6">
         <button
           type="button"
           onClick={handleGoogle}
@@ -107,19 +107,6 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
           </svg>
           )}
           <span>{googleLoading ? "กำลังเปิด Google…" : t("login_google")}</span>
-        </button>
-        {/* PSU SSO is not wired up yet — it needs an app registration from PSU IT */}
-        <button
-          type="button"
-          disabled
-          title="ยังไม่เปิดใช้งาน"
-          className="w-full border border-[var(--c-line)] rounded-xl py-3 flex items-center justify-center gap-3 text-sm font-medium opacity-45 cursor-not-allowed"
-        >
-          <span className="text-lg">🎓</span>
-          <span>{t("login_psu")}</span>
-          <span className="text-[10px] font-semibold text-[var(--c-muted)] border border-[var(--c-line)] rounded px-1.5 py-0.5">
-            เร็วๆ นี้
-          </span>
         </button>
       </div>
       <div className="relative mb-6">
