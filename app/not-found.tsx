@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import Link from "next/link";
 
 export const metadata = { title: "ไม่พบหน้านี้ | PSU Store" };
@@ -10,11 +11,12 @@ export const metadata = { title: "ไม่พบหน้านี้ | PSU Sto
  * what happened and offers the three places someone in this situation is
  * actually trying to reach.
  */
-export default function NotFound() {
+export default async function NotFound() {
+  const tr = await getTr();
   const links = [
-    { href: "/",          label: "หน้าร้าน",       hint: "เลือกดูสินค้าทั้งหมด" },
-    { href: "/borrow",    label: "ยืมของฟรี",      hint: "อุปกรณ์จากงานภัทร" },
-    { href: "/dashboard", label: "บัญชีของฉัน",    hint: "คำสั่งซื้อและประกาศ" },
+    { href: "/",          label: tr("หน้าร้าน"),       hint: tr("เลือกดูสินค้าทั้งหมด") },
+    { href: "/borrow",    label: tr("ยืมของฟรี"),      hint: tr("อุปกรณ์จากงานภัทร") },
+    { href: "/dashboard", label: tr("บัญชีของฉัน"),    hint: tr("คำสั่งซื้อและประกาศ") },
   ];
 
   return (
@@ -24,13 +26,8 @@ export default function NotFound() {
           404
         </p>
 
-        <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] mt-3">
-          ไม่พบหน้าที่คุณกำลังหา
-        </h1>
-        <p className="text-[14px] text-[var(--hp-muted)] mt-2.5 leading-[1.9]">
-          ลิงก์อาจพิมพ์ผิด หรือหน้านี้ถูกย้ายไปแล้ว
-          ถ้าคุณมาจากลิงก์ในเว็บนี้ ช่วยแจ้งทีมงานได้ที่หน้าช่วยเหลือ
-        </p>
+        <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] mt-3">{tr("ไม่พบหน้าที่คุณกำลังหา")}</h1>
+        <p className="text-[14px] text-[var(--hp-muted)] mt-2.5 leading-[1.9]">{tr("ลิงก์อาจพิมพ์ผิด หรือหน้านี้ถูกย้ายไปแล้ว ถ้าคุณมาจากลิงก์ในเว็บนี้ ช่วยแจ้งทีมงานได้ที่หน้าช่วยเหลือ")}</p>
 
         <div className="mt-7 grid gap-2.5 text-left">
           {links.map((l) => (
@@ -50,9 +47,7 @@ export default function NotFound() {
           ))}
         </div>
 
-        <Link href="/support" className="ui-btn ui-btn-quiet mt-5 !text-[13px]">
-          ติดต่อทีมงาน
-        </Link>
+        <Link href="/support" className="ui-btn ui-btn-quiet mt-5 !text-[13px]">{tr("ติดต่อทีมงาน")}</Link>
       </div>
     </main>
   );
