@@ -485,7 +485,6 @@ export default function OrdersClient({
   }
 
   function handleReceipt(order: BuyOrder | SellOrder) {
-  const tr = useTr();
     const bo = order as BuyOrder;
     const so = order as SellOrder;
     setReceiptData({

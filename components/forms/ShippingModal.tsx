@@ -50,7 +50,6 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
   // ─── Proof image upload ───────────────────────────────────────────────────
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-  const tr = useTr();
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
@@ -82,7 +81,6 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
   // ─── Submit ───────────────────────────────────────────────────────────────
 
   function handleSubmit(e: React.FormEvent) {
-  const tr = useTr();
     e.preventDefault();
     setFormError(null);
 

@@ -161,7 +161,6 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
   }
 
   function matches(i: MyItem, key: FilterKey) {
-  const tr = useTr();
     if (key === "ALL")      return true;
     if (key === "DELETING") return isDeleting(i);
     // A listing waiting to be deleted still carries its old status, so it would

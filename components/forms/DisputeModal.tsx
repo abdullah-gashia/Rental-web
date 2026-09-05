@@ -44,7 +44,6 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
   // ─── Image Upload ───────────────────────────────────────────────────────────
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-  const tr = useTr();
     const files = Array.from(e.target.files ?? []);
     e.target.value = "";           // reset so same file can be re-selected
     if (!files.length) return;
@@ -100,7 +99,6 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
   // ─── Submit ─────────────────────────────────────────────────────────────────
 
   function handleSubmit(e: React.FormEvent) {
-  const tr = useTr();
     e.preventDefault();
     setSubmitError(null);
 

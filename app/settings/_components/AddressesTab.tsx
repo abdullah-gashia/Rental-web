@@ -52,7 +52,6 @@ export default function AddressesTab({ addresses, showToast }: Props) {
   const [pending, startTransition] = useTransition();
 
   const startNew = () => {
-  const tr = useTr();
     if (list.length >= 5) {
       showToast(false, tr("คุณมีที่อยู่ครบ 5 รายการแล้ว กรุณาลบที่อยู่เดิมก่อนเพิ่มใหม่"));
       return;
@@ -98,7 +97,6 @@ export default function AddressesTab({ addresses, showToast }: Props) {
   };
 
   const handleDelete = (id: string) => {
-  const tr = useTr();
     startTransition(async () => {
       const res = await deleteSavedAddress(id);
       if (res.error) {
@@ -111,7 +109,6 @@ export default function AddressesTab({ addresses, showToast }: Props) {
   };
 
   const handleSetDefault = (id: string) => {
-  const tr = useTr();
     startTransition(async () => {
       const res = await setDefaultAddress(id);
       if (res.error) {

@@ -70,7 +70,6 @@ function RejectModal({
   const [error, setError]   = useState("");
 
   function handleSubmit(e: React.FormEvent) {
-  const tr = useTr();
     e.preventDefault();
     if (!reason.trim()) { setError(tr("กรุณาระบุเหตุผล")); return; }
     onSubmit(reason);

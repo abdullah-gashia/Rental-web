@@ -103,7 +103,6 @@ function PsuIdStep({ form, onChange, onNext }: {
   }
 
   function validate(): boolean {
-  const tr = useTr();
     if (!form.psuIdType) { setErr(tr("กรุณาเลือกประเภท (นักศึกษา / บุคลากร)")); return false; }
     const n = form.psuIdNumber;
     if (!n) { setErr(tr("กรุณากรอกรหัสประจำตัว")); return false; }
@@ -242,7 +241,6 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
   const [err,       setErr]       = useState("");
 
   async function handleFile(file: File) {
-  const tr = useTr();
     if (!file.type.startsWith("image/")) { setErr(tr("กรุณาเลือกไฟล์รูปภาพ")); return; }
 
     setUploading(true);
@@ -417,7 +415,6 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
   const canSubmit      = !missingIdCard && !missingSelfie;
 
   async function handleSubmit() {
-  const tr = useTr();
     if (!canSubmit) {
       setError(tr("ข้อมูลไม่ครบ กรุณากลับไปตรวจสอบ"));
       return;

@@ -102,7 +102,6 @@ export default function OrderTrackingClient({
   // ── Actions ──────────────────────────────────────────────────────────
 
   function handleShip() {
-  const tr = useTr();
     if (!trackNum.trim()) { showToast(tr("⚠️ กรุณากรอกเลขพัสดุ")); return; }
     startTransition(async () => {
       const res = await confirmShipmentNew(order.id, trackNum, trackCarrier);
@@ -112,7 +111,6 @@ export default function OrderTrackingClient({
   }
 
   function handleConfirmDelivery() {
-  const tr = useTr();
     startTransition(async () => {
       const res = await confirmDelivery(order.id);
       if (res.error) showToast(`❌ ${res.error}`);
@@ -121,7 +119,6 @@ export default function OrderTrackingClient({
   }
 
   function handleConfirmMeetup() {
-  const tr = useTr();
     startTransition(async () => {
       const res = await confirmMeetupComplete(order.id);
       if (res.error) showToast(`❌ ${res.error}`);
@@ -130,7 +127,6 @@ export default function OrderTrackingClient({
   }
 
   function handleCancel() {
-  const tr = useTr();
     if (!confirm(tr("คุณแน่ใจหรือไม่ว่าต้องการยกเลิกคำสั่งซื้อนี้?"))) return;
     const role = isBuyer ? "BUYER" : "SELLER";
     startTransition(async () => {

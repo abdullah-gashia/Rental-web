@@ -71,7 +71,6 @@ export default function CancelOrderModal({
   })();
 
   function handleSubmit(e: React.FormEvent) {
-  const tr = useTr();
     e.preventDefault();
     setFormError(null);
 

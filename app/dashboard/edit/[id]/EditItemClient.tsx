@@ -247,7 +247,6 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
 
   // ── Form submit ──────────────────────────────────────
   function handleSubmit(e: React.FormEvent) {
-  const tr = useTr();
     e.preventDefault();
     setFormError("");
 

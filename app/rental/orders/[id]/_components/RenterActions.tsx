@@ -34,7 +34,6 @@ export default function RenterActions({ orderId, status }: Props) {
   }
 
   function handleCancel() {
-  const tr = useTr();
     if (!reason.trim()) { setError(tr("กรุณาระบุเหตุผล")); return; }
     startTransition(async () => {
       const res = await cancelRentalOrder(orderId, reason);

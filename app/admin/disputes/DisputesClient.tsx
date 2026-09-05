@@ -401,7 +401,6 @@ export default function DisputesClient({ orders: initialOrders }: Props) {
   }
 
   function handleAutoRelease() {
-  const tr = useTr();
     setAutoMsg(null);
     start(async () => {
       const res = await checkAndAutoReleaseEscrows();

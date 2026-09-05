@@ -45,7 +45,6 @@ export default function FundClient({ summary, entries }: { summary: any; entries
   }
 
   async function uploadReceipt(file: File | undefined) {
-  const tr = useTr();
     if (!file) return;
     setUploading(true);
     try {

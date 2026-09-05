@@ -91,7 +91,6 @@ export default function OfficeItemsClient({
   }
 
   async function addPhotos(files: FileList | null) {
-  const tr = useTr();
     if (!files?.length) return;
     setUploading(true);
     const next = [...form.images];

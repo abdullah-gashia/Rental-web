@@ -275,7 +275,6 @@ export default function ChatModal({
 
   // ── File → upload ─────────────────────────────────────────────
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const tr = useTr();
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = "";

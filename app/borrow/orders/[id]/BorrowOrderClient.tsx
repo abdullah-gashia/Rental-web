@@ -53,7 +53,6 @@ function PhotoPicker({ photos, onChange }: { photos: string[]; onChange: (p: str
   const [err, setErr]   = useState<string | null>(null);
 
   async function pick(files: FileList | null) {
-  const tr = useTr();
     if (!files?.length) return;
     setBusy(true); setErr(null);
     const next = [...photos];

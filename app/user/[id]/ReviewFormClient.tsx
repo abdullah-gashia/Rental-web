@@ -28,7 +28,6 @@ export default function ReviewFormClient({
   const display = hovered || selected;
 
   async function handleSubmit(e: { preventDefault(): void }) {
-  const tr = useTr();
     e.preventDefault();
     if (selected === 0) { setError(tr("กรุณาเลือกคะแนนก่อน")); return; }
     setError("");

@@ -29,7 +29,6 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
   useEffect(() => { if (initialError) setError(initialError); }, [initialError]);
 
   const handleGoogle = async () => {
-  const tr = useTr();
     setError("");
     setGoogleLoading(true);
     try {

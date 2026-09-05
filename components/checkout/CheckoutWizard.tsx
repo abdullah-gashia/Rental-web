@@ -115,7 +115,6 @@ export default function CheckoutWizard({
   const canAdvance = canAdvanceFromStep(state, state.currentStep, hasSufficientBalance);
 
   async function handleSubmit() {
-  const tr = useTr();
     if (!state.deliveryMethod || !state.paymentMethod) return;
     dispatch({ type: "SUBMIT_START" });
 

@@ -84,7 +84,6 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
   );
 
   function pick(file: File | undefined) {
-  const tr = useTr();
     if (!file) return;
     setError(null);
 
@@ -134,7 +133,6 @@ export default function AvatarEditor({ current, onSaved, onCancel }: Props) {
 
   // ── Export ────────────────────────────────────────────────────────────────
   async function save() {
-  const tr = useTr();
     if (!img) return;
     setBusy(true);
     setError(null);

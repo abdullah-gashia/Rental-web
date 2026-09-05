@@ -196,13 +196,11 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
   );
 
   const handleNextFromStep1 = () => {
-  const tr = useTr();
     if (!category) { showToast(tr("⚠️ กรุณาเลือกหมวดหมู่ก่อน")); return; }
     setStep(2);
   };
 
   const handleNextFromStep2 = () => {
-  const tr = useTr();
     if (!name.trim()) { showToast(t("post_error_name")); return; }
     if (pendingImages.some((p) => p.uploading)) { showToast(tr("⚠️ กรุณารอให้รูปภาพอัปโหลดเสร็จก่อน")); return; }
     if (pendingImages.some((p) => p.uploadError)) { showToast(tr("⚠️ มีรูปภาพที่อัปโหลดไม่สำเร็จ กรุณาลบออกแล้วลองใหม่")); return; }
@@ -210,7 +208,6 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
   };
 
   const handleSubmit = async () => {
-  const tr = useTr();
     if (!name.trim()) { showToast(t("post_error_name")); setStep(2); return; }
 
     const isRent = adType === "rent";

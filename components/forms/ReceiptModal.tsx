@@ -50,7 +50,6 @@ export default function ReceiptModal({ data, onClose }: Props) {
     : null;
 
   function handlePrint() {
-  const tr = useTr();
     if (!printRef.current) return;
 
     const html = `<!DOCTYPE html>

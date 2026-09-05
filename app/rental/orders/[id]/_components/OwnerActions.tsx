@@ -32,7 +32,6 @@ export default function OwnerActions({ orderId, status }: Props) {
   }
 
   function handleReject() {
-  const tr = useTr();
     if (!reason.trim()) { setError(tr("กรุณาระบุเหตุผล")); return; }
     setError(null);
     startTransition(async () => {

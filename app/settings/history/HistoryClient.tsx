@@ -64,7 +64,6 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
   }
 
   function handleDelete(id: string) {
-  const tr = useTr();
     start(async () => {
       const res = await deleteInteraction(id);
       if (res.success) {
@@ -79,7 +78,6 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
   }
 
   function handleClearAll() {
-  const tr = useTr();
     start(async () => {
       const res = await clearAllHistory();
       if (res.success) {
@@ -91,7 +89,6 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
   }
 
   function handleToggleTracking() {
-  const tr = useTr();
     const next = !tracking;
     start(async () => {
       const res = await toggleTracking(next);

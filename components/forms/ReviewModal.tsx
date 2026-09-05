@@ -36,7 +36,6 @@ export default function ReviewModal({
   const STAR_LABELS = ["", tr("แย่มาก"), tr("พอใช้"), tr("ปานกลาง"), tr("ดี"), tr("ยอดเยี่ยม")];
 
   function handleSubmit() {
-  const tr = useTr();
     if (rating === 0) { setError(tr("กรุณาเลือกคะแนนดาวก่อน")); return; }
     setError(null);
     startTransition(async () => {

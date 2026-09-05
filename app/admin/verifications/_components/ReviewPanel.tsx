@@ -55,7 +55,6 @@ export default function ReviewPanel({ request }: Props) {
   const finalReason = rejectionReason === tr("อื่นๆ") ? customReason : rejectionReason;
 
   function handleSubmit() {
-  const tr = useTr();
     if (!decision) return;
     if (decision === "REJECTED" && !finalReason.trim()) {
       setError(tr("กรุณาระบุเหตุผลการปฏิเสธ"));

@@ -42,7 +42,6 @@ export default function ReportButton({
   }
 
   function handleSubmit() {
-  const tr = useTr();
     setError(null);
     if (!category) { setError(tr("กรุณาเลือกหัวข้อการรายงาน")); return; }
     if (reason.trim().length < 10) { setError(tr("กรุณาอธิบายเหตุผลอย่างน้อย 10 ตัวอักษร")); return; }

@@ -50,7 +50,6 @@ export default function SecurityTab({ userData, showToast }: Props) {
   };
 
   const handleExport = () => {
-  const tr = useTr();
     startTransition(async () => {
       const res = await exportMyData();
       if (res.success) {

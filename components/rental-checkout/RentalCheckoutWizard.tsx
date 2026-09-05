@@ -85,7 +85,6 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
   const canNext = canAdvance(state, minRentalDays, maxRentalDays);
 
   function handleSubmit() {
-  const tr = useTr();
     setSubmitError(null);
     startTransition(async () => {
       const res = await createRentalOrder({

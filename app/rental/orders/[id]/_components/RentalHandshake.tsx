@@ -118,7 +118,6 @@ export default function RentalHandshake({
   }
 
   function handleConfirm() {
-  const tr = useTr();
     if (!agreed) { setError(tr("กรุณายืนยันว่าข้อมูลถูกต้อง")); return; }
     if (needsSignature && !signature) { setError(tr("กรุณาลงลายเซ็นดิจิทัลก่อน")); return; }
     setError(null);
