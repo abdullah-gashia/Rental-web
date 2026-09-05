@@ -22,7 +22,7 @@ function Stars({ rating }: { rating: number }) {
   return (
     <span className="inline-flex">
       {[1, 2, 3, 4, 5].map((s) => (
-        <span key={s} className={s <= rating ? "text-amber-400" : "text-[#e5e3de]"}>★</span>
+        <span key={s} className={s <= rating ? "text-amber-400" : "text-[#dfe7f2]"}>★</span>
       ))}
     </span>
   );
@@ -58,14 +58,14 @@ export default function ProfileReviewSection({
           ) : (
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold text-[#111]">มีประสบการณ์กับผู้ขายคนนี้?</p>
-                <p className="text-xs text-[#9a9590] mt-0.5">
+                <p className="text-sm font-semibold text-[#0f1e35]">มีประสบการณ์กับผู้ขายคนนี้?</p>
+                <p className="text-xs text-[#64748b] mt-0.5">
                   แชร์รีวิวของคุณเพื่อช่วยให้ชุมชนปลอดภัยขึ้น
                 </p>
               </div>
               <button
                 onClick={() => setFormVisible(true)}
-                className="flex-shrink-0 bg-[#e8500a] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-[#c94208] transition"
+                className="flex-shrink-0 bg-[#2563eb] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-[#1d4ed8] transition"
               >
                 เขียนรีวิว
               </button>
@@ -79,29 +79,29 @@ export default function ProfileReviewSection({
       )}
 
       {/* ── Reviews List ───────────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-[#e5e3de] overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#e5e3de]">
-          <h2 className="text-sm font-bold text-[#111]">
+      <div className="bg-white rounded-2xl border border-[#dfe7f2] overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#dfe7f2]">
+          <h2 className="text-sm font-bold text-[#0f1e35]">
             รีวิว
-            <span className="ml-2 text-[#9a9590] font-normal">({reviews.length})</span>
+            <span className="ml-2 text-[#64748b] font-normal">({reviews.length})</span>
           </h2>
         </div>
 
         {reviews.length === 0 ? (
-          <div className="px-6 py-12 text-center text-[#9a9590]">
+          <div className="px-6 py-12 text-center text-[#64748b]">
             <p className="text-3xl mb-2">💬</p>
             <p className="text-sm">ยังไม่มีรีวิว</p>
           </div>
         ) : (
-          <ul className="divide-y divide-[#f0ede7]">
+          <ul className="divide-y divide-[#eaf0f8]">
             {reviews.map((review) => (
               <li key={review.id} className="px-6 py-5">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#f0ede7] flex-shrink-0 overflow-hidden flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-[#eaf0f8] flex-shrink-0 overflow-hidden flex items-center justify-center">
                     {review.reviewer.image ? (
                       <img src={review.reviewer.image} alt="" className="w-full h-full object-cover" />
                     ) : (
-                      <svg className="w-4 h-4 text-[#9a9590]" fill="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-[#64748b]" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                       </svg>
                     )}
@@ -109,18 +109,18 @@ export default function ProfileReviewSection({
 
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <span className="text-sm font-semibold text-[#111]">
+                      <span className="text-sm font-semibold text-[#0f1e35]">
                         {review.reviewer.name ?? "ผู้ใช้ไม่ระบุชื่อ"}
                       </span>
                       <Stars rating={review.rating} />
-                      <span className="text-[10px] text-[#b0ada6] ml-auto">
+                      <span className="text-[10px] text-[#94a3b8] ml-auto">
                         {new Date(review.createdAt).toLocaleDateString("th-TH", {
                           day: "numeric", month: "short", year: "numeric",
                         })}
                       </span>
                     </div>
                     {review.comment && (
-                      <p className="text-sm text-[#555] leading-relaxed">{review.comment}</p>
+                      <p className="text-sm text-[#3d4d66] leading-relaxed">{review.comment}</p>
                     )}
                   </div>
                 </div>

@@ -38,8 +38,8 @@ export default function ReviewFormClient({
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <p className="text-sm font-bold text-[#111]">ให้คะแนน {sellerName}</p>
-        <p className="text-xs text-[#9a9590] mt-0.5">
+        <p className="text-sm font-bold text-[#0f1e35]">ให้คะแนน {sellerName}</p>
+        <p className="text-xs text-[#64748b] mt-0.5">
           รีวิวของคุณจะช่วยให้ชุมชนปลอดภัยขึ้น
         </p>
       </div>
@@ -60,15 +60,15 @@ export default function ReviewFormClient({
             </button>
           ))}
         </div>
-        <p className={`text-sm font-semibold h-5 text-[#555] transition-opacity ${display ? "opacity-100" : "opacity-0"}`}>
+        <p className={`text-sm font-semibold h-5 text-[#3d4d66] transition-opacity ${display ? "opacity-100" : "opacity-0"}`}>
           {STAR_LABELS[display]}
         </p>
       </div>
 
       {/* Comment */}
       <div>
-        <label className="block text-sm font-medium text-[#333] mb-1.5">
-          ความคิดเห็น <span className="font-normal text-[#9a9590]">(ไม่บังคับ)</span>
+        <label className="block text-sm font-medium text-[#1e2d47] mb-1.5">
+          ความคิดเห็น <span className="font-normal text-[#64748b]">(ไม่บังคับ)</span>
         </label>
         <textarea
           value={comment}
@@ -76,9 +76,9 @@ export default function ReviewFormClient({
           rows={3}
           maxLength={500}
           placeholder="แชร์ประสบการณ์ของคุณกับผู้ขายคนนี้..."
-          className="w-full border border-[#e5e3de] rounded-xl px-4 py-2.5 text-sm resize-none focus:outline-none focus:border-[#111] transition"
+          className="w-full border border-[#dfe7f2] rounded-xl px-4 py-2.5 text-sm resize-none focus:outline-none focus:border-[#0f1e35] transition"
         />
-        <p className="text-[11px] text-[#b0ada6] text-right mt-0.5">{comment.length}/500</p>
+        <p className="text-[11px] text-[#94a3b8] text-right mt-0.5">{comment.length}/500</p>
       </div>
 
       {error && (
@@ -90,7 +90,7 @@ export default function ReviewFormClient({
       <button
         type="submit"
         disabled={loading || selected === 0}
-        className="w-full bg-[#e8500a] text-white font-semibold py-3 rounded-xl hover:bg-[#c94208] transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full bg-[#2563eb] text-white font-semibold py-3 rounded-xl hover:bg-[#1d4ed8] transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {loading ? (
           <>

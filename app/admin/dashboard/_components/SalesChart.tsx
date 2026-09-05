@@ -47,8 +47,8 @@ function CustomTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-white border border-[#e5e3de] rounded-xl shadow-lg px-4 py-3 text-sm">
-      <p className="font-semibold text-[#333] mb-1.5">{label ? formatDate(label) : ""}</p>
+    <div className="bg-white border border-[#dfe7f2] rounded-xl shadow-lg px-4 py-3 text-sm">
+      <p className="font-semibold text-[#1e2d47] mb-1.5">{label ? formatDate(label) : ""}</p>
       {payload.map((p) => (
         <p key={p.name} style={{ color: p.color }} className="flex items-center gap-1.5">
           <span className="font-medium">
@@ -66,12 +66,12 @@ export default function SalesChart({ data }: SalesChartProps) {
 
   return (
     <div
-      className="bg-white rounded-2xl border border-[#e5e3de] p-5 shadow-sm"
+      className="bg-white rounded-2xl border border-[#dfe7f2] p-5 shadow-sm"
       aria-label="กราฟยอดขายรายวัน 7 วันล่าสุด"
     >
-      <h3 className="text-sm font-semibold text-[#333] mb-4">
+      <h3 className="text-sm font-semibold text-[#1e2d47] mb-4">
         ยอดขายรายวัน{" "}
-        <span className="text-xs font-normal text-[#9a9590]">(7 วันล่าสุด)</span>
+        <span className="text-xs font-normal text-[#64748b]">(7 วันล่าสุด)</span>
       </h3>
 
       {/* min-h ensures ResponsiveContainer has a non-zero height during SSR */}
@@ -81,10 +81,10 @@ export default function SalesChart({ data }: SalesChartProps) {
             data={formatted}
             margin={{ top: 4, right: 16, left: 0, bottom: 0 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0ede7" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#eaf0f8" />
             <XAxis
               dataKey="dateLabel"
-              tick={{ fontSize: 11, fill: "#9a9590" }}
+              tick={{ fontSize: 11, fill: "#64748b" }}
               axisLine={false}
               tickLine={false}
             />
@@ -92,7 +92,7 @@ export default function SalesChart({ data }: SalesChartProps) {
             <YAxis
               yAxisId="left"
               orientation="left"
-              tick={{ fontSize: 11, fill: "#9a9590" }}
+              tick={{ fontSize: 11, fill: "#64748b" }}
               axisLine={false}
               tickLine={false}
               allowDecimals={false}
@@ -102,7 +102,7 @@ export default function SalesChart({ data }: SalesChartProps) {
             <YAxis
               yAxisId="right"
               orientation="right"
-              tick={{ fontSize: 11, fill: "#9a9590" }}
+              tick={{ fontSize: 11, fill: "#64748b" }}
               axisLine={false}
               tickLine={false}
               tickFormatter={(v) => `฿${(v / 1000).toFixed(0)}k`}
@@ -115,12 +115,12 @@ export default function SalesChart({ data }: SalesChartProps) {
               formatter={(value) =>
                 value === "sales" ? "จำนวนรายการ" : "รายได้ (฿)"
               }
-              wrapperStyle={{ fontSize: 12, color: "#555" }}
+              wrapperStyle={{ fontSize: 12, color: "#3d4d66" }}
             />
             <Bar
               yAxisId="left"
               dataKey="sales"
-              fill="#e8500a"
+              fill="#2563eb"
               radius={[4, 4, 0, 0]}
               maxBarSize={40}
             />

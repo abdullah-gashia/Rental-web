@@ -25,13 +25,13 @@ export default function DisplayTab({ preferences, showToast }: Props) {
 
   return (
     <div className="p-5 sm:p-6 space-y-6">
-      <h2 className="text-lg font-bold text-[#111] flex items-center gap-2">
+      <h2 className="text-lg font-bold text-[#0f1e35] flex items-center gap-2">
         <span>🎨</span> การแสดงผล
       </h2>
 
       {/* Language */}
       <div>
-        <h3 className="text-sm font-semibold text-[#555] mb-3">ภาษา</h3>
+        <h3 className="text-sm font-semibold text-[#3d4d66] mb-3">ภาษา</h3>
         <div className="space-y-2">
           <RadioOption
             id="lang-th"
@@ -53,8 +53,8 @@ export default function DisplayTab({ preferences, showToast }: Props) {
       </div>
 
       {/* Theme */}
-      <div className="border-t border-[#e5e3de] pt-5">
-        <h3 className="text-sm font-semibold text-[#555] mb-3">ธีม</h3>
+      <div className="border-t border-[#dfe7f2] pt-5">
+        <h3 className="text-sm font-semibold text-[#3d4d66] mb-3">ธีม</h3>
         <div className="space-y-2">
           <RadioOption
             id="theme-light"
@@ -83,7 +83,7 @@ export default function DisplayTab({ preferences, showToast }: Props) {
         </div>
       </div>
 
-      <p className="text-[11px] text-[#9a9590] flex items-center gap-1">
+      <p className="text-[11px] text-[#64748b] flex items-center gap-1">
         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
@@ -95,7 +95,7 @@ export default function DisplayTab({ preferences, showToast }: Props) {
         <button
           onClick={handleSave}
           disabled={pending}
-          className="px-6 py-2.5 bg-[#e8500a] hover:bg-[#c94208] text-white rounded-xl text-sm font-bold transition disabled:opacity-50 flex items-center gap-2"
+          className="px-6 py-2.5 bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded-xl text-sm font-bold transition disabled:opacity-50 flex items-center gap-2"
         >
           {pending && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
           บันทึกการเปลี่ยนแปลง
@@ -122,8 +122,8 @@ function RadioOption({
       htmlFor={id}
       className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition border ${
         checked
-          ? "border-[#e8500a]/40 bg-orange-50/40"
-          : "border-transparent hover:bg-[#faf9f7]"
+          ? "border-[#2563eb]/40 bg-orange-50/40"
+          : "border-transparent hover:bg-[#f7f9fd]"
       }`}
     >
       <input
@@ -132,11 +132,11 @@ function RadioOption({
         name={name}
         checked={checked}
         onChange={onChange}
-        className="w-4 h-4 text-[#e8500a] accent-[#e8500a]"
+        className="w-4 h-4 text-[#2563eb] accent-[#2563eb]"
       />
       <div>
-        <p className="text-sm font-medium text-[#333]">{label}</p>
-        <p className="text-[11px] text-[#9a9590]">{description}</p>
+        <p className="text-sm font-medium text-[#1e2d47]">{label}</p>
+        <p className="text-[11px] text-[#64748b]">{description}</p>
       </div>
     </label>
   );

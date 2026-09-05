@@ -80,21 +80,21 @@ export default async function RentalOrderDetailPage({ params }: Props) {
     : null;
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]">
+    <div className="min-h-screen bg-[#f7f9fd]">
       <div className="max-w-4xl mx-auto px-5 py-6">
 
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-1.5 text-xs text-[#aaa] mb-5">
-          <Link href="/dashboard/rentals" className="hover:text-[#555]">การเช่าของฉัน</Link>
+        <nav className="flex items-center gap-1.5 text-xs text-[#94a3b8] mb-5">
+          <Link href="/dashboard/rentals" className="hover:text-[#3d4d66]">การเช่าของฉัน</Link>
           <span>/</span>
-          <span className="text-[#555] font-medium truncate max-w-[200px]">{item.title}</span>
+          <span className="text-[#3d4d66] font-medium truncate max-w-[200px]">{item.title}</span>
         </nav>
 
         {/* Header */}
         <div className="flex items-start justify-between gap-4 mb-6 flex-wrap">
           <div>
-            <h1 className="text-xl font-bold text-[#111]">{item.title}</h1>
-            <p className="text-sm text-[#777] mt-1">
+            <h1 className="text-xl font-bold text-[#0f1e35]">{item.title}</h1>
+            <p className="text-sm text-[#5b6b82] mt-1">
               รหัส: {order.refCode.slice(0, 8).toUpperCase()}
               {" · "}
               {isRenter ? "คุณเป็นผู้เช่า" : "คุณเป็นเจ้าของ"}
@@ -181,37 +181,37 @@ export default async function RentalOrderDetailPage({ params }: Props) {
             {/* PDF Download buttons */}
             {["ACTIVE", "OVERDUE", "RETURN_SCHEDULED", "RETURNED",
               "COMPLETED", "COMPLETED_WITH_DEDUCTION"].includes(order.status) && (
-              <div className="bg-white rounded-2xl border border-[#e5e3de] p-5">
-                <h3 className="text-sm font-bold text-[#111] mb-3">📄 เอกสาร</h3>
+              <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+                <h3 className="text-sm font-bold text-[#0f1e35] mb-3">📄 เอกสาร</h3>
                 <div className="flex flex-col gap-2">
                   <a
                     href={`/rental/orders/${order.id}/receipt?type=contract`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2.5 px-4 py-3 bg-[#faf9f7] border border-[#e5e3de]
-                               rounded-xl text-sm text-[#333] hover:border-[#e8500a]/40 hover:bg-[#fff5f0] transition"
+                    className="flex items-center gap-2.5 px-4 py-3 bg-[#f7f9fd] border border-[#dfe7f2]
+                               rounded-xl text-sm text-[#1e2d47] hover:border-[#2563eb]/40 hover:bg-[#eef4ff] transition"
                   >
                     <span className="text-base">📜</span>
                     <div>
                       <p className="font-semibold">สัญญาเช่า</p>
-                      <p className="text-xs text-[#999]">Rental Contract Agreement</p>
+                      <p className="text-xs text-[#8d9bb0]">Rental Contract Agreement</p>
                     </div>
-                    <span className="ml-auto text-xs text-[#aaa]">PDF ↗</span>
+                    <span className="ml-auto text-xs text-[#94a3b8]">PDF ↗</span>
                   </a>
                   {["RETURNED", "COMPLETED", "COMPLETED_WITH_DEDUCTION"].includes(order.status) && (
                     <a
                       href={`/rental/orders/${order.id}/receipt?type=return`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2.5 px-4 py-3 bg-[#faf9f7] border border-[#e5e3de]
-                                 rounded-xl text-sm text-[#333] hover:border-[#e8500a]/40 hover:bg-[#fff5f0] transition"
+                      className="flex items-center gap-2.5 px-4 py-3 bg-[#f7f9fd] border border-[#dfe7f2]
+                                 rounded-xl text-sm text-[#1e2d47] hover:border-[#2563eb]/40 hover:bg-[#eef4ff] transition"
                     >
                       <span className="text-base">🧾</span>
                       <div>
                         <p className="font-semibold">ใบเสร็จคืนสินค้า</p>
-                        <p className="text-xs text-[#999]">Return Receipt</p>
+                        <p className="text-xs text-[#8d9bb0]">Return Receipt</p>
                       </div>
-                      <span className="ml-auto text-xs text-[#aaa]">PDF ↗</span>
+                      <span className="ml-auto text-xs text-[#94a3b8]">PDF ↗</span>
                     </a>
                   )}
                 </div>
@@ -220,38 +220,38 @@ export default async function RentalOrderDetailPage({ params }: Props) {
 
             {/* Return photos evidence */}
             {order.returnPhotos.length > 0 && (
-              <div className="bg-white rounded-2xl border border-[#e5e3de] p-5">
-                <h3 className="text-sm font-bold text-[#111] mb-3">หลักฐานตอนคืนของ</h3>
+              <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+                <h3 className="text-sm font-bold text-[#0f1e35] mb-3">หลักฐานตอนคืนของ</h3>
                 <div className="flex gap-2 flex-wrap mb-2">
                   {order.returnPhotos.map((url: string, i: number) => (
-                    <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-[#e5e3de]">
+                    <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-[#dfe7f2]">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={url} alt="" className="w-full h-full object-contain" />
                     </div>
                   ))}
                 </div>
                 {order.returnConditionNote && (
-                  <p className="text-xs text-[#555]">หมายเหตุ: {order.returnConditionNote}</p>
+                  <p className="text-xs text-[#3d4d66]">หมายเหตุ: {order.returnConditionNote}</p>
                 )}
               </div>
             )}
 
             {/* Status history */}
             {order.statusHistory.length > 0 && (
-              <div className="bg-white rounded-2xl border border-[#e5e3de] p-5">
-                <h3 className="text-sm font-bold text-[#111] mb-3">ประวัติสถานะ</h3>
+              <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+                <h3 className="text-sm font-bold text-[#0f1e35] mb-3">ประวัติสถานะ</h3>
                 <div className="space-y-3">
                   {order.statusHistory.map((h: any, i: number) => (
                     <div key={i} className="flex items-start gap-3 text-xs">
                       <div className={`w-2 h-2 rounded-full mt-1 flex-shrink-0 ${
-                        i === order.statusHistory.length - 1 ? "bg-[#e8500a]" : "bg-[#ddd]"
+                        i === order.statusHistory.length - 1 ? "bg-[#2563eb]" : "bg-[#ddd]"
                       }`} />
                       <div>
-                        <p className="font-semibold text-[#111]">
+                        <p className="font-semibold text-[#0f1e35]">
                           {STATUS_LABEL[h.status] ?? h.status}
                         </p>
-                        {h.note && <p className="text-[#777]">{h.note}</p>}
-                        <p className="text-[#aaa]">
+                        {h.note && <p className="text-[#5b6b82]">{h.note}</p>}
+                        <p className="text-[#94a3b8]">
                           {new Date(h.changedAt).toLocaleString("th-TH")}
                         </p>
                       </div>
@@ -266,8 +266,8 @@ export default async function RentalOrderDetailPage({ params }: Props) {
           <div className="space-y-4">
 
             {/* Item card */}
-            <div className="bg-white rounded-2xl border border-[#e5e3de] p-4 flex items-center gap-3">
-              <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-[#f0ede7]">
+            <div className="bg-white rounded-2xl border border-[#dfe7f2] p-4 flex items-center gap-3">
+              <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-[#eaf0f8]">
                 {img ? (
                   <Image src={img} alt="" fill className="object-contain" sizes="64px" />
                 ) : (
@@ -277,16 +277,16 @@ export default async function RentalOrderDetailPage({ params }: Props) {
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <Link href={`/items/${item.id}`} className="text-sm font-semibold text-[#111] hover:text-[#e8500a] truncate block">
+                <Link href={`/items/${item.id}`} className="text-sm font-semibold text-[#0f1e35] hover:text-[#2563eb] truncate block">
                   {item.title}
                 </Link>
-                <p className="text-xs text-[#999]">{item.category?.nameTh ?? "—"}</p>
+                <p className="text-xs text-[#8d9bb0]">{item.category?.nameTh ?? "—"}</p>
               </div>
             </div>
 
             {/* Rental period */}
-            <div className="bg-white rounded-2xl border border-[#e5e3de] p-5">
-              <h3 className="text-xs font-bold text-[#999] uppercase tracking-wide mb-3">ระยะเวลาเช่า</h3>
+            <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+              <h3 className="text-xs font-bold text-[#8d9bb0] uppercase tracking-wide mb-3">ระยะเวลาเช่า</h3>
               <div className="space-y-1.5 text-sm">
                 <Row label="วันเริ่มเช่า"  value={fmtDate(order.rentalStartDate)} />
                 <Row label="วันสิ้นสุดเช่า" value={fmtDate(order.rentalEndDate)} />
@@ -297,13 +297,13 @@ export default async function RentalOrderDetailPage({ params }: Props) {
             </div>
 
             {/* Financial */}
-            <div className="bg-white rounded-2xl border border-[#e5e3de] p-5">
-              <h3 className="text-xs font-bold text-[#999] uppercase tracking-wide mb-3">สรุปการเงิน</h3>
+            <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+              <h3 className="text-xs font-bold text-[#8d9bb0] uppercase tracking-wide mb-3">สรุปการเงิน</h3>
               <div className="space-y-1.5 text-sm">
                 <Row label={`ค่าเช่า (฿${order.dailyRate}/วัน × ${order.rentalDays})`} value={`฿${order.rentalFee.toLocaleString()}`} />
                 <Row label="ค่าธรรมเนียม (5%)"  value={`฿${order.platformFee.toLocaleString()}`} />
                 <Row label="เงินมัดจำ"           value={`฿${order.securityDeposit.toLocaleString()}`} />
-                <div className="border-t border-[#f0ede7] pt-1.5 flex justify-between font-bold text-[#111]">
+                <div className="border-t border-[#eaf0f8] pt-1.5 flex justify-between font-bold text-[#0f1e35]">
                   <span>ยอดที่หักไป</span>
                   <span>฿{order.totalPaid.toLocaleString()}</span>
                 </div>
@@ -319,8 +319,8 @@ export default async function RentalOrderDetailPage({ params }: Props) {
             </div>
 
             {/* Pickup info */}
-            <div className="bg-white rounded-2xl border border-[#e5e3de] p-5">
-              <h3 className="text-xs font-bold text-[#999] uppercase tracking-wide mb-3">นัดรับ / คืน</h3>
+            <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+              <h3 className="text-xs font-bold text-[#8d9bb0] uppercase tracking-wide mb-3">นัดรับ / คืน</h3>
               <div className="space-y-1.5 text-sm">
                 {order.pickupLocation && <Row label="ที่นัดรับ"   value={`📍 ${order.pickupLocation}`} />}
                 {order.pickupDateTime && <Row label="เวลานัดรับ"  value={fmt(order.pickupDateTime)} />}
@@ -332,10 +332,10 @@ export default async function RentalOrderDetailPage({ params }: Props) {
             </div>
 
             {/* Parties */}
-            <div className="bg-white rounded-2xl border border-[#e5e3de] p-5">
-              <h3 className="text-xs font-bold text-[#999] uppercase tracking-wide mb-3">คู่สัญญา</h3>
+            <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+              <h3 className="text-xs font-bold text-[#8d9bb0] uppercase tracking-wide mb-3">คู่สัญญา</h3>
               <PartyRow label="เจ้าของ" user={order.owner} />
-              <div className="border-t border-[#f0ede7] my-3" />
+              <div className="border-t border-[#eaf0f8] my-3" />
               <PartyRow label="ผู้เช่า" user={order.renter} />
             </div>
           </div>
@@ -350,8 +350,8 @@ export default async function RentalOrderDetailPage({ params }: Props) {
 function Row({ label, value, color }: { label: string; value: string; color?: string }) {
   return (
     <div className="flex justify-between gap-2">
-      <span className="text-[#777] flex-shrink-0">{label}</span>
-      <span className={`font-medium text-right ${color ?? "text-[#111]"}`}>{value}</span>
+      <span className="text-[#5b6b82] flex-shrink-0">{label}</span>
+      <span className={`font-medium text-right ${color ?? "text-[#0f1e35]"}`}>{value}</span>
     </div>
   );
 }
@@ -359,12 +359,12 @@ function Row({ label, value, color }: { label: string; value: string; color?: st
 function PartyRow({ label, user }: { label: string; user: any }) {
   return (
     <div className="flex items-center gap-2.5">
-      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#e8500a] to-[#ff7a3d]
+      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#2563eb] to-[#60a5fa]
                       flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
         {(user.name ?? "?")[0].toUpperCase()}
       </div>
       <div>
-        <p className="text-xs font-semibold text-[#111]">{label}: {user.name ?? "—"}</p>
+        <p className="text-xs font-semibold text-[#0f1e35]">{label}: {user.name ?? "—"}</p>
         {user.verificationStatus === "APPROVED" && (
           <p className="text-[11px] text-green-600">✅ ยืนยันตัวตนแล้ว</p>
         )}

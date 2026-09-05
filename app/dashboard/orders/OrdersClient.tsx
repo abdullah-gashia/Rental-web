@@ -132,7 +132,7 @@ function StatusBadge({ status }: { status: EscrowStatus }) {
 function Thumb({ item }: { item: OrderItem }) {
   const src = item.images[0]?.url;
   return (
-    <div className="w-14 h-14 rounded-xl overflow-hidden bg-[#f0ede7] flex-shrink-0 flex items-center justify-center text-2xl">
+    <div className="w-14 h-14 rounded-xl overflow-hidden bg-[#eaf0f8] flex-shrink-0 flex items-center justify-center text-2xl">
       {src
         ? <img src={src} alt={item.title} className="w-full h-full object-contain" />
         : <span>{item.emoji ?? "📦"}</span>
@@ -153,8 +153,8 @@ function ShippingDetails({ order }: { order: BaseOrder }) {
       </div>
       {order.trackingNumber && (
         <div className="flex items-center gap-2">
-          <span className="text-[#9a9590]">หมายเลขพัสดุ:</span>
-          <span className="font-mono font-bold text-[#111]">{order.trackingNumber}</span>
+          <span className="text-[#64748b]">หมายเลขพัสดุ:</span>
+          <span className="font-mono font-bold text-[#0f1e35]">{order.trackingNumber}</span>
           <button
             onClick={() => navigator.clipboard.writeText(order.trackingNumber!).catch(() => {})}
             className="px-2 py-0.5 rounded-md bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold transition text-[10px]"
@@ -191,16 +191,16 @@ function MeetupDetails({ order }: { order: BaseOrder }) {
       <div className="flex items-center gap-1.5 text-sky-700 font-semibold">
         <span>🤝</span><span>นัดรับสินค้า</span>
       </div>
-      <div className="flex items-center gap-1.5 text-[#555]">
+      <div className="flex items-center gap-1.5 text-[#3d4d66]">
         <span>📍</span><span>{order.meetupLocation}</span>
       </div>
       {dt && (
-        <div className="flex items-center gap-1.5 text-[#555]">
+        <div className="flex items-center gap-1.5 text-[#3d4d66]">
           <span>🕐</span><span>{dt}</span>
         </div>
       )}
       {order.meetupNote && (
-        <div className="flex items-center gap-1.5 text-[#9a9590]">
+        <div className="flex items-center gap-1.5 text-[#64748b]">
           <span>💬</span><span>{order.meetupNote}</span>
         </div>
       )}
@@ -300,7 +300,7 @@ function OrderCard({
 
   return (
     <div className={`bg-white rounded-2xl border p-4 space-y-3 ${
-      isTerminal ? "border-[#f0ede7] opacity-80" : "border-[#e5e3de]"
+      isTerminal ? "border-[#eaf0f8] opacity-80" : "border-[#dfe7f2]"
     }`}>
       <div className="flex gap-4">
         <Thumb item={order.item} />
@@ -308,13 +308,13 @@ function OrderCard({
         <div className="flex-1 min-w-0 space-y-1.5">
           {/* Title + badge */}
           <div className="flex flex-wrap items-start justify-between gap-2">
-            <p className="text-sm font-bold text-[#111] truncate max-w-[200px]">{order.item.title}</p>
+            <p className="text-sm font-bold text-[#0f1e35] truncate max-w-[200px]">{order.item.title}</p>
             <StatusBadge status={order.status} />
           </div>
 
           {/* Meta row */}
-          <div className="flex flex-wrap items-center gap-2 text-xs text-[#9a9590]">
-            <span className="font-bold text-[#111] text-sm">฿{order.amount.toLocaleString()}</span>
+          <div className="flex flex-wrap items-center gap-2 text-xs text-[#64748b]">
+            <span className="font-bold text-[#0f1e35] text-sm">฿{order.amount.toLocaleString()}</span>
             <span>·</span>
             <span>{role === "buyer" ? "ขายโดย" : "ซื้อโดย"} {counterparty?.name ?? "ไม่ระบุชื่อ"}</span>
             {isMeetup && <span className="px-2 py-0.5 rounded-full bg-sky-50 text-sky-600 font-semibold">🤝 นัดพบ</span>}
@@ -388,7 +388,7 @@ function OrderCard({
                 <button
                   onClick={() => onCancel(order)}
                   disabled={pending}
-                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[#f7f6f3] text-[#777] border border-[#e5e3de] hover:bg-[#f0ede7] transition disabled:opacity-40"
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[#f1f5fb] text-[#5b6b82] border border-[#dfe7f2] hover:bg-[#eaf0f8] transition disabled:opacity-40"
                 >
                   ยกเลิก
                 </button>
@@ -433,7 +433,7 @@ function OrderCard({
                 </button>
               )}
               {isCompleted && order.myReview && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#f7f6f3] text-[#9a9590] border border-[#e5e3de]">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#f1f5fb] text-[#64748b] border border-[#dfe7f2]">
                   {"⭐".repeat(order.myReview.rating)} รีวิวแล้ว
                 </span>
               )}
@@ -451,9 +451,20 @@ function OrderCard({
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export default function OrdersClient({ buying, selling, walletBalance, escrowBalance, currentUserId }: Props) {
+export default function OrdersClient({
+  buying, selling, walletBalance, escrowBalance, currentUserId, initialTab = "buying",
+}: Props & { initialTab?: "buying" | "selling" }) {
   const router = useRouter();
-  const [tab, setTab]               = useState<"buying" | "selling">("buying");
+
+  // The tab lives in the URL so the sidebar can link straight to "การขาย"
+  // instead of always dropping the seller on the buying list first.
+  const [tab, setTabState] = useState<"buying" | "selling">(initialTab);
+  function setTab(next: "buying" | "selling") {
+    setTabState(next);
+    const url = new URL(window.location.href);
+    url.searchParams.set("tab", next);
+    window.history.replaceState(null, "", url.toString());
+  }
   const [isPending, start]          = useTransition();
   const [actionId, setActionId]     = useState<string | null>(null);
   const [disputeTarget, setDisputeTarget]         = useState<BuyOrder | SellOrder | null>(null);
@@ -512,36 +523,43 @@ export default function OrdersClient({ buying, selling, walletBalance, escrowBal
     <div className="space-y-6" onClick={escrowTooltipOpen ? closeEscrowTooltip : undefined}>
 
       {/* Heading */}
-      <div>
-        <h1 className="text-2xl font-extrabold tracking-tight text-[#111]">คำสั่งซื้อของฉัน</h1>
-        <p className="text-sm text-[#9a9590] mt-0.5">ติดตามสถานะการซื้อขายและจัดการการชำระเงิน Escrow</p>
-      </div>
+      <header className="ui-head">
+        <div>
+          <p className="ui-eyebrow mb-1.5">{tab === "buying" ? "การซื้อ" : "การขาย"}</p>
+          <h1>{tab === "buying" ? "คำสั่งซื้อของฉัน" : "รายการที่ฉันขาย"}</h1>
+          <p>
+            {tab === "buying"
+              ? "เงินจะถูกพักไว้จนกว่าคุณจะยืนยันว่าได้รับสินค้าแล้ว"
+              : "ยืนยันการส่งมอบเพื่อให้ระบบปล่อยเงินเข้ากระเป๋าของคุณ"}
+          </p>
+        </div>
+      </header>
 
       {/* Wallet cards */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-white rounded-2xl border border-[#e5e3de] px-5 py-4">
-          <p className="text-xs text-[#9a9590] mb-1">กระเป๋าเงิน</p>
-          <p className="text-2xl font-extrabold text-[#111]">฿{walletBalance.toLocaleString()}</p>
-          <p className="text-xs text-emerald-600 mt-0.5">พร้อมใช้งาน</p>
+        <div className="ui-stat">
+          <p className="ui-stat-k">กระเป๋าเงิน</p>
+          <p className="ui-stat-v">฿{walletBalance.toLocaleString()}</p>
+          <p className="ui-stat-sub">พร้อมใช้งาน</p>
         </div>
-        <div className="relative bg-white rounded-2xl border border-[#e5e3de] px-5 py-4">
+        <div className="ui-stat relative">
           {/* Label row with info icon */}
           <div className="flex items-center gap-1 mb-1">
-            <p className="text-xs text-[#9a9590]">เงิน Escrow</p>
+            <p className="ui-stat-k">เงิน Escrow</p>
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); toggleEscrowTooltip(); }}
               aria-label="Escrow information"
-              className="group relative flex-shrink-0 w-4 h-4 rounded-full bg-[#e5e3de] hover:bg-amber-200 flex items-center justify-center transition focus:outline-none focus:ring-2 focus:ring-amber-400"
+              className="group relative flex-shrink-0 w-4 h-4 rounded-full bg-[#dfe7f2] hover:bg-amber-200 flex items-center justify-center transition focus:outline-none focus:ring-2 focus:ring-amber-400"
             >
-              <svg className="w-2.5 h-2.5 text-[#9a9590] group-hover:text-amber-700 transition" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-2.5 h-2.5 text-[#64748b] group-hover:text-amber-700 transition" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
             </button>
           </div>
 
-          <p className="text-2xl font-extrabold text-amber-600">฿{escrowBalance.toLocaleString()}</p>
-          <p className="text-xs text-amber-500 mt-0.5">
+          <p className="ui-stat-v !text-[#92620e]">฿{escrowBalance.toLocaleString()}</p>
+          <p className="ui-stat-sub">
             {activeEscrowOrderCount > 0
               ? `${activeEscrowOrderCount} คำสั่งซื้อที่ถือเงินอยู่`
               : "รอการยืนยัน"}
@@ -555,7 +573,7 @@ export default function OrdersClient({ buying, selling, walletBalance, escrowBal
               onClick={(e) => e.stopPropagation()}
             >
               <p className="font-bold text-amber-400 mb-1">ระบบ Escrow คืออะไร?</p>
-              <p className="text-[#ccc]">
+              <p className="text-[#c2ccdb]">
                 เมื่อคุณซื้อสินค้า เงินจะถูกพักไว้กับ PSU.Store อย่างปลอดภัย
                 และจะโอนให้ผู้ขายก็ต่อเมื่อคุณยืนยันว่าได้รับสินค้าแล้วเท่านั้น
               </p>
@@ -572,16 +590,16 @@ export default function OrdersClient({ buying, selling, walletBalance, escrowBal
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-[#f0ede7] p-1 rounded-2xl w-fit">
+      <div className="flex gap-2">
         {(["buying", "selling"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-5 py-2 rounded-xl text-sm font-semibold transition ${
-              tab === t ? "bg-white text-[#111] shadow-sm" : "text-[#9a9590] hover:text-[#555]"
-            }`}
+            aria-pressed={tab === t}
+            className={`ui-chip ${tab === t ? "is-on" : ""}`}
           >
-            {t === "buying" ? `กำลังซื้อ (${buying.length})` : `กำลังขาย (${selling.length})`}
+            {t === "buying" ? "ฉันซื้อ" : "ฉันขาย"}
+            <span className="ui-chip-n">{t === "buying" ? buying.length : selling.length}</span>
           </button>
         ))}
       </div>
@@ -589,9 +607,22 @@ export default function OrdersClient({ buying, selling, walletBalance, escrowBal
       {/* Order list */}
       <div className="space-y-3">
         {activeTab.length === 0 ? (
-          <div className="py-16 text-center text-[#9a9590]">
-            <p className="text-4xl mb-3">📭</p>
-            <p className="text-sm">{tab === "buying" ? "ยังไม่มีรายการซื้อ" : "ยังไม่มีรายการขาย"}</p>
+          <div className="ui-card ui-empty">
+            <div className="ui-empty-icon">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 4h2l2.4 11.2a1.5 1.5 0 0 0 1.5 1.2h7.9a1.5 1.5 0 0 0 1.5-1.2L20 8H6" />
+              </svg>
+            </div>
+            <h3>{tab === "buying" ? "ยังไม่มีรายการซื้อ" : "ยังไม่มีรายการขาย"}</h3>
+            <p>
+              {tab === "buying"
+                ? "เมื่อคุณสั่งซื้อสินค้า รายการจะขึ้นที่นี่พร้อมสถานะและขั้นตอนถัดไป"
+                : "เมื่อมีคนสั่งซื้อสินค้าของคุณ รายการจะขึ้นที่นี่พร้อมสิ่งที่คุณต้องทำ"}
+            </p>
+            <a href={tab === "buying" ? "/" : "/dashboard/my-items"} className="ui-btn ui-btn-primary mt-4">
+              {tab === "buying" ? "เลือกดูสินค้า" : "จัดการประกาศของฉัน"}
+            </a>
           </div>
         ) : (
           activeTab.map((order) => (

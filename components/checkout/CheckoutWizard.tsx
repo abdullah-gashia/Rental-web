@@ -184,7 +184,7 @@ export default function CheckoutWizard({
             onClick={handleClose}
             disabled={state.isSubmitting}
             aria-label="ปิด"
-            className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-[#f0ede7] hover:bg-[#e5e3de] flex items-center justify-center text-[#777] hover:text-[#111] transition disabled:opacity-40"
+            className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-[#eaf0f8] hover:bg-[#dfe7f2] flex items-center justify-center text-[#5b6b82] hover:text-[#0f1e35] transition disabled:opacity-40"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -193,8 +193,8 @@ export default function CheckoutWizard({
 
           {/* Header */}
           <div className="px-6 pt-5 pb-2 pr-14">
-            <h2 className="text-lg font-extrabold text-[#111] tracking-tight">สั่งซื้อสินค้า</h2>
-            <p className="text-xs text-[#9a9590] mt-0.5">ขั้นตอน {state.currentStep}/3</p>
+            <h2 className="text-lg font-extrabold text-[#0f1e35] tracking-tight">สั่งซื้อสินค้า</h2>
+            <p className="text-xs text-[#64748b] mt-0.5">ขั้นตอน {state.currentStep}/3</p>
           </div>
 
           {/* ── Content — natural height, no overflow scroll ─────────────────── */}
@@ -247,7 +247,7 @@ export default function CheckoutWizard({
 
           {/* ── Footer navigation ──────────────────────────────────────────────── */}
           <div
-            className="px-6 py-4 border-t border-[#e5e3de] bg-white rounded-b-3xl"
+            className="px-6 py-4 border-t border-[#dfe7f2] bg-white rounded-b-3xl"
             style={{ paddingBottom: "max(16px, env(safe-area-inset-bottom))" }}
           >
             <div className="flex gap-3">
@@ -255,7 +255,7 @@ export default function CheckoutWizard({
                 <button
                   onClick={() => dispatch({ type: "PREV_STEP" })}
                   disabled={state.isSubmitting}
-                  className="flex-1 py-3 rounded-2xl border border-[#e5e3de] text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition disabled:opacity-40"
+                  className="flex-1 py-3 rounded-2xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-40"
                 >
                   ← ย้อนกลับ
                 </button>
@@ -265,7 +265,7 @@ export default function CheckoutWizard({
                 <button
                   onClick={() => dispatch({ type: "NEXT_STEP" })}
                   disabled={!canAdvance}
-                  className="flex-1 py-3 rounded-2xl bg-[#111] text-white text-sm font-bold hover:bg-[#333] transition disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="flex-1 py-3 rounded-2xl bg-[#0f1e35] text-white text-sm font-bold hover:bg-[#1e2d47] transition disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   ถัดไป →
                 </button>

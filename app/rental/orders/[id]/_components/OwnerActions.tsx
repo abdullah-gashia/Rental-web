@@ -39,9 +39,9 @@ export default function OwnerActions({ orderId, status }: Props) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-[#e5e3de] p-5 space-y-4">
-      <h3 className="text-sm font-bold text-[#111]">🔔 มีคำขอเช่าใหม่</h3>
-      <p className="text-xs text-[#777]">ผู้เช่าส่งคำขอมาแล้ว — กรุณาตอบรับหรือปฏิเสธภายใน 7 วัน มิฉะนั้นระบบจะยกเลิกและคืนเงินให้ผู้เช่าอัตโนมัติ</p>
+    <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 space-y-4">
+      <h3 className="text-sm font-bold text-[#0f1e35]">🔔 มีคำขอเช่าใหม่</h3>
+      <p className="text-xs text-[#5b6b82]">ผู้เช่าส่งคำขอมาแล้ว — กรุณาตอบรับหรือปฏิเสธภายใน 7 วัน มิฉะนั้นระบบจะยกเลิกและคืนเงินให้ผู้เช่าอัตโนมัติ</p>
 
       {error && (
         <div className="bg-red-50 text-red-700 text-xs px-3 py-2 rounded-xl">{error}</div>
@@ -52,8 +52,8 @@ export default function OwnerActions({ orderId, status }: Props) {
           <button
             onClick={() => setRejectOpen(true)}
             disabled={isPending}
-            className="flex-1 py-2.5 border border-[#e5e3de] text-sm font-medium text-[#555]
-                       rounded-xl hover:bg-[#f0ede7] transition disabled:opacity-50"
+            className="flex-1 py-2.5 border border-[#dfe7f2] text-sm font-medium text-[#3d4d66]
+                       rounded-xl hover:bg-[#eaf0f8] transition disabled:opacity-50"
           >
             ปฏิเสธ
           </button>
@@ -73,14 +73,14 @@ export default function OwnerActions({ orderId, status }: Props) {
             onChange={(e) => setReason(e.target.value)}
             rows={3}
             placeholder="เหตุผลที่ปฏิเสธ..."
-            className="w-full px-3 py-2 text-sm border border-[#e5e3de] rounded-xl resize-none
+            className="w-full px-3 py-2 text-sm border border-[#dfe7f2] rounded-xl resize-none
                        focus:outline-none focus:ring-2 focus:ring-red-300"
           />
           <div className="flex gap-3">
             <button
               onClick={() => { setRejectOpen(false); setReason(""); }}
               disabled={isPending}
-              className="flex-1 py-2.5 border border-[#e5e3de] text-sm rounded-xl hover:bg-[#f0ede7]"
+              className="flex-1 py-2.5 border border-[#dfe7f2] text-sm rounded-xl hover:bg-[#eaf0f8]"
             >
               ยกเลิก
             </button>

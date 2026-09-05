@@ -33,8 +33,8 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
     <div className="space-y-5">
       {/* Heading */}
       <div>
-        <h1 className="text-xl font-bold text-[#111]">รายการสั่งซื้อ</h1>
-        <p className="text-sm text-[#777] mt-0.5">ติดตามและจัดการคำสั่งซื้อทั้งหมด</p>
+        <h1 className="text-xl font-bold text-[#0f1e35]">รายการสั่งซื้อ</h1>
+        <p className="text-sm text-[#5b6b82] mt-0.5">ติดตามและจัดการคำสั่งซื้อทั้งหมด</p>
       </div>
 
       {/* Quick-filter tabs */}
@@ -80,7 +80,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-[#e5e3de] overflow-hidden">
+      <div className="bg-white rounded-2xl border border-[#dfe7f2] overflow-hidden">
         <OrdersTable rows={result.data} />
       </div>
 

@@ -32,8 +32,8 @@ export default async function AdminUsersPage({ searchParams }: Props) {
       {/* Page heading */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold text-[#111]">ผู้ใช้งาน</h1>
-          <p className="text-sm text-[#777] mt-0.5">
+          <h1 className="text-xl font-bold text-[#0f1e35]">ผู้ใช้งาน</h1>
+          <p className="text-sm text-[#5b6b82] mt-0.5">
             จัดการบัญชีผู้ใช้ บทบาท และการแบน
           </p>
         </div>
@@ -74,7 +74,7 @@ export default async function AdminUsersPage({ searchParams }: Props) {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-[#e5e3de] overflow-hidden">
+      <div className="bg-white rounded-2xl border border-[#dfe7f2] overflow-hidden">
         <UsersTable rows={result.data} />
       </div>
 

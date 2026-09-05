@@ -12,8 +12,8 @@ export default function PrintBar({ title }: Props) {
       <div className="flex gap-2">
         <button
           onClick={() => window.print()}
-          className="px-4 py-1.5 bg-[#e8500a] text-white text-sm font-semibold rounded-lg
-                     hover:bg-[#c94208] transition"
+          className="px-4 py-1.5 bg-[#2563eb] text-white text-sm font-semibold rounded-lg
+                     hover:bg-[#1d4ed8] transition"
         >
           🖨️ พิมพ์ / บันทึก PDF
         </button>

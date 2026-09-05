@@ -17,20 +17,20 @@ function PendingCard({ submittedAt }: { submittedAt: Date | string }) {
   return (
     <div className="max-w-md mx-auto text-center space-y-6 py-12 px-4">
       <div className="text-6xl">⏳</div>
-      <h1 className="text-2xl font-bold text-[#111]">รอการตรวจสอบ</h1>
-      <p className="text-[#555]">
+      <h1 className="text-2xl font-bold text-[#0f1e35]">รอการตรวจสอบ</h1>
+      <p className="text-[#3d4d66]">
         คำขอของคุณอยู่ระหว่างการตรวจสอบโดยแอดมิน กรุณารอผลภายใน 24 ชั่วโมง
       </p>
       <div className="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 text-sm text-amber-800">
         <p className="font-semibold mb-1">ส่งคำขอเมื่อ</p>
         <p>{date}</p>
       </div>
-      <p className="text-xs text-[#9a9590]">
+      <p className="text-xs text-[#64748b]">
         คุณจะได้รับการแจ้งเตือนเมื่อผลการตรวจสอบออก
       </p>
       <Link
         href="/dashboard"
-        className="inline-block px-6 py-2.5 bg-[#f7f6f3] rounded-xl text-sm font-semibold text-[#333] hover:bg-[#eee] transition"
+        className="inline-block px-6 py-2.5 bg-[#f1f5fb] rounded-xl text-sm font-semibold text-[#1e2d47] hover:bg-[#eee] transition"
       >
         กลับหน้าหลัก
       </Link>
@@ -60,8 +60,8 @@ function ApprovedCard({
   return (
     <div className="max-w-md mx-auto text-center space-y-6 py-12 px-4">
       <div className="text-6xl">✅</div>
-      <h1 className="text-2xl font-bold text-[#111]">ยืนยันตัวตนแล้ว</h1>
-      <p className="text-[#555]">บัญชีของคุณผ่านการยืนยันตัวตนเรียบร้อยแล้ว คุณสามารถลงขายสินค้าได้</p>
+      <h1 className="text-2xl font-bold text-[#0f1e35]">ยืนยันตัวตนแล้ว</h1>
+      <p className="text-[#3d4d66]">บัญชีของคุณผ่านการยืนยันตัวตนเรียบร้อยแล้ว คุณสามารถลงขายสินค้าได้</p>
 
       <div className="bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-4 text-sm text-emerald-800 space-y-2">
         <div className="flex justify-between">
@@ -133,7 +133,7 @@ export default async function VerifyPage({
   // ── Submitted success state ──────────────────────────────────────────────
   if (sp.submitted === "1") {
     return (
-      <main className="min-h-screen bg-[#faf9f6] flex items-center justify-center">
+      <main className="min-h-screen bg-[#f7f9fd] flex items-center justify-center">
         <PendingCard submittedAt={data?.latestRequest?.submittedAt ?? new Date()} />
       </main>
     );
@@ -142,7 +142,7 @@ export default async function VerifyPage({
   // ── Pending ───────────────────────────────────────────────────────────────
   if (status === "PENDING") {
     return (
-      <main className="min-h-screen bg-[#faf9f6] flex items-center justify-center">
+      <main className="min-h-screen bg-[#f7f9fd] flex items-center justify-center">
         <PendingCard submittedAt={data?.latestRequest?.submittedAt ?? new Date()} />
       </main>
     );
@@ -151,7 +151,7 @@ export default async function VerifyPage({
   // ── Approved ──────────────────────────────────────────────────────────────
   if (status === "APPROVED") {
     return (
-      <main className="min-h-screen bg-[#faf9f6] flex items-center justify-center">
+      <main className="min-h-screen bg-[#f7f9fd] flex items-center justify-center">
         <ApprovedCard
           psuIdNumber={data?.user?.psuIdNumber ?? null}
           psuIdType={data?.user?.psuIdType ?? null}
@@ -163,12 +163,12 @@ export default async function VerifyPage({
 
   // ── UNVERIFIED or REJECTED — show wizard ─────────────────────────────────
   return (
-    <main className="min-h-screen bg-[#faf9f6]">
+    <main className="min-h-screen bg-[#f7f9fd]">
       <div className="max-w-lg mx-auto px-4 py-10">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-[#111]">ยืนยันตัวตน PSU</h1>
-          <p className="text-sm text-[#9a9590] mt-1">
+          <h1 className="text-2xl font-bold text-[#0f1e35]">ยืนยันตัวตน PSU</h1>
+          <p className="text-sm text-[#64748b] mt-1">
             กรุณายืนยันตัวตนก่อนลงขายสินค้า
           </p>
         </div>

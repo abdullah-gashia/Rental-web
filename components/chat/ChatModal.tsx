@@ -88,18 +88,18 @@ function ItemContextCard({
     <div className="mx-0.5 mb-2">
       {/* Section label */}
       <div className="flex items-center gap-2 mb-2.5">
-        <div className="h-px flex-1 bg-[#e5e3de]" />
-        <span className="text-[10px] font-bold text-[#9a9590] uppercase tracking-widest whitespace-nowrap">
+        <div className="h-px flex-1 bg-[#dfe7f2]" />
+        <span className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest whitespace-nowrap">
           รายละเอียดสินค้า
         </span>
-        <div className="h-px flex-1 bg-[#e5e3de]" />
+        <div className="h-px flex-1 bg-[#dfe7f2]" />
       </div>
 
       {/* Card */}
-      <div className="rounded-2xl bg-white border border-[#e5e3de] shadow-md overflow-hidden">
+      <div className="rounded-2xl bg-white border border-[#dfe7f2] shadow-md overflow-hidden">
 
         {/* ── Image ──────────────────────────────────────────────── */}
-        <div className="w-full aspect-[4/3] bg-[#f0ede7] overflow-hidden flex items-center justify-center">
+        <div className="w-full aspect-[4/3] bg-[#eaf0f8] overflow-hidden flex items-center justify-center">
           {context.imageUrl ? (
             <img
               src={context.imageUrl}
@@ -113,8 +113,8 @@ function ItemContextCard({
 
         {/* ── Title & Price ───────────────────────────────────────── */}
         <div className="px-4 pt-3 pb-2">
-          <h4 className="text-sm font-bold text-[#111] leading-snug line-clamp-2">{title}</h4>
-          <p className="text-xl font-extrabold text-[#e8500a] mt-1 leading-none">{priceLabel}</p>
+          <h4 className="text-sm font-bold text-[#0f1e35] leading-snug line-clamp-2">{title}</h4>
+          <p className="text-xl font-extrabold text-[#2563eb] mt-1 leading-none">{priceLabel}</p>
         </div>
 
         {/* ── Badges ─────────────────────────────────────────────── */}
@@ -162,19 +162,19 @@ function ItemContextCard({
 
         {/* ── Contact ─────────────────────────────────────────────── */}
         {context.contact && (
-          <div className="mx-4 mb-3 flex items-center justify-between gap-3 bg-[#f7f6f3] rounded-xl px-3 py-2.5 border border-[#e5e3de]">
+          <div className="mx-4 mb-3 flex items-center justify-between gap-3 bg-[#f1f5fb] rounded-xl px-3 py-2.5 border border-[#dfe7f2]">
             <div className="min-w-0">
-              <p className="text-[10px] font-semibold text-[#9a9590] uppercase tracking-wide mb-0.5">
+              <p className="text-[10px] font-semibold text-[#64748b] uppercase tracking-wide mb-0.5">
                 📞 ช่องทางติดต่อผู้ขาย
               </p>
-              <p className="text-sm font-bold text-[#111] truncate">{context.contact}</p>
+              <p className="text-sm font-bold text-[#0f1e35] truncate">{context.contact}</p>
             </div>
             <button
               onClick={handleCopy}
               className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 copied
                   ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
-                  : "bg-white text-[#555] border border-[#e5e3de] hover:border-[#111] hover:text-[#111]"
+                  : "bg-white text-[#3d4d66] border border-[#dfe7f2] hover:border-[#0f1e35] hover:text-[#0f1e35]"
               }`}
             >
               {copied ? (
@@ -201,7 +201,7 @@ function ItemContextCard({
           <div className="px-4 pb-4">
             <button
               onClick={onSendGreeting}
-              className="w-full py-2.5 rounded-xl bg-[#111] text-white text-sm font-bold hover:bg-[#333] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              className="w-full py-2.5 rounded-xl bg-[#0f1e35] text-white text-sm font-bold hover:bg-[#1e2d47] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/>
@@ -374,15 +374,15 @@ export default function ChatModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       {/* ── Header ──────────────────────────────────────────────── */}
-      <div className="flex items-center gap-3 pb-4 border-b border-[#e5e3de]">
-        <div className="w-10 h-10 bg-[#f0ede7] rounded-xl flex items-center justify-center text-lg">
+      <div className="flex items-center gap-3 pb-4 border-b border-[#dfe7f2]">
+        <div className="w-10 h-10 bg-[#eaf0f8] rounded-xl flex items-center justify-center text-lg">
           {itemEmoji || "📦"}
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-sm font-bold truncate">{itemTitle}</h3>
-          <p className="text-xs text-[#e8500a] font-semibold">{itemPrice.toLocaleString()} ฿</p>
+          <p className="text-xs text-[#2563eb] font-semibold">{itemPrice.toLocaleString()} ฿</p>
         </div>
-        <button onClick={onClose} className="text-[#9a9590] hover:text-[#111] text-xl leading-none">✕</button>
+        <button onClick={onClose} className="text-[#64748b] hover:text-[#0f1e35] text-xl leading-none">✕</button>
       </div>
 
       {/* ── Messages area ───────────────────────────────────────── */}
@@ -403,7 +403,7 @@ export default function ChatModal({
 
         {/* Empty state */}
         {messages.length === 0 && !loading && !itemContext && (
-          <div className="text-center text-[#9a9590] text-sm py-12">
+          <div className="text-center text-[#64748b] text-sm py-12">
             <p className="text-3xl mb-2">💬</p>
             <p>เริ่มแชทกับผู้ขาย</p>
           </div>
@@ -411,7 +411,7 @@ export default function ChatModal({
 
         {/* Loading state */}
         {loading && messages.length === 0 && (
-          <div className="text-center text-[#9a9590] text-sm py-12">
+          <div className="text-center text-[#64748b] text-sm py-12">
             <p>กำลังโหลด...</p>
           </div>
         )}
@@ -436,7 +436,7 @@ export default function ChatModal({
           return (
             <div key={msg.id} className={`flex flex-col ${isMine ? "items-end" : "items-start"}`}>
               {!isMine && (
-                <p className="text-[10px] text-[#9a9590] mb-0.5 ml-1">{msg.sender.name}</p>
+                <p className="text-[10px] text-[#64748b] mb-0.5 ml-1">{msg.sender.name}</p>
               )}
               <div className="max-w-[75%]">
                 {hasImage && (
@@ -453,19 +453,19 @@ export default function ChatModal({
                 {hasText && (
                   <div className={`px-3.5 py-2 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
                     isMine
-                      ? "bg-[#111] text-white rounded-br-md"
-                      : "bg-[#f0ede7] text-[#111] rounded-bl-md"
+                      ? "bg-[#0f1e35] text-white rounded-br-md"
+                      : "bg-[#eaf0f8] text-[#0f1e35] rounded-bl-md"
                   }`}>
                     {msg.content}
                   </div>
                 )}
               </div>
               <div className={`flex items-center gap-1 mt-0.5 ${isMine ? "justify-end mr-1" : "ml-1"}`}>
-                <p className="text-[9px] text-[#b0ada6]">
+                <p className="text-[9px] text-[#94a3b8]">
                   {new Date(msg.createdAt).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}
                 </p>
                 {isMine && isLastSent && msg.read && (
-                  <span className="text-[9px] text-[#e8500a] font-semibold">อ่านแล้ว</span>
+                  <span className="text-[9px] text-[#2563eb] font-semibold">อ่านแล้ว</span>
                 )}
               </div>
             </div>
@@ -476,7 +476,7 @@ export default function ChatModal({
 
       {/* ── Image preview strip ──────────────────────────────────── */}
       {imagePreview && (
-        <div className="mx-1 mb-2 flex items-center gap-2 p-2 bg-[#f7f6f3] rounded-xl border border-[#e5e3de]">
+        <div className="mx-1 mb-2 flex items-center gap-2 p-2 bg-[#f1f5fb] rounded-xl border border-[#dfe7f2]">
           <div className="relative flex-shrink-0">
             <img src={imagePreview} alt="preview" className="w-14 h-14 object-contain rounded-lg" />
             {uploading && (
@@ -486,13 +486,13 @@ export default function ChatModal({
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-[#333]">{uploading ? "กำลังอัปโหลด..." : "พร้อมส่ง"}</p>
-            <p className="text-[10px] text-[#9a9590]">คุณสามารถพิมพ์ข้อความเพิ่มได้</p>
+            <p className="text-xs font-medium text-[#1e2d47]">{uploading ? "กำลังอัปโหลด..." : "พร้อมส่ง"}</p>
+            <p className="text-[10px] text-[#64748b]">คุณสามารถพิมพ์ข้อความเพิ่มได้</p>
           </div>
           <button
             onClick={clearPendingImage}
             disabled={uploading}
-            className="text-[#9a9590] hover:text-red-500 transition text-lg leading-none disabled:opacity-30"
+            className="text-[#64748b] hover:text-red-500 transition text-lg leading-none disabled:opacity-30"
             aria-label="ยกเลิกรูปภาพ"
           >
             ×
@@ -501,7 +501,7 @@ export default function ChatModal({
       )}
 
       {/* ── Input row ────────────────────────────────────────────── */}
-      <div className="pt-3 border-t border-[#e5e3de] flex gap-2 items-center">
+      <div className="pt-3 border-t border-[#dfe7f2] flex gap-2 items-center">
         <input
           ref={fileRef}
           type="file"
@@ -513,7 +513,7 @@ export default function ChatModal({
           type="button"
           onClick={() => fileRef.current?.click()}
           disabled={uploading || !!imagePreview}
-          className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-[#e5e3de] text-[#9a9590] hover:text-[#111] hover:border-[#111] transition disabled:opacity-30 disabled:cursor-not-allowed"
+          className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-[#dfe7f2] text-[#64748b] hover:text-[#0f1e35] hover:border-[#0f1e35] transition disabled:opacity-30 disabled:cursor-not-allowed"
           aria-label="แนบรูปภาพ"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -526,12 +526,12 @@ export default function ChatModal({
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={imagePreview ? "เพิ่มข้อความ (ไม่บังคับ)…" : "พิมพ์ข้อความ…"}
-          className="flex-1 border border-[#e5e3de] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#111]"
+          className="flex-1 border border-[#dfe7f2] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#0f1e35]"
         />
         <button
           onClick={() => handleSend()}
           disabled={(!input.trim() && !pendingImage) || !!uploading || !conversationId}
-          className="bg-[#111] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#333] transition disabled:opacity-30 disabled:cursor-not-allowed"
+          className="bg-[#0f1e35] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#1e2d47] transition disabled:opacity-30 disabled:cursor-not-allowed"
         >
           ส่ง
         </button>

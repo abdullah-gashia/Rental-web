@@ -45,21 +45,21 @@ const FAQS: { q: string; a: string; icon: string }[] = [
 
 export default function SupportPage() {
   return (
-    <div className="min-h-screen bg-[#f7f6f3]">
+    <div className="min-h-screen bg-[#f1f5fb]">
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 space-y-10">
 
         {/* ── Hero ─────────────────────────────────────────────────────────── */}
         <div className="text-center space-y-3">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#e8500a]/10 mb-2">
-            <svg className="w-7 h-7 text-[#e8500a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#2563eb]/10 mb-2">
+            <svg className="w-7 h-7 text-[#2563eb]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h1 className="text-3xl font-extrabold text-[#111] tracking-tight">
+          <h1 className="text-3xl font-extrabold text-[#0f1e35] tracking-tight">
             ศูนย์ช่วยเหลือ
-            <span className="text-[#e8500a]"> Help &amp; Support</span>
+            <span className="text-[#2563eb]"> Help &amp; Support</span>
           </h1>
-          <p className="text-[#9a9590] text-base max-w-lg mx-auto leading-relaxed">
+          <p className="text-[#64748b] text-base max-w-lg mx-auto leading-relaxed">
             มีอะไรให้เราช่วยเหลือหรือไม่? ค้นหาคำตอบจากคำถามที่พบบ่อย หรือติดต่อทีมงานได้โดยตรง
           </p>
         </div>
@@ -78,8 +78,8 @@ export default function SupportPage() {
 
         {/* ── FAQ Section ─────────────────────────────────────────────────────── */}
         <section>
-          <h2 className="text-lg font-extrabold text-[#111] mb-4 flex items-center gap-2">
-            <span className="w-1 h-5 rounded-full bg-[#e8500a] inline-block" />
+          <h2 className="text-lg font-extrabold text-[#0f1e35] mb-4 flex items-center gap-2">
+            <span className="w-1 h-5 rounded-full bg-[#2563eb] inline-block" />
             คำถามที่พบบ่อย (FAQ)
           </h2>
 
@@ -87,18 +87,18 @@ export default function SupportPage() {
             {FAQS.map(({ q, a, icon }) => (
               <details
                 key={q}
-                className="group bg-white border border-[#e5e3de] rounded-2xl overflow-hidden"
+                className="group bg-white border border-[#dfe7f2] rounded-2xl overflow-hidden"
               >
-                <summary className="flex items-center gap-3 px-5 py-4 cursor-pointer select-none list-none hover:bg-[#f7f6f3] transition">
+                <summary className="flex items-center gap-3 px-5 py-4 cursor-pointer select-none list-none hover:bg-[#f1f5fb] transition">
                   {/* Emoji icon */}
                   <span className="text-xl flex-shrink-0 w-8 text-center">{icon}</span>
 
                   {/* Question text */}
-                  <span className="flex-1 text-sm font-semibold text-[#111]">{q}</span>
+                  <span className="flex-1 text-sm font-semibold text-[#0f1e35]">{q}</span>
 
                   {/* Chevron — rotates when open */}
                   <svg
-                    className="w-4 h-4 text-[#9a9590] flex-shrink-0 transition-transform duration-200 group-open:rotate-180"
+                    className="w-4 h-4 text-[#64748b] flex-shrink-0 transition-transform duration-200 group-open:rotate-180"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -108,8 +108,8 @@ export default function SupportPage() {
                 </summary>
 
                 {/* Answer */}
-                <div className="px-5 pb-5 pt-1 border-t border-[#f0ede7]">
-                  <p className="text-sm text-[#555] leading-relaxed pl-11">{a}</p>
+                <div className="px-5 pb-5 pt-1 border-t border-[#eaf0f8]">
+                  <p className="text-sm text-[#3d4d66] leading-relaxed pl-11">{a}</p>
                 </div>
               </details>
             ))}
@@ -118,8 +118,8 @@ export default function SupportPage() {
 
         {/* ── Escrow How-It-Works visual ────────────────────────────────────── */}
         <section>
-          <h2 className="text-lg font-extrabold text-[#111] mb-4 flex items-center gap-2">
-            <span className="w-1 h-5 rounded-full bg-[#e8500a] inline-block" />
+          <h2 className="text-lg font-extrabold text-[#0f1e35] mb-4 flex items-center gap-2">
+            <span className="w-1 h-5 rounded-full bg-[#2563eb] inline-block" />
             ขั้นตอนระบบ Escrow
           </h2>
 
@@ -130,13 +130,13 @@ export default function SupportPage() {
               { step: "3", icon: "✅", label: "ผู้ซื้อยืนยัน", sub: "กดรับสินค้าหรือเซ็นชื่อ" },
               { step: "4", icon: "💸", label: "โอนเงินให้ผู้ขาย", sub: "Escrow ปลดล็อคเงินทันที" },
             ].map(({ step, icon, label, sub }) => (
-              <div key={step} className="bg-white border border-[#e5e3de] rounded-2xl p-4 text-center space-y-2 relative">
-                <div className="absolute -top-2.5 left-4 bg-[#e8500a] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+              <div key={step} className="bg-white border border-[#dfe7f2] rounded-2xl p-4 text-center space-y-2 relative">
+                <div className="absolute -top-2.5 left-4 bg-[#2563eb] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                   ขั้นตอนที่ {step}
                 </div>
                 <div className="text-3xl pt-2">{icon}</div>
-                <p className="text-sm font-bold text-[#111]">{label}</p>
-                <p className="text-xs text-[#9a9590]">{sub}</p>
+                <p className="text-sm font-bold text-[#0f1e35]">{label}</p>
+                <p className="text-xs text-[#64748b]">{sub}</p>
               </div>
             ))}
           </div>
@@ -144,15 +144,15 @@ export default function SupportPage() {
 
         {/* ── Contact Card ─────────────────────────────────────────────────────── */}
         <section>
-          <h2 className="text-lg font-extrabold text-[#111] mb-4 flex items-center gap-2">
-            <span className="w-1 h-5 rounded-full bg-[#e8500a] inline-block" />
+          <h2 className="text-lg font-extrabold text-[#0f1e35] mb-4 flex items-center gap-2">
+            <span className="w-1 h-5 rounded-full bg-[#2563eb] inline-block" />
             ติดต่อเรา
           </h2>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-[#e5e3de] p-8 text-center space-y-5">
+          <div className="bg-white rounded-2xl shadow-sm border border-[#dfe7f2] p-8 text-center space-y-5">
             <div>
-              <p className="text-base font-bold text-[#111]">ยังต้องการความช่วยเหลือ?</p>
-              <p className="text-sm text-[#9a9590] mt-1">
+              <p className="text-base font-bold text-[#0f1e35]">ยังต้องการความช่วยเหลือ?</p>
+              <p className="text-sm text-[#64748b] mt-1">
                 ทีมดูแลระบบพร้อมช่วยเหลือคุณ จันทร์ – ศุกร์ เวลา 9:00 – 17:00 น.
               </p>
             </div>
@@ -161,7 +161,7 @@ export default function SupportPage() {
               {/* Email */}
               <a
                 href="mailto:admin@psu.ac.th"
-                className="flex items-center gap-3 px-5 py-3.5 bg-[#f7f6f3] hover:bg-[#f0ede7] border border-[#e5e3de] rounded-2xl transition group"
+                className="flex items-center gap-3 px-5 py-3.5 bg-[#f1f5fb] hover:bg-[#eaf0f8] border border-[#dfe7f2] rounded-2xl transition group"
               >
                 <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
                   <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,13 +169,13 @@ export default function SupportPage() {
                   </svg>
                 </div>
                 <div className="text-left">
-                  <p className="text-[10px] text-[#9a9590] uppercase tracking-wider font-semibold">Email</p>
-                  <p className="text-sm font-bold text-[#111] group-hover:text-blue-600 transition">admin@psu.ac.th</p>
+                  <p className="text-[10px] text-[#64748b] uppercase tracking-wider font-semibold">Email</p>
+                  <p className="text-sm font-bold text-[#0f1e35] group-hover:text-blue-600 transition">admin@psu.ac.th</p>
                 </div>
               </a>
 
               {/* LINE OA */}
-              <div className="flex items-center gap-3 px-5 py-3.5 bg-[#f7f6f3] border border-[#e5e3de] rounded-2xl">
+              <div className="flex items-center gap-3 px-5 py-3.5 bg-[#f1f5fb] border border-[#dfe7f2] rounded-2xl">
                 <div className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
                   {/* LINE icon — simple chat bubble */}
                   <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24">
@@ -183,14 +183,14 @@ export default function SupportPage() {
                   </svg>
                 </div>
                 <div className="text-left">
-                  <p className="text-[10px] text-[#9a9590] uppercase tracking-wider font-semibold">LINE OA</p>
-                  <p className="text-sm font-bold text-[#111]">@psustore_support</p>
+                  <p className="text-[10px] text-[#64748b] uppercase tracking-wider font-semibold">LINE OA</p>
+                  <p className="text-sm font-bold text-[#0f1e35]">@psustore_support</p>
                 </div>
               </div>
             </div>
 
             {/* Response time note */}
-            <p className="text-xs text-[#9a9590]">
+            <p className="text-xs text-[#64748b]">
               ⏱ เวลาตอบกลับเฉลี่ย: ภายใน 1 วันทำการ
             </p>
           </div>
@@ -200,7 +200,7 @@ export default function SupportPage() {
         <div className="text-center pb-4">
           <a
             href="/"
-            className="inline-flex items-center gap-1.5 text-sm text-[#9a9590] hover:text-[#111] transition"
+            className="inline-flex items-center gap-1.5 text-sm text-[#64748b] hover:text-[#0f1e35] transition"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

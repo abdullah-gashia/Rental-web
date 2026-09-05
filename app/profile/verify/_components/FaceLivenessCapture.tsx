@@ -161,8 +161,8 @@ export default function FaceLivenessCapture({ onComplete }: Props) {
       {/* Instruction */}
       <div className="text-center space-y-1">
         <p className="text-2xl">{meta.icon}</p>
-        <p className="font-semibold text-[#111]">{meta.text}</p>
-        <p className="text-sm text-[#9a9590]">{meta.sub}</p>
+        <p className="font-semibold text-[#0f1e35]">{meta.text}</p>
+        <p className="text-sm text-[#64748b]">{meta.sub}</p>
       </div>
 
       {/* Camera error */}
@@ -192,7 +192,7 @@ export default function FaceLivenessCapture({ onComplete }: Props) {
         <div className="flex gap-3">
           <button
             onClick={handleRetake}
-            className="px-6 py-2.5 border border-[#e5e3de] rounded-xl text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition"
+            className="px-6 py-2.5 border border-[#dfe7f2] rounded-xl text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition"
           >
             ถ่ายใหม่
           </button>
@@ -208,12 +208,12 @@ export default function FaceLivenessCapture({ onComplete }: Props) {
       {/* Thumbnail strip */}
       <div className="flex gap-2">
         {(["front","left","right","up"] as const).map((key) => (
-          <div key={key} className={`w-14 h-14 rounded-xl overflow-hidden border-2 flex items-center justify-center bg-[#f0ede7] ${
-            frames[key] ? "border-emerald-400" : "border-[#e5e3de]"
+          <div key={key} className={`w-14 h-14 rounded-xl overflow-hidden border-2 flex items-center justify-center bg-[#eaf0f8] ${
+            frames[key] ? "border-emerald-400" : "border-[#dfe7f2]"
           }`}>
             {frames[key]
               ? <img src={frames[key]!} alt={key} className="w-full h-full object-cover" />
-              : <span className="text-[10px] text-[#9a9590]">
+              : <span className="text-[10px] text-[#64748b]">
                   {key === "front" ? "หน้า" : key === "left" ? "ซ้าย" : key === "right" ? "ขวา" : "บน"}
                 </span>
             }

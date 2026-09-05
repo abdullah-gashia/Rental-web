@@ -16,10 +16,10 @@ export default async function AdminTrendingPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-[#111] flex items-center gap-2">
+        <h1 className="text-xl font-bold text-[#0f1e35] flex items-center gap-2">
           🔥 จัดการสินค้ามาแรง
         </h1>
-        <p className="text-sm text-[#9a9590] mt-1">
+        <p className="text-sm text-[#64748b] mt-1">
           เลือกสินค้าที่จะแสดงในหน้าแรก (สูงสุด 10 รายการ)
         </p>
       </div>

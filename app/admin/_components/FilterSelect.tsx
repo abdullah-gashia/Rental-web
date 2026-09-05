@@ -29,7 +29,7 @@ export default function FilterSelect({ name, options }: FilterSelectProps) {
     <select
       value={current}
       onChange={(e) => handleChange(e.target.value)}
-      className="text-sm border border-[#e5e3de] rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[#e8500a]/20 cursor-pointer"
+      className="text-sm border border-[#dfe7f2] rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 cursor-pointer"
     >
       {options.map((o) => (
         <option key={o.value} value={o.value}>{o.label}</option>

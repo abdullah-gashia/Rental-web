@@ -78,12 +78,12 @@ function RejectModal({
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div>
-            <h3 className="text-lg font-bold text-[#111]">ปฏิเสธสินค้า</h3>
-            <p className="text-sm text-[#777] mt-0.5 truncate max-w-xs">{item.title}</p>
+            <h3 className="text-lg font-bold text-[#0f1e35]">ปฏิเสธสินค้า</h3>
+            <p className="text-sm text-[#5b6b82] mt-0.5 truncate max-w-xs">{item.title}</p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full hover:bg-[#f0ede7] flex items-center justify-center transition text-[#666]"
+            className="w-8 h-8 rounded-full hover:bg-[#eaf0f8] flex items-center justify-center transition text-[#666]"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -92,8 +92,8 @@ function RejectModal({
         </div>
 
         {/* Item preview */}
-        <div className="bg-[#f7f6f3] rounded-xl p-3 mb-5 flex gap-3 items-center">
-          <div className="w-12 h-12 rounded-xl overflow-hidden bg-white flex items-center justify-center flex-shrink-0 border border-[#e5e3de]">
+        <div className="bg-[#f1f5fb] rounded-xl p-3 mb-5 flex gap-3 items-center">
+          <div className="w-12 h-12 rounded-xl overflow-hidden bg-white flex items-center justify-center flex-shrink-0 border border-[#dfe7f2]">
             {item.images[0]?.url ? (
               <img src={item.images[0].url} alt={item.title} className="w-full h-full object-contain" />
             ) : (
@@ -101,21 +101,21 @@ function RejectModal({
             )}
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-[#111] truncate">{item.title}</p>
-            <p className="text-xs text-[#777]">ผู้ขาย: {item.seller.name ?? item.seller.email}</p>
+            <p className="text-sm font-semibold text-[#0f1e35] truncate">{item.title}</p>
+            <p className="text-xs text-[#5b6b82]">ผู้ขาย: {item.seller.name ?? item.seller.email}</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[#333] mb-1.5">
+            <label className="block text-sm font-medium text-[#1e2d47] mb-1.5">
               เหตุผลในการปฏิเสธ <span className="text-red-500">*</span>
             </label>
             <textarea
               value={reason}
               onChange={(e) => { setReason(e.target.value); setError(""); }}
               rows={4}
-              className="w-full border border-[#e5e3de] rounded-xl px-4 py-3 text-sm text-[#111] focus:outline-none focus:ring-2 focus:ring-red-400/30 focus:border-red-400 transition resize-none"
+              className="w-full border border-[#dfe7f2] rounded-xl px-4 py-3 text-sm text-[#0f1e35] focus:outline-none focus:ring-2 focus:ring-red-400/30 focus:border-red-400 transition resize-none"
               placeholder="เช่น: รูปภาพไม่ชัด, ราคาไม่เหมาะสม, สินค้าต้องห้าม..."
             />
             {error && <p className="text-xs text-red-600 mt-1.5">{error}</p>}
@@ -125,7 +125,7 @@ function RejectModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 rounded-xl border border-[#e5e3de] text-sm font-medium text-[#555] hover:bg-[#f7f6f3] transition"
+              className="flex-1 px-4 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-medium text-[#3d4d66] hover:bg-[#f1f5fb] transition"
             >
               ยกเลิก
             </button>
@@ -214,8 +214,8 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
       <div className="mb-6">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-[#111]">ตรวจสอบสินค้า</h1>
-            <p className="text-sm text-[#777] mt-1">สินค้าที่รอการอนุมัติจากผู้ขาย</p>
+            <h1 className="text-2xl font-bold text-[#0f1e35]">ตรวจสอบสินค้า</h1>
+            <p className="text-sm text-[#5b6b82] mt-1">สินค้าที่รอการอนุมัติจากผู้ขาย</p>
           </div>
           <div className="flex items-center gap-2 bg-yellow-50 border border-yellow-200 px-4 py-2 rounded-xl">
             <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
@@ -226,14 +226,14 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
 
       {/* Empty state */}
       {items.length === 0 && (
-        <div className="bg-white rounded-2xl border border-[#e5e3de] p-16 text-center">
+        <div className="bg-white rounded-2xl border border-[#dfe7f2] p-16 text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-[#111] mb-2">ไม่มีสินค้าที่รอตรวจสอบ</h3>
-          <p className="text-sm text-[#777]">สินค้าทั้งหมดได้รับการตรวจสอบแล้ว 🎉</p>
+          <h3 className="text-lg font-semibold text-[#0f1e35] mb-2">ไม่มีสินค้าที่รอตรวจสอบ</h3>
+          <p className="text-sm text-[#5b6b82]">สินค้าทั้งหมดได้รับการตรวจสอบแล้ว 🎉</p>
         </div>
       )}
 
@@ -247,12 +247,12 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
             return (
               <div
                 key={item.id}
-                className={`bg-white rounded-2xl border border-[#e5e3de] overflow-hidden transition ${isProcessing ? "opacity-60 pointer-events-none" : "hover:shadow-sm"}`}
+                className={`bg-white rounded-2xl border border-[#dfe7f2] overflow-hidden transition ${isProcessing ? "opacity-60 pointer-events-none" : "hover:shadow-sm"}`}
               >
                 <div className="p-5">
                   <div className="flex gap-4">
                     {/* Image */}
-                    <div className="flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden bg-[#f0ede7] flex items-center justify-center border border-[#e5e3de]">
+                    <div className="flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden bg-[#eaf0f8] flex items-center justify-center border border-[#dfe7f2]">
                       {imgUrl ? (
                         <img src={imgUrl} alt={item.title} className="w-full h-full object-contain" />
                       ) : (
@@ -264,45 +264,45 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2 flex-wrap">
                         <div>
-                          <span className="inline-flex items-center gap-1 bg-[#f0ede7] text-[#777] text-[10px] font-semibold px-2 py-0.5 rounded-full mb-1">
+                          <span className="inline-flex items-center gap-1 bg-[#eaf0f8] text-[#5b6b82] text-[10px] font-semibold px-2 py-0.5 rounded-full mb-1">
                             {item.category.emoji} {item.category.nameTh}
                           </span>
-                          <h3 className="text-base font-bold text-[#111]">{item.title}</h3>
+                          <h3 className="text-base font-bold text-[#0f1e35]">{item.title}</h3>
                         </div>
                         <div className="flex-shrink-0 text-right">
-                          <p className="text-lg font-bold text-[#e8500a]">
+                          <p className="text-lg font-bold text-[#2563eb]">
                             ฿{item.price.toLocaleString()}
-                            {item.listingType === "RENT" && <span className="text-xs font-normal text-[#777]">/เดือน</span>}
+                            {item.listingType === "RENT" && <span className="text-xs font-normal text-[#5b6b82]">/เดือน</span>}
                           </p>
-                          <p className="text-xs text-[#999]">{CONDITION_LABELS[item.condition] ?? item.condition}</p>
+                          <p className="text-xs text-[#8d9bb0]">{CONDITION_LABELS[item.condition] ?? item.condition}</p>
                         </div>
                       </div>
 
                       {/* Automatic screening result */}
                       {item.safetyScore !== null && (
-                        <div className="mt-2.5 flex items-start gap-2 rounded-xl border border-[#e5e3de] bg-[#faf9f7] px-3 py-2">
+                        <div className="mt-2.5 flex items-start gap-2 rounded-xl border border-[#dfe7f2] bg-[#f7f9fd] px-3 py-2">
                           <SafetyBadge score={item.safetyScore} />
-                          <p className="text-[11px] text-[#777] leading-relaxed flex-1 min-w-0">
+                          <p className="text-[11px] text-[#5b6b82] leading-relaxed flex-1 min-w-0">
                             {item.moderationReason ?? "—"}
                           </p>
                         </div>
                       )}
 
                       {/* Description */}
-                      <p className="text-sm text-[#555] mt-2 line-clamp-2">{item.description}</p>
+                      <p className="text-sm text-[#3d4d66] mt-2 line-clamp-2">{item.description}</p>
 
                       {/* Seller + Date */}
                       <div className="flex items-center gap-4 mt-3 flex-wrap">
                         <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#e8500a] to-[#ff7a3d] flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
+                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#2563eb] to-[#60a5fa] flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
                             {(item.seller.name ?? item.seller.email)[0].toUpperCase()}
                           </div>
                           <div>
-                            <p className="text-xs font-semibold text-[#333]">{item.seller.name ?? "ไม่ระบุชื่อ"}</p>
-                            <p className="text-[10px] text-[#999]">{item.seller.email}</p>
+                            <p className="text-xs font-semibold text-[#1e2d47]">{item.seller.name ?? "ไม่ระบุชื่อ"}</p>
+                            <p className="text-[10px] text-[#8d9bb0]">{item.seller.email}</p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-1 text-[10px] text-[#999]">
+                        <div className="flex items-center gap-1 text-[10px] text-[#8d9bb0]">
                           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
@@ -313,7 +313,7 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex gap-3 mt-4 pt-4 border-t border-[#f0ede7]">
+                  <div className="flex gap-3 mt-4 pt-4 border-t border-[#eaf0f8]">
                     <button
                       onClick={() => handleApprove(item)}
                       disabled={isProcessing}

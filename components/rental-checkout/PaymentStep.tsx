@@ -25,7 +25,7 @@ export default function PaymentStep({ state, pricing, walletBalance, onSetPaymen
 
   return (
     <div className="space-y-4">
-      <p className="text-xs text-[#777]">
+      <p className="text-xs text-[#5b6b82]">
         เลือกวิธีชำระเงิน — มัดจำจะถูกกักใน Escrow เสมอ ไม่ว่าจะเลือกวิธีใด
       </p>
 
@@ -36,17 +36,17 @@ export default function PaymentStep({ state, pricing, walletBalance, onSetPaymen
         disabled={!canAffordEscrow}
         className={`w-full p-4 rounded-xl border-2 text-left transition ${
           state.paymentMethod === "ESCROW"
-            ? "border-[#e8500a] bg-[#e8500a]/5"
-            : "border-[#e5e3de] hover:border-[#e8500a]/50"
+            ? "border-[#2563eb] bg-[#2563eb]/5"
+            : "border-[#dfe7f2] hover:border-[#2563eb]/50"
         } ${!canAffordEscrow ? "opacity-50 cursor-not-allowed" : ""}`}
       >
         <div className="flex items-center justify-between mb-1">
-          <span className="font-bold text-sm text-[#111]">💳 Escrow — ปลอดภัยที่สุด</span>
+          <span className="font-bold text-sm text-[#0f1e35]">💳 Escrow — ปลอดภัยที่สุด</span>
           {state.paymentMethod === "ESCROW" && (
-            <span className="text-xs text-[#e8500a] font-bold">✓ เลือกอยู่</span>
+            <span className="text-xs text-[#2563eb] font-bold">✓ เลือกอยู่</span>
           )}
         </div>
-        <p className="text-xs text-[#777]">ชำระผ่านระบบกักเงิน — เงินจะถูกโอนให้เจ้าของเมื่อคืนของสำเร็จ</p>
+        <p className="text-xs text-[#5b6b82]">ชำระผ่านระบบกักเงิน — เงินจะถูกโอนให้เจ้าของเมื่อคืนของสำเร็จ</p>
         <p className="text-xs text-green-600 font-semibold mt-1">🏆 แนะนำสำหรับการเช่า</p>
         {!canAffordEscrow && (
           <p className="text-xs text-red-600 mt-1">ยอดเงินไม่พอ (ต้องการ ฿{escrowRequired.toLocaleString()})</p>
@@ -61,16 +61,16 @@ export default function PaymentStep({ state, pricing, walletBalance, onSetPaymen
         className={`w-full p-4 rounded-xl border-2 text-left transition ${
           state.paymentMethod === "COD"
             ? "border-amber-400 bg-amber-50"
-            : "border-[#e5e3de] hover:border-amber-300"
+            : "border-[#dfe7f2] hover:border-amber-300"
         } ${!canAffordCOD ? "opacity-50 cursor-not-allowed" : ""}`}
       >
         <div className="flex items-center justify-between mb-1">
-          <span className="font-bold text-sm text-[#111]">💵 จ่ายเงินสด (COD)</span>
+          <span className="font-bold text-sm text-[#0f1e35]">💵 จ่ายเงินสด (COD)</span>
           {state.paymentMethod === "COD" && (
             <span className="text-xs text-amber-600 font-bold">✓ เลือกอยู่</span>
           )}
         </div>
-        <p className="text-xs text-[#777]">จ่ายค่าเช่าสดตอนรับของ — มัดจำยังต้องผ่านระบบเสมอ</p>
+        <p className="text-xs text-[#5b6b82]">จ่ายค่าเช่าสดตอนรับของ — มัดจำยังต้องผ่านระบบเสมอ</p>
         <p className="text-xs text-amber-600 mt-1">⚠️ ไม่มีการคุ้มครองค่าเช่า</p>
         {!canAffordCOD && (
           <p className="text-xs text-red-600 mt-1">ยอดเงินมัดจำไม่พอ (ต้องการ ฿{codRequiredFromWallet.toLocaleString()})</p>
@@ -86,20 +86,20 @@ export default function PaymentStep({ state, pricing, walletBalance, onSetPaymen
       )}
 
       {/* Wallet summary */}
-      <div className="bg-[#faf9f7] rounded-xl p-4 space-y-2 text-sm border border-[#f0ede7]">
-        <p className="text-xs font-bold text-[#555] uppercase tracking-wide">ยอดเงินในกระเป๋า</p>
+      <div className="bg-[#f7f9fd] rounded-xl p-4 space-y-2 text-sm border border-[#eaf0f8]">
+        <p className="text-xs font-bold text-[#3d4d66] uppercase tracking-wide">ยอดเงินในกระเป๋า</p>
         <div className="flex justify-between">
-          <span className="text-[#777]">ยอดปัจจุบัน</span>
-          <span className="font-bold text-[#111]">฿{balance.toLocaleString()}</span>
+          <span className="text-[#5b6b82]">ยอดปัจจุบัน</span>
+          <span className="font-bold text-[#0f1e35]">฿{balance.toLocaleString()}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-[#777]">หักออก (จากกระเป๋า)</span>
+          <span className="text-[#5b6b82]">หักออก (จากกระเป๋า)</span>
           <span className="font-medium text-red-600">
             −฿{(state.paymentMethod === "COD" ? codRequiredFromWallet : escrowRequired).toLocaleString()}
           </span>
         </div>
-        <div className="border-t border-[#e5e3de] pt-2 flex justify-between">
-          <span className="text-[#555]">คงเหลือ</span>
+        <div className="border-t border-[#dfe7f2] pt-2 flex justify-between">
+          <span className="text-[#3d4d66]">คงเหลือ</span>
           <span className={`font-bold ${
             (state.paymentMethod === "COD" ? afterCOD : afterEscrow) < 0
               ? "text-red-600" : "text-green-600"
@@ -109,7 +109,7 @@ export default function PaymentStep({ state, pricing, walletBalance, onSetPaymen
         </div>
         {state.paymentMethod === "COD" && (
           <>
-            <div className="flex justify-between text-xs text-[#999]">
+            <div className="flex justify-between text-xs text-[#8d9bb0]">
               <span>มัดจำ (กักใน escrow)</span>
               <span>฿{securityDeposit.toLocaleString()}</span>
             </div>

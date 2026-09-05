@@ -34,7 +34,7 @@ export default function ReportButton({
 
   if (done) {
     return (
-      <span className="inline-flex items-center gap-1.5 text-xs text-[#9a9590] border border-[#e5e3de] rounded-xl px-3 py-2">
+      <span className="inline-flex items-center gap-1.5 text-xs text-[#64748b] border border-[#dfe7f2] rounded-xl px-3 py-2">
         🚩 รายงานแล้ว — ทีมงานกำลังตรวจสอบ
       </span>
     );
@@ -71,14 +71,14 @@ export default function ReportButton({
 
           <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
             <div>
-              <h3 className="text-base font-bold text-[#111]">รายงาน {reportedName}</h3>
-              <p className="text-xs text-[#9a9590] mt-1">
+              <h3 className="text-base font-bold text-[#0f1e35]">รายงาน {reportedName}</h3>
+              <p className="text-xs text-[#64748b] mt-1">
                 เฉพาะผู้ดูแลระบบเท่านั้นที่เห็นรายงานนี้ ผู้ถูกรายงานจะไม่รู้ว่าใครเป็นคนรายงาน
               </p>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[#333] mb-1.5">หัวข้อ</label>
+              <label className="block text-xs font-medium text-[#1e2d47] mb-1.5">หัวข้อ</label>
               <div className="grid grid-cols-2 gap-2">
                 {REPORT_CATEGORIES.map((c) => (
                   <button
@@ -88,7 +88,7 @@ export default function ReportButton({
                     className={`text-[12px] px-3 py-2 rounded-xl border text-left transition ${
                       category === c.value
                         ? "border-[#b3261e] bg-red-50 text-[#b3261e] font-semibold"
-                        : "border-[#e5e3de] text-[#555] hover:bg-[#f7f6f3]"
+                        : "border-[#dfe7f2] text-[#3d4d66] hover:bg-[#f1f5fb]"
                     }`}
                   >
                     {c.label}
@@ -98,15 +98,15 @@ export default function ReportButton({
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[#333] mb-1.5">
-                รายละเอียด <span className="text-[#b0ada6]">({reason.trim().length}/10 ขั้นต่ำ)</span>
+              <label className="block text-xs font-medium text-[#1e2d47] mb-1.5">
+                รายละเอียด <span className="text-[#94a3b8]">({reason.trim().length}/10 ขั้นต่ำ)</span>
               </label>
               <textarea
                 value={reason}
                 onChange={(e) => { setReason(e.target.value.slice(0, 2000)); setError(null); }}
                 rows={4}
                 placeholder="เกิดอะไรขึ้น? ยิ่งละเอียดยิ่งตรวจสอบได้เร็ว"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#e5e3de] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#dfe7f2] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 transition"
               />
             </div>
 
@@ -120,7 +120,7 @@ export default function ReportButton({
               <button
                 onClick={() => setOpen(false)}
                 disabled={pending}
-                className="flex-1 py-2.5 rounded-xl border border-[#e5e3de] text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition disabled:opacity-50"
+                className="flex-1 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
               >
                 ยกเลิก
               </button>

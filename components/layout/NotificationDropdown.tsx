@@ -76,13 +76,13 @@ export default function NotificationDropdown({ onClose }: NotificationDropdownPr
   return (
     <div
       ref={dropdownRef}
-      className="absolute top-full right-0 mt-2 w-[360px] bg-white rounded-xl shadow-[0_8px_40px_rgba(0,0,0,0.16)] border border-[#e5e3de]/60 overflow-hidden z-[200] fade-up"
+      className="absolute top-full right-0 mt-2 w-[360px] bg-white rounded-xl shadow-[0_8px_40px_rgba(0,0,0,0.16)] border border-[#dfe7f2]/60 overflow-hidden z-[200] fade-up"
     >
       {/* Header */}
-      <div className="px-4 pt-4 pb-3 border-b border-[#e5e3de]">
+      <div className="px-4 pt-4 pb-3 border-b border-[#dfe7f2]">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-bold text-[#111]">การแจ้งเตือน</h3>
-          <button className="text-xs text-[#e8500a] font-medium hover:underline">
+          <h3 className="text-base font-bold text-[#0f1e35]">การแจ้งเตือน</h3>
+          <button className="text-xs text-[#2563eb] font-medium hover:underline">
             อ่านทั้งหมด
           </button>
         </div>
@@ -91,12 +91,12 @@ export default function NotificationDropdown({ onClose }: NotificationDropdownPr
       {/* Notification List */}
       <div className="max-h-[380px] overflow-y-auto">
         {loading ? (
-          <div className="py-12 text-center text-[#9a9590] text-sm">
-            <div className="animate-spin w-6 h-6 border-2 border-[#e5e3de] border-t-[#111] rounded-full mx-auto mb-2" />
+          <div className="py-12 text-center text-[#64748b] text-sm">
+            <div className="animate-spin w-6 h-6 border-2 border-[#dfe7f2] border-t-[#0f1e35] rounded-full mx-auto mb-2" />
             กำลังโหลด...
           </div>
         ) : notifications.length === 0 ? (
-          <div className="py-12 text-center text-[#9a9590]">
+          <div className="py-12 text-center text-[#64748b]">
             <p className="text-3xl mb-2">🔕</p>
             <p className="text-sm">ยังไม่มีการแจ้งเตือน</p>
           </div>
@@ -104,23 +104,23 @@ export default function NotificationDropdown({ onClose }: NotificationDropdownPr
           notifications.map((notif) => (
             <div
               key={notif.id}
-              className={`flex items-start gap-3 px-4 py-3 hover:bg-[#f7f6f3] transition cursor-pointer ${
+              className={`flex items-start gap-3 px-4 py-3 hover:bg-[#f1f5fb] transition cursor-pointer ${
                 !notif.isRead ? "bg-[#fff8f5]" : ""
               }`}
             >
-              <div className="w-10 h-10 bg-[#f0ede7] rounded-full flex items-center justify-center text-lg flex-shrink-0">
+              <div className="w-10 h-10 bg-[#eaf0f8] rounded-full flex items-center justify-center text-lg flex-shrink-0">
                 {typeIcon(notif.type)}
               </div>
               <div className="flex-1 min-w-0">
-                <p className={`text-[13px] leading-snug ${!notif.isRead ? "font-semibold text-[#111]" : "text-[#555]"}`}>
+                <p className={`text-[13px] leading-snug ${!notif.isRead ? "font-semibold text-[#0f1e35]" : "text-[#3d4d66]"}`}>
                   {notif.message}
                 </p>
-                <p className={`text-[11px] mt-0.5 ${!notif.isRead ? "text-[#e8500a] font-medium" : "text-[#9a9590]"}`}>
+                <p className={`text-[11px] mt-0.5 ${!notif.isRead ? "text-[#2563eb] font-medium" : "text-[#64748b]"}`}>
                   {timeAgo(notif.createdAt)}
                 </p>
               </div>
               {!notif.isRead && (
-                <div className="w-2.5 h-2.5 bg-[#e8500a] rounded-full flex-shrink-0 mt-1.5" />
+                <div className="w-2.5 h-2.5 bg-[#2563eb] rounded-full flex-shrink-0 mt-1.5" />
               )}
             </div>
           ))
@@ -129,8 +129,8 @@ export default function NotificationDropdown({ onClose }: NotificationDropdownPr
 
       {/* Footer */}
       {notifications.length > 0 && (
-        <div className="px-4 py-2.5 border-t border-[#e5e3de] text-center">
-          <button className="text-[13px] font-medium text-[#e8500a] hover:underline">
+        <div className="px-4 py-2.5 border-t border-[#dfe7f2] text-center">
+          <button className="text-[13px] font-medium text-[#2563eb] hover:underline">
             ดูการแจ้งเตือนทั้งหมด
           </button>
         </div>

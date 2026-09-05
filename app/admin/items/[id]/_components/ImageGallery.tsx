@@ -13,10 +13,10 @@ export default function ImageGallery({ images }: Props) {
 
   if (images.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-[#e5e3de] p-6">
-        <h3 className="text-sm font-semibold text-[#555] mb-3">รูปภาพ</h3>
-        <div className="aspect-[4/3] rounded-xl bg-[#f7f6f3] flex items-center justify-center">
-          <div className="text-center text-[#aaa]">
+      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6">
+        <h3 className="text-sm font-semibold text-[#3d4d66] mb-3">รูปภาพ</h3>
+        <div className="aspect-[4/3] rounded-xl bg-[#f1f5fb] flex items-center justify-center">
+          <div className="text-center text-[#94a3b8]">
             <span className="text-4xl block mb-2">📷</span>
             <span className="text-sm">ไม่มีรูปภาพ</span>
           </div>
@@ -29,15 +29,15 @@ export default function ImageGallery({ images }: Props) {
 
   return (
     <>
-      <div className="bg-white rounded-2xl border border-[#e5e3de] p-6">
-        <h3 className="text-sm font-semibold text-[#555] mb-3">
+      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6">
+        <h3 className="text-sm font-semibold text-[#3d4d66] mb-3">
           รูปภาพ
-          <span className="text-[#aaa] font-normal ml-1">({images.length})</span>
+          <span className="text-[#94a3b8] font-normal ml-1">({images.length})</span>
         </h3>
 
         {/* Main Image */}
         <div
-          className="relative aspect-[4/3] rounded-xl overflow-hidden bg-[#f7f6f3] cursor-zoom-in group"
+          className="relative aspect-[4/3] rounded-xl overflow-hidden bg-[#f1f5fb] cursor-zoom-in group"
           onClick={() => setLightbox(true)}
         >
           <Image
@@ -62,7 +62,7 @@ export default function ImageGallery({ images }: Props) {
                 onClick={() => setActiveIdx(idx)}
                 className={`relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-all ${
                   idx === activeIdx
-                    ? "border-[#e8500a] shadow-md"
+                    ? "border-[#2563eb] shadow-md"
                     : "border-transparent hover:border-[#d5d2cc]"
                 }`}
               >

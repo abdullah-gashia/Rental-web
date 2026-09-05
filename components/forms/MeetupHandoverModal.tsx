@@ -45,7 +45,7 @@ function SignaturePad({
         const ctx = canvas.getContext("2d");
         if (ctx) {
           ctx.scale(ratio, ratio);
-          ctx.strokeStyle = "#111";
+          ctx.strokeStyle = "#0f1e35";
           ctx.lineWidth   = 2;
           ctx.lineCap     = "round";
           ctx.lineJoin    = "round";
@@ -104,16 +104,16 @@ function SignaturePad({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold text-[#555]">✍️ ลายเซ็นผู้ซื้อ</p>
+        <p className="text-xs font-semibold text-[#3d4d66]">✍️ ลายเซ็นผู้ซื้อ</p>
         <button
           type="button"
           onClick={clearPad}
-          className="text-[10px] font-semibold text-[#9a9590] hover:text-red-500 transition px-2 py-1 rounded-lg hover:bg-red-50"
+          className="text-[10px] font-semibold text-[#64748b] hover:text-red-500 transition px-2 py-1 rounded-lg hover:bg-red-50"
         >
           ล้างลายเซ็น
         </button>
       </div>
-      <div className="relative rounded-2xl border-2 border-dashed border-[#e5e3de] bg-[#fafaf8] overflow-hidden">
+      <div className="relative rounded-2xl border-2 border-dashed border-[#dfe7f2] bg-[#fafaf8] overflow-hidden">
         <canvas
           ref={canvasRef}
           className="w-full touch-none"
@@ -134,7 +134,7 @@ function SignaturePad({
           </div>
         )}
       </div>
-      <p className="text-[10px] text-[#9a9590]">ผู้ซื้อลงนามยืนยันรับสินค้าบนหน้าจอนี้</p>
+      <p className="text-[10px] text-[#64748b]">ผู้ซื้อลงนามยืนยันรับสินค้าบนหน้าจอนี้</p>
     </div>
   );
 }
@@ -182,12 +182,12 @@ function PhotoUpload({
 
   return (
     <div className="space-y-2">
-      <p className="text-xs font-semibold text-[#555]">📸 ภาพหลักฐานการส่งมอบ <span className="text-[#9a9590] font-normal">(ไม่บังคับ)</span></p>
+      <p className="text-xs font-semibold text-[#3d4d66]">📸 ภาพหลักฐานการส่งมอบ <span className="text-[#64748b] font-normal">(ไม่บังคับ)</span></p>
       <div
         className={`relative rounded-2xl border-2 border-dashed transition cursor-pointer overflow-hidden ${
           photoUrl
             ? "border-emerald-300 bg-emerald-50"
-            : "border-[#e5e3de] bg-[#fafaf8] hover:border-[#ccc]"
+            : "border-[#dfe7f2] bg-[#fafaf8] hover:border-[#c2ccdb]"
         }`}
         style={{ minHeight: 110 }}
         onClick={() => !uploading && inputRef.current?.click()}
@@ -214,7 +214,7 @@ function PhotoUpload({
         ) : (
           <div className="flex flex-col items-center justify-center gap-2 py-6">
             {uploading ? (
-              <svg className="w-6 h-6 text-[#9a9590] animate-spin" fill="none" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-[#64748b] animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>
@@ -224,7 +224,7 @@ function PhotoUpload({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             )}
-            <p className="text-xs text-[#9a9590]">
+            <p className="text-xs text-[#64748b]">
               {uploading ? "กำลังอัปโหลด..." : "แตะเพื่อถ่ายภาพ หรือลากไฟล์มาวาง"}
             </p>
           </div>
@@ -319,7 +319,7 @@ export default function MeetupHandoverModal({
           onClick={onClose}
           disabled={submitting}
           aria-label="ปิด"
-          className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-[#f0ede7] hover:bg-[#e5e3de] flex items-center justify-center text-[#777] hover:text-[#111] transition disabled:opacity-40"
+          className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-[#eaf0f8] hover:bg-[#dfe7f2] flex items-center justify-center text-[#5b6b82] hover:text-[#0f1e35] transition disabled:opacity-40"
         >
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -330,11 +330,11 @@ export default function MeetupHandoverModal({
         <div className="px-6 pt-5 pb-3 flex-shrink-0 pr-14">
           <div className="flex items-center gap-2.5 mb-1">
             <div className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center text-base">🤝</div>
-            <h2 className="text-base font-extrabold text-[#111] tracking-tight">ยืนยันการส่งมอบสินค้า</h2>
+            <h2 className="text-base font-extrabold text-[#0f1e35] tracking-tight">ยืนยันการส่งมอบสินค้า</h2>
           </div>
-          <p className="text-xs text-[#9a9590]">
-            <span className="font-semibold text-[#555]">{itemTitle}</span>
-            {" · "}ผู้ซื้อ: <span className="font-semibold text-[#555]">{buyerName}</span>
+          <p className="text-xs text-[#64748b]">
+            <span className="font-semibold text-[#3d4d66]">{itemTitle}</span>
+            {" · "}ผู้ซื้อ: <span className="font-semibold text-[#3d4d66]">{buyerName}</span>
           </p>
         </div>
 
@@ -376,14 +376,14 @@ export default function MeetupHandoverModal({
 
         {/* Footer */}
         <div
-          className="flex-shrink-0 px-6 py-4 border-t border-[#e5e3de] bg-white"
+          className="flex-shrink-0 px-6 py-4 border-t border-[#dfe7f2] bg-white"
           style={{ paddingBottom: "max(16px, env(safe-area-inset-bottom))" }}
         >
           <div className="flex gap-3">
             <button
               onClick={onClose}
               disabled={submitting}
-              className="flex-1 py-3 rounded-2xl border border-[#e5e3de] text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition disabled:opacity-40"
+              className="flex-1 py-3 rounded-2xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-40"
             >
               ยกเลิก
             </button>

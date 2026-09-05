@@ -108,8 +108,8 @@ function DeleteModal({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h3 className="text-lg font-bold text-[#111] text-center mb-2">กำหนดลบสินค้า?</h3>
-        <p className="text-sm text-[#555] text-center mb-1 px-2">
+        <h3 className="text-lg font-bold text-[#0f1e35] text-center mb-2">กำหนดลบสินค้า?</h3>
+        <p className="text-sm text-[#3d4d66] text-center mb-1 px-2">
           สินค้า <span className="font-semibold">&ldquo;{item.title}&rdquo;</span> จะถูกลบออกหลังจาก
         </p>
         <p className="text-sm font-bold text-orange-600 text-center mb-4">24 ชั่วโมง</p>
@@ -119,7 +119,7 @@ function DeleteModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2.5 rounded-xl border border-[#e5e3de] text-sm font-medium text-[#555] hover:bg-[#f7f6f3] transition"
+            className="flex-1 px-4 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-medium text-[#3d4d66] hover:bg-[#f1f5fb] transition"
           >
             ยกเลิก
           </button>
@@ -180,7 +180,6 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
 
   const pendingCount  = counts.PENDING;
   const approvedCount = counts.APPROVED;
-  const rejectedCount = counts.REJECTED;
   const deletingCount = counts.DELETING;
 
   // ── Handlers ────────────────────────────────────────
@@ -220,108 +219,69 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
   return (
     <>
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[#111] mb-1">สินค้าของฉัน</h1>
-        <p className="text-sm text-[#777]">สวัสดี, {userName} · จัดการรายการสินค้าของคุณ</p>
-      </div>
-
-      {/* Own rating and reviews — previously only reachable through the public
-          profile at /user/[id] */}
-      {reputation && <ReputationPanel reputation={reputation} />}
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-        {([
-          { key: "ALL"      as FilterKey, label: "สินค้าทั้งหมด", count: activeItems.length, color: "text-[#111]",     bg: "bg-white"     },
-          { key: "PENDING"  as FilterKey, label: "รอตรวจสอบ",    count: pendingCount,       color: "text-yellow-600", bg: "bg-yellow-50" },
-          { key: "APPROVED" as FilterKey, label: "อนุมัติแล้ว",  count: approvedCount,      color: "text-green-600",  bg: "bg-green-50"  },
-          { key: "REJECTED" as FilterKey, label: "ถูกปฏิเสธ",    count: rejectedCount,      color: "text-red-600",    bg: "bg-red-50"    },
-        ]).map((s) => (
-          <button
-            key={s.label}
-            onClick={() => setFilter(s.key)}
-            className={`${s.bg} rounded-2xl p-4 border text-left transition ${
-              filter === s.key ? "border-[#e8500a] ring-1 ring-[#e8500a]/30" : "border-[#e5e3de] hover:border-[#c9c5bd]"
-            }`}
-          >
-            <p className={`text-2xl font-bold ${s.color}`}>{s.count}</p>
-            <p className="text-xs text-[#777] mt-0.5">{s.label}</p>
-          </button>
-        ))}
-      </div>
+      <header className="ui-head">
+        <div>
+          <p className="ui-eyebrow mb-1.5">ที่ฉันขาย</p>
+          <h1>ประกาศของฉัน</h1>
+          <p>
+            {activeItems.length === 0
+              ? "ยังไม่มีประกาศ — ลงชิ้นแรกได้จากหน้าร้าน"
+              : `${activeItems.length} ประกาศ · เผยแพร่อยู่ ${approvedCount} · รอตรวจสอบ ${pendingCount}`}
+          </p>
+        </div>
+        <a href="/" className="ui-btn ui-btn-primary">ลงประกาศใหม่</a>
+      </header>
 
       {/* Deletion-pending warning strip */}
       {deletingCount > 0 && (
-        <div className="bg-orange-50 border border-orange-200 rounded-2xl px-4 py-3 mb-5 flex items-center gap-3">
-          <svg className="w-5 h-5 text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-          <p className="text-sm text-orange-700">
-            คุณมี <span className="font-bold">{deletingCount} สินค้า</span> ที่อยู่ในช่วงรอลบ กรุณาตรวจสอบด้านล่าง
-          </p>
+        <div className="ui-note ui-note-warn mb-5 flex items-center justify-between gap-3 flex-wrap">
+          <span>
+            คุณมี <strong>{deletingCount} ประกาศ</strong> ที่อยู่ในช่วงรอลบ ยกเลิกได้ก่อนหมดเวลา
+          </span>
+          <button onClick={() => setFilter("DELETING")} className="ui-btn ui-btn-ghost ui-btn-sm">
+            ดูรายการ
+          </button>
         </div>
       )}
 
-      {/* Filter chips */}
+      {/* Filter chips — these are also the counts, so there is no separate
+          stat row saying the same numbers a second time. */}
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar mb-4 pb-0.5">
         {FILTERS.map((f) => (
           <button
             key={f.key}
             onClick={() => setFilter(f.key)}
-            className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold border transition ${
-              filter === f.key
-                ? "bg-[#e8500a] border-[#e8500a] text-white"
-                : "bg-white border-[#e5e3de] text-[#555] hover:border-[#c9c5bd]"
-            }`}
+            aria-pressed={filter === f.key}
+            className={`ui-chip flex-shrink-0 ${filter === f.key ? "is-on" : ""}`}
           >
             {f.label}
-            <span className={`ml-1.5 ${filter === f.key ? "text-white/75" : "text-[#9a9590]"}`}>
-              {counts[f.key]}
-            </span>
+            <span className="ui-chip-n">{counts[f.key]}</span>
           </button>
         ))}
       </div>
 
-      {/* Section header */}
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="text-base font-semibold text-[#111]">
-          รายการสินค้า
-          {filter !== "ALL" && (
-            <span className="ml-2 text-xs font-normal text-[#9a9590]">
-              · {FILTERS.find((f) => f.key === filter)?.label} {visibleItems.length} รายการ
-            </span>
-          )}
-        </h2>
-        <a
-          href="/"
-          className="flex items-center gap-2 bg-[#e8500a] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-[#c94208] transition"
-        >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          ลงประกาศใหม่
-        </a>
-      </div>
 
       {/* Empty state */}
       {visibleItems.length === 0 && (
-        <div className="bg-white rounded-2xl border border-[#e5e3de] p-16 text-center">
-          <div className="text-5xl mb-4">📦</div>
+        <div className="ui-card ui-empty">
+          <div className="ui-empty-icon">
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 7.5 12 3.5 4 7.5m16 0-8 4m8-4V16l-8 4m0-8.5L4 7.5m8 4V20M4 7.5V16l8 4" />
+            </svg>
+          </div>
           {activeItems.length === 0 ? (
             <>
-              <h3 className="text-lg font-semibold text-[#111] mb-2">ยังไม่มีสินค้า</h3>
-              <p className="text-sm text-[#777]">เริ่มลงประกาศสินค้าแรกของคุณเลย!</p>
+              <h3>ยังไม่มีประกาศ</h3>
+              <p>ลงประกาศชิ้นแรกจากหน้าร้าน แล้วรายการจะมาอยู่ที่นี่พร้อมสถานะการตรวจสอบ</p>
+              <a href="/" className="ui-btn ui-btn-primary mt-4">ลงประกาศใหม่</a>
             </>
           ) : (
             <>
-              <h3 className="text-lg font-semibold text-[#111] mb-2">
-                ไม่มีสินค้าในหมวด &ldquo;{FILTERS.find((f) => f.key === filter)?.label}&rdquo;
-              </h3>
-              <button
-                onClick={() => setFilter("ALL")}
-                className="text-sm font-semibold text-[#e8500a] hover:underline"
-              >
-                ดูสินค้าทั้งหมด
+              <h3>ไม่มีประกาศในหมวด &ldquo;{FILTERS.find((f) => f.key === filter)?.label}&rdquo;</h3>
+              <p>ลองเลือกหมวดอื่น หรือดูประกาศทั้งหมดของคุณ</p>
+              <button onClick={() => setFilter("ALL")} className="ui-btn ui-btn-ghost mt-4">
+                ดูทั้งหมด
               </button>
             </>
           )}
@@ -344,12 +304,12 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
               ? expired
                 ? "bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300 p-4 flex gap-4 items-start opacity-60"
                 : "bg-red-50/40 rounded-2xl border-2 border-red-300 p-4 flex gap-4 items-start"
-              : "bg-white rounded-2xl border border-[#e5e3de] p-4 flex gap-4 items-start hover:shadow-sm transition";
+              : "bg-white rounded-2xl border border-[#dfe7f2] p-4 flex gap-4 items-start hover:shadow-sm transition";
 
             return (
               <div key={item.id} className={cardClass}>
                 {/* Thumbnail */}
-                <div className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden flex items-center justify-center ${isScheduled ? "bg-[#f0ede7] opacity-70" : "bg-[#f0ede7]"}`}>
+                <div className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden flex items-center justify-center ${isScheduled ? "bg-[#eaf0f8] opacity-70" : "bg-[#eaf0f8]"}`}>
                   {imgUrl ? (
                     <img src={imgUrl} alt={item.title} className="w-full h-full object-contain" />
                   ) : (
@@ -362,10 +322,10 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                   {/* Title row */}
                   <div className="flex items-start justify-between gap-2 flex-wrap">
                     <div className="min-w-0">
-                      <h3 className={`text-sm font-semibold truncate ${isScheduled ? "text-[#666] line-through" : "text-[#111]"}`}>
+                      <h3 className={`text-sm font-semibold truncate ${isScheduled ? "text-[#666] line-through" : "text-[#0f1e35]"}`}>
                         {item.title}
                       </h3>
-                      <p className="text-xs text-[#777] mt-0.5">{item.category.nameTh}</p>
+                      <p className="text-xs text-[#5b6b82] mt-0.5">{item.category.nameTh}</p>
                     </div>
                     <div className="flex-shrink-0">
                       {isScheduled ? (
@@ -380,7 +340,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                   </div>
 
                   {/* Price */}
-                  <p className={`text-base font-bold mt-2 ${isScheduled ? "text-[#aaa] line-through" : "text-[#e8500a]"}`}>
+                  <p className={`text-base font-bold mt-2 ${isScheduled ? "text-[#94a3b8] line-through" : "text-[#2563eb]"}`}>
                     ฿{item.price.toLocaleString()}
                     {item.listingType === "RENT" && <span className="text-xs font-normal">/เดือน</span>}
                   </p>
@@ -466,7 +426,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                         <>
                           <a
                             href={`/dashboard/edit/${item.id}`}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#e5e3de] text-xs font-medium text-[#333] hover:bg-[#f7f6f3] transition"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#dfe7f2] text-xs font-medium text-[#1e2d47] hover:bg-[#f1f5fb] transition"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -501,6 +461,14 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
           onConfirm={handleDelete}
           isPending={isPending}
         />
+      )}
+
+      {/* Rating and reviews. Below the listings on purpose — a seller opens
+          this page to manage what they are selling, not to read their score. */}
+      {reputation && (
+        <div className="mt-8">
+          <ReputationPanel reputation={reputation} />
+        </div>
       )}
     </>
   );

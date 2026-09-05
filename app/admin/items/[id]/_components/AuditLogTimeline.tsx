@@ -25,11 +25,11 @@ export default function AuditLogTimeline({ auditLog, itemCreatedAt }: Props) {
     : [{ action: "สร้างสินค้าใหม่", adminName: "ระบบ", note: null, createdAt: itemCreatedAt }];
 
   return (
-    <div className="bg-white rounded-2xl border border-[#e5e3de] p-6">
-      <h3 className="text-sm font-semibold text-[#555] mb-4">
+    <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6">
+      <h3 className="text-sm font-semibold text-[#3d4d66] mb-4">
         บันทึกกิจกรรม
         {auditLog.length === 0 && (
-          <span className="text-[#aaa] font-normal ml-1 text-xs">(ยังไม่มีบันทึก)</span>
+          <span className="text-[#94a3b8] font-normal ml-1 text-xs">(ยังไม่มีบันทึก)</span>
         )}
       </h3>
 
@@ -38,29 +38,29 @@ export default function AuditLogTimeline({ auditLog, itemCreatedAt }: Props) {
           <div key={idx} className="flex gap-3 text-sm relative">
             {/* Timeline line */}
             {idx < entries.length - 1 && (
-              <div className="absolute left-[5px] top-[14px] bottom-0 w-[1px] bg-[#e5e3de]" />
+              <div className="absolute left-[5px] top-[14px] bottom-0 w-[1px] bg-[#dfe7f2]" />
             )}
 
             {/* Dot */}
             <div className="w-[11px] flex-shrink-0 pt-[6px]">
               <div className={`w-[11px] h-[11px] rounded-full border-2 ${
                 idx === 0
-                  ? "bg-[#e8500a] border-[#e8500a]"
+                  ? "bg-[#2563eb] border-[#2563eb]"
                   : "bg-white border-[#d5d2cc]"
               }`} />
             </div>
 
             {/* Content */}
             <div className="pb-4 min-w-0">
-              <p className="text-[#333]">
+              <p className="text-[#1e2d47]">
                 <span className="font-medium">{entry.adminName}</span>
-                <span className="mx-1 text-[#aaa]">—</span>
+                <span className="mx-1 text-[#94a3b8]">—</span>
                 <span>{entry.action}</span>
               </p>
               {entry.note && (
-                <p className="text-[#888] text-xs mt-0.5 italic">&ldquo;{entry.note}&rdquo;</p>
+                <p className="text-[#8494a9] text-xs mt-0.5 italic">&ldquo;{entry.note}&rdquo;</p>
               )}
-              <p className="text-[#aaa] text-xs mt-0.5">{fmtDate(entry.createdAt)}</p>
+              <p className="text-[#94a3b8] text-xs mt-0.5">{fmtDate(entry.createdAt)}</p>
             </div>
           </div>
         ))}

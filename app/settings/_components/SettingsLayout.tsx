@@ -65,8 +65,8 @@ export default function SettingsLayout({ userData, activeTab }: SettingsLayoutPr
                 onClick={() => setTab(t.key)}
                 className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-left text-sm font-medium transition ${
                   tab === t.key
-                    ? "bg-white text-[#111] shadow-sm border border-[#e5e3de]"
-                    : "text-[#777] hover:text-[#333] hover:bg-white/60"
+                    ? "bg-white text-[#0f1e35] shadow-sm border border-[#dfe7f2]"
+                    : "text-[#5b6b82] hover:text-[#1e2d47] hover:bg-white/60"
                 }`}
               >
                 <span className="text-base">{t.icon}</span>
@@ -85,8 +85,8 @@ export default function SettingsLayout({ userData, activeTab }: SettingsLayoutPr
                 onClick={() => setTab(t.key)}
                 className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition ${
                   tab === t.key
-                    ? "bg-[#111] text-white shadow"
-                    : "bg-white text-[#555] border border-[#e5e3de] hover:bg-[#f7f6f3]"
+                    ? "bg-[#0f1e35] text-white shadow"
+                    : "bg-white text-[#3d4d66] border border-[#dfe7f2] hover:bg-[#f1f5fb]"
                 }`}
               >
                 <span>{t.icon}</span>
@@ -98,7 +98,7 @@ export default function SettingsLayout({ userData, activeTab }: SettingsLayoutPr
 
         {/* ── Tab content ─────────────────────────────────────────────── */}
         <main className="flex-1 min-w-0">
-          <div className="bg-white rounded-2xl border border-[#e5e3de] shadow-sm overflow-hidden">
+          <div className="bg-white rounded-2xl border border-[#dfe7f2] shadow-sm overflow-hidden">
             {tab === "profile"       && <ProfileTab       userData={userData} showToast={showToast} />}
             {tab === "addresses"     && <AddressesTab     addresses={userData.savedAddresses} showToast={showToast} />}
             {tab === "notifications" && <NotificationsTab preferences={userData.preferences} showToast={showToast} />}

@@ -48,7 +48,7 @@ export default function OrdersTable({ rows }: Props) {
 
   if (rows.length === 0) {
     return (
-      <div className="py-20 text-center text-[#aaa] text-sm">ไม่พบรายการสั่งซื้อ</div>
+      <div className="py-20 text-center text-[#94a3b8] text-sm">ไม่พบรายการสั่งซื้อ</div>
     );
   }
 
@@ -82,7 +82,7 @@ export default function OrdersTable({ rows }: Props) {
       >
         {dialog?.kind === "cancel" && (
           <textarea
-            className="w-full border border-[#e5e3de] rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#e8500a]/20 focus:border-[#e8500a]"
+            className="w-full border border-[#dfe7f2] rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
             placeholder="เหตุผลในการยกเลิก..."
             rows={3}
             value={cancelReason}
@@ -95,29 +95,29 @@ export default function OrdersTable({ rows }: Props) {
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-[#e5e3de] bg-[#faf9f7]">
-              <th className="text-left px-4 py-3 font-semibold text-[#555] w-8" />
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">รหัส</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555] w-[200px]">สินค้า</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">ผู้ซื้อ</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">ผู้ขาย</th>
-              <th className="text-right px-4 py-3 font-semibold text-[#555]">จำนวนเงิน</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">การจัดส่ง</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">สถานะ</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">วันที่</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">การจัดการ</th>
+            <tr className="border-b border-[#dfe7f2] bg-[#f7f9fd]">
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66] w-8" />
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">รหัส</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66] w-[200px]">สินค้า</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">ผู้ซื้อ</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">ผู้ขาย</th>
+              <th className="text-right px-4 py-3 font-semibold text-[#3d4d66]">จำนวนเงิน</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">การจัดส่ง</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">สถานะ</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">วันที่</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">การจัดการ</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#f0ede7]">
+          <tbody className="divide-y divide-[#eaf0f8]">
             {rows.map((order) => (
               <>
                 <tr
                   key={order.id}
-                  className="hover:bg-[#faf9f7] transition cursor-pointer"
+                  className="hover:bg-[#f7f9fd] transition cursor-pointer"
                   onClick={() => setExpanded(expanded === order.id ? null : order.id)}
                 >
                   {/* Expand toggle */}
-                  <td className="px-4 py-3 text-[#aaa]">
+                  <td className="px-4 py-3 text-[#94a3b8]">
                     <svg
                       className={`w-3.5 h-3.5 transition-transform ${expanded === order.id ? "rotate-90" : ""}`}
                       fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -127,8 +127,8 @@ export default function OrdersTable({ rows }: Props) {
                   </td>
 
                   {/* Ref */}
-                  <td className="px-4 py-3 font-mono text-xs text-[#555]">
-                    <span className="font-semibold text-[#111]">
+                  <td className="px-4 py-3 font-mono text-xs text-[#3d4d66]">
+                    <span className="font-semibold text-[#0f1e35]">
                       #{order.shortRef}
                     </span>
                     {order.hasDispute && (
@@ -140,7 +140,7 @@ export default function OrdersTable({ rows }: Props) {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2.5">
                       {order.item.thumbnailUrl ? (
-                        <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0 bg-[#f0ede7]">
+                        <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0 bg-[#eaf0f8]">
                           <Image
                             src={order.item.thumbnailUrl}
                             alt={order.item.title}
@@ -150,28 +150,28 @@ export default function OrdersTable({ rows }: Props) {
                           />
                         </div>
                       ) : (
-                        <div className="w-8 h-8 rounded-lg bg-[#f0ede7] flex items-center justify-center text-sm flex-shrink-0">
+                        <div className="w-8 h-8 rounded-lg bg-[#eaf0f8] flex items-center justify-center text-sm flex-shrink-0">
                           📦
                         </div>
                       )}
-                      <span className="truncate max-w-[140px] text-[#333]">{order.item.title}</span>
+                      <span className="truncate max-w-[140px] text-[#1e2d47]">{order.item.title}</span>
                     </div>
                   </td>
 
                   {/* Buyer */}
                   <td className="px-4 py-3">
-                    <p className="text-[#333] truncate max-w-[120px]">{order.buyer.name ?? "—"}</p>
-                    <p className="text-xs text-[#9a9590] truncate max-w-[120px]">{order.buyer.email}</p>
+                    <p className="text-[#1e2d47] truncate max-w-[120px]">{order.buyer.name ?? "—"}</p>
+                    <p className="text-xs text-[#64748b] truncate max-w-[120px]">{order.buyer.email}</p>
                   </td>
 
                   {/* Seller */}
                   <td className="px-4 py-3">
-                    <p className="text-[#333] truncate max-w-[120px]">{order.seller.name ?? "—"}</p>
-                    <p className="text-xs text-[#9a9590] truncate max-w-[120px]">{order.seller.email}</p>
+                    <p className="text-[#1e2d47] truncate max-w-[120px]">{order.seller.name ?? "—"}</p>
+                    <p className="text-xs text-[#64748b] truncate max-w-[120px]">{order.seller.email}</p>
                   </td>
 
                   {/* Amount */}
-                  <td className="px-4 py-3 text-right font-medium text-[#111] whitespace-nowrap">
+                  <td className="px-4 py-3 text-right font-medium text-[#0f1e35] whitespace-nowrap">
                     {formatCurrency(order.totalAmount ?? order.amount)}
                   </td>
 
@@ -186,7 +186,7 @@ export default function OrdersTable({ rows }: Props) {
                   </td>
 
                   {/* Date */}
-                  <td className="px-4 py-3 text-[#777] whitespace-nowrap">
+                  <td className="px-4 py-3 text-[#5b6b82] whitespace-nowrap">
                     {formatRelativeDate(order.createdAt)}
                   </td>
 
@@ -206,69 +206,69 @@ export default function OrdersTable({ rows }: Props) {
 
                 {/* Expanded detail row */}
                 {expanded === order.id && (
-                  <tr key={`${order.id}-detail`} className="bg-[#faf9f7]">
+                  <tr key={`${order.id}-detail`} className="bg-[#f7f9fd]">
                     <td colSpan={10} className="px-8 py-4 space-y-4">
                       {/* Core IDs + dates */}
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div>
-                          <p className="text-[#999] text-xs mb-1">รหัสเต็ม</p>
-                          <p className="font-mono text-xs text-[#333]">{order.id}</p>
+                          <p className="text-[#8d9bb0] text-xs mb-1">รหัสเต็ม</p>
+                          <p className="font-mono text-xs text-[#1e2d47]">{order.id}</p>
                         </div>
                         <div>
-                          <p className="text-[#999] text-xs mb-1">สินค้า ID</p>
+                          <p className="text-[#8d9bb0] text-xs mb-1">สินค้า ID</p>
                           <a
                             href={`/items/${order.item.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-mono text-xs text-[#e8500a] hover:underline"
+                            className="font-mono text-xs text-[#2563eb] hover:underline"
                           >
                             {truncateId(order.item.id)}
                           </a>
                         </div>
                         <div>
-                          <p className="text-[#999] text-xs mb-1">วันที่สั่งซื้อ</p>
-                          <p className="text-[#333]">{formatThaiDate(order.createdAt)}</p>
+                          <p className="text-[#8d9bb0] text-xs mb-1">วันที่สั่งซื้อ</p>
+                          <p className="text-[#1e2d47]">{formatThaiDate(order.createdAt)}</p>
                         </div>
                         {order.shippedAt && (
                           <div>
-                            <p className="text-[#999] text-xs mb-1">วันที่จัดส่ง</p>
-                            <p className="text-[#333]">{formatThaiDate(order.shippedAt)}</p>
+                            <p className="text-[#8d9bb0] text-xs mb-1">วันที่จัดส่ง</p>
+                            <p className="text-[#1e2d47]">{formatThaiDate(order.shippedAt)}</p>
                           </div>
                         )}
                         {order.trackingNumber && (
                           <div>
-                            <p className="text-[#999] text-xs mb-1">เลขพัสดุ</p>
-                            <p className="font-mono text-xs text-[#333]">{order.trackingNumber}</p>
+                            <p className="text-[#8d9bb0] text-xs mb-1">เลขพัสดุ</p>
+                            <p className="font-mono text-xs text-[#1e2d47]">{order.trackingNumber}</p>
                           </div>
                         )}
                       </div>
 
                       {/* Delivery details */}
                       {order.deliveryMethod === "SHIPPING" && order.shippingAddress && (
-                        <div className="bg-white border border-[#e5e3de] rounded-xl px-4 py-3 text-sm">
-                          <p className="text-[#999] text-xs font-semibold uppercase tracking-wide mb-2">ที่อยู่จัดส่ง</p>
-                          <p className="font-medium text-[#111]">{order.shippingAddress.recipientName}</p>
-                          <p className="text-[#555]">{order.shippingAddress.phone}</p>
-                          <p className="text-[#555]">
+                        <div className="bg-white border border-[#dfe7f2] rounded-xl px-4 py-3 text-sm">
+                          <p className="text-[#8d9bb0] text-xs font-semibold uppercase tracking-wide mb-2">ที่อยู่จัดส่ง</p>
+                          <p className="font-medium text-[#0f1e35]">{order.shippingAddress.recipientName}</p>
+                          <p className="text-[#3d4d66]">{order.shippingAddress.phone}</p>
+                          <p className="text-[#3d4d66]">
                             {order.shippingAddress.addressLine1}
                             {order.shippingAddress.addressLine2 ? `, ${order.shippingAddress.addressLine2}` : ""}
                           </p>
-                          <p className="text-[#555]">
+                          <p className="text-[#3d4d66]">
                             {order.shippingAddress.district} {order.shippingAddress.province} {order.shippingAddress.postalCode}
                           </p>
                           {order.shippingAddress.note && (
-                            <p className="text-xs text-[#9a9590] mt-1">หมายเหตุ: {order.shippingAddress.note}</p>
+                            <p className="text-xs text-[#64748b] mt-1">หมายเหตุ: {order.shippingAddress.note}</p>
                           )}
                         </div>
                       )}
                       {order.deliveryMethod === "MEETUP" && (order.meetupLocation || order.meetupDateTime) && (
-                        <div className="bg-white border border-[#e5e3de] rounded-xl px-4 py-3 text-sm">
-                          <p className="text-[#999] text-xs font-semibold uppercase tracking-wide mb-2">นัดพบ</p>
+                        <div className="bg-white border border-[#dfe7f2] rounded-xl px-4 py-3 text-sm">
+                          <p className="text-[#8d9bb0] text-xs font-semibold uppercase tracking-wide mb-2">นัดพบ</p>
                           {order.meetupLocation && (
-                            <p className="text-[#333]">📍 {order.meetupLocation}</p>
+                            <p className="text-[#1e2d47]">📍 {order.meetupLocation}</p>
                           )}
                           {order.meetupDateTime && (
-                            <p className="text-[#555] text-xs mt-0.5">
+                            <p className="text-[#3d4d66] text-xs mt-0.5">
                               🕐 {new Date(order.meetupDateTime).toLocaleString("th-TH", {
                                 dateStyle: "medium", timeStyle: "short",
                               })}
@@ -321,7 +321,7 @@ function OrderActionsDropdown({
     <div className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#e5e3de] transition text-[#555]"
+        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#dfe7f2] transition text-[#3d4d66]"
         aria-label="เมนูการจัดการ"
       >
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -332,11 +332,11 @@ function OrderActionsDropdown({
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-9 z-50 w-44 bg-white rounded-xl border border-[#e5e3de] shadow-lg py-1">
+          <div className="absolute right-0 top-9 z-50 w-44 bg-white rounded-xl border border-[#dfe7f2] shadow-lg py-1">
             {canComplete && (
               <button
                 onClick={() => { setOpen(false); onComplete(); }}
-                className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f7f6f3] text-green-700 transition"
+                className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f1f5fb] text-green-700 transition"
               >
                 ✅ บังคับให้สำเร็จ
               </button>
@@ -344,7 +344,7 @@ function OrderActionsDropdown({
             {canCancel && (
               <button
                 onClick={() => { setOpen(false); onCancel(); }}
-                className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f7f6f3] text-red-600 transition"
+                className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f1f5fb] text-red-600 transition"
               >
                 ❌ ยกเลิกและคืนเงิน
               </button>
@@ -366,7 +366,7 @@ function DeliveryMethodBadge({
   payment:  string | null;
 }) {
   if (!delivery && !payment) {
-    return <span className="text-xs text-[#bbb]">—</span>;
+    return <span className="text-xs text-[#a3b0c2]">—</span>;
   }
 
   const deliveryLabel: Record<string, string> = {
@@ -386,7 +386,7 @@ function DeliveryMethodBadge({
         </span>
       )}
       {payment && (
-        <span className="text-xs text-[#777] whitespace-nowrap">
+        <span className="text-xs text-[#5b6b82] whitespace-nowrap">
           {paymentLabel[payment] ?? payment}
         </span>
       )}

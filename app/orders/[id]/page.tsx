@@ -15,7 +15,7 @@ export default async function OrderPage({
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f6f3]">
+    <main className="min-h-screen bg-[#f1f5fb]">
       <OrderTrackingClient
         order={result.order}
         currentUserId={result.currentUserId}

@@ -3,11 +3,15 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import OrdersClient from "./OrdersClient";
 
-export default async function OrdersPage() {
+export default async function OrdersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
   const session = await auth();
   if (!session?.user?.id) redirect("/");
 
-  const result = await getMyOrders();
+  const [result, { tab }] = await Promise.all([getMyOrders(), searchParams]);
 
   if ("error" in result) redirect("/");
 
@@ -18,6 +22,7 @@ export default async function OrdersPage() {
       walletBalance={result.walletBalance}
       escrowBalance={result.escrowBalance}
       currentUserId={session.user.id}
+      initialTab={tab === "selling" ? "selling" : "buying"}
     />
   );
 }

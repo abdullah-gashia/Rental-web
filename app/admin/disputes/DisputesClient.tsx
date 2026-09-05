@@ -59,7 +59,7 @@ function Avatar({ user, size = "sm" }: { user: { name: string | null; image: str
   const px = size === "md" ? "w-9 h-9" : "w-6 h-6";
   const txt = size === "md" ? "text-xs" : "text-[10px]";
   return (
-    <div className={`${px} rounded-full bg-gradient-to-br from-[#e8500a] to-[#ff7a3d] flex items-center justify-center flex-shrink-0 overflow-hidden`}>
+    <div className={`${px} rounded-full bg-gradient-to-br from-[#2563eb] to-[#60a5fa] flex items-center justify-center flex-shrink-0 overflow-hidden`}>
       {user.image
         ? <img src={user.image} alt="" className="w-full h-full object-cover" />
         : <span className={`font-bold text-white ${txt}`}>{(user.name ?? "?")[0].toUpperCase()}</span>
@@ -74,7 +74,7 @@ function EvidenceGallery({ images }: { images: string[] }) {
   const [lightbox, setLightbox] = useState<string | null>(null);
 
   if (images.length === 0) return (
-    <p className="text-xs text-[#9a9590] italic">ไม่มีรูปภาพหลักฐาน</p>
+    <p className="text-xs text-[#64748b] italic">ไม่มีรูปภาพหลักฐาน</p>
   );
 
   return (
@@ -84,7 +84,7 @@ function EvidenceGallery({ images }: { images: string[] }) {
           <button
             key={i}
             onClick={() => setLightbox(url)}
-            className="w-20 h-20 rounded-xl overflow-hidden border border-[#e5e3de] hover:ring-2 hover:ring-[#e8500a] transition flex-shrink-0"
+            className="w-20 h-20 rounded-xl overflow-hidden border border-[#dfe7f2] hover:ring-2 hover:ring-[#2563eb] transition flex-shrink-0"
           >
             <img src={url} alt={`หลักฐาน ${i + 1}`} className="w-full h-full object-contain" />
           </button>
@@ -135,10 +135,10 @@ function ChatLog({
   const messages = conv?.messages ?? [];
 
   return (
-    <div className="border border-[#e5e3de] rounded-xl overflow-hidden">
+    <div className="border border-[#dfe7f2] rounded-xl overflow-hidden">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-[#f7f6f3] hover:bg-[#f0ede7] transition text-sm font-semibold text-[#555]"
+        className="w-full flex items-center justify-between px-4 py-3 bg-[#f1f5fb] hover:bg-[#eaf0f8] transition text-sm font-semibold text-[#3d4d66]"
       >
         <span className="flex items-center gap-2">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,9 +155,9 @@ function ChatLog({
       </button>
 
       {open && (
-        <div className="max-h-72 overflow-y-auto divide-y divide-[#f0ede7]">
+        <div className="max-h-72 overflow-y-auto divide-y divide-[#eaf0f8]">
           {messages.length === 0 ? (
-            <p className="px-4 py-6 text-center text-sm text-[#9a9590]">ไม่มีข้อความ</p>
+            <p className="px-4 py-6 text-center text-sm text-[#64748b]">ไม่มีข้อความ</p>
           ) : (
             messages.map((msg) => {
               const isSystem = parseSystemMessage(msg.content) !== null;
@@ -171,7 +171,7 @@ function ChatLog({
                       <span className="text-[10px] text-blue-600 font-bold uppercase tracking-wider">
                         ข้อมูลระบบ (System Record)
                       </span>
-                      <span className="text-[10px] text-[#bbb] ml-auto">
+                      <span className="text-[10px] text-[#a3b0c2] ml-auto">
                         {new Date(msg.createdAt).toLocaleString("th-TH", {
                           month: "short", day: "numeric",
                           hour: "2-digit", minute: "2-digit",
@@ -189,13 +189,13 @@ function ChatLog({
                   <Avatar user={msg.sender} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2 flex-wrap">
-                      <span className="text-xs font-semibold text-[#111]">
+                      <span className="text-xs font-semibold text-[#0f1e35]">
                         {msg.sender.name ?? "ไม่ระบุชื่อ"}
                       </span>
-                      <span className="text-[10px] text-[#9a9590]">
+                      <span className="text-[10px] text-[#64748b]">
                         {isBuyer ? "(ผู้ซื้อ)" : "(ผู้ขาย)"}
                       </span>
-                      <span className="text-[10px] text-[#bbb] ml-auto">
+                      <span className="text-[10px] text-[#a3b0c2] ml-auto">
                         {new Date(msg.createdAt).toLocaleString("th-TH", {
                           month: "short", day: "numeric",
                           hour: "2-digit", minute: "2-digit",
@@ -258,7 +258,7 @@ function DisputeCard({
         {/* ── Order Summary ──────────────────────────────────────────────────── */}
         <div className="flex gap-4">
           {/* Item thumbnail */}
-          <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#f0ede7] flex-shrink-0 flex items-center justify-center text-2xl border border-[#e5e3de]">
+          <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#eaf0f8] flex-shrink-0 flex items-center justify-center text-2xl border border-[#dfe7f2]">
             {itemImg
               ? <img src={itemImg} alt={order.item.title} className="w-full h-full object-contain" />
               : <span>{order.item.emoji ?? "📦"}</span>
@@ -266,10 +266,10 @@ function DisputeCard({
           </div>
 
           <div className="flex-1 min-w-0">
-            <p className="text-base font-bold text-[#111] truncate">{order.item.title}</p>
+            <p className="text-base font-bold text-[#0f1e35] truncate">{order.item.title}</p>
             <p className="text-lg font-extrabold text-red-700 mt-0.5">
               ฿{order.amount.toLocaleString()}
-              <span className="text-xs font-normal text-[#9a9590] ml-2">ถูกอายัด</span>
+              <span className="text-xs font-normal text-[#64748b] ml-2">ถูกอายัด</span>
             </p>
           </div>
         </div>
@@ -291,32 +291,32 @@ function DisputeCard({
                 <p className={`text-[10px] font-bold uppercase tracking-wider ${
                   accent === "blue" ? "text-blue-500" : "text-orange-500"
                 }`}>{label}</p>
-                <p className="text-sm font-semibold text-[#111] truncate">{user.name ?? "ไม่ระบุชื่อ"}</p>
-                <p className="text-[10px] text-[#9a9590] truncate">{user.email}</p>
+                <p className="text-sm font-semibold text-[#0f1e35] truncate">{user.name ?? "ไม่ระบุชื่อ"}</p>
+                <p className="text-[10px] text-[#64748b] truncate">{user.email}</p>
               </div>
             </div>
           ))}
         </div>
 
         {/* ── Dispute reason ────────────────────────────────────────────────── */}
-        <div className="rounded-xl bg-[#f7f6f3] border border-[#e5e3de] p-4 space-y-1.5">
-          <div className="flex items-center gap-2 text-xs font-bold text-[#555] uppercase tracking-wider">
+        <div className="rounded-xl bg-[#f1f5fb] border border-[#dfe7f2] p-4 space-y-1.5">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#3d4d66] uppercase tracking-wider">
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             เหตุผล
             {reporter && (
-              <span className="ml-auto font-normal text-[#9a9590] normal-case tracking-normal">
+              <span className="ml-auto font-normal text-[#64748b] normal-case tracking-normal">
                 รายงานโดย{reporterLabel} ({reporter.name ?? "ไม่ระบุชื่อ"})
               </span>
             )}
           </div>
-          <p className="text-sm text-[#333] leading-relaxed">{reason}</p>
+          <p className="text-sm text-[#1e2d47] leading-relaxed">{reason}</p>
         </div>
 
         {/* ── Evidence images ───────────────────────────────────────────────── */}
         <div className="space-y-2">
-          <p className="text-xs font-bold text-[#555] uppercase tracking-wider">
+          <p className="text-xs font-bold text-[#3d4d66] uppercase tracking-wider">
             หลักฐาน ({evidence.length} ภาพ)
           </p>
           <EvidenceGallery images={evidence} />
@@ -357,7 +357,7 @@ function DisputeCard({
             </div>
           </div>
         ) : (
-          <div className="flex flex-col sm:flex-row gap-3 pt-1 border-t border-[#f0ede7]">
+          <div className="flex flex-col sm:flex-row gap-3 pt-1 border-t border-[#eaf0f8]">
             <button
               onClick={() => setConfirmAction("REFUND_BUYER")}
               disabled={resolving}
@@ -431,8 +431,8 @@ export default function DisputesClient({ orders: initialOrders }: Props) {
       {/* ── Header ─────────────────────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[#111]">ศูนย์จัดการข้อพิพาท</h1>
-          <p className="text-sm text-[#777] mt-1">ตรวจสอบหลักฐานและตัดสินผลเพื่อปลดล็อคเงิน Escrow</p>
+          <h1 className="text-2xl font-bold text-[#0f1e35]">ศูนย์จัดการข้อพิพาท</h1>
+          <p className="text-sm text-[#5b6b82] mt-1">ตรวจสอบหลักฐานและตัดสินผลเพื่อปลดล็อคเงิน Escrow</p>
         </div>
 
         <div className="flex items-center gap-3 flex-wrap">
@@ -450,7 +450,7 @@ export default function DisputesClient({ orders: initialOrders }: Props) {
           <button
             onClick={handleAutoRelease}
             disabled={isPending}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#e5e3de] bg-white text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#dfe7f2] bg-white text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
           >
             <svg className={`w-4 h-4 ${isPending ? "animate-spin" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -469,14 +469,14 @@ export default function DisputesClient({ orders: initialOrders }: Props) {
 
       {/* ── Empty state ─────────────────────────────────────────────────────────── */}
       {orders.length === 0 && (
-        <div className="bg-white rounded-2xl border border-[#e5e3de] p-16 text-center">
+        <div className="bg-white rounded-2xl border border-[#dfe7f2] p-16 text-center">
           <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-[#111] mb-1">ไม่มีข้อพิพาทที่รอตรวจสอบ</h3>
-          <p className="text-sm text-[#777]">ทุกธุรกรรมดำเนินไปอย่างราบรื่น 🎉</p>
+          <h3 className="text-lg font-semibold text-[#0f1e35] mb-1">ไม่มีข้อพิพาทที่รอตรวจสอบ</h3>
+          <p className="text-sm text-[#5b6b82]">ทุกธุรกรรมดำเนินไปอย่างราบรื่น 🎉</p>
         </div>
       )}
 

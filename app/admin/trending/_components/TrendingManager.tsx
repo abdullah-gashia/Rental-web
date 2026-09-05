@@ -135,25 +135,25 @@ export default function TrendingManager({ initialItems }: Props) {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* ── Left: Current Featured List ──────────────────────────────── */}
         <div className="space-y-4">
-          <div className="bg-white rounded-2xl border border-[#e5e3de] p-5">
+          <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-bold text-[#333] flex items-center gap-2">
+              <h2 className="text-sm font-bold text-[#1e2d47] flex items-center gap-2">
                 📋 รายการมาแรงปัจจุบัน
               </h2>
               <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                 items.length >= 10
                   ? "bg-red-50 text-red-600"
-                  : "bg-[#f0ede7] text-[#555]"
+                  : "bg-[#eaf0f8] text-[#3d4d66]"
               }`}>
                 {items.length}/10 รายการ
               </span>
             </div>
 
             {items.length === 0 ? (
-              <div className="py-10 text-center text-[#aaa]">
+              <div className="py-10 text-center text-[#94a3b8]">
                 <span className="text-3xl block mb-2">📭</span>
                 <p className="text-sm">ยังไม่มีสินค้ามาแรง</p>
-                <p className="text-xs text-[#bbb] mt-1">ค้นหาและเพิ่มสินค้าด้านล่าง</p>
+                <p className="text-xs text-[#a3b0c2] mt-1">ค้นหาและเพิ่มสินค้าด้านล่าง</p>
               </div>
             ) : (
               <div className="space-y-1">
@@ -176,13 +176,13 @@ export default function TrendingManager({ initialItems }: Props) {
           </div>
 
           {/* ── Search & Add Items ─────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl border border-[#e5e3de] p-5">
-            <h2 className="text-sm font-bold text-[#333] flex items-center gap-2 mb-3">
+          <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+            <h2 className="text-sm font-bold text-[#1e2d47] flex items-center gap-2 mb-3">
               ➕ เพิ่มสินค้าเข้ารายการมาแรง
             </h2>
 
             <div className="relative mb-3">
-              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#aaa]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94a3b8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               <input
@@ -190,17 +190,17 @@ export default function TrendingManager({ initialItems }: Props) {
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder="ค้นหาสินค้าเพื่อเพิ่ม..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#e5e3de] text-sm
-                           focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30 focus:border-[#e8500a] transition"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#dfe7f2] text-sm
+                           focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition"
               />
               {searching && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <span className="w-4 h-4 border-2 border-[#e8500a] border-t-transparent rounded-full animate-spin inline-block" />
+                  <span className="w-4 h-4 border-2 border-[#2563eb] border-t-transparent rounded-full animate-spin inline-block" />
                 </div>
               )}
             </div>
 
-            <p className="text-[11px] text-[#aaa] mb-3">
+            <p className="text-[11px] text-[#94a3b8] mb-3">
               แสดงเฉพาะสินค้าที่สถานะ "อนุมัติแล้ว" และยังไม่ได้อยู่ในรายการมาแรง
             </p>
 
@@ -218,7 +218,7 @@ export default function TrendingManager({ initialItems }: Props) {
             )}
 
             {searchQuery.trim().length > 0 && searchResults.length === 0 && !searching && (
-              <div className="py-6 text-center text-[#aaa] text-sm">
+              <div className="py-6 text-center text-[#94a3b8] text-sm">
                 ไม่พบสินค้าที่ตรงกัน
               </div>
             )}
@@ -226,23 +226,23 @@ export default function TrendingManager({ initialItems }: Props) {
         </div>
 
         {/* ── Right: Live Preview ──────────────────────────────────────── */}
-        <div className="bg-white rounded-2xl border border-[#e5e3de] p-5">
-          <h2 className="text-sm font-bold text-[#333] flex items-center gap-2 mb-4">
+        <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+          <h2 className="text-sm font-bold text-[#1e2d47] flex items-center gap-2 mb-4">
             👁️ ตัวอย่างหน้าจริง
           </h2>
 
           {/* Preview header */}
           <div className="flex items-center justify-between mb-3 px-1">
-            <h3 className="text-base font-bold tracking-tight text-[#111]">กำลังมาแรงในขณะนี้</h3>
-            <span className="flex items-center gap-1.5 text-xs font-medium text-[#e8500a]">
-              <span className="w-2 h-2 bg-[#e8500a] rounded-full animate-pulse" />
+            <h3 className="text-base font-bold tracking-tight text-[#0f1e35]">กำลังมาแรงในขณะนี้</h3>
+            <span className="flex items-center gap-1.5 text-xs font-medium text-[#2563eb]">
+              <span className="w-2 h-2 bg-[#2563eb] rounded-full animate-pulse" />
               Live
             </span>
           </div>
 
           {items.length === 0 ? (
-            <div className="flex items-center justify-center h-48 bg-[#faf9f7] rounded-xl border border-dashed border-[#d5d2cc]">
-              <p className="text-sm text-[#aaa]">เพิ่มสินค้าเพื่อดูตัวอย่าง</p>
+            <div className="flex items-center justify-center h-48 bg-[#f7f9fd] rounded-xl border border-dashed border-[#d5d2cc]">
+              <p className="text-sm text-[#94a3b8]">เพิ่มสินค้าเพื่อดูตัวอย่าง</p>
             </div>
           ) : (
             <div className="flex gap-3 overflow-x-auto pb-3 snap-x snap-mandatory">
@@ -251,19 +251,19 @@ export default function TrendingManager({ initialItems }: Props) {
                 return (
                   <div
                     key={fi.id}
-                    className="relative flex-shrink-0 w-[160px] h-[220px] rounded-xl overflow-hidden snap-start bg-[#f0ede7]"
+                    className="relative flex-shrink-0 w-[160px] h-[220px] rounded-xl overflow-hidden snap-start bg-[#eaf0f8]"
                   >
                     {img ? (
                       <Image src={img.url} alt={fi.item.title} fill className="object-contain" sizes="160px" />
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center bg-[#f0ede7]">
+                      <div className="absolute inset-0 flex items-center justify-center bg-[#eaf0f8]">
                         <span className="text-3xl">📦</span>
                       </div>
                     )}
 
                     {/* Badge */}
                     <div className="absolute top-2 left-2">
-                      <span className="inline-flex items-center gap-0.5 bg-[#e8500a] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
+                      <span className="inline-flex items-center gap-0.5 bg-[#2563eb] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
                         🔥 {fi.customLabel ?? "มาแรง"}
                       </span>
                     </div>
@@ -316,24 +316,24 @@ function FeaturedRow({
       onDragEnd={onDragEnd}
       className={`flex items-center gap-3 p-2.5 rounded-xl border transition-all cursor-grab active:cursor-grabbing ${
         isDragging
-          ? "border-[#e8500a] bg-[#e8500a]/5 shadow-md scale-[1.02]"
-          : "border-transparent hover:bg-[#faf9f7]"
+          ? "border-[#2563eb] bg-[#2563eb]/5 shadow-md scale-[1.02]"
+          : "border-transparent hover:bg-[#f7f9fd]"
       }`}
     >
       {/* Drag handle */}
-      <div className="text-[#bbb] flex-shrink-0 cursor-grab">
+      <div className="text-[#a3b0c2] flex-shrink-0 cursor-grab">
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path d="M7 2a2 2 0 10.001 4.001A2 2 0 007 2zm0 6a2 2 0 10.001 4.001A2 2 0 007 8zm0 6a2 2 0 10.001 4.001A2 2 0 007 14zm6-8a2 2 0 10-.001-4.001A2 2 0 0013 6zm0 2a2 2 0 10.001 4.001A2 2 0 0013 8zm0 6a2 2 0 10.001 4.001A2 2 0 0013 14z" />
         </svg>
       </div>
 
       {/* Position */}
-      <span className="text-xs font-bold text-[#aaa] w-5 text-center flex-shrink-0">
+      <span className="text-xs font-bold text-[#94a3b8] w-5 text-center flex-shrink-0">
         {index + 1}
       </span>
 
       {/* Image */}
-      <div className="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#f0ede7]">
+      <div className="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#eaf0f8]">
         {img ? (
           <Image src={img.url} alt="" fill className="object-cover" sizes="40px" />
         ) : (
@@ -343,8 +343,8 @@ function FeaturedRow({
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-[#111] truncate">{item.item.title}</p>
-        <p className="text-xs text-[#9a9590]">
+        <p className="text-sm font-medium text-[#0f1e35] truncate">{item.item.title}</p>
+        <p className="text-xs text-[#64748b]">
           ฿{item.item.price.toLocaleString()} — {item.item.seller.name ?? "—"}
         </p>
       </div>
@@ -356,7 +356,7 @@ function FeaturedRow({
             type="text"
             value={labelVal}
             onChange={(e) => setLabelVal(e.target.value.slice(0, 50))}
-            className="w-24 px-2 py-1 text-xs border border-[#e5e3de] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#e8500a]"
+            className="w-24 px-2 py-1 text-xs border border-[#dfe7f2] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563eb]"
             placeholder="เช่น ขายดีสุด"
             autoFocus
             onKeyDown={(e) => {
@@ -369,7 +369,7 @@ function FeaturedRow({
           />
           <button
             onClick={() => { onLabelUpdate(labelVal); setEditingLabel(false); }}
-            className="text-[10px] text-[#e8500a] hover:underline"
+            className="text-[10px] text-[#2563eb] hover:underline"
           >
             ✓
           </button>
@@ -377,7 +377,7 @@ function FeaturedRow({
       ) : (
         <button
           onClick={() => setEditingLabel(true)}
-          className="text-[10px] text-[#999] hover:text-[#e8500a] px-2 py-1 rounded-lg hover:bg-[#f0ede7] transition flex-shrink-0"
+          className="text-[10px] text-[#8d9bb0] hover:text-[#2563eb] px-2 py-1 rounded-lg hover:bg-[#eaf0f8] transition flex-shrink-0"
           title="แก้ไข label"
         >
           🏷️ {item.customLabel ?? "ไม่มี label"}
@@ -409,8 +409,8 @@ function SearchResultRow({
   const img = item.images[0];
 
   return (
-    <div className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#faf9f7] transition">
-      <div className="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#f0ede7]">
+    <div className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f7f9fd] transition">
+      <div className="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#eaf0f8]">
         {img ? (
           <Image src={img.url} alt="" fill className="object-cover" sizes="40px" />
         ) : (
@@ -421,8 +421,8 @@ function SearchResultRow({
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-[#111] truncate">{item.title}</p>
-        <p className="text-xs text-[#9a9590]">
+        <p className="text-sm font-medium text-[#0f1e35] truncate">{item.title}</p>
+        <p className="text-xs text-[#64748b]">
           ฿{item.price.toLocaleString()} — {item.seller.name ?? "—"}
         </p>
       </div>
@@ -430,8 +430,8 @@ function SearchResultRow({
       <button
         onClick={onAdd}
         disabled={disabled}
-        className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-white bg-[#e8500a] rounded-lg
-                   hover:bg-[#c94208] transition disabled:opacity-40"
+        className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-white bg-[#2563eb] rounded-lg
+                   hover:bg-[#1d4ed8] transition disabled:opacity-40"
       >
         + เพิ่ม
       </button>

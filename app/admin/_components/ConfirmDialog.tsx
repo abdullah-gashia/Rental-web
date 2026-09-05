@@ -40,10 +40,10 @@ export default function ConfirmDialog({
 
       {/* Panel */}
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
-        <h3 id="confirm-title" className="text-base font-bold text-[#111]">
+        <h3 id="confirm-title" className="text-base font-bold text-[#0f1e35]">
           {title}
         </h3>
-        <p className="text-sm text-[#555] leading-relaxed">{description}</p>
+        <p className="text-sm text-[#3d4d66] leading-relaxed">{description}</p>
 
         {/* Optional extra content (reason input etc.) */}
         {children && <div>{children}</div>}
@@ -53,7 +53,7 @@ export default function ConfirmDialog({
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="flex-1 py-2.5 rounded-xl border border-[#e5e3de] text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition disabled:opacity-50"
+            className="flex-1 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
           >
             ยกเลิก
           </button>
@@ -62,7 +62,7 @@ export default function ConfirmDialog({
             onClick={onConfirm}
             disabled={loading}
             className={`flex-1 py-2.5 rounded-xl text-sm font-bold text-white transition disabled:opacity-50 flex items-center justify-center gap-2 ${
-              danger ? "bg-red-600 hover:bg-red-700" : "bg-[#e8500a] hover:bg-[#c94208]"
+              danger ? "bg-red-600 hover:bg-red-700" : "bg-[#2563eb] hover:bg-[#1d4ed8]"
             }`}
           >
             {loading && (

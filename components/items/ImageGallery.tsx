@@ -52,7 +52,7 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
     return (
       <div
         className="w-full aspect-square rounded-xl flex items-center justify-center"
-        style={{ background: color || "#e5e3de" }}
+        style={{ background: color || "#dfe7f2" }}
       >
         <span className="text-[80px]">{emoji || "📦"}</span>
       </div>
@@ -68,7 +68,7 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
         <button
           type="button"
           onClick={() => setLightbox(true)}
-          className="relative w-full aspect-square rounded-xl overflow-hidden group bg-[#f4f5f7] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#e8500a]"
+          className="relative w-full aspect-square rounded-xl overflow-hidden group bg-[#eef2f8] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]"
           aria-label="ดูรูปขยาย"
         >
           <img
@@ -98,11 +98,11 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
                   aria-label={`รูปที่ ${idx + 1}`}
                   className={`w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 transition-all duration-150 focus:outline-none ${
                     isActive
-                      ? "ring-2 ring-[#e8500a] ring-offset-1 opacity-100"
-                      : "ring-1 ring-[#e5e3de] opacity-60 hover:opacity-100 hover:ring-[#ccc]"
+                      ? "ring-2 ring-[#2563eb] ring-offset-1 opacity-100"
+                      : "ring-1 ring-[#dfe7f2] opacity-60 hover:opacity-100 hover:ring-[#c2ccdb]"
                   }`}
                 >
-                  <img src={img.url} alt="" className="w-full h-full object-contain bg-[#f4f5f7]" />
+                  <img src={img.url} alt="" className="w-full h-full object-contain bg-[#eef2f8]" />
                 </button>
               );
             })}
@@ -131,7 +131,7 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
             <button
               type="button"
               onClick={() => setLightbox(false)}
-              className="absolute -top-3 -right-3 w-9 h-9 bg-white hover:bg-gray-100 text-[#111] rounded-full shadow-lg flex items-center justify-center transition text-lg font-bold leading-none"
+              className="absolute -top-3 -right-3 w-9 h-9 bg-white hover:bg-gray-100 text-[#0f1e35] rounded-full shadow-lg flex items-center justify-center transition text-lg font-bold leading-none"
               aria-label="ปิด"
             >
               ✕

@@ -28,16 +28,16 @@ interface Props {
 
 export default function OrderHistoryTable({ orders }: Props) {
   return (
-    <div className="bg-white rounded-2xl border border-[#e5e3de] p-6">
-      <h3 className="text-sm font-semibold text-[#555] mb-4">
+    <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6">
+      <h3 className="text-sm font-semibold text-[#3d4d66] mb-4">
         ประวัติคำสั่งซื้อ
         {orders.length > 0 && (
-          <span className="text-[#aaa] font-normal ml-1">({orders.length})</span>
+          <span className="text-[#94a3b8] font-normal ml-1">({orders.length})</span>
         )}
       </h3>
 
       {orders.length === 0 ? (
-        <div className="text-center py-8 text-[#aaa] text-sm">
+        <div className="text-center py-8 text-[#94a3b8] text-sm">
           <span className="text-3xl block mb-2">📦</span>
           ยังไม่มีคำสั่งซื้อสำหรับสินค้านี้
         </div>
@@ -45,17 +45,17 @@ export default function OrderHistoryTable({ orders }: Props) {
         <div className="overflow-x-auto -mx-6 px-6">
           <table className="w-full text-sm min-w-[600px]">
             <thead>
-              <tr className="border-b border-[#e5e3de]">
-                <th className="text-left py-2 text-[#888] font-medium text-xs">รหัส</th>
-                <th className="text-left py-2 text-[#888] font-medium text-xs">ผู้ซื้อ</th>
-                <th className="text-right py-2 text-[#888] font-medium text-xs">จำนวนเงิน</th>
-                <th className="text-center py-2 text-[#888] font-medium text-xs">ชำระ</th>
-                <th className="text-center py-2 text-[#888] font-medium text-xs">จัดส่ง</th>
-                <th className="text-center py-2 text-[#888] font-medium text-xs">สถานะ</th>
-                <th className="text-right py-2 text-[#888] font-medium text-xs">วันที่</th>
+              <tr className="border-b border-[#dfe7f2]">
+                <th className="text-left py-2 text-[#8494a9] font-medium text-xs">รหัส</th>
+                <th className="text-left py-2 text-[#8494a9] font-medium text-xs">ผู้ซื้อ</th>
+                <th className="text-right py-2 text-[#8494a9] font-medium text-xs">จำนวนเงิน</th>
+                <th className="text-center py-2 text-[#8494a9] font-medium text-xs">ชำระ</th>
+                <th className="text-center py-2 text-[#8494a9] font-medium text-xs">จัดส่ง</th>
+                <th className="text-center py-2 text-[#8494a9] font-medium text-xs">สถานะ</th>
+                <th className="text-right py-2 text-[#8494a9] font-medium text-xs">วันที่</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#f0ede7]">
+            <tbody className="divide-y divide-[#eaf0f8]">
               {orders.map((order) => {
                 const payment = order.paymentMethod
                   ? PAYMENT_METHOD_TH[order.paymentMethod] ?? { label: order.paymentMethod, cls: "bg-gray-50 text-gray-600 border-gray-200" }
@@ -65,20 +65,20 @@ export default function OrderHistoryTable({ orders }: Props) {
                   : null;
 
                 return (
-                  <tr key={order.id} className="hover:bg-[#faf9f7] transition">
+                  <tr key={order.id} className="hover:bg-[#f7f9fd] transition">
                     <td className="py-2.5">
                       <Link
                         href={`/admin/orders?search=${order.id}`}
-                        className="text-[#e8500a] hover:underline font-mono text-xs"
+                        className="text-[#2563eb] hover:underline font-mono text-xs"
                       >
                         {truncateId(order.id)}
                       </Link>
                     </td>
                     <td className="py-2.5">
-                      <p className="text-[#333] truncate max-w-[120px]">{order.buyerName ?? "—"}</p>
-                      <p className="text-[10px] text-[#aaa] truncate max-w-[120px]">{order.buyerEmail}</p>
+                      <p className="text-[#1e2d47] truncate max-w-[120px]">{order.buyerName ?? "—"}</p>
+                      <p className="text-[10px] text-[#94a3b8] truncate max-w-[120px]">{order.buyerEmail}</p>
                     </td>
-                    <td className="py-2.5 text-right font-medium text-[#333] whitespace-nowrap">
+                    <td className="py-2.5 text-right font-medium text-[#1e2d47] whitespace-nowrap">
                       {formatCurrency(order.totalAmount ?? order.amount)}
                     </td>
                     <td className="py-2.5 text-center">
@@ -87,7 +87,7 @@ export default function OrderHistoryTable({ orders }: Props) {
                           {payment.label}
                         </span>
                       ) : (
-                        <span className="text-[#aaa]">—</span>
+                        <span className="text-[#94a3b8]">—</span>
                       )}
                     </td>
                     <td className="py-2.5 text-center">
@@ -96,13 +96,13 @@ export default function OrderHistoryTable({ orders }: Props) {
                           {delivery.label}
                         </span>
                       ) : (
-                        <span className="text-[#aaa]">—</span>
+                        <span className="text-[#94a3b8]">—</span>
                       )}
                     </td>
                     <td className="py-2.5 text-center">
                       <StatusBadge status={order.status} type="order" />
                     </td>
-                    <td className="py-2.5 text-right text-[#777] whitespace-nowrap text-xs">
+                    <td className="py-2.5 text-right text-[#5b6b82] whitespace-nowrap text-xs">
                       {formatThaiDate(order.createdAt)}
                     </td>
                   </tr>

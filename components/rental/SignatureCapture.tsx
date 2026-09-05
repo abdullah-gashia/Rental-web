@@ -83,20 +83,20 @@ export default function SignatureCapture({ onComplete, onCancel, agreementText, 
   return (
     <div className="space-y-4">
       {/* Agreement text */}
-      <div className="bg-[#faf9f7] border border-[#e5e3de] rounded-xl p-4 text-sm text-[#333] leading-relaxed max-h-48 overflow-y-auto">
+      <div className="bg-[#f7f9fd] border border-[#dfe7f2] rounded-xl p-4 text-sm text-[#1e2d47] leading-relaxed max-h-48 overflow-y-auto">
         <p className="font-semibold mb-2">
-          ข้าพเจ้า <span className="text-[#e8500a]">{signerName}</span>{" "}
-          ในฐานะ <span className="text-[#e8500a]">{signerRole}</span>
+          ข้าพเจ้า <span className="text-[#2563eb]">{signerName}</span>{" "}
+          ในฐานะ <span className="text-[#2563eb]">{signerRole}</span>
         </p>
-        <pre className="whitespace-pre-wrap font-sans text-xs text-[#555]">{agreementText}</pre>
-        <p className="text-[11px] text-[#aaa] mt-3">
+        <pre className="whitespace-pre-wrap font-sans text-xs text-[#3d4d66]">{agreementText}</pre>
+        <p className="text-[11px] text-[#94a3b8] mt-3">
           วันที่: {dateStr} เวลา: {timeStr} น.
         </p>
       </div>
 
       {/* Canvas */}
       <div>
-        <p className="text-xs font-semibold text-[#555] mb-2">✍️ ลงลายเซ็นในกรอบด้านล่าง:</p>
+        <p className="text-xs font-semibold text-[#3d4d66] mb-2">✍️ ลงลายเซ็นในกรอบด้านล่าง:</p>
         <canvas
           ref={canvasRef}
           style={{ width: "100%", height: "160px", display: "block" }}
@@ -110,7 +110,7 @@ export default function SignatureCapture({ onComplete, onCancel, agreementText, 
           onTouchEnd={endDraw}
         />
         {!hasSignature && (
-          <p className="text-[11px] text-[#bbb] mt-1 text-center">ลากเพื่อเซ็นชื่อ</p>
+          <p className="text-[11px] text-[#a3b0c2] mt-1 text-center">ลากเพื่อเซ็นชื่อ</p>
         )}
       </div>
 
@@ -120,7 +120,7 @@ export default function SignatureCapture({ onComplete, onCancel, agreementText, 
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2.5 border border-[#e5e3de] rounded-xl text-sm text-[#555] hover:bg-[#f0ede7] transition"
+            className="px-4 py-2.5 border border-[#dfe7f2] rounded-xl text-sm text-[#3d4d66] hover:bg-[#eaf0f8] transition"
           >
             ยกเลิก
           </button>
@@ -128,7 +128,7 @@ export default function SignatureCapture({ onComplete, onCancel, agreementText, 
         <button
           type="button"
           onClick={clear}
-          className="px-4 py-2.5 border border-[#e5e3de] rounded-xl text-sm text-[#555] hover:bg-[#f0ede7] transition"
+          className="px-4 py-2.5 border border-[#dfe7f2] rounded-xl text-sm text-[#3d4d66] hover:bg-[#eaf0f8] transition"
         >
           🗑️ ล้าง
         </button>
@@ -136,8 +136,8 @@ export default function SignatureCapture({ onComplete, onCancel, agreementText, 
           type="button"
           onClick={confirm}
           disabled={!hasSignature}
-          className="flex-1 py-2.5 bg-[#e8500a] text-white text-sm font-bold rounded-xl
-                     hover:bg-[#c94208] transition disabled:opacity-40 disabled:cursor-not-allowed"
+          className="flex-1 py-2.5 bg-[#2563eb] text-white text-sm font-bold rounded-xl
+                     hover:bg-[#1d4ed8] transition disabled:opacity-40 disabled:cursor-not-allowed"
         >
           ✅ ยืนยันลายเซ็น
         </button>

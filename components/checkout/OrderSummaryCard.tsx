@@ -16,7 +16,7 @@ export default function OrderSummaryCard({
   emoji,
 }: OrderSummaryCardProps) {
   return (
-    <div className="flex items-center gap-3 bg-[#f7f6f3] rounded-xl px-4 py-3 mb-5 border border-[#e5e3de]">
+    <div className="flex items-center gap-3 bg-[#f1f5fb] rounded-xl px-4 py-3 mb-5 border border-[#dfe7f2]">
       {/* Thumbnail */}
       <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#e8e5df] flex-shrink-0 flex items-center justify-center">
         {imageUrl ? (
@@ -28,14 +28,14 @@ export default function OrderSummaryCard({
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-[#111] truncate">{title}</p>
-        <p className="text-xs text-[#9a9590]">
+        <p className="text-sm font-bold text-[#0f1e35] truncate">{title}</p>
+        <p className="text-xs text-[#64748b]">
           ขายโดย: {sellerName ?? "ไม่ระบุชื่อ"}
         </p>
       </div>
 
       {/* Price */}
-      <p className="text-sm font-extrabold text-[#111] flex-shrink-0">
+      <p className="text-sm font-extrabold text-[#0f1e35] flex-shrink-0">
         ฿{price.toLocaleString()}
       </p>
     </div>

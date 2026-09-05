@@ -59,7 +59,7 @@ export default function DateSelectionStep({ state, item, onChange }: Props) {
   return (
     <div className="space-y-5">
       <div>
-        <label className="block text-xs font-semibold text-[#555] mb-1.5">
+        <label className="block text-xs font-semibold text-[#3d4d66] mb-1.5">
           วันเริ่มเช่า <span className="text-red-500">*</span>
         </label>
         <input
@@ -68,14 +68,14 @@ export default function DateSelectionStep({ state, item, onChange }: Props) {
           min={today}
           max={maxStart}
           onChange={(e) => handleStartChange(e.target.value)}
-          className="w-full px-3 py-2.5 border border-[#e5e3de] rounded-xl text-sm
-                     focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30 focus:border-[#e8500a]"
+          className="w-full px-3 py-2.5 border border-[#dfe7f2] rounded-xl text-sm
+                     focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb]"
         />
-        <p className="text-[11px] text-[#999] mt-1">เริ่มเช่าได้ตั้งแต่วันนี้เป็นต้นไป</p>
+        <p className="text-[11px] text-[#8d9bb0] mt-1">เริ่มเช่าได้ตั้งแต่วันนี้เป็นต้นไป</p>
       </div>
 
       <div>
-        <label className="block text-xs font-semibold text-[#555] mb-1.5">
+        <label className="block text-xs font-semibold text-[#3d4d66] mb-1.5">
           วันสิ้นสุดเช่า (วันคืนของ) <span className="text-red-500">*</span>
         </label>
         <input
@@ -84,10 +84,10 @@ export default function DateSelectionStep({ state, item, onChange }: Props) {
           min={minEnd}
           max={maxEnd}
           onChange={(e) => handleEndChange(e.target.value)}
-          className="w-full px-3 py-2.5 border border-[#e5e3de] rounded-xl text-sm
-                     focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30 focus:border-[#e8500a]"
+          className="w-full px-3 py-2.5 border border-[#dfe7f2] rounded-xl text-sm
+                     focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb]"
         />
-        <p className="text-[11px] text-[#999] mt-1">
+        <p className="text-[11px] text-[#8d9bb0] mt-1">
           เช่าได้ {item.minRentalDays}–{item.maxRentalDays} วัน
         </p>
         {daysError && (

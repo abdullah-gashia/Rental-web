@@ -56,24 +56,24 @@ export default function ReceiptModal({ data, onClose }: Props) {
   <title>ใบเสร็จ #${shortId}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #fff; color: #111; padding: 40px; font-size: 14px; }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #fff; color: #0f1e35; padding: 40px; font-size: 14px; }
     .header { text-align: center; border-bottom: 3px solid #10b981; padding-bottom: 20px; margin-bottom: 24px; }
     .logo { font-size: 22px; font-weight: 900; letter-spacing: -1px; }
-    .logo span { color: #e8500a; }
+    .logo span { color: #2563eb; }
     .badge { display: inline-flex; align-items: center; gap: 6px; background: #d1fae5; color: #065f46; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 99px; margin-top: 8px; }
     .title { font-size: 18px; font-weight: 800; margin-top: 12px; }
-    .ref { font-size: 12px; color: #6b7280; margin-top: 4px; }
+    .ref { font-size: 12px; color: #64748b; margin-top: 4px; }
     .section { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-    .section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #6b7280; margin-bottom: 10px; }
+    .section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #64748b; margin-bottom: 10px; }
     .row { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 0; }
-    .row .label { color: #6b7280; }
+    .row .label { color: #64748b; }
     .row .value { font-weight: 600; }
     .amount { font-size: 28px; font-weight: 900; color: #10b981; text-align: center; margin: 8px 0; }
     .proof { margin-top: 12px; border-radius: 8px; overflow: hidden; max-height: 200px; text-align: center; }
     .proof img { max-width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; }
     .evidence { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-    .evidence-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #6b7280; margin-bottom: 12px; }
-    .evidence-label { font-size: 11px; color: #6b7280; margin-bottom: 6px; }
+    .evidence-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #64748b; margin-bottom: 12px; }
+    .evidence-label { font-size: 11px; color: #64748b; margin-bottom: 6px; }
     .sig-box { background: #fff; border: 1px solid #d1d5db; border-radius: 8px; padding: 8px; text-align: center; margin-bottom: 12px; }
     .sig-box img { max-height: 80px; object-fit: contain; }
     .photo-box { background: #fff; border: 1px solid #d1d5db; border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
@@ -167,19 +167,19 @@ export default function ReceiptModal({ data, onClose }: Props) {
         {/* Receipt body */}
         <div ref={printRef} className="px-6 py-5 space-y-4">
           {/* Logo + status */}
-          <div className="text-center space-y-1.5 pb-4 border-b border-[#e5e3de]">
+          <div className="text-center space-y-1.5 pb-4 border-b border-[#dfe7f2]">
             <p className="text-xl font-black tracking-tighter">
-              PSU<span style={{ color: "#e8500a" }}>.</span>STORE
+              PSU<span style={{ color: "#2563eb" }}>.</span>STORE
             </p>
             <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">
               ✅ ชำระเงินแล้ว (PAID via Escrow)
             </span>
-            <p className="text-xs text-[#9a9590] font-mono">#{shortId}</p>
+            <p className="text-xs text-[#64748b] font-mono">#{shortId}</p>
           </div>
 
           {/* Transaction details */}
-          <div className="bg-[#f7f6f3] rounded-xl p-4 space-y-2">
-            <p className="text-[10px] font-bold text-[#9a9590] uppercase tracking-wider mb-3">รายละเอียดธุรกรรม</p>
+          <div className="bg-[#f1f5fb] rounded-xl p-4 space-y-2">
+            <p className="text-[10px] font-bold text-[#64748b] uppercase tracking-wider mb-3">รายละเอียดธุรกรรม</p>
             {[
               { label: "สินค้า",         value: data.itemTitle },
               { label: "ผู้ซื้อ",         value: data.buyerName  || "ไม่ระบุ" },
@@ -188,15 +188,15 @@ export default function ReceiptModal({ data, onClose }: Props) {
               { label: "สถานะ",          value: "✅ PAID via Escrow" },
             ].map(({ label, value }) => (
               <div key={label} className="flex items-start justify-between gap-2 text-sm">
-                <span className="text-[#9a9590] flex-shrink-0">{label}</span>
-                <span className="font-semibold text-[#111] text-right">{value}</span>
+                <span className="text-[#64748b] flex-shrink-0">{label}</span>
+                <span className="font-semibold text-[#0f1e35] text-right">{value}</span>
               </div>
             ))}
           </div>
 
           {/* Amount */}
-          <div className="text-center py-3 border-y border-[#e5e3de]">
-            <p className="text-[10px] text-[#9a9590] uppercase tracking-wider mb-1">ยอดรวม</p>
+          <div className="text-center py-3 border-y border-[#dfe7f2]">
+            <p className="text-[10px] text-[#64748b] uppercase tracking-wider mb-1">ยอดรวม</p>
             <p className="text-4xl font-black text-emerald-600">฿{data.amount.toLocaleString()}</p>
           </div>
 
@@ -205,13 +205,13 @@ export default function ReceiptModal({ data, onClose }: Props) {
             <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 space-y-2">
               <p className="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-2">ข้อมูลการจัดส่ง</p>
               <div className="flex items-start justify-between gap-2 text-sm">
-                <span className="text-[#9a9590]">วิธีจัดส่ง</span>
-                <span className="font-semibold text-[#111]">{methodLabel}</span>
+                <span className="text-[#64748b]">วิธีจัดส่ง</span>
+                <span className="font-semibold text-[#0f1e35]">{methodLabel}</span>
               </div>
               {data.trackingNumber && (
                 <div className="flex items-start justify-between gap-2 text-sm">
-                  <span className="text-[#9a9590]">หมายเลขพัสดุ</span>
-                  <span className="font-mono font-bold text-[#111]">{data.trackingNumber}</span>
+                  <span className="text-[#64748b]">หมายเลขพัสดุ</span>
+                  <span className="font-mono font-bold text-[#0f1e35]">{data.trackingNumber}</span>
                 </div>
               )}
               {data.shippingProofImage && (
@@ -236,7 +236,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
               {/* Signature block */}
               {data.handoverSignature && (
                 <div className="space-y-1.5">
-                  <p className="text-xs font-semibold text-[#555]">ลายมือชื่อผู้รับสินค้า</p>
+                  <p className="text-xs font-semibold text-[#3d4d66]">ลายมือชื่อผู้รับสินค้า</p>
                   <div className="bg-white border border-gray-200 rounded-lg p-2 flex items-center justify-center">
                     <img
                       src={data.handoverSignature}
@@ -250,7 +250,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
               {/* Photo block */}
               {data.handoverPhotoUrl && (
                 <div className="space-y-1.5">
-                  <p className="text-xs font-semibold text-[#555]">ภาพถ่ายหลักฐานการส่งมอบ</p>
+                  <p className="text-xs font-semibold text-[#3d4d66]">ภาพถ่ายหลักฐานการส่งมอบ</p>
                   <a
                     href={data.handoverPhotoUrl}
                     target="_blank"
@@ -264,7 +264,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
                     />
                   </a>
                   {data.handoverConfirmedAt && (
-                    <p className="text-[10px] text-[#9a9590]">
+                    <p className="text-[10px] text-[#64748b]">
                       บันทึกเมื่อ:{" "}
                       {new Date(data.handoverConfirmedAt).toLocaleString("th-TH", {
                         day: "numeric", month: "long", year: "numeric",
@@ -278,17 +278,17 @@ export default function ReceiptModal({ data, onClose }: Props) {
           )}
 
           {/* Footer note */}
-          <p className="text-[10px] text-center text-[#9a9590] leading-relaxed">
+          <p className="text-[10px] text-center text-[#64748b] leading-relaxed">
             เอกสารนี้ออกโดยระบบ PSU.STORE อัตโนมัติ ไม่ต้องมีลายเซ็น<br />
             Order ID: <span className="font-mono">{data.orderId}</span>
           </p>
         </div>
 
         {/* Actions */}
-        <div className="sticky bottom-0 bg-white border-t border-[#e5e3de] px-6 py-4 flex gap-3 rounded-b-2xl">
+        <div className="sticky bottom-0 bg-white border-t border-[#dfe7f2] px-6 py-4 flex gap-3 rounded-b-2xl">
           <button
             onClick={onClose}
-            className="flex-1 py-3 rounded-xl border border-[#e5e3de] text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition"
+            className="flex-1 py-3 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition"
           >
             ปิด
           </button>

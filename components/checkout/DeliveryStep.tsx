@@ -76,7 +76,7 @@ function ShippingAddressForm({
       {/* Saved addresses */}
       {savedAddresses.length > 0 && (
         <div>
-          <p className="text-xs font-semibold text-[#9a9590] mb-2">📍 เลือกที่อยู่ที่บันทึกไว้</p>
+          <p className="text-xs font-semibold text-[#64748b] mb-2">📍 เลือกที่อยู่ที่บันทึกไว้</p>
           <div className="space-y-2">
             {savedAddresses.map((sa) => (
               <button
@@ -85,15 +85,15 @@ function ShippingAddressForm({
                 className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm transition ${
                   state.savedAddressId === sa.id
                     ? "border-blue-500 bg-blue-50"
-                    : "border-[#e5e3de] hover:border-[#111]"
+                    : "border-[#dfe7f2] hover:border-[#0f1e35]"
                 }`}
               >
                 <span className="font-semibold">{sa.isDefault ? "🏠" : "📍"} {sa.label}</span>
-                <span className="text-[#9a9590] ml-2">— {sa.recipientName}, {sa.district}</span>
+                <span className="text-[#64748b] ml-2">— {sa.recipientName}, {sa.district}</span>
               </button>
             ))}
           </div>
-          <div className="border-t border-[#e5e3de] my-3" />
+          <div className="border-t border-[#dfe7f2] my-3" />
         </div>
       )}
 
@@ -170,7 +170,7 @@ function ShippingAddressForm({
             className="checkout-input"
           />
           {showProvinces && filteredProvinces.length > 0 && (
-            <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-white border border-[#e5e3de] rounded-xl shadow-lg max-h-40 overflow-y-auto">
+            <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-white border border-[#dfe7f2] rounded-xl shadow-lg max-h-40 overflow-y-auto">
               {filteredProvinces.slice(0, 10).map((p) => (
                 <button
                   key={p}
@@ -179,7 +179,7 @@ function ShippingAddressForm({
                     setProvinceSearch("");
                     setShowProvinces(false);
                   }}
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-[#f7f6f3] transition"
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-[#f1f5fb] transition"
                 >
                   {p}
                 </button>
@@ -214,7 +214,7 @@ function ShippingAddressForm({
       </div>
 
       {/* Save checkbox */}
-      <label className="flex items-center gap-2 cursor-pointer text-sm text-[#555] mt-1">
+      <label className="flex items-center gap-2 cursor-pointer text-sm text-[#3d4d66] mt-1">
         <input
           type="checkbox"
           checked={state.saveAddressForLater}
@@ -250,7 +250,7 @@ function MeetupForm({
 
   return (
     <div className="space-y-3 mt-4">
-      <p className="text-xs font-bold text-[#555] uppercase tracking-wide mb-3">📍 เลือกสถานที่นัดรับ</p>
+      <p className="text-xs font-bold text-[#3d4d66] uppercase tracking-wide mb-3">📍 เลือกสถานที่นัดรับ</p>
 
       <div className="grid grid-cols-2 gap-2.5">
         {CAMPUS_MEETUP_LOCATIONS.map((loc) => {
@@ -266,8 +266,8 @@ function MeetupForm({
             >
               <div className="meetup-card-icon">🏫</div>
               <div className="min-w-0">
-                <p className="text-[12px] font-bold text-[#111] leading-tight truncate">{loc.label}</p>
-                <p className="text-[10px] text-[#9a9590] mt-0.5 leading-tight line-clamp-2">{loc.description}</p>
+                <p className="text-[12px] font-bold text-[#0f1e35] leading-tight truncate">{loc.label}</p>
+                <p className="text-[10px] text-[#64748b] mt-0.5 leading-tight line-clamp-2">{loc.description}</p>
               </div>
             </button>
           );
@@ -283,8 +283,8 @@ function MeetupForm({
         >
           <div className="meetup-card-icon">✏️</div>
           <div>
-            <p className="text-[12px] font-bold text-[#111]">ระบุเอง</p>
-            <p className="text-[10px] text-[#9a9590] mt-0.5">กรอกสถานที่</p>
+            <p className="text-[12px] font-bold text-[#0f1e35]">ระบุเอง</p>
+            <p className="text-[10px] text-[#64748b] mt-0.5">กรอกสถานที่</p>
           </div>
         </button>
       </div>
@@ -356,7 +356,7 @@ export default function DeliveryStep({
 
   return (
     <div className="fade-up">
-      <h3 className="text-base font-bold text-[#111] mb-3">เลือกวิธีจัดส่ง</h3>
+      <h3 className="text-base font-bold text-[#0f1e35] mb-3">เลือกวิธีจัดส่ง</h3>
 
       {/* Method cards — hide if only one option */}
       {allowShipping && allowMeetup && (
@@ -367,8 +367,8 @@ export default function DeliveryStep({
           >
             <span className="text-2xl">🚚</span>
             <p className="text-sm font-bold mt-1">จัดส่งถึงที่อยู่</p>
-            <p className="text-xs text-[#9a9590]">ค่าส่ง ฿50</p>
-            <p className="text-[10px] text-[#bbb]">2-5 วันทำการ</p>
+            <p className="text-xs text-[#64748b]">ค่าส่ง ฿50</p>
+            <p className="text-[10px] text-[#a3b0c2]">2-5 วันทำการ</p>
           </button>
           <button
             onClick={() => dispatch({ type: "SET_DELIVERY_METHOD", payload: "MEETUP" })}
@@ -377,7 +377,7 @@ export default function DeliveryStep({
             <span className="text-2xl">🤝</span>
             <p className="text-sm font-bold mt-1">นัดรับสินค้า</p>
             <p className="text-xs text-emerald-600 font-semibold">ฟรี!</p>
-            <p className="text-[10px] text-[#bbb]">นัดเวลาเอง</p>
+            <p className="text-[10px] text-[#a3b0c2]">นัดเวลาเอง</p>
           </button>
         </div>
       )}

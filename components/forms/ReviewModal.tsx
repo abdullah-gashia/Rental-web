@@ -61,8 +61,8 @@ export default function ReviewModal({
 
         <div className="px-6 py-5 space-y-5">
           {/* Seller name */}
-          <p className="text-center text-sm text-[#555]">
-            {roleLabel}: <span className="font-semibold text-[#111]">{counterpartyName}</span>
+          <p className="text-center text-sm text-[#3d4d66]">
+            {roleLabel}: <span className="font-semibold text-[#0f1e35]">{counterpartyName}</span>
           </p>
 
           {/* Star rating */}
@@ -84,7 +84,7 @@ export default function ReviewModal({
               ))}
             </div>
             <p className={`text-sm font-semibold h-5 transition-colors ${
-              displayRating ? "text-amber-600" : "text-[#ccc]"
+              displayRating ? "text-amber-600" : "text-[#c2ccdb]"
             }`}>
               {displayRating ? STAR_LABELS[displayRating] : "เลือกคะแนน"}
             </p>
@@ -92,9 +92,9 @@ export default function ReviewModal({
 
           {/* Comment textarea */}
           <div>
-            <label className="block text-sm font-semibold text-[#333] mb-1.5">
+            <label className="block text-sm font-semibold text-[#1e2d47] mb-1.5">
               ความคิดเห็น
-              <span className="ml-1.5 text-xs font-normal text-[#9a9590]">(ไม่บังคับ)</span>
+              <span className="ml-1.5 text-xs font-normal text-[#64748b]">(ไม่บังคับ)</span>
             </label>
             <textarea
               value={comment}
@@ -103,9 +103,9 @@ export default function ReviewModal({
               maxLength={500}
               placeholder="บอกเล่าประสบการณ์การซื้อขายของคุณ…"
               disabled={isPending}
-              className="w-full border border-[#e5e3de] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 transition resize-none disabled:opacity-60"
+              className="w-full border border-[#dfe7f2] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 transition resize-none disabled:opacity-60"
             />
-            <p className="text-[10px] text-[#bbb] text-right mt-0.5">{comment.length}/500</p>
+            <p className="text-[10px] text-[#a3b0c2] text-right mt-0.5">{comment.length}/500</p>
           </div>
 
           {/* Error */}
@@ -122,7 +122,7 @@ export default function ReviewModal({
               type="button"
               onClick={onClose}
               disabled={isPending}
-              className="flex-1 py-3 rounded-xl border border-[#e5e3de] text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition disabled:opacity-50"
+              className="flex-1 py-3 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
             >
               ข้าม
             </button>

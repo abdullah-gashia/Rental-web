@@ -132,14 +132,14 @@ export default function RentalHandshake({
   // Already confirmed — show status only
   if (myConfirmed) {
     return (
-      <div className="bg-white rounded-2xl border border-[#e5e3de] p-5">
-        <h3 className="text-sm font-bold text-[#111] mb-2">{title}</h3>
+      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+        <h3 className="text-sm font-bold text-[#0f1e35] mb-2">{title}</h3>
         <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50 rounded-xl px-3 py-2.5">
           <span>✅</span>
           <span>คุณยืนยันแล้ว{otherConfirmed ? "" : ` — รอ${otherLabel}ยืนยัน`}</span>
         </div>
         {!otherConfirmed && (
-          <p className="text-xs text-[#999] mt-2">เมื่อ{otherLabel}ยืนยันด้วย สถานะจะเปลี่ยนอัตโนมัติ</p>
+          <p className="text-xs text-[#8d9bb0] mt-2">เมื่อ{otherLabel}ยืนยันด้วย สถานะจะเปลี่ยนอัตโนมัติ</p>
         )}
       </div>
     );
@@ -148,8 +148,8 @@ export default function RentalHandshake({
   // Signature pad overlay
   if (showSigPad) {
     return (
-      <div className="bg-white rounded-2xl border border-[#e5e3de] p-5">
-        <h3 className="text-sm font-bold text-[#111] mb-4">✍️ ลงลายเซ็นดิจิทัล</h3>
+      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+        <h3 className="text-sm font-bold text-[#0f1e35] mb-4">✍️ ลงลายเซ็นดิจิทัล</h3>
         <SignatureCapture
           signerName={userName}
           signerRole={signerRole}
@@ -165,10 +165,10 @@ export default function RentalHandshake({
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-[#e5e3de] p-5 space-y-4">
+    <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 space-y-4">
       {/* Title + party status */}
       <div>
-        <h3 className="text-sm font-bold text-[#111]">{title}</h3>
+        <h3 className="text-sm font-bold text-[#0f1e35]">{title}</h3>
         <div className="flex items-center gap-3 mt-2 text-xs">
           <span className={`px-2 py-1 rounded-full border ${
             myConfirmed ? "bg-green-50 border-green-300 text-green-700" : "bg-gray-50 border-gray-200 text-gray-500"
@@ -185,13 +185,13 @@ export default function RentalHandshake({
 
       {/* Photo upload */}
       <div>
-        <p className="text-xs font-semibold text-[#555] mb-2">
+        <p className="text-xs font-semibold text-[#3d4d66] mb-2">
           📷 ถ่ายรูปสภาพสินค้า {type === "pickup" ? "(ก่อนรับ)" : "(หลังคืน)"}
         </p>
-        <label className="flex items-center gap-2 px-3 py-2.5 border-2 border-dashed border-[#e5e3de]
-                          rounded-xl cursor-pointer hover:border-[#e8500a]/50 transition">
+        <label className="flex items-center gap-2 px-3 py-2.5 border-2 border-dashed border-[#dfe7f2]
+                          rounded-xl cursor-pointer hover:border-[#2563eb]/50 transition">
           <span className="text-xl">📷</span>
-          <span className="text-sm text-[#777]">
+          <span className="text-sm text-[#5b6b82]">
             {uploading ? "กำลังอัปโหลด..." : "เลือกรูปภาพ (หลายรูปได้)"}
           </span>
           <input type="file" accept="image/*" multiple className="hidden" onChange={handleUpload} />
@@ -200,7 +200,7 @@ export default function RentalHandshake({
           <div className="flex gap-2 flex-wrap mt-2">
             {photos.map((url, i) => (
               // eslint-disable-next-line @next/next/no-img-element
-              <img key={i} src={url} alt="" className="w-16 h-16 rounded-lg object-contain border border-[#e5e3de]" />
+              <img key={i} src={url} alt="" className="w-16 h-16 rounded-lg object-contain border border-[#dfe7f2]" />
             ))}
           </div>
         )}
@@ -209,7 +209,7 @@ export default function RentalHandshake({
       {/* Condition rating — return, owner only */}
       {isReturn && isOwner && (
         <div>
-          <p className="text-xs font-semibold text-[#555] mb-2">สภาพสินค้าหลังคืน</p>
+          <p className="text-xs font-semibold text-[#3d4d66] mb-2">สภาพสินค้าหลังคืน</p>
           <div className="grid grid-cols-2 gap-2">
             {CONDITIONS.map((c) => (
               <button
@@ -217,7 +217,7 @@ export default function RentalHandshake({
                 type="button"
                 onClick={() => setCondition(c.value)}
                 className={`p-2.5 rounded-xl border text-xs font-semibold transition ${
-                  condition === c.value ? c.color : "border-[#e5e3de] text-[#555]"
+                  condition === c.value ? c.color : "border-[#dfe7f2] text-[#3d4d66]"
                 }`}
               >
                 {c.label}
@@ -226,12 +226,12 @@ export default function RentalHandshake({
           </div>
           {["MINOR_DAMAGE", "MAJOR_DAMAGE"].includes(condition) && (
             <div className="mt-3 space-y-2">
-              <p className="text-xs font-semibold text-[#555]">ค่าเสียหาย (฿)</p>
+              <p className="text-xs font-semibold text-[#3d4d66]">ค่าเสียหาย (฿)</p>
               <input
                 type="number" min={0} value={damageFee}
                 onChange={(e) => setDamageFee(Number(e.target.value))}
-                className="w-full px-3 py-2 border border-[#e5e3de] rounded-xl text-sm
-                           focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30"
+                className="w-full px-3 py-2 border border-[#dfe7f2] rounded-xl text-sm
+                           focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30"
               />
             </div>
           )}
@@ -240,21 +240,21 @@ export default function RentalHandshake({
 
       {/* Notes */}
       <div>
-        <p className="text-xs font-semibold text-[#555] mb-1.5">หมายเหตุ (ไม่บังคับ)</p>
+        <p className="text-xs font-semibold text-[#3d4d66] mb-1.5">หมายเหตุ (ไม่บังคับ)</p>
         <textarea
           value={conditionNote}
           onChange={(e) => setConditionNote(e.target.value)}
           rows={2}
           placeholder="เช่น สภาพดี, มีรอยขีดข่วนเล็กน้อย..."
-          className="w-full px-3 py-2 text-sm border border-[#e5e3de] rounded-xl resize-none
-                     focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30"
+          className="w-full px-3 py-2 text-sm border border-[#dfe7f2] rounded-xl resize-none
+                     focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30"
         />
       </div>
 
       {/* Digital Signature — renter at pickup, owner at return */}
       {needsSignature && (
         <div>
-          <p className="text-xs font-semibold text-[#555] mb-2">✍️ ลายเซ็นดิจิทัล (จำเป็น)</p>
+          <p className="text-xs font-semibold text-[#3d4d66] mb-2">✍️ ลายเซ็นดิจิทัล (จำเป็น)</p>
           {signature ? (
             <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-3 py-2.5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -265,7 +265,7 @@ export default function RentalHandshake({
               <button
                 type="button"
                 onClick={() => setSignature(null)}
-                className="text-xs text-[#777] hover:text-red-600 transition"
+                className="text-xs text-[#5b6b82] hover:text-red-600 transition"
               >
                 เปลี่ยน
               </button>
@@ -274,8 +274,8 @@ export default function RentalHandshake({
             <button
               type="button"
               onClick={() => setShowSigPad(true)}
-              className="w-full py-3 border-2 border-dashed border-[#e5e3de] rounded-xl text-sm
-                         text-[#777] hover:border-[#e8500a]/40 hover:text-[#e8500a] transition"
+              className="w-full py-3 border-2 border-dashed border-[#dfe7f2] rounded-xl text-sm
+                         text-[#5b6b82] hover:border-[#2563eb]/40 hover:text-[#2563eb] transition"
             >
               ✍️ กดเพื่อลงลายเซ็น
             </button>
@@ -284,11 +284,11 @@ export default function RentalHandshake({
       )}
 
       {/* Agreement checkbox */}
-      <label className="flex items-center gap-2 cursor-pointer text-xs text-[#555]">
+      <label className="flex items-center gap-2 cursor-pointer text-xs text-[#3d4d66]">
         <input
           type="checkbox" checked={agreed}
           onChange={(e) => setAgreed(e.target.checked)}
-          className="w-4 h-4 accent-[#e8500a]"
+          className="w-4 h-4 accent-[#2563eb]"
         />
         ข้าพเจ้ายืนยันว่าข้อมูลข้างต้นถูกต้องและเป็นความจริง
       </label>
@@ -300,8 +300,8 @@ export default function RentalHandshake({
       <button
         onClick={handleConfirm}
         disabled={isPending || !agreed || (needsSignature && !signature)}
-        className="w-full py-3 bg-[#e8500a] text-white text-sm font-bold rounded-xl
-                   hover:bg-[#c94208] transition disabled:opacity-50"
+        className="w-full py-3 bg-[#2563eb] text-white text-sm font-bold rounded-xl
+                   hover:bg-[#1d4ed8] transition disabled:opacity-50"
       >
         {isPending ? "กำลังยืนยัน..." : `✅ ยืนยัน${type === "pickup" ? "การรับของ" : "การคืนของ"}`}
       </button>

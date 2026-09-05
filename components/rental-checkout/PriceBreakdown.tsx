@@ -14,35 +14,35 @@ export default function PriceBreakdown({ pricing, lateFeePerDay, compact }: Prop
   if (compact) {
     return (
       <div className="flex justify-between items-center text-sm font-bold">
-        <span className="text-[#555]">ยอดชำระทั้งหมด</span>
-        <span className="text-[#e8500a] text-lg">฿{totalPaid.toLocaleString()}</span>
+        <span className="text-[#3d4d66]">ยอดชำระทั้งหมด</span>
+        <span className="text-[#2563eb] text-lg">฿{totalPaid.toLocaleString()}</span>
       </div>
     );
   }
 
   return (
-    <div className="bg-[#faf9f7] rounded-xl p-4 space-y-2 text-sm border border-[#f0ede7]">
-      <div className="flex justify-between text-[#555]">
+    <div className="bg-[#f7f9fd] rounded-xl p-4 space-y-2 text-sm border border-[#eaf0f8]">
+      <div className="flex justify-between text-[#3d4d66]">
         <span>ค่าเช่า (฿{rentalFee / rentalDays} × {rentalDays} วัน)</span>
         <span>฿{rentalFee.toLocaleString()}</span>
       </div>
-      <div className="flex justify-between text-[#555]">
+      <div className="flex justify-between text-[#3d4d66]">
         <span>ค่าธรรมเนียมระบบ (5%)</span>
         <span>฿{platformFee.toLocaleString()}</span>
       </div>
       {securityDeposit > 0 && (
-        <div className="flex justify-between text-[#555]">
+        <div className="flex justify-between text-[#3d4d66]">
           <span>เงินมัดจำ <span className="text-[10px] text-green-600">(คืนหลังส่งของ)</span></span>
           <span>฿{securityDeposit.toLocaleString()}</span>
         </div>
       )}
-      <div className="border-t border-[#e5e3de] pt-2 flex justify-between font-bold text-[#111]">
+      <div className="border-t border-[#dfe7f2] pt-2 flex justify-between font-bold text-[#0f1e35]">
         <span>💰 ยอดชำระทั้งหมด</span>
-        <span className="text-[#e8500a]">฿{totalPaid.toLocaleString()}</span>
+        <span className="text-[#2563eb]">฿{totalPaid.toLocaleString()}</span>
       </div>
 
       {/* Info footnotes */}
-      <div className="pt-1 space-y-1 text-[11px] text-[#999]">
+      <div className="pt-1 space-y-1 text-[11px] text-[#8d9bb0]">
         <p>• ค่าเช่า ฿{rentalFee} + ค่าธรรมเนียม ฿{platformFee} → จ่ายให้เจ้าของเมื่อคืนของ</p>
         {securityDeposit > 0 && (
           <p>• มัดจำ ฿{securityDeposit.toLocaleString()} → คืนให้คุณเมื่อของสภาพเดิม</p>

@@ -43,7 +43,7 @@ export default function DeleteDialog({
 
       {/* Panel */}
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
-        <h3 className="text-base font-bold text-[#111] flex items-center gap-2">
+        <h3 className="text-base font-bold text-[#0f1e35] flex items-center gap-2">
           🗑️ ลบสินค้า &ldquo;{itemTitle}&rdquo; ถาวร
         </h3>
 
@@ -58,11 +58,11 @@ export default function DeleteDialog({
 
         {/* Reason textarea */}
         <div>
-          <label className="text-sm text-[#555] font-medium block mb-1.5">
+          <label className="text-sm text-[#3d4d66] font-medium block mb-1.5">
             เหตุผลในการลบ <span className="text-red-500">*</span>
           </label>
           <textarea
-            className="w-full border border-[#e5e3de] rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-400 transition"
+            className="w-full border border-[#dfe7f2] rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-400 transition"
             placeholder="ระบุเหตุผลในการลบ..."
             rows={2}
             value={reason}
@@ -73,15 +73,15 @@ export default function DeleteDialog({
 
         {/* Type-to-confirm */}
         <div>
-          <label className="text-sm text-[#555] font-medium block mb-1.5">
-            พิมพ์ชื่อสินค้า &ldquo;<span className="font-bold text-[#111]">{itemTitle}</span>&rdquo; เพื่อยืนยัน:
+          <label className="text-sm text-[#3d4d66] font-medium block mb-1.5">
+            พิมพ์ชื่อสินค้า &ldquo;<span className="font-bold text-[#0f1e35]">{itemTitle}</span>&rdquo; เพื่อยืนยัน:
           </label>
           <input
             type="text"
             className={`w-full border rounded-xl p-3 text-sm focus:outline-none focus:ring-2 transition ${
               confirmText.length > 0 && !nameMatch
                 ? "border-red-300 focus:ring-red-200 focus:border-red-400"
-                : "border-[#e5e3de] focus:ring-[#e8500a]/20 focus:border-[#e8500a]"
+                : "border-[#dfe7f2] focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
             }`}
             placeholder={itemTitle}
             value={confirmText}
@@ -101,7 +101,7 @@ export default function DeleteDialog({
             type="button"
             onClick={handleClose}
             disabled={loading}
-            className="flex-1 py-2.5 rounded-xl border border-[#e5e3de] text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition disabled:opacity-50"
+            className="flex-1 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
           >
             ยกเลิก
           </button>

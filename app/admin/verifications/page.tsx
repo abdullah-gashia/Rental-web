@@ -49,12 +49,12 @@ export default async function AdminVerificationsPage({
     <div className="p-6 max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[#111]">ยืนยันตัวตน KYC</h1>
-        <p className="text-sm text-[#9a9590] mt-1">ตรวจสอบคำขอยืนยันตัวตนของผู้ใช้</p>
+        <h1 className="text-2xl font-bold text-[#0f1e35]">ยืนยันตัวตน KYC</h1>
+        <p className="text-sm text-[#64748b] mt-1">ตรวจสอบคำขอยืนยันตัวตนของผู้ใช้</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-[#f0ede7] p-1 rounded-xl w-fit">
+      <div className="flex gap-1 bg-[#eaf0f8] p-1 rounded-xl w-fit">
         {TABS.map((tab) => {
           const count = tab.value === "ALL"
             ? Object.values(countMap).reduce((a, b) => a + b, 0)
@@ -67,8 +67,8 @@ export default async function AdminVerificationsPage({
               href={`/admin/verifications?filter=${tab.value}`}
               className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition ${
                 isActive
-                  ? "bg-white text-[#111] shadow-sm"
-                  : "text-[#9a9590] hover:text-[#555]"
+                  ? "bg-white text-[#0f1e35] shadow-sm"
+                  : "text-[#64748b] hover:text-[#3d4d66]"
               }`}
             >
               {tab.label}
@@ -76,7 +76,7 @@ export default async function AdminVerificationsPage({
                 <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold ${
                   isActive && tab.value === "PENDING"
                     ? "bg-amber-100 text-amber-700"
-                    : "bg-[#e5e3de] text-[#555]"
+                    : "bg-[#dfe7f2] text-[#3d4d66]"
                 }`}>
                   {count}
                 </span>
@@ -87,7 +87,7 @@ export default async function AdminVerificationsPage({
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-[#e5e3de] p-6">
+      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6">
         <VerificationTable requests={requests} filter={filter} />
       </div>
     </div>

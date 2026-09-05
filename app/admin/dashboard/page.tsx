@@ -1,123 +1,138 @@
 // Server Component — no "use client"
+import { prisma }                 from "@/lib/prisma";
 import { getAdminDashboardStats } from "./actions";
 import { getAdminRevenueStats }   from "@/lib/actions/admin-revenue";
-import KpiCard            from "./_components/KpiCard";
 import SalesChart         from "./_components/SalesChart";
 import StatusPieChart     from "./_components/StatusPieChart";
 import RecentOrdersTable  from "./_components/RecentOrdersTable";
 import RefreshButton      from "./_components/RefreshButton";
 import RevenueChart       from "./_components/RevenueChart";
-import MoneyValue        from "./_components/MoneyValue";
+import MoneyValue         from "./_components/MoneyValue";
 
-// KPI icon helpers — inline SVGs keep this file self-contained
-function UsersIcon()    { return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>; }
-function PackageIcon()  { return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>; }
-function CartIcon()     { return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>; }
-function BanknoteIcon() { return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>; }
-function TrendIcon()    { return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>; }
-function ClockIcon()    { return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>; }
+/**
+ * The admin's first screen.
+ *
+ * It used to open with eight identical KPI tiles in two rows, each with its own
+ * pastel icon chip — blue, amber, green, purple, violet, indigo. Eight things
+ * shouting equally is the same as nothing shouting, and none of them was
+ * actionable. The order here is deliberate: what needs a decision, then the
+ * money, then the size of the place.
+ */
 
-function fmt(n: number)      { return new Intl.NumberFormat("th-TH").format(n); }
+const fmt = (n: number) => new Intl.NumberFormat("th-TH").format(n);
 
 export default async function AdminDashboardPage() {
-  const [stats, revenue] = await Promise.all([
-    getAdminDashboardStats(),
-    getAdminRevenueStats(),
-  ]);
+  const [stats, revenue, pendingItems, pendingKyc, openDisputes, openReports, waitingRentals, waitingBorrows] =
+    await Promise.all([
+      getAdminDashboardStats(),
+      getAdminRevenueStats(),
+      prisma.item.count({ where: { status: "PENDING" } }),
+      prisma.verificationRequest.count({ where: { status: "PENDING" } }),
+      prisma.dispute.count({ where: { status: "OPEN" } }),
+      prisma.report.count({ where: { status: "OPEN" } }),
+      prisma.rentalOrder.count({ where: { status: "REQUESTED" } }),
+      prisma.lendingOrder.count({ where: { status: "REQUESTED" } }),
+    ]);
+
+  const queues = [
+    { n: pendingItems,   label: "ประกาศรอตรวจสอบ",     href: "/admin/approvals",     bad: false },
+    { n: pendingKyc,     label: "คำขอยืนยันตัวตน",       href: "/admin/verifications", bad: false },
+    { n: openDisputes,   label: "ข้อพิพาทที่ยังไม่ปิด",   href: "/admin/disputes",      bad: true  },
+    { n: openReports,    label: "รายงานผู้ใช้ที่ยังไม่อ่าน", href: "/admin/users",         bad: true  },
+    { n: waitingRentals, label: "คำขอเช่ารอเจ้าของตอบ",  href: "/admin/lending?f=waiting", bad: false },
+    { n: waitingBorrows, label: "คำขอยืมรองานภัทร",     href: "/pattara/requests",    bad: false },
+  ];
+  const live = queues.filter((q) => q.n > 0);
+  const totalWaiting = live.reduce((s, q) => s + q.n, 0);
 
   return (
-    <div className="space-y-6">
-      {/* ── Header ─────────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between gap-4">
+    <div className="flex flex-col gap-6">
+      <header className="ui-head">
         <div>
-          <h1 className="text-xl font-extrabold text-[#111] tracking-tight">
-            แดชบอร์ดผู้ดูแลระบบ
-          </h1>
-          <p className="text-sm text-[#9a9590] mt-0.5">ภาพรวมแพลตฟอร์ม PSU.STORE</p>
+          <p className="ui-eyebrow mb-1.5">แผงผู้ดูแลระบบ</p>
+          <h1>ภาพรวมแพลตฟอร์ม</h1>
+          <p>
+            {totalWaiting === 0
+              ? "ไม่มีงานค้างในคิวใด ๆ ตอนนี้"
+              : `มี ${totalWaiting} รายการรอการตัดสินใจจากผู้ดูแล`}
+          </p>
         </div>
         <RefreshButton />
-      </div>
+      </header>
 
-      {/* ── KPI cards ──────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard
-          label="ผู้ใช้ทั้งหมด"
-          value={fmt(stats.totalUsers)}
-          sublabel="นักศึกษาที่ลงทะเบียน"
-          accent="bg-blue-100 text-blue-600"
-          icon={<UsersIcon />}
-        />
-        <KpiCard
-          label="สินค้าทั้งหมด"
-          value={fmt(stats.totalItems)}
-          sublabel="ไม่รวมที่ถูกนำออก"
-          accent="bg-amber-100 text-amber-600"
-          icon={<PackageIcon />}
-        />
-        <KpiCard
-          label="ยอดขายสำเร็จ"
-          value={fmt(stats.totalCompletedSales)}
-          sublabel="คำสั่งซื้อที่เสร็จสิ้น"
-          accent="bg-green-100 text-green-600"
-          icon={<CartIcon />}
-        />
-        <KpiCard
-          label="รายได้รวม"
-          value={<MoneyValue amount={stats.totalRevenue} />}
-          sublabel="Escrow ที่โอนให้ผู้ขายแล้ว"
-          accent="bg-purple-100 text-purple-600"
-          icon={<BanknoteIcon />}
-        />
-      </div>
+      {/* ── 1. What needs a person ───────────────────────────────────────── */}
+      {live.length > 0 && (
+        <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          {live.map((q) => (
+            <a key={q.href} href={q.href} className={`ui-stat ${q.bad ? "is-bad" : "is-warn"}`}>
+              <p className="ui-stat-v !text-[24px]">{q.n}</p>
+              <p className="ui-stat-k mt-1 leading-snug">{q.label}</p>
+            </a>
+          ))}
+        </section>
+      )}
 
-      {/* ── Platform revenue KPI row ───────────────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard
-          label="รายได้รวมทั้งหมด"
-          value={<MoneyValue amount={revenue.platformFeeTotal} />}
-          sublabel="ค่าธรรมเนียมที่เก็บได้ตั้งแต่เริ่ม"
-          accent="bg-purple-100 text-purple-600"
-          icon={<BanknoteIcon />}
-        />
-        <KpiCard
-          label="รายได้เดือนนี้"
-          value={<MoneyValue amount={revenue.platformFeeMonth} />}
-          sublabel="30 วันที่ผ่านมา"
-          accent="bg-violet-100 text-violet-600"
-          icon={<TrendIcon />}
-        />
-        <KpiCard
-          label="รายได้สัปดาห์นี้"
-          value={<MoneyValue amount={revenue.platformFeeWeek} />}
-          sublabel="7 วันที่ผ่านมา"
-          accent="bg-indigo-100 text-indigo-600"
-          icon={<TrendIcon />}
-        />
-        <KpiCard
-          label="รายได้รอดำเนินการ"
-          value={<MoneyValue amount={revenue.pendingPlatformFee} />}
-          sublabel="คำสั่งซื้อที่ยังไม่เสร็จสิ้น"
-          accent="bg-amber-100 text-amber-600"
-          icon={<ClockIcon />}
-        />
-      </div>
+      {/* ── 2. The money ─────────────────────────────────────────────────── */}
+      <section className="ui-card overflow-hidden">
+        <div className="ui-card-head">
+          <h2>ค่าธรรมเนียมที่แพลตฟอร์มเก็บได้</h2>
+          <a href="/admin/fund" className="text-[12.5px] font-semibold text-[var(--psu-blue)] hover:underline">
+            ดูกองทุนงานภัทร →
+          </a>
+        </div>
 
-      {/* ── Revenue bar chart ──────────────────────────────────────────── */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-[var(--hp-border)]">
+          {[
+            { k: "ทั้งหมดตั้งแต่เริ่ม", v: revenue.platformFeeTotal,   s: "เข้ากองทุนงานภัทร 100%" },
+            { k: "30 วันที่ผ่านมา",     v: revenue.platformFeeMonth,   s: "รอบเดือนล่าสุด" },
+            { k: "7 วันที่ผ่านมา",      v: revenue.platformFeeWeek,    s: "รอบสัปดาห์ล่าสุด" },
+            { k: "ยังไม่รับรู้",        v: revenue.pendingPlatformFee, s: "อยู่ในคำสั่งซื้อที่ยังไม่จบ" },
+          ].map((c) => (
+            <div key={c.k} className="px-5 py-4">
+              <p className="ui-stat-k">{c.k}</p>
+              <p className="ui-stat-v !text-[22px]"><MoneyValue amount={c.v} /></p>
+              <p className="ui-stat-sub">{c.s}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <RevenueChart data={revenue.dailyRevenue} />
 
-      {/* ── Charts row ─────────────────────────────────────────────────── */}
+      {/* ── 3. How big the place is ──────────────────────────────────────── */}
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <a href="/admin/users" className="ui-stat">
+          <p className="ui-stat-k">ผู้ใช้ทั้งหมด</p>
+          <p className="ui-stat-v">{fmt(stats.totalUsers)}</p>
+          <p className="ui-stat-sub">บัญชีที่ลงทะเบียน</p>
+        </a>
+        <a href="/admin/items" className="ui-stat">
+          <p className="ui-stat-k">สินค้าทั้งหมด</p>
+          <p className="ui-stat-v">{fmt(stats.totalItems)}</p>
+          <p className="ui-stat-sub">ไม่รวมที่ถูกนำออก</p>
+        </a>
+        <a href="/admin/orders" className="ui-stat">
+          <p className="ui-stat-k">ขายสำเร็จ</p>
+          <p className="ui-stat-v">{fmt(stats.totalCompletedSales)}</p>
+          <p className="ui-stat-sub">คำสั่งซื้อที่เสร็จสิ้น</p>
+        </a>
+        <div className="ui-stat">
+          <p className="ui-stat-k">มูลค่าที่โอนให้ผู้ขาย</p>
+          <p className="ui-stat-v"><MoneyValue amount={stats.totalRevenue} /></p>
+          <p className="ui-stat-sub">ปล่อยออกจาก Escrow แล้ว</p>
+        </div>
+      </section>
+
+      {/* ── 4. Trends ────────────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-        {/* Sales bar+line chart — wider (3/5) */}
         <div className="lg:col-span-3">
           <SalesChart data={stats.salesOverTime} />
         </div>
-        {/* Status donut chart — narrower (2/5) */}
         <div className="lg:col-span-2">
           <StatusPieChart data={stats.itemStatusCounts} />
         </div>
       </div>
 
-      {/* ── Recent orders table ─────────────────────────────────────────── */}
       <RecentOrdersTable orders={stats.recentOrders} />
     </div>
   );

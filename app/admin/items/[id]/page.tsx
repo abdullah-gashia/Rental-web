@@ -52,7 +52,7 @@ export default async function AdminItemDetailPage({ params }: Props) {
       {/* Back link */}
       <Link
         href="/admin/items"
-        className="inline-flex items-center gap-1.5 text-sm text-[#888] hover:text-[#555] transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm text-[#8494a9] hover:text-[#3d4d66] transition-colors"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -61,26 +61,26 @@ export default async function AdminItemDetailPage({ params }: Props) {
       </Link>
 
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-1.5 text-xs text-[#aaa] flex-wrap">
-        <Link href="/admin/dashboard" className="hover:text-[#555] transition-colors">
+      <nav className="flex items-center gap-1.5 text-xs text-[#94a3b8] flex-wrap">
+        <Link href="/admin/dashboard" className="hover:text-[#3d4d66] transition-colors">
           Admin Panel
         </Link>
         <span>/</span>
-        <Link href="/admin/items" className="hover:text-[#555] transition-colors">
+        <Link href="/admin/items" className="hover:text-[#3d4d66] transition-colors">
           สินค้า
         </Link>
         <span>/</span>
-        <span className="text-[#555] font-medium truncate max-w-[200px]">{item.title}</span>
+        <span className="text-[#3d4d66] font-medium truncate max-w-[200px]">{item.title}</span>
       </nav>
 
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-xl font-bold text-[#111]">{item.title}</h1>
+            <h1 className="text-xl font-bold text-[#0f1e35]">{item.title}</h1>
             <StatusBadge status={item.status} type="item" />
           </div>
-          <p className="text-sm text-[#888] mt-1">
+          <p className="text-sm text-[#8494a9] mt-1">
             {item.category.emoji && <span className="mr-1">{item.category.emoji}</span>}
             {item.category.nameTh}
             {" · "}

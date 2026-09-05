@@ -34,7 +34,7 @@ export default function SearchInput({
   return (
     <div className="relative">
       <svg
-        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9a9590]"
+        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748b]"
         fill="none" stroke="currentColor" viewBox="0 0 24 24"
       >
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -45,12 +45,12 @@ export default function SearchInput({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
-        className="w-full pl-9 pr-4 py-2 text-sm bg-white border border-[#e5e3de] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#e8500a]/20 focus:border-[#e8500a] transition"
+        className="w-full pl-9 pr-4 py-2 text-sm bg-white border border-[#dfe7f2] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 focus:border-[#2563eb] transition"
       />
       {value && (
         <button
           onClick={() => setValue("")}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9a9590] hover:text-[#333] transition"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748b] hover:text-[#1e2d47] transition"
           aria-label="ล้างการค้นหา"
         >
           ×

@@ -40,8 +40,8 @@ export default function RenterActions({ orderId, status }: Props) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-[#e5e3de] p-5 space-y-3">
-      <h3 className="text-sm font-bold text-[#111]">การดำเนินการ</h3>
+    <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 space-y-3">
+      <h3 className="text-sm font-bold text-[#0f1e35]">การดำเนินการ</h3>
 
       {error && (
         <div className="bg-red-50 text-red-700 text-xs px-3 py-2 rounded-xl">{error}</div>
@@ -51,8 +51,8 @@ export default function RenterActions({ orderId, status }: Props) {
         <button
           onClick={handleReturn}
           disabled={isPending}
-          className="w-full py-3 bg-[#e8500a] text-white text-sm font-bold rounded-xl
-                     hover:bg-[#c94208] transition disabled:opacity-50"
+          className="w-full py-3 bg-[#2563eb] text-white text-sm font-bold rounded-xl
+                     hover:bg-[#1d4ed8] transition disabled:opacity-50"
         >
           {isPending ? "กำลังดำเนินการ..." : "📦 แจ้งคืนของ"}
         </button>
@@ -71,20 +71,20 @@ export default function RenterActions({ orderId, status }: Props) {
 
       {cancelOpen && (
         <div className="space-y-3">
-          <p className="text-xs text-[#777]">เงินจะถูกคืนเข้ากระเป๋าหลังจากยกเลิก</p>
+          <p className="text-xs text-[#5b6b82]">เงินจะถูกคืนเข้ากระเป๋าหลังจากยกเลิก</p>
           <textarea
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             rows={3}
             placeholder="เหตุผลที่ยกเลิก..."
-            className="w-full px-3 py-2 text-sm border border-[#e5e3de] rounded-xl resize-none
+            className="w-full px-3 py-2 text-sm border border-[#dfe7f2] rounded-xl resize-none
                        focus:outline-none focus:ring-2 focus:ring-red-300"
           />
           <div className="flex gap-3">
             <button
               onClick={() => { setCancelOpen(false); setReason(""); }}
               disabled={isPending}
-              className="flex-1 py-2.5 border border-[#e5e3de] text-sm rounded-xl hover:bg-[#f0ede7]"
+              className="flex-1 py-2.5 border border-[#dfe7f2] text-sm rounded-xl hover:bg-[#eaf0f8]"
             >
               ยกเลิก
             </button>

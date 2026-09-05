@@ -50,7 +50,7 @@ export default function ItemsTable({ rows }: Props) {
 
   if (rows.length === 0) {
     return (
-      <div className="py-20 text-center text-[#aaa] text-sm">ไม่พบสินค้า</div>
+      <div className="py-20 text-center text-[#94a3b8] text-sm">ไม่พบสินค้า</div>
     );
   }
 
@@ -94,7 +94,7 @@ export default function ItemsTable({ rows }: Props) {
       >
         {dialog?.kind === "reject" && (
           <textarea
-            className="w-full border border-[#e5e3de] rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#e8500a]/20 focus:border-[#e8500a]"
+            className="w-full border border-[#dfe7f2] rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
             placeholder="เหตุผลในการปฏิเสธ..."
             rows={3}
             value={rejectReason}
@@ -107,24 +107,24 @@ export default function ItemsTable({ rows }: Props) {
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-[#e5e3de] bg-[#faf9f7]">
-              <th className="text-left px-4 py-3 font-semibold text-[#555] w-[280px]">สินค้า</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">ผู้ขาย</th>
-              <th className="text-right px-4 py-3 font-semibold text-[#555]">ราคา</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">ประเภท</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">สถานะ</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">โพสต์เมื่อ</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">การจัดการ</th>
+            <tr className="border-b border-[#dfe7f2] bg-[#f7f9fd]">
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66] w-[280px]">สินค้า</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">ผู้ขาย</th>
+              <th className="text-right px-4 py-3 font-semibold text-[#3d4d66]">ราคา</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">ประเภท</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">สถานะ</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">โพสต์เมื่อ</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">การจัดการ</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#f0ede7]">
+          <tbody className="divide-y divide-[#eaf0f8]">
             {rows.map((item) => (
-              <tr key={item.id} className="hover:bg-[#faf9f7] transition">
+              <tr key={item.id} className="hover:bg-[#f7f9fd] transition">
                 {/* Item */}
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     {item.thumbnailUrl ? (
-                      <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#f0ede7]">
+                      <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#eaf0f8]">
                         <Image
                           src={item.thumbnailUrl}
                           alt={item.title}
@@ -134,14 +134,14 @@ export default function ItemsTable({ rows }: Props) {
                         />
                       </div>
                     ) : (
-                      <div className="w-10 h-10 rounded-lg bg-[#f0ede7] flex items-center justify-center text-lg flex-shrink-0">
+                      <div className="w-10 h-10 rounded-lg bg-[#eaf0f8] flex items-center justify-center text-lg flex-shrink-0">
                         📦
                       </div>
                     )}
                     <div className="min-w-0">
-                      <p className="font-medium text-[#111] truncate max-w-[200px]">{item.title}</p>
+                      <p className="font-medium text-[#0f1e35] truncate max-w-[200px]">{item.title}</p>
                       {item.category && (
-                        <p className="text-xs text-[#9a9590]">{item.category}</p>
+                        <p className="text-xs text-[#64748b]">{item.category}</p>
                       )}
                     </div>
                   </div>
@@ -149,17 +149,17 @@ export default function ItemsTable({ rows }: Props) {
 
                 {/* Seller */}
                 <td className="px-4 py-3">
-                  <p className="text-[#333] truncate max-w-[140px]">{item.seller.name ?? "—"}</p>
-                  <p className="text-xs text-[#9a9590] truncate max-w-[140px]">{item.seller.email}</p>
+                  <p className="text-[#1e2d47] truncate max-w-[140px]">{item.seller.name ?? "—"}</p>
+                  <p className="text-xs text-[#64748b] truncate max-w-[140px]">{item.seller.email}</p>
                 </td>
 
                 {/* Price */}
-                <td className="px-4 py-3 text-right font-medium text-[#333] whitespace-nowrap">
+                <td className="px-4 py-3 text-right font-medium text-[#1e2d47] whitespace-nowrap">
                   {formatCurrency(item.price)}
                 </td>
 
                 {/* Type */}
-                <td className="px-4 py-3 text-[#555]">
+                <td className="px-4 py-3 text-[#3d4d66]">
                   {item.listingType === "SELL" ? "ขาย" : "เช่า"}
                 </td>
 
@@ -176,7 +176,7 @@ export default function ItemsTable({ rows }: Props) {
                 </td>
 
                 {/* Date */}
-                <td className="px-4 py-3 text-[#777] whitespace-nowrap">
+                <td className="px-4 py-3 text-[#5b6b82] whitespace-nowrap">
                   {formatThaiDate(item.createdAt)}
                 </td>
 
@@ -224,7 +224,7 @@ function ItemActionsDropdown({
     <div className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#f0ede7] transition text-[#555]"
+        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#eaf0f8] transition text-[#3d4d66]"
         aria-label="เมนูการจัดการ"
       >
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -235,28 +235,28 @@ function ItemActionsDropdown({
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-9 z-50 w-40 bg-white rounded-xl border border-[#e5e3de] shadow-lg py-1">
+          <div className="absolute right-0 top-9 z-50 w-40 bg-white rounded-xl border border-[#dfe7f2] shadow-lg py-1">
             {isPending && (
               <>
                 <button
                   onClick={() => { setOpen(false); onApprove(); }}
-                  className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f7f6f3] text-green-700 transition"
+                  className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f1f5fb] text-green-700 transition"
                 >
                   ✅ อนุมัติ
                 </button>
                 <button
                   onClick={() => { setOpen(false); onReject(); }}
-                  className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f7f6f3] text-red-600 transition"
+                  className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f1f5fb] text-red-600 transition"
                 >
                   ❌ ปฏิเสธ
                 </button>
-                <div className="my-1 border-t border-[#f0ede7]" />
+                <div className="my-1 border-t border-[#eaf0f8]" />
               </>
             )}
             <a
               href={`/admin/items/${item.id}`}
               onClick={() => setOpen(false)}
-              className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f7f6f3] text-[#333] transition"
+              className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f1f5fb] text-[#1e2d47] transition"
             >
               🔗 ดูสินค้า
             </a>
@@ -264,7 +264,7 @@ function ItemActionsDropdown({
             {item.status === "APPROVED" && (
               <button
                 onClick={() => { setOpen(false); onTrendingToggle(); }}
-                className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f7f6f3] text-orange-600 transition"
+                className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f1f5fb] text-orange-600 transition"
               >
                 {item.isTrending ? "🔥 ลบออกจากมาแรง" : "🔥 ตั้งเป็นสินค้ามาแรง"}
               </button>
@@ -272,7 +272,7 @@ function ItemActionsDropdown({
             {item.status !== "REMOVED" && (
               <button
                 onClick={() => { setOpen(false); onDelete(); }}
-                className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f7f6f3] text-red-600 transition"
+                className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f1f5fb] text-red-600 transition"
               >
                 🗑 ลบสินค้า
               </button>

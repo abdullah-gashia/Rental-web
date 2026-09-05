@@ -102,8 +102,8 @@ export default function AdminActionPanel({ item }: Props) {
         </div>
       )}
 
-      <div className="bg-white rounded-2xl border border-[#e5e3de] p-6">
-        <h3 className="text-sm font-semibold text-[#555] mb-4">การจัดการ</h3>
+      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6">
+        <h3 className="text-sm font-semibold text-[#3d4d66] mb-4">การจัดการ</h3>
 
         {/* Removed banner */}
         {isRemoved && (
@@ -179,10 +179,10 @@ export default function AdminActionPanel({ item }: Props) {
           )}
 
           {/* ── Trending Toggle ── */}
-          <div className="border-t border-[#f0ede7] my-2" />
+          <div className="border-t border-[#eaf0f8] my-2" />
           {trending ? (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs text-[#555] bg-orange-50 border border-orange-200 rounded-xl px-3 py-2.5">
+              <div className="flex items-center justify-between text-xs text-[#3d4d66] bg-orange-50 border border-orange-200 rounded-xl px-3 py-2.5">
                 <div>
                   <p className="font-semibold text-orange-700">🔥 อยู่ในรายการมาแรง</p>
                   <p className="text-orange-600 mt-0.5">ตำแหน่ง #{trending.position}</p>
@@ -225,7 +225,7 @@ export default function AdminActionPanel({ item }: Props) {
           {/* ── Delete (always, unless already removed) ── */}
           {!isRemoved && (
             <>
-              <div className="border-t border-[#f0ede7] my-2" />
+              <div className="border-t border-[#eaf0f8] my-2" />
               <button
                 onClick={() => setDeleteOpen(true)}
                 disabled={pending}
@@ -243,8 +243,8 @@ export default function AdminActionPanel({ item }: Props) {
             href={`/items/${item.id}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full px-4 py-2.5 border border-[#e5e3de] text-[#555] rounded-xl
-                       hover:bg-[#faf9f7] transition-colors flex items-center justify-center gap-2 text-xs font-medium"
+            className="w-full px-4 py-2.5 border border-[#dfe7f2] text-[#3d4d66] rounded-xl
+                       hover:bg-[#f7f9fd] transition-colors flex items-center justify-center gap-2 text-xs font-medium"
           >
             🔗 ดูหน้าสินค้าจริง (เปิดแท็บใหม่)
           </a>

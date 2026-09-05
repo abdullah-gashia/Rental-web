@@ -29,7 +29,7 @@ export default function PaymentStep({
 
   return (
     <div className="fade-up space-y-4">
-      <h3 className="text-base font-bold text-[#111]">เลือกวิธีชำระเงิน</h3>
+      <h3 className="text-base font-bold text-[#0f1e35]">เลือกวิธีชำระเงิน</h3>
 
       {/* Payment method cards */}
       <div className={`grid gap-3 ${allowCOD ? "grid-cols-2" : "grid-cols-1"}`}>
@@ -48,7 +48,7 @@ export default function PaymentStep({
           </div>
           <p className="text-sm font-bold mt-1">จ่ายผ่าน Escrow</p>
           <p className="text-[11px] text-emerald-600 font-semibold">✅ ปลอดภัยที่สุด</p>
-          <p className="text-[10px] text-[#9a9590] mt-0.5 leading-tight">
+          <p className="text-[10px] text-[#64748b] mt-0.5 leading-tight">
             เงินจะถูกกักไว้จนกว่าคุณจะยืนยันว่าได้รับของ
           </p>
         </button>
@@ -62,7 +62,7 @@ export default function PaymentStep({
             <span className="text-2xl">💵</span>
             <p className="text-sm font-bold mt-1">จ่ายเงินสด</p>
             <p className="text-[11px] text-amber-600 font-semibold">⚠️ ไม่มีการคุ้มครอง</p>
-            <p className="text-[10px] text-[#9a9590] mt-0.5 leading-tight">
+            <p className="text-[10px] text-[#64748b] mt-0.5 leading-tight">
               จ่ายตอนรับของ ({deliveryMethod === "SHIPPING" ? "เก็บเงินปลายทาง" : "จ่ายตอนนัดรับ"})
             </p>
           </button>
@@ -79,9 +79,9 @@ export default function PaymentStep({
 
           {/* Wallet balance */}
           <div className="flex justify-between text-sm">
-            <span className="text-[#555]">ยอดเงินในกระเป๋า</span>
+            <span className="text-[#3d4d66]">ยอดเงินในกระเป๋า</span>
             {loadingBalance ? (
-              <span className="text-[#9a9590] animate-pulse">กำลังโหลด…</span>
+              <span className="text-[#64748b] animate-pulse">กำลังโหลด…</span>
             ) : (
               <span className={`font-bold ${sufficient ? "text-emerald-600" : "text-red-600"}`}>
                 ฿{walletBalance?.toLocaleString()}
@@ -92,20 +92,20 @@ export default function PaymentStep({
           {/* Price breakdown */}
           <div className="border-t border-blue-100 pt-2 space-y-1.5 text-sm">
             <div className="flex justify-between">
-              <span className="text-[#555]">ราคาสินค้า</span>
+              <span className="text-[#3d4d66]">ราคาสินค้า</span>
               <span>฿{breakdown.itemPrice.toLocaleString()}</span>
             </div>
             {breakdown.shippingCost > 0 && (
               <div className="flex justify-between">
-                <span className="text-[#555]">ค่าจัดส่ง</span>
+                <span className="text-[#3d4d66]">ค่าจัดส่ง</span>
                 <span>฿{breakdown.shippingCost.toLocaleString()}</span>
               </div>
             )}
             <div className="flex justify-between">
-              <span className="text-[#555]">ค่าธรรมเนียม (5%)</span>
+              <span className="text-[#3d4d66]">ค่าธรรมเนียม (5%)</span>
               <span>฿{breakdown.platformFee.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between font-bold text-[#111] border-t border-blue-100 pt-1.5">
+            <div className="flex justify-between font-bold text-[#0f1e35] border-t border-blue-100 pt-1.5">
               <span>รวมทั้งสิ้น</span>
               <span>฿{breakdown.totalAmount.toLocaleString()}</span>
             </div>
@@ -122,15 +122,15 @@ export default function PaymentStep({
               <div className="rounded-lg bg-red-50 border border-red-200 p-3 space-y-2">
                 <p className="text-xs text-red-700 font-semibold">⚠️ ยอดเงินไม่เพียงพอ</p>
                 <div className="grid grid-cols-2 gap-1 text-xs">
-                  <span className="text-[#555]">ยอดที่ต้องชำระ:</span>
+                  <span className="text-[#3d4d66]">ยอดที่ต้องชำระ:</span>
                   <span className="text-right font-bold">฿{breakdown.totalAmount.toLocaleString()}</span>
-                  <span className="text-[#555]">ขาดอีก:</span>
+                  <span className="text-[#3d4d66]">ขาดอีก:</span>
                   <span className="text-right font-bold text-red-600">฿{deficit.toLocaleString()}</span>
                 </div>
                 {allowCOD && (
                   <button
                     onClick={() => dispatch({ type: "SET_PAYMENT_METHOD", payload: "COD" })}
-                    className="w-full mt-1 py-2 rounded-lg bg-white border border-[#e5e3de] text-xs font-semibold text-[#555] hover:bg-[#f7f6f3] transition"
+                    className="w-full mt-1 py-2 rounded-lg bg-white border border-[#dfe7f2] text-xs font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition"
                   >
                     💵 เปลี่ยนเป็นจ่ายเงินสด
                   </button>
@@ -164,7 +164,7 @@ export default function PaymentStep({
               onChange={() => dispatch({ type: "TOGGLE_COD_RISK" })}
               className="mt-0.5 rounded"
             />
-            <span className="text-xs text-[#555]">
+            <span className="text-xs text-[#3d4d66]">
               ฉันเข้าใจและยอมรับความเสี่ยง <span className="text-red-500">*</span>
             </span>
           </label>
@@ -172,26 +172,26 @@ export default function PaymentStep({
           {/* Price breakdown */}
           <div className="border-t border-amber-100 pt-2 space-y-1.5 text-sm">
             <div className="flex justify-between">
-              <span className="text-[#555]">ราคาสินค้า</span>
+              <span className="text-[#3d4d66]">ราคาสินค้า</span>
               <span>฿{breakdown.itemPrice.toLocaleString()}</span>
             </div>
             {breakdown.shippingCost > 0 && (
               <div className="flex justify-between">
-                <span className="text-[#555]">ค่าจัดส่ง</span>
+                <span className="text-[#3d4d66]">ค่าจัดส่ง</span>
                 <span>฿{breakdown.shippingCost.toLocaleString()}</span>
               </div>
             )}
             <div className="flex justify-between">
-              <span className="text-[#555]">ค่าธรรมเนียม</span>
+              <span className="text-[#3d4d66]">ค่าธรรมเนียม</span>
               <span className="text-emerald-600 font-semibold">฿0 (ฟรีสำหรับ COD)</span>
             </div>
-            <div className="flex justify-between font-bold text-[#111] border-t border-amber-100 pt-1.5">
+            <div className="flex justify-between font-bold text-[#0f1e35] border-t border-amber-100 pt-1.5">
               <span>รวมทั้งสิ้น</span>
               <span>฿{breakdown.totalAmount.toLocaleString()}</span>
             </div>
           </div>
 
-          <p className="text-xs text-[#9a9590]">💵 ชำระเงินตอนรับสินค้า</p>
+          <p className="text-xs text-[#64748b]">💵 ชำระเงินตอนรับสินค้า</p>
         </div>
       )}
     </div>

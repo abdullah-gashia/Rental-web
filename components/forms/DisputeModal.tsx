@@ -130,16 +130,16 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[92vh] overflow-y-auto">
 
         {/* ── Header ─────────────────────────────────────────────────────────── */}
-        <div className="sticky top-0 bg-white border-b border-[#e5e3de] px-6 py-4 flex items-start justify-between z-10 rounded-t-2xl">
+        <div className="sticky top-0 bg-white border-b border-[#dfe7f2] px-6 py-4 flex items-start justify-between z-10 rounded-t-2xl">
           <div>
-            <h3 className="text-lg font-bold text-[#111]">แจ้งปัญหา / เปิดข้อพิพาท</h3>
-            <p className="text-xs text-[#9a9590] mt-0.5">
+            <h3 className="text-lg font-bold text-[#0f1e35]">แจ้งปัญหา / เปิดข้อพิพาท</h3>
+            <p className="text-xs text-[#64748b] mt-0.5">
               เงินจะถูกอายัดรอการตัดสินจากผู้ดูแลระบบ
             </p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-[#9a9590] hover:bg-[#f0ede7] hover:text-[#111] transition flex-shrink-0 ml-3"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-[#64748b] hover:bg-[#eaf0f8] hover:text-[#0f1e35] transition flex-shrink-0 ml-3"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -165,7 +165,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
 
           {/* Reason */}
           <div>
-            <label className="block text-sm font-semibold text-[#333] mb-1.5">
+            <label className="block text-sm font-semibold text-[#1e2d47] mb-1.5">
               เหตุผลในการแจ้งปัญหา <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -173,17 +173,17 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
               onChange={(e) => { setReason(e.target.value); setSubmitError(null); }}
               rows={4}
               disabled={isPending}
-              className="w-full border border-[#e5e3de] rounded-xl px-4 py-3 text-sm text-[#111] placeholder-[#bbb] focus:outline-none focus:ring-2 focus:ring-red-400/30 focus:border-red-400 transition resize-none disabled:opacity-60"
+              className="w-full border border-[#dfe7f2] rounded-xl px-4 py-3 text-sm text-[#0f1e35] placeholder-[#a3b0c2] focus:outline-none focus:ring-2 focus:ring-red-400/30 focus:border-red-400 transition resize-none disabled:opacity-60"
               placeholder="อธิบายปัญหาที่พบ เช่น ไม่ได้รับสินค้า, สินค้าไม่ตรงปก, สินค้าชำรุดเสียหาย..."
             />
           </div>
 
           {/* Evidence Images */}
           <div>
-            <label className="block text-sm font-semibold text-[#333] mb-0.5">
+            <label className="block text-sm font-semibold text-[#1e2d47] mb-0.5">
               หลักฐาน (รูปภาพ) <span className="text-red-500">*</span>
             </label>
-            <p className="text-xs text-[#9a9590] mb-3">
+            <p className="text-xs text-[#64748b] mb-3">
               อย่างน้อย 1 ภาพ · สูงสุด {MAX_IMAGES} ภาพ · รูปภาพทุกชนิด ทุกขนาด
             </p>
 
@@ -192,7 +192,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
               {images.map((img, idx) => (
                 <div
                   key={idx}
-                  className="relative w-20 h-20 rounded-xl overflow-hidden bg-[#f0ede7] border border-[#e5e3de] flex-shrink-0"
+                  className="relative w-20 h-20 rounded-xl overflow-hidden bg-[#eaf0f8] border border-[#dfe7f2] flex-shrink-0"
                 >
                   <img src={img.preview} alt="" className="w-full h-full object-contain" />
 
@@ -229,7 +229,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isPending}
-                  className="w-20 h-20 rounded-xl border-2 border-dashed border-[#d1cfc9] hover:border-red-400 hover:bg-red-50 transition flex flex-col items-center justify-center gap-1 text-[#9a9590] hover:text-red-500 disabled:opacity-40"
+                  className="w-20 h-20 rounded-xl border-2 border-dashed border-[#d1cfc9] hover:border-red-400 hover:bg-red-50 transition flex flex-col items-center justify-center gap-1 text-[#64748b] hover:text-red-500 disabled:opacity-40"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -258,8 +258,8 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
           )}
 
           {/* Warning notice */}
-          <div className="bg-[#f7f6f3] rounded-xl px-4 py-3 text-xs text-[#777] leading-relaxed">
-            <span className="font-semibold text-[#555]">หมายเหตุ:</span>{" "}
+          <div className="bg-[#f1f5fb] rounded-xl px-4 py-3 text-xs text-[#5b6b82] leading-relaxed">
+            <span className="font-semibold text-[#3d4d66]">หมายเหตุ:</span>{" "}
             การเปิดข้อพิพาทจะทำให้เงินถูกอายัดทันที และไม่สามารถยกเลิกได้
             ผู้ดูแลระบบจะตรวจสอบหลักฐานและตัดสินผลภายใน 2–3 วันทำการ
           </div>
@@ -270,7 +270,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
               type="button"
               onClick={onClose}
               disabled={isPending}
-              className="flex-1 py-3 rounded-xl border border-[#e5e3de] text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition disabled:opacity-50"
+              className="flex-1 py-3 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
             >
               ยกเลิก
             </button>

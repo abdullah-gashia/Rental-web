@@ -49,18 +49,18 @@ export default async function RentalDashboardPage() {
   const pastAsOwner    = asOwner.filter((o: any) => !ACTIVE_STATUSES.includes(o.status));
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]">
+    <div className="min-h-screen bg-[#f7f9fd]">
       <div className="max-w-5xl mx-auto px-5 py-6">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
           <div>
-            <h1 className="text-xl font-extrabold text-[#111]">🔑 การเช่าของฉัน</h1>
-            <p className="text-sm text-[#777] mt-0.5">ติดตามการเช่าและให้เช่าทั้งหมดของคุณ</p>
+            <h1 className="text-xl font-extrabold text-[#0f1e35]">🔑 การเช่าของฉัน</h1>
+            <p className="text-sm text-[#5b6b82] mt-0.5">ติดตามการเช่าและให้เช่าทั้งหมดของคุณ</p>
           </div>
           <Link
             href="/rental"
-            className="px-4 py-2 bg-[#e8500a] text-white text-sm font-bold rounded-xl hover:bg-[#c94208] transition"
+            className="px-4 py-2 bg-[#2563eb] text-white text-sm font-bold rounded-xl hover:bg-[#1d4ed8] transition"
           >
             ค้นหาสินค้าเช่า
           </Link>
@@ -70,10 +70,10 @@ export default async function RentalDashboardPage() {
 
           {/* ── ฉันเป็นผู้เช่า ── */}
           <section>
-            <h2 className="text-sm font-bold text-[#333] mb-3 flex items-center gap-2">
+            <h2 className="text-sm font-bold text-[#1e2d47] mb-3 flex items-center gap-2">
               📥 ฉันเป็นผู้เช่า
               {activeAsRenter.length > 0 && (
-                <span className="px-2 py-0.5 bg-[#e8500a] text-white text-[10px] font-bold rounded-full">
+                <span className="px-2 py-0.5 bg-[#2563eb] text-white text-[10px] font-bold rounded-full">
                   {activeAsRenter.length} กำลังดำเนิน
                 </span>
               )}
@@ -91,7 +91,7 @@ export default async function RentalDashboardPage() {
 
           {/* ── ฉันเป็นเจ้าของ ── */}
           <section>
-            <h2 className="text-sm font-bold text-[#333] mb-3 flex items-center gap-2">
+            <h2 className="text-sm font-bold text-[#1e2d47] mb-3 flex items-center gap-2">
               📤 ฉันเป็นเจ้าของ
               {activeAsOwner.length > 0 && (
                 <span className="px-2 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded-full">
@@ -124,10 +124,10 @@ function OrderRow({ order, counterpartyLabel, counterparty }: { order: any; coun
   return (
     <Link
       href={`/rental/orders/${order.id}`}
-      className="flex items-center gap-3 bg-white rounded-xl border border-[#e5e3de] p-3.5
-                 hover:border-[#e8500a]/40 hover:shadow-sm transition group"
+      className="flex items-center gap-3 bg-white rounded-xl border border-[#dfe7f2] p-3.5
+                 hover:border-[#2563eb]/40 hover:shadow-sm transition group"
     >
-      <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-[#f0ede7] flex items-center justify-center">
+      <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-[#eaf0f8] flex items-center justify-center">
         {img ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={img} alt="" className="w-full h-full object-contain" />
@@ -136,15 +136,15 @@ function OrderRow({ order, counterpartyLabel, counterparty }: { order: any; coun
         )}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-[#111] truncate group-hover:text-[#e8500a] transition">
+        <p className="text-sm font-medium text-[#0f1e35] truncate group-hover:text-[#2563eb] transition">
           {order.item.title}
         </p>
-        <p className="text-xs text-[#999]">
+        <p className="text-xs text-[#8d9bb0]">
           {counterpartyLabel}: {counterparty?.name ?? "—"}
         </p>
         {daysLeft !== null && (
           <p className={`text-xs mt-0.5 font-medium ${
-            daysLeft < 0 ? "text-red-600" : daysLeft <= 1 ? "text-amber-600" : "text-[#777]"
+            daysLeft < 0 ? "text-red-600" : daysLeft <= 1 ? "text-amber-600" : "text-[#5b6b82]"
           }`}>
             {daysLeft < 0 ? `⚠️ เกิน ${Math.abs(daysLeft)} วัน` :
              daysLeft === 0 ? "⏰ ครบวันนี้!" :
@@ -163,11 +163,11 @@ function OrderRow({ order, counterpartyLabel, counterparty }: { order: any; coun
 
 function EmptyCard({ msg, href, linkLabel }: { msg: string; href: string; linkLabel: string }) {
   return (
-    <div className="bg-white rounded-2xl border border-[#e5e3de] p-8 text-center">
+    <div className="bg-white rounded-2xl border border-[#dfe7f2] p-8 text-center">
       <p className="text-2xl mb-2">📭</p>
-      <p className="text-sm text-[#777]">{msg}</p>
+      <p className="text-sm text-[#5b6b82]">{msg}</p>
       <Link href={href}
-        className="mt-3 inline-block px-4 py-2 bg-[#e8500a] text-white text-xs font-bold rounded-xl hover:bg-[#c94208] transition">
+        className="mt-3 inline-block px-4 py-2 bg-[#2563eb] text-white text-xs font-bold rounded-xl hover:bg-[#1d4ed8] transition">
         {linkLabel}
       </Link>
     </div>

@@ -2,22 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Design Tokens ──────────────────────────── */
-:root {
-  --ink:          #111111;
-  --ink-soft:     #333333;
-  --paper:        #f7f6f3;
-  --paper-dark:   #f0ede7;
-  --muted:        #9a9590;
-  --border:       #e5e3de;
-  --border-light: #eeebe5;
-  --accent:       #e8500a;
-  --accent-light: #fff5f0;
-  --accent-dark:  #c94208;
+/* ─── Design Tokens ──────────────────────────────────────────────────────────
+   One palette for the whole product.
 
-  /* ─── PSU brand scale (น้ำเงิน · คราม · ฟ้า) ───
-     Used by the homepage. Legacy tokens above are kept
-     so the not-yet-redesigned pages render unchanged. */
+   The site used to run three at once: warm beige with an orange accent in the
+   admin panel, the seller dashboard, the profile and every modal; PSU blue on
+   the homepage; and a third, quieter blue in the borrowing pages. Everything
+   now sits on the PSU blue scale below, with neutrals tinted toward navy so
+   greys read as part of the same family rather than as a different product.
+
+   The old names are kept and repointed, so any file still saying
+   var(--accent) picks up the new colour instead of the orange.
+   ──────────────────────────────────────────────────────────────────────────── */
+:root {
+  --ink:          #0f1e35;
+  --ink-soft:     #1e2d47;
+  --paper:        #f1f5fb;
+  --paper-dark:   #eaf0f8;
+  --muted:        #64748b;
+  --border:       #dfe7f2;
+  --border-light: #eef2f8;
+  --accent:       #2563eb;
+  --accent-light: #eef4ff;
+  --accent-dark:  #1d4ed8;
+
+  /* ─── PSU brand scale (น้ำเงิน · คราม · ฟ้า) ─── */
   --psu-navy:     #0a2b5e;   /* น้ำเงิน — headings, primary surface */
   --psu-navy-800: #0f3a7a;
   --psu-indigo:   #1b3f8f;   /* คราม — primary action */
@@ -26,7 +35,9 @@
   --psu-sky:      #eef4ff;   /* ฟ้าอ่อน — tint fill */
   --psu-sky-200:  #cfe0ff;
 
-  /* Homepage neutrals — cool, not warm paper */
+  /* ─── The shared neutral ramp ───
+     Every surface uses these; the hp- prefix is historical. Contrast on
+     white: ink 15.4:1 · ink-2 8.8:1 · muted 4.8:1 (all AA or better). */
   --hp-bg:         #ffffff;
   --hp-canvas:     #eef2f7;   /* page shell behind the panels */
   --hp-subtle:     #f7f9fc;
@@ -62,16 +73,20 @@ body {
 /* Thin accent scrollbar for scrollable areas */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+::-webkit-scrollbar-thumb { background: var(--hp-border-str); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--hp-muted); }
 
 /* ─── Focus Ring ─────────────────────────────── */
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
-button:focus-visible {
-  outline: 2px solid var(--ink);
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--psu-blue);
   outline-offset: 2px;
+  border-radius: 6px;
 }
 
 /* Homepage overrides the ring to PSU blue */
@@ -92,8 +107,8 @@ button:focus-visible {
 /* Legacy focus for non-focus-visible browsers */
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: var(--ink) !important;
-  box-shadow: 0 0 0 3px rgba(17,17,17,0.08) !important;
+  border-color: var(--psu-blue) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
 }
 
 /* ─── Card Lift ──────────────────────────────── */
@@ -111,7 +126,7 @@ input:focus, textarea:focus, select:focus {
 /* ─── Modal ──────────────────────────────────── */
 .modal-overlay {
   position: fixed; inset: 0;
-  background: rgba(17,17,17,0.42);
+  background: rgba(10, 25, 47, 0.45);
   backdrop-filter: blur(6px) saturate(1.2);
   -webkit-backdrop-filter: blur(6px) saturate(1.2);
   z-index: 100;
@@ -981,3 +996,334 @@ textarea.bw-input { height: auto; padding: 10px 12px; line-height: 1.8; resize: 
 
 /* Figures line up in columns */
 .bw-num { font-variant-numeric: tabular-nums; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ui-*  ·  the shared component layer
+   ═══════════════════════════════════════════════════════════════════════════
+   One vocabulary for the buyer's pages, the seller's dashboard and the admin
+   panel. Before this, each of the three had invented its own button, its own
+   card and its own table header, which is most of why the same product felt
+   like three products. These classes are global on purpose — no wrapper class
+   required — so a page can adopt them one element at a time.
+*/
+
+/* ── Page furniture ──────────────────────────────────────────────────────── */
+
+.ui-shell {
+  background: var(--hp-canvas);
+  min-height: 100vh;
+}
+
+/* A page header: title, one line of context, actions on the right. */
+.ui-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin-bottom: 22px;
+}
+.ui-head h1 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--psu-navy);
+  line-height: 1.35;
+  margin: 0;
+}
+.ui-head p {
+  font-size: 13px;
+  color: var(--hp-muted);
+  margin: 5px 0 0;
+  line-height: 1.75;
+  max-width: 66ch;
+}
+
+.ui-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--hp-muted);
+}
+
+/* ── Surfaces ────────────────────────────────────────────────────────────── */
+
+.ui-card {
+  background: var(--hp-bg);
+  border: 1px solid var(--hp-border);
+  border-radius: 14px;
+}
+.ui-card-p { padding: 20px; }
+
+/* Section heading inside a card — a rule, not another box. */
+.ui-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--hp-border);
+}
+.ui-card-head h2 {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--psu-navy);
+  margin: 0;
+}
+
+/* A figure worth reading at a glance. Only for numbers that decide something. */
+.ui-stat {
+  background: var(--hp-bg);
+  border: 1px solid var(--hp-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: block;
+  text-align: left;
+  transition: border-color .14s, background-color .14s;
+}
+a.ui-stat:hover, button.ui-stat:hover {
+  border-color: var(--psu-sky-200);
+  background: var(--psu-sky);
+}
+.ui-stat-k { font-size: 11.5px; color: var(--hp-muted); line-height: 1.5; }
+.ui-stat-v {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--psu-navy);
+  line-height: 1.1;
+  margin-top: 5px;
+  font-variant-numeric: tabular-nums;
+}
+.ui-stat-sub { font-size: 11px; color: var(--hp-muted); margin-top: 5px; }
+.ui-stat.is-warn { border-color: #f3e2b7; background: #fff8e6; }
+.ui-stat.is-warn .ui-stat-v { color: #92620e; }
+.ui-stat.is-bad  { border-color: #f6c9c4; background: #fdecea; }
+.ui-stat.is-bad  .ui-stat-v { color: #b3261e; }
+
+/* ── Controls ────────────────────────────────────────────────────────────── */
+
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color .14s, border-color .14s, color .14s;
+}
+.ui-btn:disabled { opacity: .45; cursor: not-allowed; }
+.ui-btn-sm { height: 32px; padding: 0 12px; font-size: 12.5px; border-radius: 8px; }
+.ui-btn-lg { height: 44px; padding: 0 22px; font-size: 14.5px; }
+
+.ui-btn-primary { background: var(--psu-blue); color: #fff; }
+.ui-btn-primary:hover:not(:disabled) { background: var(--psu-blue-700); }
+
+.ui-btn-ghost {
+  background: var(--hp-bg);
+  border-color: var(--hp-border-str);
+  color: var(--hp-ink);
+}
+.ui-btn-ghost:hover:not(:disabled) { background: var(--psu-sky); border-color: var(--psu-blue); }
+
+.ui-btn-quiet { background: transparent; color: var(--hp-ink-2); }
+.ui-btn-quiet:hover:not(:disabled) { background: var(--hp-subtle); color: var(--hp-ink); }
+
+.ui-btn-danger {
+  background: var(--hp-bg);
+  border-color: #f6c9c4;
+  color: #b3261e;
+}
+.ui-btn-danger:hover:not(:disabled) { background: #fdecea; }
+
+.ui-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--hp-border-str);
+  border-radius: 10px;
+  font-size: 13.5px;
+  background: var(--hp-bg);
+  color: var(--hp-ink);
+  transition: border-color .14s, box-shadow .14s;
+}
+textarea.ui-input { height: auto; padding: 10px 12px; line-height: 1.85; resize: vertical; }
+select.ui-input { padding-right: 30px; }
+.ui-input::placeholder { color: var(--hp-muted); }
+
+.ui-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--hp-ink-2);
+  margin-bottom: 6px;
+}
+.ui-hint { font-size: 11.5px; color: var(--hp-muted); margin-top: 6px; line-height: 1.7; }
+
+/* ── Filter chips ────────────────────────────────────────────────────────── */
+
+.ui-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 13px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  border: 1px solid var(--hp-border);
+  background: var(--hp-bg);
+  color: var(--hp-ink-2);
+  white-space: nowrap;
+  transition: border-color .14s, background-color .14s, color .14s;
+}
+.ui-chip:hover { border-color: var(--hp-border-str); }
+.ui-chip.is-on {
+  background: var(--psu-navy);
+  border-color: var(--psu-navy);
+  color: #fff;
+}
+.ui-chip-n { font-variant-numeric: tabular-nums; opacity: .62; font-weight: 500; }
+
+/* ── Status pills — colour carries meaning, never decoration ─────────────── */
+
+.ui-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid;
+  white-space: nowrap;
+  line-height: 1.5;
+}
+.ui-pill-wait { background: #fff8e6; color: #92620e; border-color: #f3e2b7; }
+.ui-pill-info { background: var(--psu-sky); color: var(--psu-blue-700); border-color: var(--psu-sky-200); }
+.ui-pill-good { background: #e8f5ee; color: #1f6b45; border-color: #c3e3d1; }
+.ui-pill-bad  { background: #fdecea; color: #b3261e; border-color: #f6c9c4; }
+.ui-pill-flat { background: var(--hp-subtle); color: var(--hp-ink-2); border-color: var(--hp-border); }
+.ui-pill-off  { background: var(--hp-subtle); color: var(--hp-muted); border-color: var(--hp-border); }
+
+/* ── Tables ──────────────────────────────────────────────────────────────── */
+
+.ui-table-wrap { overflow-x: auto; }
+.ui-table { width: 100%; font-size: 13px; border-collapse: collapse; }
+.ui-table thead th {
+  text-align: left;
+  padding: 11px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--hp-ink-2);
+  background: var(--hp-subtle);
+  border-bottom: 1px solid var(--hp-border);
+  white-space: nowrap;
+}
+.ui-table tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--hp-border);
+  vertical-align: middle;
+}
+.ui-table tbody tr:last-child td { border-bottom: 0; }
+.ui-table tbody tr { transition: background-color .12s; }
+.ui-table tbody tr:hover { background: var(--psu-sky); }
+.ui-num { font-variant-numeric: tabular-nums; }
+
+/* ── Empty states ────────────────────────────────────────────────────────── */
+
+.ui-empty { text-align: center; padding: 56px 24px; }
+.ui-empty-icon {
+  width: 46px; height: 46px;
+  margin: 0 auto 14px;
+  border-radius: 12px;
+  background: var(--psu-sky);
+  color: var(--psu-blue);
+  display: flex; align-items: center; justify-content: center;
+}
+.ui-empty h3 { font-size: 15px; font-weight: 600; color: var(--hp-ink); margin: 0 0 6px; }
+.ui-empty p  { font-size: 13px; color: var(--hp-muted); margin: 0 auto; max-width: 42ch; line-height: 1.85; }
+
+/* ── Feedback ────────────────────────────────────────────────────────────── */
+
+.ui-note {
+  border-radius: 12px;
+  border: 1px solid;
+  padding: 12px 16px;
+  font-size: 13px;
+  line-height: 1.85;
+}
+.ui-note-info { background: var(--psu-sky); border-color: var(--psu-sky-200); color: #17356e; }
+.ui-note-good { background: #e8f5ee; border-color: #c3e3d1; color: #1f6b45; }
+.ui-note-warn { background: #fff8e6; border-color: #f3e2b7; color: #92620e; }
+.ui-note-bad  { background: #fdecea; border-color: #f6c9c4; color: #b3261e; }
+
+/* ── Sidebar navigation, shared by the admin panel and the seller hub ────── */
+
+.ui-nav { display: flex; flex-direction: column; gap: 2px; }
+.ui-nav-group {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--hp-muted);
+  padding: 0 12px;
+  margin: 16px 0 6px;
+}
+.ui-nav-group:first-child { margin-top: 0; }
+.ui-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 9px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--hp-ink-2);
+  transition: background-color .12s, color .12s;
+}
+.ui-nav-item:hover { background: var(--psu-sky); color: var(--psu-navy); }
+.ui-nav-item.is-on {
+  background: var(--psu-sky);
+  color: var(--psu-blue-700);
+  font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--psu-blue);
+}
+.ui-nav-icon { width: 17px; height: 17px; flex-shrink: 0; opacity: .85; }
+.ui-nav-badge {
+  margin-left: auto;
+  min-width: 19px;
+  text-align: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 1.5px 6px;
+  border-radius: 999px;
+  background: var(--psu-blue);
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.ui-nav-badge.is-bad { background: #b3261e; }
+
+/* Image tile — contain, never crop. Same rule everywhere. */
+.ui-thumb {
+  background: var(--hp-subtle);
+  border: 1px solid var(--hp-border);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ui-thumb img { width: 100%; height: 100%; object-fit: contain; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-btn, .ui-chip, .ui-nav-item, .ui-stat, .ui-table tbody tr { transition: none; }
+}

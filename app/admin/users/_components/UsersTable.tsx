@@ -49,7 +49,7 @@ export default function UsersTable({ rows }: Props) {
 
   if (rows.length === 0) {
     return (
-      <div className="py-20 text-center text-[#aaa] text-sm">ไม่พบผู้ใช้งาน</div>
+      <div className="py-20 text-center text-[#94a3b8] text-sm">ไม่พบผู้ใช้งาน</div>
     );
   }
 
@@ -104,33 +104,33 @@ export default function UsersTable({ rows }: Props) {
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-[#e5e3de] bg-[#faf9f7]">
-              <th className="text-left px-4 py-3 font-semibold text-[#555] w-[260px]">ผู้ใช้</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">บทบาท</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">สถานะ</th>
-              <th className="text-right px-4 py-3 font-semibold text-[#555]">คะแนน</th>
-              <th className="text-left  px-4 py-3 font-semibold text-[#555]">ดาว</th>
-              <th className="text-center px-4 py-3 font-semibold text-[#555]">รีพอร์ต</th>
-              <th className="text-right px-4 py-3 font-semibold text-[#555]">สินค้า</th>
-              <th className="text-right px-4 py-3 font-semibold text-[#555]">คำสั่งซื้อ</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">สมัครเมื่อ</th>
-              <th className="text-left px-4 py-3 font-semibold text-[#555]">การจัดการ</th>
+            <tr className="border-b border-[#dfe7f2] bg-[#f7f9fd]">
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66] w-[260px]">ผู้ใช้</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">บทบาท</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">สถานะ</th>
+              <th className="text-right px-4 py-3 font-semibold text-[#3d4d66]">คะแนน</th>
+              <th className="text-left  px-4 py-3 font-semibold text-[#3d4d66]">ดาว</th>
+              <th className="text-center px-4 py-3 font-semibold text-[#3d4d66]">รีพอร์ต</th>
+              <th className="text-right px-4 py-3 font-semibold text-[#3d4d66]">สินค้า</th>
+              <th className="text-right px-4 py-3 font-semibold text-[#3d4d66]">คำสั่งซื้อ</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">สมัครเมื่อ</th>
+              <th className="text-left px-4 py-3 font-semibold text-[#3d4d66]">การจัดการ</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#f0ede7]">
+          <tbody className="divide-y divide-[#eaf0f8]">
             {rows.map((u) => (
-              <tr key={u.id} className="hover:bg-[#faf9f7] transition group">
+              <tr key={u.id} className="hover:bg-[#f7f9fd] transition group">
                 {/* User info */}
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 flex-shrink-0 rounded-full bg-gradient-to-br from-[#e8500a] to-[#ff7a3d] flex items-center justify-center text-white text-xs font-bold">
+                    <div className="w-8 h-8 flex-shrink-0 rounded-full bg-gradient-to-br from-[#2563eb] to-[#60a5fa] flex items-center justify-center text-white text-xs font-bold">
                       {(u.name ?? u.email)[0].toUpperCase()}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-medium text-[#111] truncate max-w-[180px]">
+                      <p className="font-medium text-[#0f1e35] truncate max-w-[180px]">
                         {u.name ?? "—"}
                       </p>
-                      <p className="text-xs text-[#9a9590] truncate max-w-[180px]">{u.email}</p>
+                      <p className="text-xs text-[#64748b] truncate max-w-[180px]">{u.email}</p>
                     </div>
                   </div>
                 </td>
@@ -146,7 +146,7 @@ export default function UsersTable({ rows }: Props) {
                 </td>
 
                 {/* Trust score */}
-                <td className="px-4 py-3 text-right font-medium text-[#333]">
+                <td className="px-4 py-3 text-right font-medium text-[#1e2d47]">
                   <span className={u.trustScore < 50 ? "text-red-600" : u.trustScore < 80 ? "text-yellow-600" : "text-green-700"}>
                     {u.trustScore}
                   </span>
@@ -157,13 +157,13 @@ export default function UsersTable({ rows }: Props) {
                   {u.reviewCount > 0 ? (
                     <span className="inline-flex items-center gap-1.5">
                       <Stars rating={u.avgRating ?? 0} />
-                      <span className="text-xs font-semibold text-[#333]">
+                      <span className="text-xs font-semibold text-[#1e2d47]">
                         {(u.avgRating ?? 0).toFixed(1)}
                       </span>
-                      <span className="text-[11px] text-[#9a9590]">({u.reviewCount})</span>
+                      <span className="text-[11px] text-[#64748b]">({u.reviewCount})</span>
                     </span>
                   ) : (
-                    <span className="text-xs text-[#c4c0b9]">ยังไม่มีรีวิว</span>
+                    <span className="text-xs text-[#a8b4c4]">ยังไม่มีรีวิว</span>
                   )}
                 </td>
 
@@ -178,18 +178,18 @@ export default function UsersTable({ rows }: Props) {
                       🚩 {u.openReportCount}
                     </button>
                   ) : (
-                    <span className="text-xs text-[#c4c0b9]">—</span>
+                    <span className="text-xs text-[#a8b4c4]">—</span>
                   )}
                 </td>
 
                 {/* Item count */}
-                <td className="px-4 py-3 text-right text-[#555]">{u.itemCount}</td>
+                <td className="px-4 py-3 text-right text-[#3d4d66]">{u.itemCount}</td>
 
                 {/* Order count */}
-                <td className="px-4 py-3 text-right text-[#555]">{u.orderCount}</td>
+                <td className="px-4 py-3 text-right text-[#3d4d66]">{u.orderCount}</td>
 
                 {/* Created */}
-                <td className="px-4 py-3 text-[#777] whitespace-nowrap">
+                <td className="px-4 py-3 text-[#5b6b82] whitespace-nowrap">
                   {formatThaiDate(u.createdAt)}
                 </td>
 
@@ -251,7 +251,7 @@ function ActionsDropdown({
       <button
         ref={btnRef}
         onClick={toggle}
-        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#f0ede7] transition text-[#555]"
+        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#eaf0f8] transition text-[#3d4d66]"
         aria-label="เมนูการจัดการ"
       >
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -263,11 +263,11 @@ function ActionsDropdown({
         <>
           <div className="fixed inset-0 z-[400]" onClick={() => setOpen(false)} />
           <div
-            className="fixed z-[401] w-48 bg-white rounded-xl border border-[#e5e3de] shadow-lg py-1"
+            className="fixed z-[401] w-48 bg-white rounded-xl border border-[#dfe7f2] shadow-lg py-1"
             style={{ top: pos.top, right: pos.right }}
           >
             {isAdmin ? (
-              <div className="px-3 py-2.5 text-xs text-[#9a9590] leading-relaxed">
+              <div className="px-3 py-2.5 text-xs text-[#64748b] leading-relaxed">
                 🛡️ บัญชีผู้ดูแลระบบ<br />
                 <span className="text-[11px]">ไม่สามารถแก้ไข แบน หรือลดสิทธิ์ได้</span>
               </div>
@@ -284,7 +284,7 @@ function ActionsDropdown({
                   onClick={() => { setOpen(false); onEdit(); }}
                 />
 
-                <div className="my-1 border-t border-[#f0ede7]" />
+                <div className="my-1 border-t border-[#eaf0f8]" />
 
                 {/* Ban / Unban */}
                 {user.isBanned ? (
@@ -302,7 +302,7 @@ function ActionsDropdown({
                   />
                 )}
 
-                <div className="my-1 border-t border-[#f0ede7]" />
+                <div className="my-1 border-t border-[#eaf0f8]" />
 
                 <MenuItem
                   label="เลื่อนเป็นแอดมิน"
@@ -338,7 +338,7 @@ function Stars({ rating }: { rating: number }) {
   return (
     <span className="inline-flex text-[13px] leading-none" aria-label={`${rating.toFixed(1)} ดาว`}>
       {[1, 2, 3, 4, 5].map((s) => (
-        <span key={s} className={s <= rounded ? "text-amber-400" : "text-[#e5e3de]"}>
+        <span key={s} className={s <= rounded ? "text-amber-400" : "text-[#dfe7f2]"}>
           {s - 0.5 === rounded ? "⯨" : "★"}
         </span>
       ))}
@@ -355,8 +355,8 @@ function MenuItem({ label, icon, danger = false, onClick }: {
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f7f6f3] transition ${
-        danger ? "text-red-600" : "text-[#333]"
+      className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#f1f5fb] transition ${
+        danger ? "text-red-600" : "text-[#1e2d47]"
       }`}
     >
       <span>{icon}</span>

@@ -54,9 +54,9 @@ export default async function RentalReceiptPage({ params, searchParams }: Props)
         <div className="max-w-[700px] mx-auto px-8 py-10 print:px-0 print:py-0">
 
           {/* Header */}
-          <div className="flex items-start justify-between mb-8 pb-6 border-b-2 border-[#e8500a]">
+          <div className="flex items-start justify-between mb-8 pb-6 border-b-2 border-[#2563eb]">
             <div>
-              <div className="text-2xl font-black text-[#e8500a] mb-1">PSU Store</div>
+              <div className="text-2xl font-black text-[#2563eb] mb-1">PSU Store</div>
               <div className="text-xs text-gray-500">มหาวิทยาลัยสงขลานครินทร์</div>
             </div>
             <div className="text-right">

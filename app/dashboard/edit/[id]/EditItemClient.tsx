@@ -92,8 +92,8 @@ function Thumb({
   onRemove: () => void;
 }) {
   return (
-    <div className="relative group w-[88px] h-[88px] rounded-xl overflow-hidden border border-[#e5e3de] bg-[#f0ede7] flex-shrink-0">
-      <img src={src} alt="" className="w-full h-full object-contain bg-[#f4f5f7]" />
+    <div className="relative group w-[88px] h-[88px] rounded-xl overflow-hidden border border-[#dfe7f2] bg-[#eaf0f8] flex-shrink-0">
+      <img src={src} alt="" className="w-full h-full object-contain bg-[#eef2f8]" />
 
       {/* Uploading overlay */}
       {uploading && (
@@ -118,7 +118,7 @@ function Thumb({
 
       {/* Main badge */}
       {isMain && !uploading && !error && (
-        <span className="absolute bottom-1 left-1 bg-[#e8500a] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md leading-none">
+        <span className="absolute bottom-1 left-1 bg-[#2563eb] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md leading-none">
           หลัก
         </span>
       )}
@@ -307,7 +307,7 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
       {/* Back link */}
       <a
         href="/dashboard/my-items"
-        className="inline-flex items-center gap-1.5 text-sm text-[#777] hover:text-[#111] transition mb-6"
+        className="inline-flex items-center gap-1.5 text-sm text-[#5b6b82] hover:text-[#0f1e35] transition mb-6"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -315,11 +315,11 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
         กลับไปสินค้าของฉัน
       </a>
 
-      <h1 className="text-xl font-bold text-[#111] mb-6">แก้ไขสินค้า</h1>
+      <h1 className="text-xl font-bold text-[#0f1e35] mb-6">แก้ไขสินค้า</h1>
 
       {/* Item header card */}
-      <div className="bg-white rounded-2xl border border-[#e5e3de] p-4 mb-6 flex gap-4 items-center">
-        <div className="w-14 h-14 rounded-xl overflow-hidden bg-[#f0ede7] flex items-center justify-center flex-shrink-0">
+      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-4 mb-6 flex gap-4 items-center">
+        <div className="w-14 h-14 rounded-xl overflow-hidden bg-[#eaf0f8] flex items-center justify-center flex-shrink-0">
           {existingImages[0] ? (
             <img src={existingImages[0].url} alt={item.title} className="w-full h-full object-contain" />
           ) : pendingImages[0]?.previewUrl ? (
@@ -329,8 +329,8 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-xs text-[#777] mb-0.5">{item.category.nameTh}</p>
-          <p className="text-sm font-semibold text-[#111] truncate">{item.title}</p>
+          <p className="text-xs text-[#5b6b82] mb-0.5">{item.category.nameTh}</p>
+          <p className="text-sm font-semibold text-[#0f1e35] truncate">{item.title}</p>
           <span className={`inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-xs font-semibold border ${STATUS_COLORS[item.status] ?? "bg-gray-50 text-gray-600 border-gray-200"}`}>
             {STATUS_LABELS[item.status] ?? item.status}
           </span>
@@ -352,25 +352,25 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
 
       {/* Pending-reset notice */}
       <div className="bg-[#fff8f0] border border-[#ffd4b3] rounded-xl px-4 py-3 mb-6 flex gap-3 items-start">
-        <svg className="w-5 h-5 text-[#e8500a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5 text-[#2563eb] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <p className="text-sm text-[#c94208]">
+        <p className="text-sm text-[#1d4ed8]">
           หลังบันทึก สินค้าจะถูกส่งรอการอนุมัติใหม่ และจะซ่อนจากหน้าหลักชั่วคราว
         </p>
       </div>
 
       {/* ── Edit Form ────────────────────────────────── */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-[#e5e3de] p-6 space-y-6">
+      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-[#dfe7f2] p-6 space-y-6">
 
         {/* ── Image Section ──────────────────────────── */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <label className="text-sm font-medium text-[#333]">รูปภาพสินค้า</label>
+            <label className="text-sm font-medium text-[#1e2d47]">รูปภาพสินค้า</label>
             <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
               totalImages >= MAX_IMAGES
                 ? "bg-red-50 text-red-600"
-                : "bg-[#f0ede7] text-[#777]"
+                : "bg-[#eaf0f8] text-[#5b6b82]"
             }`}>
               {totalImages}/{MAX_IMAGES}
             </span>
@@ -405,12 +405,12 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="w-[88px] h-[88px] rounded-xl border-2 border-dashed border-[#d9d5cf] hover:border-[#e8500a] hover:bg-[#fff8f0] flex flex-col items-center justify-center gap-1 transition group flex-shrink-0"
+                className="w-[88px] h-[88px] rounded-xl border-2 border-dashed border-[#d9d5cf] hover:border-[#2563eb] hover:bg-[#fff8f0] flex flex-col items-center justify-center gap-1 transition group flex-shrink-0"
               >
-                <svg className="w-6 h-6 text-[#bbb] group-hover:text-[#e8500a] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-[#a3b0c2] group-hover:text-[#2563eb] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
                 </svg>
-                <span className="text-[10px] text-[#aaa] group-hover:text-[#e8500a] transition font-medium">เพิ่มรูป</span>
+                <span className="text-[10px] text-[#94a3b8] group-hover:text-[#2563eb] transition font-medium">เพิ่มรูป</span>
               </button>
             )}
           </div>
@@ -425,31 +425,31 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
             onChange={handleFileChange}
           />
 
-          <p className="text-[11px] text-[#aaa] mt-2">
+          <p className="text-[11px] text-[#94a3b8] mt-2">
             รูปภาพทุกชนิด ทุกขนาด · ระบบย่อขนาดให้อัตโนมัติ · สูงสุด {MAX_IMAGES} รูป · รูปแรกจะเป็นรูปหลัก
           </p>
         </div>
 
         {/* Divider */}
-        <div className="border-t border-[#f0ede7]" />
+        <div className="border-t border-[#eaf0f8]" />
 
         {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-[#333] mb-1.5">ชื่อสินค้า</label>
+          <label className="block text-sm font-medium text-[#1e2d47] mb-1.5">ชื่อสินค้า</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             maxLength={100}
-            className="w-full border border-[#e5e3de] rounded-xl px-4 py-2.5 text-sm text-[#111] focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30 focus:border-[#e8500a] transition"
+            className="w-full border border-[#dfe7f2] rounded-xl px-4 py-2.5 text-sm text-[#0f1e35] focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition"
             placeholder="ชื่อสินค้า"
           />
         </div>
 
         {/* Price */}
         <div>
-          <label className="block text-sm font-medium text-[#333] mb-1.5">
-            ราคา (฿){item.listingType === "RENT" && <span className="text-[#999] font-normal"> / เดือน</span>}
+          <label className="block text-sm font-medium text-[#1e2d47] mb-1.5">
+            ราคา (฿){item.listingType === "RENT" && <span className="text-[#8d9bb0] font-normal"> / เดือน</span>}
           </label>
           <input
             type="number"
@@ -457,84 +457,84 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
             onChange={(e) => setPrice(e.target.value)}
             min={1}
             step="0.01"
-            className="w-full border border-[#e5e3de] rounded-xl px-4 py-2.5 text-sm text-[#111] focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30 focus:border-[#e8500a] transition"
+            className="w-full border border-[#dfe7f2] rounded-xl px-4 py-2.5 text-sm text-[#0f1e35] focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition"
             placeholder="0"
           />
         </div>
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-[#333] mb-1.5">รายละเอียด</label>
+          <label className="block text-sm font-medium text-[#1e2d47] mb-1.5">รายละเอียด</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={5}
-            className="w-full border border-[#e5e3de] rounded-xl px-4 py-2.5 text-sm text-[#111] focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30 focus:border-[#e8500a] transition resize-none"
+            className="w-full border border-[#dfe7f2] rounded-xl px-4 py-2.5 text-sm text-[#0f1e35] focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition resize-none"
             placeholder="อธิบายสินค้าของคุณ..."
           />
         </div>
 
         {/* ── Rental fields (only for RENT items) ── */}
         {item.listingType === "RENT" && (
-          <div className="border border-[#e5e3de] rounded-xl p-4 space-y-4 bg-[#faf9f7]">
-            <p className="text-sm font-bold text-[#111]">🔑 ตั้งค่าการเช่า</p>
+          <div className="border border-[#dfe7f2] rounded-xl p-4 space-y-4 bg-[#f7f9fd]">
+            <p className="text-sm font-bold text-[#0f1e35]">🔑 ตั้งค่าการเช่า</p>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-[#555] mb-1">ค่าเช่า/วัน (฿) *</label>
+                <label className="block text-xs font-medium text-[#3d4d66] mb-1">ค่าเช่า/วัน (฿) *</label>
                 <input type="number" min={0} value={dailyRate}
                   onChange={(e) => setDailyRate(e.target.value)}
-                  className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+                  className="w-full border border-[#dfe7f2] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[#555] mb-1">เงินมัดจำ (฿) *</label>
+                <label className="block text-xs font-medium text-[#3d4d66] mb-1">เงินมัดจำ (฿) *</label>
                 <input type="number" min={0} value={securityDeposit}
                   onChange={(e) => setSecurityDeposit(e.target.value)}
-                  className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+                  className="w-full border border-[#dfe7f2] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[#555] mb-1">เช่าขั้นต่ำ (วัน)</label>
+                <label className="block text-xs font-medium text-[#3d4d66] mb-1">เช่าขั้นต่ำ (วัน)</label>
                 <input type="number" min={1} value={minRentalDays}
                   onChange={(e) => setMinRentalDays(e.target.value)}
-                  className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+                  className="w-full border border-[#dfe7f2] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[#555] mb-1">เช่าสูงสุด (วัน)</label>
+                <label className="block text-xs font-medium text-[#3d4d66] mb-1">เช่าสูงสุด (วัน)</label>
                 <input type="number" min={1} value={maxRentalDays}
                   onChange={(e) => setMaxRentalDays(e.target.value)}
-                  className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+                  className="w-full border border-[#dfe7f2] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[#555] mb-1">ค่าปรับล่าช้า/วัน (฿)</label>
+                <label className="block text-xs font-medium text-[#3d4d66] mb-1">ค่าปรับล่าช้า/วัน (฿)</label>
                 <input type="number" min={0} value={lateFeePerDay}
                   onChange={(e) => setLateFeePerDay(e.target.value)}
-                  className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+                  className="w-full border border-[#dfe7f2] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[#555] mb-1">ต่ออายุได้สูงสุด (ครั้ง)</label>
+                <label className="block text-xs font-medium text-[#3d4d66] mb-1">ต่ออายุได้สูงสุด (ครั้ง)</label>
                 <input type="number" min={0} value={maxRenewals}
                   onChange={(e) => setMaxRenewals(e.target.value)}
-                  className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+                  className="w-full border border-[#dfe7f2] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30" />
               </div>
             </div>
 
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" checked={isRenewable} onChange={(e) => setIsRenewable(e.target.checked)}
-                className="w-4 h-4 accent-[#e8500a]" />
-              <span className="text-sm text-[#555]">อนุญาตให้ต่ออายุการเช่า</span>
+                className="w-4 h-4 accent-[#2563eb]" />
+              <span className="text-sm text-[#3d4d66]">อนุญาตให้ต่ออายุการเช่า</span>
             </label>
 
             <div>
-              <label className="block text-xs font-medium text-[#555] mb-1">เงื่อนไขเพิ่มเติม</label>
+              <label className="block text-xs font-medium text-[#3d4d66] mb-1">เงื่อนไขเพิ่มเติม</label>
               <textarea rows={2} value={rentalTerms} onChange={(e) => setRentalTerms(e.target.value)}
                 placeholder="เช่น ห้ามนำไปใช้กลางแจ้ง..."
-                className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+                className="w-full border border-[#dfe7f2] rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[#555] mb-1">คำแนะนำการใช้งาน</label>
+              <label className="block text-xs font-medium text-[#3d4d66] mb-1">คำแนะนำการใช้งาน</label>
               <textarea rows={2} value={rentalInstructions} onChange={(e) => setRentalInstructions(e.target.value)}
                 placeholder="เช่น ชาร์จด้วย USB-C เท่านั้น..."
-                className="w-full border border-[#e5e3de] rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30" />
+                className="w-full border border-[#dfe7f2] rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30" />
             </div>
           </div>
         )}
@@ -553,14 +553,14 @@ export default function EditItemClient({ item }: { item: EditableItem }) {
         <div className="flex gap-3 pt-1">
           <a
             href="/dashboard/my-items"
-            className="flex-1 text-center px-4 py-2.5 rounded-xl border border-[#e5e3de] text-sm font-medium text-[#555] hover:bg-[#f7f6f3] transition"
+            className="flex-1 text-center px-4 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-medium text-[#3d4d66] hover:bg-[#f1f5fb] transition"
           >
             ยกเลิก
           </a>
           <button
             type="submit"
             disabled={isPending || pendingImages.some((p) => p.uploading)}
-            className="flex-1 px-4 py-2.5 rounded-xl bg-[#111] text-white text-sm font-semibold hover:bg-[#333] transition disabled:opacity-50 flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-2.5 rounded-xl bg-[#0f1e35] text-white text-sm font-semibold hover:bg-[#1e2d47] transition disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {isPending ? (
               <>

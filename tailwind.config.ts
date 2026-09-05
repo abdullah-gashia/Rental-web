@@ -13,11 +13,11 @@ const config: Config = {
         mono: ["var(--font-dm-mono)", "monospace"],
       },
       colors: {
-        ink: "#111111",
-        paper: "#f7f6f3",
-        muted: "#9a9590",
-        border: "#e5e3de",
-        accent: "#e8500a",
+        ink: "#0f1e35",
+        paper: "#f1f5fb",
+        muted: "#64748b",
+        border: "#dfe7f2",
+        accent: "#2563eb",
         // PSU brand — น้ำเงิน / คราม / ฟ้า (homepage)
         psu: {
           navy: "#0a2b5e",

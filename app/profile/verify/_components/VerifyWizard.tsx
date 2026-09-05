@@ -42,17 +42,17 @@ function StepBar({ current }: { current: Step }) {
         return (
           <div key={n} className="flex-1 flex flex-col items-center gap-1">
             <div className="flex items-center w-full">
-              {i > 0 && <div className={`flex-1 h-0.5 ${done || active ? "bg-[#e8500a]" : "bg-[#e5e3de]"}`} />}
+              {i > 0 && <div className={`flex-1 h-0.5 ${done || active ? "bg-[#2563eb]" : "bg-[#dfe7f2]"}`} />}
               <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border-2 transition-all ${
-                done   ? "bg-[#e8500a] border-[#e8500a] text-white" :
-                active ? "bg-white border-[#e8500a] text-[#e8500a]" :
-                         "bg-white border-[#e5e3de] text-[#9a9590]"
+                done   ? "bg-[#2563eb] border-[#2563eb] text-white" :
+                active ? "bg-white border-[#2563eb] text-[#2563eb]" :
+                         "bg-white border-[#dfe7f2] text-[#64748b]"
               }`}>
                 {done ? "✓" : n}
               </div>
-              {i < 3 && <div className={`flex-1 h-0.5 ${done ? "bg-[#e8500a]" : "bg-[#e5e3de]"}`} />}
+              {i < 3 && <div className={`flex-1 h-0.5 ${done ? "bg-[#2563eb]" : "bg-[#dfe7f2]"}`} />}
             </div>
-            <span className={`text-[10px] font-medium ${active ? "text-[#e8500a]" : done ? "text-[#555]" : "text-[#9a9590]"}`}>
+            <span className={`text-[10px] font-medium ${active ? "text-[#2563eb]" : done ? "text-[#3d4d66]" : "text-[#64748b]"}`}>
               {label}
             </span>
           </div>
@@ -125,21 +125,21 @@ function PsuIdStep({ form, onChange, onNext }: {
     <div className="space-y-5">
       <div className="text-center space-y-1">
         <div className="text-4xl">🎓</div>
-        <h2 className="text-lg font-extrabold text-[#111]">ยืนยันตัวตนเพื่อเป็นผู้ขาย</h2>
-        <p className="text-sm text-[#9a9590]">เฉพาะนักศึกษาและบุคลากร PSU เท่านั้น</p>
+        <h2 className="text-lg font-extrabold text-[#0f1e35]">ยืนยันตัวตนเพื่อเป็นผู้ขาย</h2>
+        <p className="text-sm text-[#64748b]">เฉพาะนักศึกษาและบุคลากร PSU เท่านั้น</p>
       </div>
 
       {/* Type selector — buttons replace radio so they're always clickable */}
       <div>
-        <p className="text-sm font-semibold text-[#333] mb-2">คุณเป็น <span className="text-red-500">*</span></p>
+        <p className="text-sm font-semibold text-[#1e2d47] mb-2">คุณเป็น <span className="text-red-500">*</span></p>
         <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
             onClick={() => handleTypeSelect("STUDENT")}
             className={`flex flex-col items-center gap-1 py-4 rounded-xl border-2 text-sm font-semibold transition ${
               form.psuIdType === "STUDENT"
-                ? "border-[#e8500a] bg-orange-50 text-[#e8500a]"
-                : "border-[#e5e3de] text-[#555] hover:border-[#e8500a]/50"
+                ? "border-[#2563eb] bg-orange-50 text-[#2563eb]"
+                : "border-[#dfe7f2] text-[#3d4d66] hover:border-[#2563eb]/50"
             }`}
           >
             <span className="text-2xl">🎓</span>
@@ -150,8 +150,8 @@ function PsuIdStep({ form, onChange, onNext }: {
             onClick={() => handleTypeSelect("STAFF")}
             className={`flex flex-col items-center gap-1 py-4 rounded-xl border-2 text-sm font-semibold transition ${
               form.psuIdType === "STAFF"
-                ? "border-[#e8500a] bg-orange-50 text-[#e8500a]"
-                : "border-[#e5e3de] text-[#555] hover:border-[#e8500a]/50"
+                ? "border-[#2563eb] bg-orange-50 text-[#2563eb]"
+                : "border-[#dfe7f2] text-[#3d4d66] hover:border-[#2563eb]/50"
             }`}
           >
             <span className="text-2xl">👨‍💼</span>
@@ -169,7 +169,7 @@ function PsuIdStep({ form, onChange, onNext }: {
 
       {/* ID input */}
       <div>
-        <label className="block text-sm font-semibold text-[#333] mb-1.5">
+        <label className="block text-sm font-semibold text-[#1e2d47] mb-1.5">
           รหัสประจำตัว PSU <span className="text-red-500">*</span>
         </label>
         <input
@@ -186,7 +186,7 @@ function PsuIdStep({ form, onChange, onNext }: {
             "เลือกประเภทก่อน"
           }
           disabled={!form.psuIdType}
-          className="w-full border border-[#e5e3de] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30 focus:border-[#e8500a] transition font-mono disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full border border-[#dfe7f2] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition font-mono disabled:opacity-40 disabled:cursor-not-allowed"
         />
 
         {/* Inline validation hint */}
@@ -194,7 +194,7 @@ function PsuIdStep({ form, onChange, onNext }: {
           <p className={`text-xs mt-1.5 ${
             hint.status === "valid"  ? "text-emerald-600" :
             hint.status === "error"  ? "text-red-500"     :
-            hint.status === "typing" ? "text-[#9a9590]"   : "hidden"
+            hint.status === "typing" ? "text-[#64748b]"   : "hidden"
           }`}>
             {hint.message}
           </p>
@@ -205,21 +205,21 @@ function PsuIdStep({ form, onChange, onNext }: {
 
       {/* Faculty */}
       <div>
-        <label className="block text-sm font-semibold text-[#333] mb-1.5">
-          คณะ / หน่วยงาน <span className="text-[#9a9590] font-normal">(ไม่บังคับ)</span>
+        <label className="block text-sm font-semibold text-[#1e2d47] mb-1.5">
+          คณะ / หน่วยงาน <span className="text-[#64748b] font-normal">(ไม่บังคับ)</span>
         </label>
         <input
           type="text"
           value={form.facultyOrDepartment}
           onChange={(e) => onChange({ facultyOrDepartment: e.target.value })}
           placeholder="เช่น คณะวิศวกรรมศาสตร์"
-          className="w-full border border-[#e5e3de] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30 focus:border-[#e8500a] transition"
+          className="w-full border border-[#dfe7f2] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition"
         />
       </div>
 
       <button
         onClick={() => { if (validate()) onNext(); }}
-        className="w-full py-3 rounded-xl bg-[#e8500a] text-white font-bold text-sm hover:bg-[#c94208] transition"
+        className="w-full py-3 rounded-xl bg-[#2563eb] text-white font-bold text-sm hover:bg-[#1d4ed8] transition"
       >
         ถัดไป →
       </button>
@@ -282,8 +282,8 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
     <div className="space-y-5">
       <div className="text-center space-y-1">
         <div className="text-4xl">📸</div>
-        <h2 className="text-lg font-extrabold text-[#111]">อัปโหลดรูปบัตรประจำตัว</h2>
-        <p className="text-sm text-[#9a9590]">ถ่ายรูปหน้าบัตร PSU ให้เห็นชื่อและรหัสชัดเจน</p>
+        <h2 className="text-lg font-extrabold text-[#0f1e35]">อัปโหลดรูปบัตรประจำตัว</h2>
+        <p className="text-sm text-[#64748b]">ถ่ายรูปหน้าบัตร PSU ให้เห็นชื่อและรหัสชัดเจน</p>
       </div>
 
       {/* Upload area */}
@@ -291,8 +291,8 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
         onClick={() => !uploading && fileRef.current?.click()}
         className={`border-2 border-dashed rounded-2xl p-6 text-center transition ${
           uploading
-            ? "border-[#e5e3de] cursor-not-allowed opacity-60"
-            : "border-[#e5e3de] cursor-pointer hover:border-[#e8500a]/50 hover:bg-orange-50/30"
+            ? "border-[#dfe7f2] cursor-not-allowed opacity-60"
+            : "border-[#dfe7f2] cursor-pointer hover:border-[#2563eb]/50 hover:bg-orange-50/30"
         }`}
       >
         {form.idCardImagePreview ? (
@@ -306,14 +306,14 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
               <p className="text-xs text-emerald-600 font-medium">✓ อัปโหลดเรียบร้อยแล้ว</p>
             )}
             {uploading && (
-              <p className="text-xs text-[#9a9590] animate-pulse">⏳ กำลังอัปโหลด…</p>
+              <p className="text-xs text-[#64748b] animate-pulse">⏳ กำลังอัปโหลด…</p>
             )}
             {!uploading && (
-              <p className="text-xs text-[#9a9590]">คลิกเพื่อเปลี่ยนรูป</p>
+              <p className="text-xs text-[#64748b]">คลิกเพื่อเปลี่ยนรูป</p>
             )}
           </div>
         ) : (
-          <div className="space-y-2 text-[#9a9590]">
+          <div className="space-y-2 text-[#64748b]">
             <div className="text-4xl">🪪</div>
             <p className="text-sm font-semibold">คลิกเพื่อเลือกรูป หรือลากไฟล์มาวางที่นี่</p>
             <p className="text-xs">รูปภาพทุกชนิด ทุกขนาด • ระบบย่อขนาดให้อัตโนมัติ</p>
@@ -340,7 +340,7 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex-1 py-3 rounded-xl border border-[#e5e3de] text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition"
+          className="flex-1 py-3 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition"
         >
           ← ย้อนกลับ
         </button>
@@ -350,7 +350,7 @@ function IdCardUploadStep({ form, onChange, onNext, onBack }: {
             onNext();
           }}
           disabled={uploading}
-          className="flex-1 py-3 rounded-xl bg-[#e8500a] text-white font-bold text-sm hover:bg-[#c94208] transition disabled:opacity-40"
+          className="flex-1 py-3 rounded-xl bg-[#2563eb] text-white font-bold text-sm hover:bg-[#1d4ed8] transition disabled:opacity-40"
         >
           {uploading ? "กำลังอัปโหลด…" : "ถัดไป →"}
         </button>
@@ -380,8 +380,8 @@ function FaceLivenessStep({ form, onChange, onNext, onBack }: {
     <div className="space-y-5">
       <div className="text-center space-y-1">
         <div className="text-4xl">🤳</div>
-        <h2 className="text-lg font-extrabold text-[#111]">ยืนยันใบหน้า</h2>
-        <p className="text-sm text-[#9a9590]">ถ่ายภาพ 4 มุมเพื่อยืนยันว่าเป็นตัวคุณเอง</p>
+        <h2 className="text-lg font-extrabold text-[#0f1e35]">ยืนยันใบหน้า</h2>
+        <p className="text-sm text-[#64748b]">ถ่ายภาพ 4 มุมเพื่อยืนยันว่าเป็นตัวคุณเอง</p>
       </div>
 
       <FaceLivenessCapture onComplete={handleComplete} />
@@ -389,14 +389,14 @@ function FaceLivenessStep({ form, onChange, onNext, onBack }: {
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex-1 py-3 rounded-xl border border-[#e5e3de] text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition"
+          className="flex-1 py-3 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition"
         >
           ← ย้อนกลับ
         </button>
         <button
           onClick={onNext}
           disabled={!done}
-          className="flex-1 py-3 rounded-xl bg-[#e8500a] text-white font-bold text-sm hover:bg-[#c94208] transition disabled:opacity-40"
+          className="flex-1 py-3 rounded-xl bg-[#2563eb] text-white font-bold text-sm hover:bg-[#1d4ed8] transition disabled:opacity-40"
         >
           ถัดไป →
         </button>
@@ -453,24 +453,24 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
     <div className="space-y-5">
       <div className="text-center space-y-1">
         <div className="text-4xl">📋</div>
-        <h2 className="text-lg font-extrabold text-[#111]">ตรวจสอบก่อนส่ง</h2>
+        <h2 className="text-lg font-extrabold text-[#0f1e35]">ตรวจสอบก่อนส่ง</h2>
       </div>
 
       {/* Summary */}
-      <div className="bg-[#f7f6f3] rounded-xl p-4 space-y-2 text-sm">
+      <div className="bg-[#f1f5fb] rounded-xl p-4 space-y-2 text-sm">
         <div className="flex justify-between">
-          <span className="text-[#9a9590]">ประเภท</span>
+          <span className="text-[#64748b]">ประเภท</span>
           <span className="font-semibold">
             {form.psuIdType === "STUDENT" ? "นักศึกษา" : form.psuIdType === "STAFF" ? "บุคลากร" : "—"}
           </span>
         </div>
         <div className="flex justify-between">
-          <span className="text-[#9a9590]">รหัส PSU</span>
+          <span className="text-[#64748b]">รหัส PSU</span>
           <span className="font-mono font-semibold">{form.psuIdNumber || "—"}</span>
         </div>
         {form.facultyOrDepartment && (
           <div className="flex justify-between">
-            <span className="text-[#9a9590]">คณะ/หน่วยงาน</span>
+            <span className="text-[#64748b]">คณะ/หน่วยงาน</span>
             <span className="font-semibold">{form.facultyOrDepartment}</span>
           </div>
         )}
@@ -479,11 +479,11 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
       {/* ID Card thumb */}
       {form.idCardImagePreview ? (
         <div>
-          <p className="text-xs font-semibold text-[#555] mb-1.5">รูปบัตรประจำตัว</p>
+          <p className="text-xs font-semibold text-[#3d4d66] mb-1.5">รูปบัตรประจำตัว</p>
           <img
             src={form.idCardImagePreview}
             alt="ID"
-            className="h-28 w-full object-contain rounded-xl border border-[#e5e3de] bg-[#f7f6f3]"
+            className="h-28 w-full object-contain rounded-xl border border-[#dfe7f2] bg-[#f1f5fb]"
           />
         </div>
       ) : (
@@ -496,7 +496,7 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
 
       {/* Selfie thumbs */}
       <div>
-        <p className="text-xs font-semibold text-[#555] mb-1.5">รูปยืนยันตัวตน</p>
+        <p className="text-xs font-semibold text-[#3d4d66] mb-1.5">รูปยืนยันตัวตน</p>
         {missingSelfie ? (
           <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-xs text-red-600">
             ⚠️ ไม่พบรูปยืนยันตัวตน — กรุณากลับไปถ่ายรูปอีกครั้ง
@@ -507,7 +507,7 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
               <div
                 key={k}
                 className={`flex-1 aspect-square rounded-xl overflow-hidden border ${
-                  form.frames[k] ? "border-emerald-300" : "border-[#e5e3de] bg-[#f7f6f3]"
+                  form.frames[k] ? "border-emerald-300" : "border-[#dfe7f2] bg-[#f1f5fb]"
                 }`}
               >
                 {form.frames[k] && (
@@ -531,14 +531,14 @@ function ReviewStep({ form, onBack }: { form: FormState; onBack: () => void }) {
         <button
           onClick={onBack}
           disabled={submitting}
-          className="flex-1 py-3 rounded-xl border border-[#e5e3de] text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition disabled:opacity-40"
+          className="flex-1 py-3 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-40"
         >
           ← ย้อนกลับ
         </button>
         <button
           onClick={handleSubmit}
           disabled={submitting || !canSubmit}
-          className="flex-1 py-3 rounded-xl bg-[#e8500a] text-white font-bold text-sm hover:bg-[#c94208] transition disabled:opacity-40 flex items-center justify-center gap-2"
+          className="flex-1 py-3 rounded-xl bg-[#2563eb] text-white font-bold text-sm hover:bg-[#1d4ed8] transition disabled:opacity-40 flex items-center justify-center gap-2"
         >
           {submitting && (
             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

@@ -53,7 +53,7 @@ export default function DeleteAccountDialog({ open, onClose, showToast }: Props)
           ⚠️ ยืนยันการลบบัญชี
         </h3>
 
-        <div className="text-sm text-[#555] space-y-2">
+        <div className="text-sm text-[#3d4d66] space-y-2">
           <p>
             การดำเนินการนี้<strong>ไม่สามารถย้อนกลับได้</strong> ข้อมูลทั้งหมดจะถูกลบถาวรใน 30 วัน
           </p>
@@ -68,7 +68,7 @@ export default function DeleteAccountDialog({ open, onClose, showToast }: Props)
           onChange={(e) => setConfirmText(e.target.value)}
           placeholder="พิมพ์ข้อความยืนยัน..."
           disabled={pending}
-          className="w-full px-3.5 py-2.5 rounded-xl border border-red-200 bg-red-50/30 text-sm text-[#111] focus:outline-none focus:ring-2 focus:ring-red-300 transition"
+          className="w-full px-3.5 py-2.5 rounded-xl border border-red-200 bg-red-50/30 text-sm text-[#0f1e35] focus:outline-none focus:ring-2 focus:ring-red-300 transition"
         />
 
         <div className="flex gap-3 pt-1">
@@ -76,7 +76,7 @@ export default function DeleteAccountDialog({ open, onClose, showToast }: Props)
             type="button"
             onClick={onClose}
             disabled={pending}
-            className="flex-1 py-2.5 rounded-xl border border-[#e5e3de] text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition disabled:opacity-50"
+            className="flex-1 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
           >
             ยกเลิก
           </button>

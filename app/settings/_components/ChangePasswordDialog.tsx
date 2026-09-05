@@ -31,7 +31,7 @@ function PasswordField({
 
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-[#333] mb-1">
+      <label htmlFor={id} className="block text-sm font-medium text-[#1e2d47] mb-1">
         {label}
       </label>
       <div className="relative">
@@ -43,14 +43,14 @@ function PasswordField({
           autoFocus={autoFocus}
           disabled={disabled}
           autoComplete={autoComplete}
-          className="w-full px-3.5 py-2.5 pr-11 rounded-xl border border-[#e5e3de] bg-white text-sm text-[#111] focus:outline-none focus:ring-2 focus:ring-[#e8500a]/30 focus:border-[#e8500a] transition disabled:opacity-50"
+          className="w-full px-3.5 py-2.5 pr-11 rounded-xl border border-[#dfe7f2] bg-white text-sm text-[#0f1e35] focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition disabled:opacity-50"
         />
         <button
           type="button"
           onClick={() => setVisible((v) => !v)}
           tabIndex={-1}
           aria-label={visible ? "ซ่อนรหัสผ่าน" : "แสดงรหัสผ่าน"}
-          className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center text-[#9a9590] hover:text-[#333] transition"
+          className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center text-[#64748b] hover:text-[#1e2d47] transition"
         >
           {visible ? (
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,10 +136,10 @@ export default function ChangePasswordDialog({ open, onClose, showToast }: Props
         className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4"
       >
         <div>
-          <h3 id="change-password-title" className="text-base font-bold text-[#111] flex items-center gap-2">
+          <h3 id="change-password-title" className="text-base font-bold text-[#0f1e35] flex items-center gap-2">
             🔑 เปลี่ยนรหัสผ่าน
           </h3>
-          <p className="text-xs text-[#9a9590] mt-1">
+          <p className="text-xs text-[#64748b] mt-1">
             ยืนยันรหัสผ่านปัจจุบันก่อน แล้วตั้งรหัสผ่านใหม่ตามต้องการ
           </p>
         </div>
@@ -155,7 +155,7 @@ export default function ChangePasswordDialog({ open, onClose, showToast }: Props
             autoComplete="current-password"
           />
 
-          <div className="border-t border-[#e5e3de] pt-3.5 space-y-3.5">
+          <div className="border-t border-[#dfe7f2] pt-3.5 space-y-3.5">
             <PasswordField
               id="cp-new"
               label="รหัสผ่านใหม่"
@@ -201,14 +201,14 @@ export default function ChangePasswordDialog({ open, onClose, showToast }: Props
             type="button"
             onClick={onClose}
             disabled={pending}
-            className="flex-1 py-2.5 rounded-xl border border-[#e5e3de] text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition disabled:opacity-50"
+            className="flex-1 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
           >
             ยกเลิก
           </button>
           <button
             type="submit"
             disabled={!canSubmit}
-            className="flex-1 py-2.5 rounded-xl bg-[#e8500a] hover:bg-[#c94208] text-sm font-bold text-white transition disabled:opacity-50 flex items-center justify-center gap-2"
+            className="flex-1 py-2.5 rounded-xl bg-[#2563eb] hover:bg-[#1d4ed8] text-sm font-bold text-white transition disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {pending && (
               <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

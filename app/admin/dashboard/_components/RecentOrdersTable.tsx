@@ -43,33 +43,33 @@ function relativeTime(iso: string): string {
 export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
   if (orders.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-[#e5e3de] p-5 shadow-sm">
-        <h3 className="text-sm font-semibold text-[#333] mb-4">รายการล่าสุด</h3>
-        <p className="text-sm text-[#9a9590] text-center py-8">ยังไม่มีรายการ</p>
+      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 shadow-sm">
+        <h3 className="text-sm font-semibold text-[#1e2d47] mb-4">รายการล่าสุด</h3>
+        <p className="text-sm text-[#64748b] text-center py-8">ยังไม่มีรายการ</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-[#e5e3de] shadow-sm overflow-hidden">
-      <div className="px-5 py-4 border-b border-[#e5e3de]">
-        <h3 className="text-sm font-semibold text-[#333]">รายการล่าสุด</h3>
+    <div className="bg-white rounded-2xl border border-[#dfe7f2] shadow-sm overflow-hidden">
+      <div className="px-5 py-4 border-b border-[#dfe7f2]">
+        <h3 className="text-sm font-semibold text-[#1e2d47]">รายการล่าสุด</h3>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm" aria-label="รายการ Escrow ล่าสุด">
           <thead>
-            <tr className="border-b border-[#e5e3de] bg-[#f7f6f3]">
-              <th className="text-left px-5 py-3 text-xs font-semibold text-[#777] uppercase tracking-wide">
+            <tr className="border-b border-[#dfe7f2] bg-[#f1f5fb]">
+              <th className="text-left px-5 py-3 text-xs font-semibold text-[#5b6b82] uppercase tracking-wide">
                 รหัสคำสั่ง
               </th>
-              <th className="text-right px-5 py-3 text-xs font-semibold text-[#777] uppercase tracking-wide">
+              <th className="text-right px-5 py-3 text-xs font-semibold text-[#5b6b82] uppercase tracking-wide">
                 จำนวนเงิน
               </th>
-              <th className="text-center px-5 py-3 text-xs font-semibold text-[#777] uppercase tracking-wide">
+              <th className="text-center px-5 py-3 text-xs font-semibold text-[#5b6b82] uppercase tracking-wide">
                 สถานะ
               </th>
-              <th className="text-right px-5 py-3 text-xs font-semibold text-[#777] uppercase tracking-wide">
+              <th className="text-right px-5 py-3 text-xs font-semibold text-[#5b6b82] uppercase tracking-wide">
                 วันที่
               </th>
             </tr>
@@ -83,18 +83,18 @@ export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
               return (
                 <tr
                   key={order.id}
-                  className={`border-b border-[#f0ede7] hover:bg-[#faf9f7] transition-colors ${
+                  className={`border-b border-[#eaf0f8] hover:bg-[#f7f9fd] transition-colors ${
                     idx === orders.length - 1 ? "border-b-0" : ""
                   }`}
                 >
                   {/* Order ID — show last 8 chars to keep it short */}
                   <td className="px-5 py-3.5">
-                    <span className="font-mono text-xs text-[#555] bg-[#f0ede7] px-2 py-0.5 rounded-lg">
+                    <span className="font-mono text-xs text-[#3d4d66] bg-[#eaf0f8] px-2 py-0.5 rounded-lg">
                       #{order.id.slice(-8).toUpperCase()}
                     </span>
                   </td>
 
-                  <td className="px-5 py-3.5 text-right font-semibold text-[#111] tabular-nums">
+                  <td className="px-5 py-3.5 text-right font-semibold text-[#0f1e35] tabular-nums">
                     {formatBaht(order.amount)}
                   </td>
 
@@ -106,7 +106,7 @@ export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
                     </span>
                   </td>
 
-                  <td className="px-5 py-3.5 text-right text-xs text-[#9a9590] whitespace-nowrap">
+                  <td className="px-5 py-3.5 text-right text-xs text-[#64748b] whitespace-nowrap">
                     {relativeTime(order.createdAt)}
                   </td>
                 </tr>

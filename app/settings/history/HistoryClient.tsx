@@ -118,10 +118,10 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f6f3]">
+    <div className="min-h-screen bg-[#f1f5fb]">
       {/* Toast */}
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#111] text-white text-sm font-medium px-4 py-3 rounded-xl shadow-lg">
+        <div className="fixed bottom-6 right-6 z-50 bg-[#0f1e35] text-white text-sm font-medium px-4 py-3 rounded-xl shadow-lg">
           {toast}
         </div>
       )}
@@ -129,11 +129,11 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
       <div className="max-w-2xl mx-auto px-5 py-10 space-y-6">
         {/* Header */}
         <div>
-          <a href="/" className="text-sm text-[#9a9590] hover:text-[#111] transition">
+          <a href="/" className="text-sm text-[#64748b] hover:text-[#0f1e35] transition">
             ← กลับหน้าหลัก
           </a>
-          <h1 className="text-2xl font-bold text-[#111] mt-3">ประวัติการเข้าชม</h1>
-          <p className="text-sm text-[#777] mt-1">
+          <h1 className="text-2xl font-bold text-[#0f1e35] mt-3">ประวัติการเข้าชม</h1>
+          <p className="text-sm text-[#5b6b82] mt-1">
             สินค้าที่คุณเคยดูจะถูกใช้เพื่อแนะนำสินค้าที่ตรงใจคุณ
           </p>
         </div>
@@ -146,8 +146,8 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
             disabled={pending}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition disabled:opacity-50 ${
               tracking
-                ? "bg-white border-[#e5e3de] text-[#555] hover:border-[#111]"
-                : "bg-[#111] border-[#111] text-white"
+                ? "bg-white border-[#dfe7f2] text-[#3d4d66] hover:border-[#0f1e35]"
+                : "bg-[#0f1e35] border-[#0f1e35] text-white"
             }`}
           >
             {tracking ? "⏸ หยุดบันทึกชั่วคราว" : "▶ เปิดการบันทึก"}
@@ -169,12 +169,12 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/40" onClick={() => setShowClearConfirm(false)} />
             <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 space-y-4">
-              <h3 className="font-bold text-[#111]">ล้างประวัติทั้งหมด?</h3>
-              <p className="text-sm text-[#555]">ข้อมูลการแนะนำสินค้าจะถูกรีเซ็ต คุณจะเห็นสินค้ายอดนิยมแทน</p>
+              <h3 className="font-bold text-[#0f1e35]">ล้างประวัติทั้งหมด?</h3>
+              <p className="text-sm text-[#3d4d66]">ข้อมูลการแนะนำสินค้าจะถูกรีเซ็ต คุณจะเห็นสินค้ายอดนิยมแทน</p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowClearConfirm(false)}
-                  className="flex-1 py-2.5 rounded-xl border border-[#e5e3de] text-sm font-semibold text-[#555] hover:bg-[#f7f6f3] transition"
+                  className="flex-1 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition"
                 >
                   ยกเลิก
                 </button>
@@ -192,23 +192,23 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
 
         {/* History list */}
         {history.total === 0 ? (
-          <div className="bg-white rounded-2xl border border-[#e5e3de] py-16 text-center">
+          <div className="bg-white rounded-2xl border border-[#dfe7f2] py-16 text-center">
             <p className="text-4xl mb-3">📭</p>
-            <p className="text-sm font-semibold text-[#333]">ยังไม่มีประวัติการเข้าชม</p>
-            <p className="text-xs text-[#9a9590] mt-1">เริ่มดูสินค้าเพื่อรับการแนะนำที่ตรงใจ</p>
+            <p className="text-sm font-semibold text-[#1e2d47]">ยังไม่มีประวัติการเข้าชม</p>
+            <p className="text-xs text-[#64748b] mt-1">เริ่มดูสินค้าเพื่อรับการแนะนำที่ตรงใจ</p>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl border border-[#e5e3de] overflow-hidden divide-y divide-[#f0ede7]">
+          <div className="bg-white rounded-2xl border border-[#dfe7f2] overflow-hidden divide-y divide-[#eaf0f8]">
             {groups.map((group) => (
               <div key={group.label}>
                 {/* Day label */}
-                <div className="px-4 py-2.5 bg-[#faf9f7]">
-                  <p className="text-xs font-bold text-[#9a9590] uppercase tracking-wide">{group.label}</p>
+                <div className="px-4 py-2.5 bg-[#f7f9fd]">
+                  <p className="text-xs font-bold text-[#64748b] uppercase tracking-wide">{group.label}</p>
                 </div>
                 {group.items.map((ix) => (
-                  <div key={ix.id} className="flex items-center gap-3 px-4 py-3 hover:bg-[#faf9f7] transition">
+                  <div key={ix.id} className="flex items-center gap-3 px-4 py-3 hover:bg-[#f7f9fd] transition">
                     {/* Thumbnail */}
-                    <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#f0ede7] flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#eaf0f8] flex items-center justify-center">
                       {ix.item.thumbnailUrl ? (
                         <img src={ix.item.thumbnailUrl} alt={ix.item.title} className="w-full h-full object-contain" />
                       ) : (
@@ -218,14 +218,14 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-[#111] truncate">{ix.item.title}</p>
-                      <p className="text-xs text-[#9a9590]">
+                      <p className="text-sm font-medium text-[#0f1e35] truncate">{ix.item.title}</p>
+                      <p className="text-xs text-[#64748b]">
                         {ix.item.categoryTh} · {relativeTime(ix.createdAt)}
                       </p>
                     </div>
 
                     {/* Price */}
-                    <p className="text-sm font-semibold text-[#111] flex-shrink-0">
+                    <p className="text-sm font-semibold text-[#0f1e35] flex-shrink-0">
                       ฿{ix.item.price.toLocaleString()}
                     </p>
 
@@ -233,7 +233,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
                     <button
                       onClick={() => handleDelete(ix.id)}
                       disabled={pending}
-                      className="w-7 h-7 flex items-center justify-center rounded-lg text-[#9a9590] hover:text-red-500 hover:bg-red-50 transition disabled:opacity-40 flex-shrink-0"
+                      className="w-7 h-7 flex items-center justify-center rounded-lg text-[#64748b] hover:text-red-500 hover:bg-red-50 transition disabled:opacity-40 flex-shrink-0"
                       aria-label="ลบรายการนี้"
                     >
                       ×
@@ -248,21 +248,21 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
         {/* Pagination */}
         {history.totalPages > 1 && (
           <div className="flex items-center justify-between">
-            <p className="text-sm text-[#777]">
+            <p className="text-sm text-[#5b6b82]">
               หน้า {history.page} / {history.totalPages}
             </p>
             <div className="flex gap-2">
               <button
                 onClick={() => refreshPage(history.page - 1)}
                 disabled={history.page === 1 || pending}
-                className="px-3 py-1.5 text-sm border border-[#e5e3de] rounded-lg disabled:opacity-30 hover:bg-[#f0ede7] transition"
+                className="px-3 py-1.5 text-sm border border-[#dfe7f2] rounded-lg disabled:opacity-30 hover:bg-[#eaf0f8] transition"
               >
                 ← ก่อนหน้า
               </button>
               <button
                 onClick={() => refreshPage(history.page + 1)}
                 disabled={history.page >= history.totalPages || pending}
-                className="px-3 py-1.5 text-sm border border-[#e5e3de] rounded-lg disabled:opacity-30 hover:bg-[#f0ede7] transition"
+                className="px-3 py-1.5 text-sm border border-[#dfe7f2] rounded-lg disabled:opacity-30 hover:bg-[#eaf0f8] transition"
               >
                 ถัดไป →
               </button>

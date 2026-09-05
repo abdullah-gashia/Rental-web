@@ -12,8 +12,8 @@ function ImageCard({ label, url }: { label: string; url: string | null }) {
   if (!url) {
     return (
       <div className="space-y-2">
-        <p className="text-xs font-medium text-[#9a9590] uppercase tracking-wide">{label}</p>
-        <div className="aspect-video bg-[#f0ede7] rounded-xl flex items-center justify-center text-[#9a9590] text-sm">
+        <p className="text-xs font-medium text-[#64748b] uppercase tracking-wide">{label}</p>
+        <div className="aspect-video bg-[#eaf0f8] rounded-xl flex items-center justify-center text-[#64748b] text-sm">
           ไม่มีรูป
         </div>
       </div>
@@ -22,9 +22,9 @@ function ImageCard({ label, url }: { label: string; url: string | null }) {
 
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium text-[#9a9590] uppercase tracking-wide">{label}</p>
+      <p className="text-xs font-medium text-[#64748b] uppercase tracking-wide">{label}</p>
       <a href={url} target="_blank" rel="noopener noreferrer" className="block group">
-        <div className="relative aspect-video bg-[#f0ede7] rounded-xl overflow-hidden">
+        <div className="relative aspect-video bg-[#eaf0f8] rounded-xl overflow-hidden">
           <Image
             src={url}
             alt={label}
@@ -87,7 +87,7 @@ export default async function VerificationDetailPage({
       {/* Back */}
       <Link
         href="/admin/verifications"
-        className="inline-flex items-center gap-1.5 text-sm text-[#9a9590] hover:text-[#111] transition"
+        className="inline-flex items-center gap-1.5 text-sm text-[#64748b] hover:text-[#0f1e35] transition"
       >
         ← กลับรายการ
       </Link>
@@ -95,8 +95,8 @@ export default async function VerificationDetailPage({
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-[#111]">ตรวจสอบคำขอยืนยันตัวตน</h1>
-          <p className="text-sm text-[#9a9590] mt-0.5 font-mono">{request.id}</p>
+          <h1 className="text-xl font-bold text-[#0f1e35]">ตรวจสอบคำขอยืนยันตัวตน</h1>
+          <p className="text-sm text-[#64748b] mt-0.5 font-mono">{request.id}</p>
         </div>
         <span className={`px-3 py-1.5 rounded-full text-sm font-semibold ${STATUS_BADGE[request.status] ?? "bg-gray-100 text-gray-700"}`}>
           {request.status === "PENDING" ? "รอตรวจสอบ" : request.status === "APPROVED" ? "อนุมัติแล้ว" : "ปฏิเสธแล้ว"}
@@ -107,8 +107,8 @@ export default async function VerificationDetailPage({
         {/* Left: Images */}
         <div className="lg:col-span-2 space-y-6">
           {/* ID Card */}
-          <div className="bg-white rounded-2xl border border-[#e5e3de] p-5 space-y-4">
-            <h2 className="font-semibold text-[#111]">บัตรประจำตัว</h2>
+          <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 space-y-4">
+            <h2 className="font-semibold text-[#0f1e35]">บัตรประจำตัว</h2>
             <div className="grid grid-cols-2 gap-4">
               <ImageCard label="ด้านหน้า" url={request.idCardImageUrl} />
               <ImageCard label="ด้านหลัง" url={request.idCardBackUrl} />
@@ -116,8 +116,8 @@ export default async function VerificationDetailPage({
           </div>
 
           {/* Face liveness */}
-          <div className="bg-white rounded-2xl border border-[#e5e3de] p-5 space-y-4">
-            <h2 className="font-semibold text-[#111]">Face Liveness</h2>
+          <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 space-y-4">
+            <h2 className="font-semibold text-[#0f1e35]">Face Liveness</h2>
             <SelfieGrid request={request} />
           </div>
         </div>
@@ -125,8 +125,8 @@ export default async function VerificationDetailPage({
         {/* Right: Info + Review */}
         <div className="space-y-4">
           {/* Applicant info */}
-          <div className="bg-white rounded-2xl border border-[#e5e3de] p-5 space-y-3">
-            <h2 className="font-semibold text-[#111]">ข้อมูลผู้สมัคร</h2>
+          <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 space-y-3">
+            <h2 className="font-semibold text-[#0f1e35]">ข้อมูลผู้สมัคร</h2>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2.5">
                 {request.user.image ? (
@@ -134,17 +134,17 @@ export default async function VerificationDetailPage({
                     <Image src={request.user.image} alt="" fill className="object-cover" />
                   </div>
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-[#e5e3de] flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-[#dfe7f2] flex items-center justify-center text-sm font-bold flex-shrink-0">
                     {request.user.name?.[0]?.toUpperCase() ?? "?"}
                   </div>
                 )}
                 <div>
-                  <p className="font-medium text-[#111]">{request.user.name ?? "—"}</p>
-                  <p className="text-xs text-[#9a9590]">{request.user.email}</p>
+                  <p className="font-medium text-[#0f1e35]">{request.user.name ?? "—"}</p>
+                  <p className="text-xs text-[#64748b]">{request.user.email}</p>
                 </div>
               </div>
 
-              <hr className="border-[#e5e3de]" />
+              <hr className="border-[#dfe7f2]" />
 
               {[
                 { label: "ประเภท", value: request.psuIdType === "STUDENT" ? "นักศึกษา" : "บุคลากร" },
@@ -154,15 +154,15 @@ export default async function VerificationDetailPage({
                 { label: "ส่งเมื่อ", value: submittedDate },
               ].map(({ label, value, mono }) => (
                 <div key={label} className="flex justify-between gap-2">
-                  <span className="text-[#9a9590]">{label}</span>
-                  <span className={`font-medium text-[#333] text-right ${mono ? "font-mono" : ""}`}>{value}</span>
+                  <span className="text-[#64748b]">{label}</span>
+                  <span className={`font-medium text-[#1e2d47] text-right ${mono ? "font-mono" : ""}`}>{value}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Review panel */}
-          <div className="bg-white rounded-2xl border border-[#e5e3de] p-5">
+          <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
             <ReviewPanel request={request} />
           </div>
 

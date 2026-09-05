@@ -28,17 +28,17 @@ interface Props {
 
 export default function ItemDetailsCard({ item }: Props) {
   return (
-    <div className="bg-white rounded-2xl border border-[#e5e3de] p-6">
-      <h3 className="text-sm font-semibold text-[#555] mb-4">รายละเอียดสินค้า</h3>
+    <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6">
+      <h3 className="text-sm font-semibold text-[#3d4d66] mb-4">รายละเอียดสินค้า</h3>
 
       <div className="space-y-3.5">
         {/* Price */}
         <Row label="ราคา">
-          <span className="text-lg font-bold text-[#e8500a]">
+          <span className="text-lg font-bold text-[#2563eb]">
             {formatCurrency(item.price)}
           </span>
           {item.negotiable && (
-            <span className="ml-2 text-xs text-[#777] bg-[#f7f6f3] rounded-full px-2 py-0.5">
+            <span className="ml-2 text-xs text-[#5b6b82] bg-[#f1f5fb] rounded-full px-2 py-0.5">
               ต่อรองได้
             </span>
           )}
@@ -46,7 +46,7 @@ export default function ItemDetailsCard({ item }: Props) {
 
         {/* Category */}
         <Row label="หมวดหมู่">
-          <span className="text-[#333]">
+          <span className="text-[#1e2d47]">
             {item.category.emoji && <span className="mr-1">{item.category.emoji}</span>}
             {item.category.nameTh}
           </span>
@@ -54,14 +54,14 @@ export default function ItemDetailsCard({ item }: Props) {
 
         {/* Condition */}
         <Row label="สภาพ">
-          <span className="text-[#333]">
+          <span className="text-[#1e2d47]">
             {CONDITION_TH[item.condition] || item.condition}
           </span>
         </Row>
 
         {/* Listing Type */}
         <Row label="ประเภท">
-          <span className="text-[#333]">
+          <span className="text-[#1e2d47]">
             {item.listingType === "SELL" ? "ขาย" : "เช่า"}
           </span>
         </Row>
@@ -80,8 +80,8 @@ export default function ItemDetailsCard({ item }: Props) {
         )}
 
         {/* Divider */}
-        <div className="border-t border-[#f0ede7] pt-3.5">
-          <p className="text-xs font-semibold text-[#888] uppercase tracking-wider mb-3">
+        <div className="border-t border-[#eaf0f8] pt-3.5">
+          <p className="text-xs font-semibold text-[#8494a9] uppercase tracking-wider mb-3">
             การจัดส่งและชำระเงิน
           </p>
 
@@ -94,14 +94,14 @@ export default function ItemDetailsCard({ item }: Props) {
           {/* Location */}
           {item.location && (
             <Row label="สถานที่">
-              <span className="text-[#333]">📍 {item.location}</span>
+              <span className="text-[#1e2d47]">📍 {item.location}</span>
             </Row>
           )}
 
           {/* Shipping note */}
           {item.shippingNote && (
             <Row label="หมายเหตุ">
-              <span className="text-[#555] text-xs italic">{item.shippingNote}</span>
+              <span className="text-[#3d4d66] text-xs italic">{item.shippingNote}</span>
             </Row>
           )}
         </div>
@@ -113,7 +113,7 @@ export default function ItemDetailsCard({ item }: Props) {
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-start justify-between gap-2">
-      <span className="text-sm text-[#888] flex-shrink-0">{label}</span>
+      <span className="text-sm text-[#8494a9] flex-shrink-0">{label}</span>
       <div className="text-sm text-right">{children}</div>
     </div>
   );
