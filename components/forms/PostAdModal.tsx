@@ -39,8 +39,8 @@ function Thumb({
   error?: string | null; onRemove: () => void;
 }) {
   return (
-    <div className="relative group w-[80px] h-[80px] rounded-xl overflow-hidden border border-[#dfe7f2] bg-[#eaf0f8] flex-shrink-0 shadow-[var(--shadow-xs)]">
-      <img src={src} alt="" className="w-full h-full object-contain bg-[#eef2f8]" />
+    <div className="relative group w-[80px] h-[80px] rounded-xl overflow-hidden border border-[var(--c-line)] bg-[var(--c-line-soft)] flex-shrink-0 shadow-[var(--shadow-xs)]">
+      <img src={src} alt="" className="w-full h-full object-contain bg-[var(--c-subtle-2)]" />
 
       {uploading && (
         <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-1">
@@ -62,7 +62,7 @@ function Thumb({
       )}
 
       {isMain && !uploading && !error && (
-        <span className="absolute bottom-1 left-1 bg-[#2563eb] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md leading-none">
+        <span className="absolute bottom-1 left-1 bg-[var(--c-accent)] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md leading-none">
           หลัก
         </span>
       )}
@@ -276,32 +276,32 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
         <div className="flex flex-col items-center text-center gap-5 py-6 px-2">
           <div className="text-5xl">🔒</div>
           <div>
-            <h2 className="text-xl font-bold text-[#0f1e35]">ต้องยืนยันตัวตนก่อน</h2>
-            <p className="text-sm text-[#64748b] mt-2 leading-relaxed">
+            <h2 className="text-xl font-bold text-[var(--c-ink)]">ต้องยืนยันตัวตนก่อน</h2>
+            <p className="text-sm text-[var(--c-muted)] mt-2 leading-relaxed">
               คุณต้องยืนยันตัวตน PSU ก่อนจึงจะลงขายสินค้าได้
               <br />กระบวนการใช้เวลาประมาณ 2-3 นาที
             </p>
           </div>
-          <div className="bg-[#f1f5fb] rounded-2xl px-5 py-4 text-left text-sm space-y-2 w-full">
+          <div className="bg-[var(--c-canvas)] rounded-2xl px-5 py-4 text-left text-sm space-y-2 w-full">
             {["อัปโหลดรูปบัตรประจำตัว PSU", "ถ่ายรูปยืนยันใบหน้า (Face Liveness)", "รอแอดมินอนุมัติภายใน 24 ชั่วโมง"].map((step, i) => (
               <div key={i} className="flex items-center gap-3">
-                <span className="w-5 h-5 rounded-full bg-[#2563eb] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
+                <span className="w-5 h-5 rounded-full bg-[var(--c-accent)] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
                   {i + 1}
                 </span>
-                <span className="text-[#1e2d47]">{step}</span>
+                <span className="text-[var(--c-ink-1)]">{step}</span>
               </div>
             ))}
           </div>
           <div className="flex gap-3 w-full">
             <button
               onClick={() => { setShowVerifyGate(false); handleClose(); }}
-              className="flex-1 py-2.5 border border-[#dfe7f2] rounded-xl text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition"
+              className="flex-1 py-2.5 border border-[var(--c-line)] rounded-xl text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
             >
               ยกเลิก
             </button>
             <a
               href="/profile/verify"
-              className="flex-1 py-2.5 bg-[#2563eb] text-white rounded-xl text-sm font-bold text-center hover:bg-[#1d4ed8] transition"
+              className="flex-1 py-2.5 bg-[var(--c-accent)] text-white rounded-xl text-sm font-bold text-center hover:bg-[var(--c-accent-str)] transition"
             >
               ยืนยันตัวตน →
             </a>
@@ -316,14 +316,14 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
       {/* Header */}
       <div className="flex justify-between items-start mb-5">
         <div>
-          <h2 className="text-xl font-extrabold text-[#0f1e35] tracking-tight">{t("post_title")}</h2>
-          <p className="text-[12px] text-[#64748b] mt-0.5 font-medium">
+          <h2 className="text-xl font-extrabold text-[var(--c-ink)] tracking-tight">{t("post_title")}</h2>
+          <p className="text-[12px] text-[var(--c-muted)] mt-0.5 font-medium">
             ขั้นตอน {step}/3 — {stepLabels[step - 1]}
           </p>
         </div>
         <button
           onClick={handleClose}
-          className="w-8 h-8 rounded-full flex items-center justify-center text-[#64748b] hover:text-[#0f1e35] hover:bg-[#eaf0f8] transition flex-shrink-0"
+          className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--c-muted)] hover:text-[var(--c-ink)] hover:bg-[var(--c-line-soft)] transition flex-shrink-0"
         >
           ✕
         </button>
@@ -335,7 +335,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
           <div
             key={d}
             className={`h-1.5 rounded-full flex-1 transition-all duration-400 ${
-              d < step ? "bg-[#10b981]" : d === step ? "bg-[#0f1e35]" : "bg-[#dfe7f2]"
+              d < step ? "bg-[#10b981]" : d === step ? "bg-[var(--c-ink)]" : "bg-[var(--c-line)]"
             }`}
           />
         ))}
@@ -344,7 +344,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
       {/* ── Step 1 ─────────────────────────────────────── */}
       {step === 1 && (
         <div className="fade-up">
-          <p className="text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest mb-3">{t("post_type_label")}</p>
+          <p className="text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-3">{t("post_type_label")}</p>
           <div className="grid grid-cols-2 gap-3 mb-5">
             {(["sell", "rent"] as const).map((type) => (
               <button
@@ -353,27 +353,27 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                 onClick={() => setAdType(type)}
                 className={`rounded-2xl p-4 text-center transition-all border-2 ${
                   adType === type
-                    ? "border-[#0f1e35] bg-white shadow-[var(--shadow-sm)]"
-                    : "border-[#dfe7f2] bg-[#f7f9fd] hover:border-[#94a3b8]"
+                    ? "border-[var(--c-ink)] bg-[var(--c-surface)] shadow-[var(--shadow-sm)]"
+                    : "border-[var(--c-line)] bg-[var(--c-subtle)] hover:border-[var(--c-faint)]"
                 }`}
               >
                 <div className={`w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-2 text-xl ${
-                  type === "sell" ? "bg-orange-50" : "bg-blue-50"
+                  type === "sell" ? "bg-[var(--c-warn-soft)]" : "bg-[var(--c-accent-soft)]"
                 }`}>
                   {type === "sell" ? "🏷️" : "🔑"}
                 </div>
-                <p className="text-sm font-bold text-[#0f1e35]">{t(type === "sell" ? "post_type_sell" : "post_type_rent")}</p>
-                <p className="text-[11px] text-[#64748b] mt-0.5 leading-tight">{t(type === "sell" ? "post_type_sell_desc" : "post_type_rent_desc")}</p>
+                <p className="text-sm font-bold text-[var(--c-ink)]">{t(type === "sell" ? "post_type_sell" : "post_type_rent")}</p>
+                <p className="text-[11px] text-[var(--c-muted)] mt-0.5 leading-tight">{t(type === "sell" ? "post_type_sell_desc" : "post_type_rent_desc")}</p>
               </button>
             ))}
           </div>
 
-          <p className="text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest mb-2">{t("post_category_label")}</p>
+          <p className="text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-2">{t("post_category_label")}</p>
           <div className="relative mb-5">
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full border border-[#dfe7f2] rounded-xl px-4 py-2.5 text-sm bg-white appearance-none pr-10 transition focus:border-[#0f1e35] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)] outline-none cursor-pointer"
+              className="w-full border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm bg-[var(--c-surface)] appearance-none pr-10 transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)] outline-none cursor-pointer"
             >
               <option value="">{t("post_category_placeholder")}</option>
               <option value="secondhand">{t("cat_secondhand")}</option>
@@ -383,14 +383,14 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
               <option value="books">{t("cat_books")}</option>
               <option value="rental">{t("cat_rental")}</option>
             </select>
-            <svg className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--c-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </div>
 
           <button
             onClick={handleNextFromStep1}
-            className="w-full bg-[#0f1e35] text-white font-bold py-3 rounded-2xl hover:bg-[#1e2d47] transition shadow-[var(--shadow-sm)] text-sm"
+            className="w-full bg-[var(--c-ink)] text-white font-bold py-3 rounded-2xl hover:bg-[var(--c-ink-1)] transition shadow-[var(--shadow-sm)] text-sm"
           >
             {t("post_next")} →
           </button>
@@ -403,11 +403,11 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
           {/* Image picker */}
           <div className="mb-5">
             <div className="flex items-center justify-between mb-2.5">
-              <p className="text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest">{t("post_photos_label")}</p>
+              <p className="text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest">{t("post_photos_label")}</p>
               <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                 totalImages >= MAX_IMAGES
-                  ? "bg-red-50 text-red-600 border border-red-200"
-                  : "bg-[#eaf0f8] text-[#5b6b82]"
+                  ? "bg-[var(--c-danger-soft)] text-[var(--c-danger)] border border-[var(--c-danger-line)]"
+                  : "bg-[var(--c-line-soft)] text-[var(--c-ink-3)]"
               }`}>
                 {totalImages}/{MAX_IMAGES}
               </span>
@@ -428,44 +428,44 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-[80px] h-[80px] rounded-xl border-2 border-dashed border-[#d9d5cf] hover:border-[#2563eb] hover:bg-orange-50/50 flex flex-col items-center justify-center gap-1 transition group flex-shrink-0"
+                  className="w-[80px] h-[80px] rounded-xl border-2 border-dashed border-[#d9d5cf] hover:border-[var(--c-accent)] hover:bg-[var(--c-warn-soft)]/50 flex flex-col items-center justify-center gap-1 transition group flex-shrink-0"
                 >
-                  <svg className="w-5 h-5 text-[#c2ccdb] group-hover:text-[#2563eb] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-[var(--c-line-str)] group-hover:text-[var(--c-accent)] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
                   </svg>
-                  <span className="text-[10px] text-[#a3b0c2] group-hover:text-[#2563eb] transition font-semibold">เพิ่มรูป</span>
+                  <span className="text-[10px] text-[var(--c-faint-2)] group-hover:text-[var(--c-accent)] transition font-semibold">เพิ่มรูป</span>
                 </button>
               )}
             </div>
             <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFileChange} />
-            <p className="text-[11px] text-[#a3b0c2] mt-1.5">รูปภาพทุกชนิด ทุกขนาด · ระบบย่อขนาดให้อัตโนมัติ · รูปแรกเป็นรูปหลัก</p>
+            <p className="text-[11px] text-[var(--c-faint-2)] mt-1.5">รูปภาพทุกชนิด ทุกขนาด · ระบบย่อขนาดให้อัตโนมัติ · รูปแรกเป็นรูปหลัก</p>
           </div>
 
           <div className="space-y-3 mb-3">
             <div>
-              <label className="block text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest mb-1.5">{t("post_name_label")}</label>
+              <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">{t("post_name_label")}</label>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 type="text"
                 placeholder={t("post_name_placeholder")}
-                className="w-full border border-[#dfe7f2] rounded-xl px-4 py-2.5 text-sm outline-none transition focus:border-[#0f1e35] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                className="w-full border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
               />
             </div>
             <div>
-              <label className="block text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest mb-1.5">{t("post_desc_label")}</label>
+              <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">{t("post_desc_label")}</label>
               <textarea
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
                 rows={3}
                 placeholder={t("post_desc_placeholder")}
-                className="w-full border border-[#dfe7f2] rounded-xl px-4 py-2.5 text-sm resize-none outline-none transition focus:border-[#0f1e35] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                className="w-full border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm resize-none outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest mb-2">{t("post_condition_label")}</label>
+            <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-2">{t("post_condition_label")}</label>
             <div className="flex flex-wrap gap-2">
               {conditions.map((c) => (
                 <button
@@ -474,8 +474,8 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                   onClick={() => setCondition(c.key)}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition ${
                     condition === c.key
-                      ? "border-[#0f1e35] bg-[#0f1e35] text-white"
-                      : "border-[#dfe7f2] hover:border-[#0f1e35] text-[#3d4d66]"
+                      ? "border-[var(--c-ink)] bg-[var(--c-ink)] text-white"
+                      : "border-[var(--c-line)] hover:border-[var(--c-ink)] text-[var(--c-ink-2)]"
                   }`}
                 >
                   {c.label}
@@ -485,13 +485,13 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
           </div>
 
           <div className="flex gap-3 mt-6">
-            <button onClick={() => setStep(1)} className="flex-1 border border-[#dfe7f2] font-semibold py-3 rounded-2xl hover:bg-[#eaf0f8] transition text-sm">
+            <button onClick={() => setStep(1)} className="flex-1 border border-[var(--c-line)] font-semibold py-3 rounded-2xl hover:bg-[var(--c-line-soft)] transition text-sm">
               ← {t("post_back")}
             </button>
             <button
               onClick={handleNextFromStep2}
               disabled={pendingImages.some((p) => p.uploading)}
-              className="flex-1 bg-[#0f1e35] text-white font-bold py-3 rounded-2xl hover:bg-[#1e2d47] transition disabled:opacity-50 flex items-center justify-center gap-2 text-sm shadow-[var(--shadow-sm)]"
+              className="flex-1 bg-[var(--c-ink)] text-white font-bold py-3 rounded-2xl hover:bg-[var(--c-ink-1)] transition disabled:opacity-50 flex items-center justify-center gap-2 text-sm shadow-[var(--shadow-sm)]"
             >
               {pendingImages.some((p) => p.uploading) ? <><Spinner /> กำลังอัปโหลด...</> : <>{t("post_next")} →</>}
             </button>
@@ -507,20 +507,20 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
           {adType === "sell" && (
             <div className="space-y-3 mb-4">
               <div>
-                <label className="block text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest mb-1.5">{t("post_price_label")}</label>
+                <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">{t("post_price_label")}</label>
                 <div className="relative">
                   <input
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     type="number" min="0"
                     placeholder={t("post_price_placeholder")}
-                    className="w-full border border-[#dfe7f2] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[#0f1e35] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                    className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[#64748b]">฿</span>
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">฿</span>
                 </div>
               </div>
-              <label className="flex items-center gap-2.5 cursor-pointer text-sm text-[#3d4d66] bg-[#f7f9fd] border border-[#dfe7f2] rounded-xl px-4 py-2.5 hover:bg-[#eaf0f8] transition">
-                <input type="checkbox" checked={negotiable} onChange={(e) => setNegotiable(e.target.checked)} className="rounded w-4 h-4 accent-[#2563eb]" />
+              <label className="flex items-center gap-2.5 cursor-pointer text-sm text-[var(--c-ink-2)] bg-[var(--c-subtle)] border border-[var(--c-line)] rounded-xl px-4 py-2.5 hover:bg-[var(--c-line-soft)] transition">
+                <input type="checkbox" checked={negotiable} onChange={(e) => setNegotiable(e.target.checked)} className="rounded w-4 h-4 accent-[var(--c-accent)]" />
                 <span className="font-medium">{t("post_negotiable")}</span>
               </label>
             </div>
@@ -529,14 +529,14 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
           {/* ── RENT: rental-specific fields ─── */}
           {adType === "rent" && (
             <div className="space-y-3 mb-4">
-              <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-2.5 mb-1">
-                <p className="text-[11px] font-bold text-blue-700 uppercase tracking-widest">ตั้งค่าการเช่า</p>
+              <div className="bg-[var(--c-accent-soft)] border border-blue-100 rounded-xl px-4 py-2.5 mb-1">
+                <p className="text-[11px] font-bold text-[var(--c-accent-str)] uppercase tracking-widest">ตั้งค่าการเช่า</p>
               </div>
 
               {/* Rate + rate type */}
               <div>
-                <label className="block text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest mb-1.5">
-                  ค่าเช่า <span className="text-red-500">*</span>
+                <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">
+                  ค่าเช่า <span className="text-[var(--c-danger)]">*</span>
                 </label>
                 <div className="flex gap-2">
                   <div className="relative flex-1">
@@ -545,11 +545,11 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                       onChange={(e) => setPrice(e.target.value)}
                       type="number" min="1"
                       placeholder={rateType === "DAILY" ? "เช่น 80" : rateType === "MONTHLY" ? "เช่น 500" : "เช่น 6000"}
-                      className="w-full border border-[#dfe7f2] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[#0f1e35] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                      className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                     />
-                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[#64748b]">฿</span>
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">฿</span>
                   </div>
-                  <div className="flex border border-[#dfe7f2] rounded-xl overflow-hidden flex-shrink-0">
+                  <div className="flex border border-[var(--c-line)] rounded-xl overflow-hidden flex-shrink-0">
                     {(["DAILY", "MONTHLY", "YEARLY"] as const).map((t) => (
                       <button
                         key={t}
@@ -557,8 +557,8 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                         onClick={() => setRateType(t)}
                         className={`px-3 py-2.5 text-xs font-semibold transition ${
                           rateType === t
-                            ? "bg-[#0f1e35] text-white"
-                            : "text-[#3d4d66] hover:bg-[#eaf0f8]"
+                            ? "bg-[var(--c-ink)] text-white"
+                            : "text-[var(--c-ink-2)] hover:bg-[var(--c-line-soft)]"
                         }`}
                       >
                         {t === "DAILY" ? "/วัน" : t === "MONTHLY" ? "/เดือน" : "/ปี"}
@@ -573,7 +573,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                   const perMonth = perDay * 30;
                   const perYear = perDay * 365;
                   return (
-                    <p className="text-[11px] text-blue-600 mt-1.5 bg-blue-50 rounded-lg px-2.5 py-1.5">
+                    <p className="text-[11px] text-[var(--c-accent)] mt-1.5 bg-[var(--c-accent-soft)] rounded-lg px-2.5 py-1.5">
                       💡 เทียบเท่า: ฿{perDay.toFixed(1)}/วัน · ฿{Math.round(perMonth)}/เดือน · ฿{Math.round(perYear)}/ปี
                     </p>
                   );
@@ -582,8 +582,8 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
 
               {/* Security deposit */}
               <div>
-                <label className="block text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest mb-1.5">
-                  เงินมัดจำ <span className="text-red-500">*</span>
+                <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">
+                  เงินมัดจำ <span className="text-[var(--c-danger)]">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -591,16 +591,16 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                     onChange={(e) => setSecurityDeposit(e.target.value)}
                     type="number" min="0"
                     placeholder="เช่น 500"
-                    className="w-full border border-[#dfe7f2] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[#0f1e35] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                    className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[#64748b]">฿</span>
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">฿</span>
                 </div>
-                <p className="text-[11px] text-[#94a3b8] mt-1">คืนให้ผู้เช่าหลังตรวจสอบสภาพสินค้า</p>
+                <p className="text-[11px] text-[var(--c-faint)] mt-1">คืนให้ผู้เช่าหลังตรวจสอบสภาพสินค้า</p>
               </div>
 
               {/* Late fee */}
               <div>
-                <label className="block text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest mb-1.5">
+                <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">
                   ค่าปรับคืนช้า (ต่อวัน)
                 </label>
                 <div className="relative">
@@ -609,49 +609,49 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                     onChange={(e) => setLateFeePerDay(e.target.value)}
                     type="number" min="0"
                     placeholder="0 = ไม่คิดค่าปรับ"
-                    className="w-full border border-[#dfe7f2] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[#0f1e35] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                    className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[#64748b]">฿</span>
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--c-muted)]">฿</span>
                 </div>
               </div>
 
               {/* Min / Max rental days */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest mb-1.5">เช่าขั้นต่ำ</label>
+                  <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">เช่าขั้นต่ำ</label>
                   <div className="relative">
                     <input
                       value={minRentalDays}
                       onChange={(e) => setMinRentalDays(e.target.value)}
                       type="number" min="1" max="365"
-                      className="w-full border border-[#dfe7f2] rounded-xl pl-4 pr-12 py-2.5 text-sm outline-none transition focus:border-[#0f1e35] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                      className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-12 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                     />
-                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[#64748b]">วัน</span>
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--c-muted)]">วัน</span>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest mb-1.5">เช่าสูงสุด</label>
+                  <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">เช่าสูงสุด</label>
                   <div className="relative">
                     <input
                       value={maxRentalDays}
                       onChange={(e) => setMaxRentalDays(e.target.value)}
                       type="number" min="1" max="365"
-                      className="w-full border border-[#dfe7f2] rounded-xl pl-4 pr-12 py-2.5 text-sm outline-none transition focus:border-[#0f1e35] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                      className="w-full border border-[var(--c-line)] rounded-xl pl-4 pr-12 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                     />
-                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[#64748b]">วัน</span>
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--c-muted)]">วัน</span>
                   </div>
                 </div>
               </div>
 
               {/* Rental terms */}
               <div>
-                <label className="block text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest mb-1.5">เงื่อนไขการเช่า (ไม่บังคับ)</label>
+                <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">เงื่อนไขการเช่า (ไม่บังคับ)</label>
                 <textarea
                   value={rentalTerms}
                   onChange={(e) => setRentalTerms(e.target.value)}
                   rows={2}
                   placeholder={'เช่น "ห้ามแกะชิ้นส่วน", "คืนพร้อมกล่องและอุปกรณ์ครบ"'}
-                  className="w-full border border-[#dfe7f2] rounded-xl px-4 py-2.5 text-sm resize-none outline-none transition focus:border-[#0f1e35] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+                  className="w-full border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm resize-none outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                 />
               </div>
             </div>
@@ -659,12 +659,12 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
 
           <div className="space-y-3 mb-4">
             <div>
-              <label className="block text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest mb-1.5">{t("post_location_label")}</label>
+              <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">{t("post_location_label")}</label>
               <div className="relative">
                 <select
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="w-full border border-[#dfe7f2] rounded-xl px-4 py-2.5 text-sm bg-white appearance-none pr-10 outline-none transition focus:border-[#0f1e35] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)] cursor-pointer"
+                  className="w-full border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm bg-[var(--c-surface)] appearance-none pr-10 outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)] cursor-pointer"
                 >
                   <option value="">{t("post_location_placeholder")}</option>
                   <option>หอพักนักศึกษา</option>
@@ -674,7 +674,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                   <option>หน้า 7-11</option>
                   <option>อื่นๆ</option>
                 </select>
-                <svg className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--c-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
@@ -682,29 +682,29 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
           </div>
 
           {/* ── Delivery & Payment config ─────────────────── */}
-          <div className="mb-4 rounded-2xl border border-[#dfe7f2] overflow-hidden">
-            <div className="bg-[#f7f9fd] px-4 py-2.5 border-b border-[#dfe7f2]">
-              <p className="text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest">ตั้งค่าการจัดส่งและชำระเงิน</p>
+          <div className="mb-4 rounded-2xl border border-[var(--c-line)] overflow-hidden">
+            <div className="bg-[var(--c-subtle)] px-4 py-2.5 border-b border-[var(--c-line)]">
+              <p className="text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest">ตั้งค่าการจัดส่งและชำระเงิน</p>
             </div>
 
             {/* Delivery */}
             <div className="px-4 pt-3 pb-1">
-              <p className="text-[10px] font-bold text-[#94a3b8] uppercase tracking-widest mb-2">วิธีจัดส่ง</p>
+              <p className="text-[10px] font-bold text-[var(--c-faint)] uppercase tracking-widest mb-2">วิธีจัดส่ง</p>
               <div className="space-y-2 mb-3">
                 <button
                   type="button"
                   onClick={() => setAllowShipping((v) => v || !allowMeetup ? !v : false)}
                   className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl border-2 transition text-left ${
-                    allowShipping ? "border-[#0f1e35] bg-white" : "border-[#dfe7f2] bg-[#f7f9fd] hover:border-[#94a3b8]"
+                    allowShipping ? "border-[var(--c-ink)] bg-[var(--c-surface)]" : "border-[var(--c-line)] bg-[var(--c-subtle)] hover:border-[var(--c-faint)]"
                   }`}
                 >
                   <span className="text-lg">📦</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#0f1e35]">จัดส่งทางไปรษณีย์</p>
-                    <p className="text-[11px] text-[#64748b]">ผู้ซื้อรับสินค้าทางไปรษณีย์</p>
+                    <p className="text-sm font-semibold text-[var(--c-ink)]">จัดส่งทางไปรษณีย์</p>
+                    <p className="text-[11px] text-[var(--c-muted)]">ผู้ซื้อรับสินค้าทางไปรษณีย์</p>
                   </div>
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition ${
-                    allowShipping ? "border-[#0f1e35] bg-[#0f1e35]" : "border-[#c2ccdb]"
+                    allowShipping ? "border-[var(--c-ink)] bg-[var(--c-ink)]" : "border-[var(--c-line-str)]"
                   }`}>
                     {allowShipping && <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
                   </div>
@@ -714,36 +714,36 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                   type="button"
                   onClick={() => setAllowMeetup((v) => v || !allowShipping ? !v : false)}
                   className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl border-2 transition text-left ${
-                    allowMeetup ? "border-[#0f1e35] bg-white" : "border-[#dfe7f2] bg-[#f7f9fd] hover:border-[#94a3b8]"
+                    allowMeetup ? "border-[var(--c-ink)] bg-[var(--c-surface)]" : "border-[var(--c-line)] bg-[var(--c-subtle)] hover:border-[var(--c-faint)]"
                   }`}
                 >
                   <span className="text-lg">🤝</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#0f1e35]">นัดรับสินค้า</p>
-                    <p className="text-[11px] text-[#64748b]">ผู้ซื้อมารับด้วยตนเอง (ใน PSU)</p>
+                    <p className="text-sm font-semibold text-[var(--c-ink)]">นัดรับสินค้า</p>
+                    <p className="text-[11px] text-[var(--c-muted)]">ผู้ซื้อมารับด้วยตนเอง (ใน PSU)</p>
                   </div>
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition ${
-                    allowMeetup ? "border-[#0f1e35] bg-[#0f1e35]" : "border-[#c2ccdb]"
+                    allowMeetup ? "border-[var(--c-ink)] bg-[var(--c-ink)]" : "border-[var(--c-line-str)]"
                   }`}>
                     {allowMeetup && <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
                   </div>
                 </button>
               </div>
               {!allowShipping && !allowMeetup && (
-                <p className="text-[11px] text-red-500 font-medium mb-2">⚠️ ต้องเลือกอย่างน้อย 1 วิธี</p>
+                <p className="text-[11px] text-[var(--c-danger)] font-medium mb-2">⚠️ ต้องเลือกอย่างน้อย 1 วิธี</p>
               )}
             </div>
 
             {/* Payment */}
-            <div className="px-4 pt-1 pb-3 border-t border-[#eaf0f8]">
-              <p className="text-[10px] font-bold text-[#94a3b8] uppercase tracking-widest mb-2 mt-2">วิธีชำระเงิน</p>
+            <div className="px-4 pt-1 pb-3 border-t border-[var(--c-line-soft)]">
+              <p className="text-[10px] font-bold text-[var(--c-faint)] uppercase tracking-widest mb-2 mt-2">วิธีชำระเงิน</p>
               <div className="space-y-2">
                 {/* Escrow — always enabled */}
                 <div className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl border-2 border-[#10b981]/40 bg-[#f0fdf4]">
                   <span className="text-lg">🔒</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#0f1e35]">โอนผ่าน Escrow</p>
-                    <p className="text-[11px] text-[#64748b]">เงินโอนให้ผู้ขายหลังยืนยันรับสินค้า</p>
+                    <p className="text-sm font-semibold text-[var(--c-ink)]">โอนผ่าน Escrow</p>
+                    <p className="text-[11px] text-[var(--c-muted)]">เงินโอนให้ผู้ขายหลังยืนยันรับสินค้า</p>
                   </div>
                   <span className="text-[10px] font-bold text-[#10b981] bg-[#dcfce7] px-2 py-0.5 rounded-full">บังคับใช้</span>
                 </div>
@@ -755,19 +755,19 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                   onClick={() => setAllowCOD((v) => !v)}
                   className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl border-2 transition text-left ${
                     !allowMeetup
-                      ? "border-[#dfe7f2] bg-[#f7f7f7] opacity-40 cursor-not-allowed"
+                      ? "border-[var(--c-line)] bg-[#f7f7f7] opacity-40 cursor-not-allowed"
                       : allowCOD
-                        ? "border-[#0f1e35] bg-white"
-                        : "border-[#dfe7f2] bg-[#f7f9fd] hover:border-[#94a3b8]"
+                        ? "border-[var(--c-ink)] bg-[var(--c-surface)]"
+                        : "border-[var(--c-line)] bg-[var(--c-subtle)] hover:border-[var(--c-faint)]"
                   }`}
                 >
                   <span className="text-lg">💵</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#0f1e35]">เก็บเงินปลายทาง (COD)</p>
-                    <p className="text-[11px] text-[#64748b]">ชำระเงินสดตอนนัดรับ</p>
+                    <p className="text-sm font-semibold text-[var(--c-ink)]">เก็บเงินปลายทาง (COD)</p>
+                    <p className="text-[11px] text-[var(--c-muted)]">ชำระเงินสดตอนนัดรับ</p>
                   </div>
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition ${
-                    allowMeetup && allowCOD ? "border-[#0f1e35] bg-[#0f1e35]" : "border-[#c2ccdb]"
+                    allowMeetup && allowCOD ? "border-[var(--c-ink)] bg-[var(--c-ink)]" : "border-[var(--c-line-str)]"
                   }`}>
                     {allowMeetup && allowCOD && <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
                   </div>
@@ -777,22 +777,22 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
           </div>
 
           <div className="mb-5">
-            <label className="block text-[11px] font-bold text-[#5b6b82] uppercase tracking-widest mb-1.5">{t("post_contact_label")}</label>
+            <label className="block text-[11px] font-bold text-[var(--c-ink-3)] uppercase tracking-widest mb-1.5">{t("post_contact_label")}</label>
             <input
               value={contact}
               onChange={(e) => setContact(e.target.value)}
               type="text"
               placeholder={t("post_contact_placeholder")}
-              className="w-full border border-[#dfe7f2] rounded-xl px-4 py-2.5 text-sm outline-none transition focus:border-[#0f1e35] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
+              className="w-full border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
             />
           </div>
 
           {/* Preview card */}
           {name && (
-            <div className="mb-5 p-4 bg-gradient-to-br from-[#f7f9fd] to-[#eaf0f8] border border-[#dfe7f2] rounded-2xl">
-              <p className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest mb-3">{t("post_preview_label")}</p>
+            <div className="mb-5 p-4 bg-gradient-to-br from-[var(--c-subtle)] to-[var(--c-line-soft)] border border-[var(--c-line)] rounded-2xl">
+              <p className="text-[10px] font-bold text-[var(--c-muted)] uppercase tracking-widest mb-3">{t("post_preview_label")}</p>
               <div className="flex gap-3 items-center">
-                <div className="w-14 h-14 rounded-xl flex-shrink-0 overflow-hidden bg-[#dfe7f2] flex items-center justify-center shadow-[var(--shadow-xs)]">
+                <div className="w-14 h-14 rounded-xl flex-shrink-0 overflow-hidden bg-[var(--c-line)] flex items-center justify-center shadow-[var(--shadow-xs)]">
                   {pendingImages[0]?.previewUrl ? (
                     <img src={pendingImages[0].previewUrl} alt="" className="w-full h-full object-contain" />
                   ) : (
@@ -800,11 +800,11 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                   )}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-bold text-[#0f1e35] truncate">{name}</p>
-                  <p className="text-base font-extrabold text-[#2563eb]">
+                  <p className="text-sm font-bold text-[var(--c-ink)] truncate">{name}</p>
+                  <p className="text-base font-extrabold text-[var(--c-accent)]">
                     {price ? `฿${Number(price).toLocaleString()}${adType === "rent" ? "/วัน" : ""}` : "—"}
                   </p>
-                  {location && <p className="text-xs text-[#64748b]">📍 {location}</p>}
+                  {location && <p className="text-xs text-[var(--c-muted)]">📍 {location}</p>}
                 </div>
               </div>
             </div>
@@ -814,14 +814,14 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
             <button
               onClick={() => setStep(2)}
               disabled={loading}
-              className="flex-1 border border-[#dfe7f2] font-semibold py-3 rounded-2xl hover:bg-[#eaf0f8] transition disabled:opacity-40 text-sm"
+              className="flex-1 border border-[var(--c-line)] font-semibold py-3 rounded-2xl hover:bg-[var(--c-line-soft)] transition disabled:opacity-40 text-sm"
             >
               ← {t("post_back")}
             </button>
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="flex-1 bg-[#2563eb] text-white font-bold py-3 rounded-2xl hover:bg-[#1d4ed8] transition disabled:opacity-70 flex items-center justify-center gap-2 text-sm shadow-[0_4px_16px_rgba(232,80,10,0.28)]"
+              className="flex-1 bg-[var(--c-accent)] text-white font-bold py-3 rounded-2xl hover:bg-[var(--c-accent-str)] transition disabled:opacity-70 flex items-center justify-center gap-2 text-sm shadow-[0_4px_16px_rgba(232,80,10,0.28)]"
             >
               {loading ? <><Spinner /> กำลังลงประกาศ...</> : <>{t("post_submit")} ✓</>}
             </button>

@@ -59,8 +59,8 @@ export default function DateSelectionStep({ state, item, onChange }: Props) {
   return (
     <div className="space-y-5">
       <div>
-        <label className="block text-xs font-semibold text-[#3d4d66] mb-1.5">
-          วันเริ่มเช่า <span className="text-red-500">*</span>
+        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">
+          วันเริ่มเช่า <span className="text-[var(--c-danger)]">*</span>
         </label>
         <input
           type="date"
@@ -68,15 +68,15 @@ export default function DateSelectionStep({ state, item, onChange }: Props) {
           min={today}
           max={maxStart}
           onChange={(e) => handleStartChange(e.target.value)}
-          className="w-full px-3 py-2.5 border border-[#dfe7f2] rounded-xl text-sm
-                     focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb]"
+          className="w-full px-3 py-2.5 border border-[var(--c-line)] rounded-xl text-sm
+                     focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)]"
         />
-        <p className="text-[11px] text-[#8d9bb0] mt-1">เริ่มเช่าได้ตั้งแต่วันนี้เป็นต้นไป</p>
+        <p className="text-[11px] text-[var(--c-faint)] mt-1">เริ่มเช่าได้ตั้งแต่วันนี้เป็นต้นไป</p>
       </div>
 
       <div>
-        <label className="block text-xs font-semibold text-[#3d4d66] mb-1.5">
-          วันสิ้นสุดเช่า (วันคืนของ) <span className="text-red-500">*</span>
+        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">
+          วันสิ้นสุดเช่า (วันคืนของ) <span className="text-[var(--c-danger)]">*</span>
         </label>
         <input
           type="date"
@@ -84,14 +84,14 @@ export default function DateSelectionStep({ state, item, onChange }: Props) {
           min={minEnd}
           max={maxEnd}
           onChange={(e) => handleEndChange(e.target.value)}
-          className="w-full px-3 py-2.5 border border-[#dfe7f2] rounded-xl text-sm
-                     focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb]"
+          className="w-full px-3 py-2.5 border border-[var(--c-line)] rounded-xl text-sm
+                     focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)]"
         />
-        <p className="text-[11px] text-[#8d9bb0] mt-1">
+        <p className="text-[11px] text-[var(--c-faint)] mt-1">
           เช่าได้ {item.minRentalDays}–{item.maxRentalDays} วัน
         </p>
         {daysError && (
-          <p className="text-xs text-red-600 mt-1">
+          <p className="text-xs text-[var(--c-danger)] mt-1">
             {rentalDays < item.minRentalDays
               ? `ต้องเช่าขั้นต่ำ ${item.minRentalDays} วัน`
               : `เช่าได้สูงสุด ${item.maxRentalDays} วัน`}
@@ -101,8 +101,8 @@ export default function DateSelectionStep({ state, item, onChange }: Props) {
 
       {rentalDays > 0 && !daysError && (
         <>
-          <div className="flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-xl px-3 py-2 text-sm">
-            <span className="text-blue-600 font-bold">📅 {rentalDays} วัน</span>
+          <div className="flex items-center gap-2 bg-[var(--c-accent-soft)] border border-blue-100 rounded-xl px-3 py-2 text-sm">
+            <span className="text-[var(--c-accent)] font-bold">📅 {rentalDays} วัน</span>
             <span className="text-blue-500 text-xs">
               ({new Date(startDate).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}
               {" – "}

@@ -1,4 +1,5 @@
 import { auth }        from "@/lib/auth";
+import Brand from "@/components/layout/Brand";
 import { redirect }    from "next/navigation";
 import { getSettingsData } from "./actions";
 import SettingsLayout  from "./_components/SettingsLayout";
@@ -26,16 +27,14 @@ export default async function SettingsPage({ searchParams }: Props) {
   const activeTab = (typeof sp.tab === "string" ? sp.tab : "profile") as string;
 
   return (
-    <div className="min-h-screen bg-[#f1f5fb]">
+    <div className="min-h-screen bg-[var(--c-canvas)]">
       {/* Top bar */}
-      <header className="sticky top-0 z-50 bg-white border-b border-[#dfe7f2] shadow-sm">
+      <header className="sticky top-0 z-50 bg-[var(--c-surface)] border-b border-[var(--c-line)] shadow-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <a href="/" className="text-lg font-extrabold tracking-tighter">
-              PSU<span style={{ color: "#2563eb" }}>.</span>STORE
-            </a>
-            <span className="text-[#dfe7f2]">/</span>
-            <span className="flex items-center gap-1.5 text-sm font-semibold text-[#3d4d66]">
+            <Brand size={26} />
+            <span className="text-[var(--c-line)]">/</span>
+            <span className="flex items-center gap-1.5 text-sm font-semibold text-[var(--c-ink-2)]">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                   d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -47,7 +46,7 @@ export default async function SettingsPage({ searchParams }: Props) {
 
           <a
             href="/"
-            className="text-sm text-[#5b6b82] hover:text-[#1e2d47] transition flex items-center gap-1"
+            className="text-sm text-[var(--c-ink-3)] hover:text-[var(--c-ink-1)] transition flex items-center gap-1"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

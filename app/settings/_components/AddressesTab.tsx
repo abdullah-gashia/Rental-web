@@ -125,17 +125,17 @@ export default function AddressesTab({ addresses, showToast }: Props) {
   return (
     <div className="p-5 sm:p-6 space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-[#0f1e35] flex items-center gap-2">
+        <h2 className="text-lg font-bold text-[var(--c-ink)] flex items-center gap-2">
           <span>📍</span> ที่อยู่จัดส่ง
         </h2>
-        <span className="text-xs text-[#64748b]">
+        <span className="text-xs text-[var(--c-muted)]">
           {list.length}/5 ที่อยู่
         </span>
       </div>
 
       {/* Address cards */}
       {list.length === 0 && !editing && (
-        <div className="py-12 text-center text-[#94a3b8] text-sm">
+        <div className="py-12 text-center text-[var(--c-faint)] text-sm">
           <p className="text-3xl mb-2">📍</p>
           <p>ยังไม่มีที่อยู่จัดส่ง</p>
           <p className="text-xs mt-1">เพิ่มที่อยู่เพื่อใช้ในการสั่งซื้อ</p>
@@ -148,61 +148,61 @@ export default function AddressesTab({ addresses, showToast }: Props) {
             key={addr.id}
             className={`p-4 rounded-xl border transition ${
               addr.isDefault
-                ? "border-[#2563eb]/30 bg-orange-50/30"
-                : "border-[#dfe7f2] bg-white"
+                ? "border-[var(--c-accent)]/30 bg-[var(--c-warn-soft)]/30"
+                : "border-[var(--c-line)] bg-[var(--c-surface)]"
             }`}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-sm font-semibold text-[#0f1e35]">
+                  <span className="text-sm font-semibold text-[var(--c-ink)]">
                     🏠 {addr.label}
                   </span>
                   {addr.isDefault && (
-                    <span className="inline-flex items-center rounded-full border border-[#2563eb]/30 bg-orange-50 px-2 py-0.5 text-[10px] font-semibold text-[#2563eb]">
+                    <span className="inline-flex items-center rounded-full border border-[var(--c-accent)]/30 bg-[var(--c-warn-soft)] px-2 py-0.5 text-[10px] font-semibold text-[var(--c-accent)]">
                       ⭐ ค่าเริ่มต้น
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-[#1e2d47] font-medium">{addr.recipientName}</p>
-                <p className="text-xs text-[#5b6b82]">{addr.phone}</p>
-                <p className="text-xs text-[#5b6b82] mt-1">
+                <p className="text-sm text-[var(--c-ink-1)] font-medium">{addr.recipientName}</p>
+                <p className="text-xs text-[var(--c-ink-3)]">{addr.phone}</p>
+                <p className="text-xs text-[var(--c-ink-3)] mt-1">
                   {addr.addressLine1}
                   {addr.addressLine2 ? `, ${addr.addressLine2}` : ""}
                 </p>
-                <p className="text-xs text-[#5b6b82]">
+                <p className="text-xs text-[var(--c-ink-3)]">
                   อ.{addr.district} จ.{addr.province} {addr.postalCode}
                 </p>
                 {addr.note && (
-                  <p className="text-[11px] text-[#64748b] mt-1">📝 {addr.note}</p>
+                  <p className="text-[11px] text-[var(--c-muted)] mt-1">📝 {addr.note}</p>
                 )}
               </div>
             </div>
 
             {/* Card actions */}
-            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-[#eaf0f8]">
+            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-[var(--c-line-soft)]">
               <button
                 onClick={() => startEdit(addr)}
                 disabled={pending}
-                className="text-xs text-[#3d4d66] hover:text-[#2563eb] transition flex items-center gap-1 disabled:opacity-50"
+                className="text-xs text-[var(--c-ink-2)] hover:text-[var(--c-accent)] transition flex items-center gap-1 disabled:opacity-50"
               >
                 ✏️ แก้ไข
               </button>
-              <span className="text-[#dfe7f2]">|</span>
+              <span className="text-[var(--c-line)]">|</span>
               <button
                 onClick={() => handleDelete(addr.id)}
                 disabled={pending}
-                className="text-xs text-[#3d4d66] hover:text-red-600 transition flex items-center gap-1 disabled:opacity-50"
+                className="text-xs text-[var(--c-ink-2)] hover:text-[var(--c-danger)] transition flex items-center gap-1 disabled:opacity-50"
               >
                 🗑️ ลบ
               </button>
               {!addr.isDefault && (
                 <>
-                  <span className="text-[#dfe7f2]">|</span>
+                  <span className="text-[var(--c-line)]">|</span>
                   <button
                     onClick={() => handleSetDefault(addr.id)}
                     disabled={pending}
-                    className="text-xs text-[#3d4d66] hover:text-[#2563eb] transition flex items-center gap-1 disabled:opacity-50"
+                    className="text-xs text-[var(--c-ink-2)] hover:text-[var(--c-accent)] transition flex items-center gap-1 disabled:opacity-50"
                   >
                     ⭐ ตั้งเป็นค่าเริ่มต้น
                   </button>
@@ -215,8 +215,8 @@ export default function AddressesTab({ addresses, showToast }: Props) {
 
       {/* Add / Edit form */}
       {editing ? (
-        <form onSubmit={handleSubmit} className="p-4 rounded-xl border border-[#dfe7f2] bg-[#f7f9fd] space-y-3">
-          <h3 className="text-sm font-semibold text-[#1e2d47]">
+        <form onSubmit={handleSubmit} className="p-4 rounded-xl border border-[var(--c-line)] bg-[var(--c-subtle)] space-y-3">
+          <h3 className="text-sm font-semibold text-[var(--c-ink-1)]">
             {editing === "new" ? "➕ เพิ่มที่อยู่ใหม่" : "✏️ แก้ไขที่อยู่"}
           </h3>
 
@@ -238,14 +238,14 @@ export default function AddressesTab({ addresses, showToast }: Props) {
               type="button"
               onClick={() => setEditing(null)}
               disabled={pending}
-              className="px-4 py-2 text-sm text-[#3d4d66] hover:text-[#1e2d47] transition disabled:opacity-50"
+              className="px-4 py-2 text-sm text-[var(--c-ink-2)] hover:text-[var(--c-ink-1)] transition disabled:opacity-50"
             >
               ยกเลิก
             </button>
             <button
               type="submit"
               disabled={pending}
-              className="px-5 py-2 bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded-xl text-sm font-bold transition disabled:opacity-50 flex items-center gap-2"
+              className="px-5 py-2 bg-[var(--c-accent)] hover:bg-[var(--c-accent-str)] text-white rounded-xl text-sm font-bold transition disabled:opacity-50 flex items-center gap-2"
             >
               {pending && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
               {editing === "new" ? "เพิ่มที่อยู่" : "บันทึก"}
@@ -256,7 +256,7 @@ export default function AddressesTab({ addresses, showToast }: Props) {
         <button
           onClick={startNew}
           disabled={list.length >= 5}
-          className="w-full py-3 rounded-xl border-2 border-dashed border-[#dfe7f2] text-sm font-medium text-[#5b6b82] hover:border-[#2563eb] hover:text-[#2563eb] transition disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full py-3 rounded-xl border-2 border-dashed border-[var(--c-line)] text-sm font-medium text-[var(--c-ink-3)] hover:border-[var(--c-accent)] hover:text-[var(--c-accent)] transition disabled:opacity-40 disabled:cursor-not-allowed"
         >
           + เพิ่มที่อยู่ใหม่
         </button>
@@ -278,8 +278,8 @@ function FormField({
 }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-[#3d4d66] mb-1">
-        {label} {required && <span className="text-red-500">*</span>}
+      <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">
+        {label} {required && <span className="text-[var(--c-danger)]">*</span>}
       </label>
       <input
         type="text"
@@ -287,7 +287,7 @@ function FormField({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         required={required}
-        className="w-full px-3 py-2 rounded-lg border border-[#dfe7f2] bg-white text-sm text-[#0f1e35] focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition"
+        className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] bg-[var(--c-surface)] text-sm text-[var(--c-ink)] focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
       />
     </div>
   );

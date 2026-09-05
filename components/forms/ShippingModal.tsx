@@ -111,17 +111,17 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[92vh] overflow-y-auto">
+      <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-md max-h-[92vh] overflow-y-auto">
 
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-[#dfe7f2] px-6 py-4 flex items-start justify-between z-10 rounded-t-2xl">
+        <div className="sticky top-0 bg-[var(--c-surface)] border-b border-[var(--c-line)] px-6 py-4 flex items-start justify-between z-10 rounded-t-2xl">
           <div>
-            <h3 className="text-lg font-bold text-[#0f1e35]">ยืนยันการจัดส่ง</h3>
-            <p className="text-xs text-[#64748b] mt-0.5 truncate max-w-xs">{itemTitle}</p>
+            <h3 className="text-lg font-bold text-[var(--c-ink)]">ยืนยันการจัดส่ง</h3>
+            <p className="text-xs text-[var(--c-muted)] mt-0.5 truncate max-w-xs">{itemTitle}</p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-[#64748b] hover:bg-[#eaf0f8] hover:text-[#0f1e35] transition flex-shrink-0 ml-3"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--c-muted)] hover:bg-[var(--c-line-soft)] hover:text-[var(--c-ink)] transition flex-shrink-0 ml-3"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -133,8 +133,8 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
 
           {/* Delivery method */}
           <div>
-            <label className="block text-sm font-semibold text-[#1e2d47] mb-2">
-              วิธีจัดส่ง <span className="text-red-500">*</span>
+            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-2">
+              วิธีจัดส่ง <span className="text-[var(--c-danger)]">*</span>
             </label>
             <div className="grid grid-cols-3 gap-2">
               {METHODS.map((m) => (
@@ -144,8 +144,8 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
                   onClick={() => setMethod(m.value)}
                   className={`flex flex-col items-center gap-1 py-3 px-2 rounded-xl border-2 text-xs font-semibold transition ${
                     method === m.value
-                      ? "border-blue-500 bg-blue-50 text-blue-700"
-                      : "border-[#dfe7f2] bg-white text-[#3d4d66] hover:border-blue-200 hover:bg-blue-50/40"
+                      ? "border-blue-500 bg-[var(--c-accent-soft)] text-[var(--c-accent-str)]"
+                      : "border-[var(--c-line)] bg-[var(--c-surface)] text-[var(--c-ink-2)] hover:border-[var(--c-line-str)] hover:bg-[var(--c-accent-soft)]/40"
                   }`}
                 >
                   <span className="text-xl">{m.icon}</span>
@@ -158,8 +158,8 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
           {/* Tracking number — hidden for meetup */}
           {!isMeetup && (
             <div>
-              <label className="block text-sm font-semibold text-[#1e2d47] mb-1.5">
-                หมายเลขพัสดุ <span className="text-red-500">*</span>
+              <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-1.5">
+                หมายเลขพัสดุ <span className="text-[var(--c-danger)]">*</span>
               </label>
               <input
                 type="text"
@@ -167,21 +167,21 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
                 onChange={(e) => { setTrackingNumber(e.target.value); setFormError(null); }}
                 placeholder="เช่น TH123456789TH"
                 disabled={isPending}
-                className="w-full border border-[#dfe7f2] rounded-xl px-4 py-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400 transition disabled:opacity-60"
+                className="w-full border border-[var(--c-line)] rounded-xl px-4 py-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400 transition disabled:opacity-60"
               />
             </div>
           )}
 
           {/* Proof image upload */}
           <div>
-            <label className="block text-sm font-semibold text-[#1e2d47] mb-0.5">
+            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-0.5">
               รูปหลักฐานการจัดส่ง
-              <span className="ml-1 text-xs font-normal text-[#64748b]">(ไม่บังคับ แต่แนะนำ)</span>
+              <span className="ml-1 text-xs font-normal text-[var(--c-muted)]">(ไม่บังคับ แต่แนะนำ)</span>
             </label>
-            <p className="text-xs text-[#64748b] mb-3">รูปใบเสร็จ / พัสดุก่อนส่ง · รูปภาพทุกชนิด ทุกขนาด</p>
+            <p className="text-xs text-[var(--c-muted)] mb-3">รูปใบเสร็จ / พัสดุก่อนส่ง · รูปภาพทุกชนิด ทุกขนาด</p>
 
             {proofPreview ? (
-              <div className="relative w-full h-40 rounded-xl overflow-hidden border border-[#dfe7f2] bg-[#eaf0f8]">
+              <div className="relative w-full h-40 rounded-xl overflow-hidden border border-[var(--c-line)] bg-[var(--c-line-soft)]">
                 <img src={proofPreview} alt="" className="w-full h-full object-contain" />
 
                 {proofUploading && (
@@ -209,7 +209,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
                 type="button"
                 onClick={() => fileRef.current?.click()}
                 disabled={isPending}
-                className="w-full h-24 rounded-xl border-2 border-dashed border-[#d1cfc9] hover:border-blue-400 hover:bg-blue-50/40 transition flex flex-col items-center justify-center gap-1.5 text-[#64748b] hover:text-blue-500 disabled:opacity-40"
+                className="w-full h-24 rounded-xl border-2 border-dashed border-[#d1cfc9] hover:border-blue-400 hover:bg-[var(--c-accent-soft)]/40 transition flex flex-col items-center justify-center gap-1.5 text-[var(--c-muted)] hover:text-blue-500 disabled:opacity-40"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -229,16 +229,16 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
 
           {/* Meetup note */}
           {isMeetup && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-xs text-amber-800 leading-relaxed">
+            <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-4 py-3 text-xs text-amber-800 leading-relaxed">
               <span className="font-semibold">นัดรับ:</span> ผู้ซื้อจะได้รับแจ้งเตือนให้ยืนยันเมื่อรับสินค้าจากคุณโดยตรง
             </div>
           )}
 
           {/* Error */}
           {formError && (
-            <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-              <span className="text-red-500">⚠️</span>
-              <p className="text-sm text-red-700 font-medium">{formError}</p>
+            <div className="flex items-center gap-2 bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-4 py-3">
+              <span className="text-[var(--c-danger)]">⚠️</span>
+              <p className="text-sm text-[var(--c-danger)] font-medium">{formError}</p>
             </div>
           )}
 
@@ -248,7 +248,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
               type="button"
               onClick={onClose}
               disabled={isPending}
-              className="flex-1 py-3 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
+              className="flex-1 py-3 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
             >
               ยกเลิก
             </button>

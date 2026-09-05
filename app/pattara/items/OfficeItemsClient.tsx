@@ -121,7 +121,7 @@ export default function OfficeItemsClient({
 
       {msg && !editing && (
         <div role="status" className={`rounded-xl px-4 py-3 text-[13px] border ${
-          msg.ok ? "bg-[#e8f5ee] border-[#c3e3d1] text-[#1f6b45]" : "bg-[#fdecea] border-[#f6c9c4] text-[#b3261e]"
+          msg.ok ? "bg-[var(--c-ok-soft)] border-[var(--c-ok-line)] text-[var(--c-ok)]" : "bg-[var(--c-danger-soft)] border-[var(--c-danger-line)] text-[var(--c-danger)]"
         }`}>
           {msg.text}
         </div>
@@ -237,7 +237,7 @@ export default function OfficeItemsClient({
       {editing && (
         <div className="fixed inset-0 z-[500] flex items-start justify-center p-4 overflow-y-auto" role="dialog" aria-modal>
           <div className="absolute inset-0 bg-black/45 backdrop-blur-sm" onClick={pending ? undefined : () => setEditing(null)} />
-          <div className="relative bg-white rounded-2xl w-full max-w-2xl my-8 p-6 border border-[var(--bw-line)]">
+          <div className="relative bg-[var(--c-surface)] rounded-2xl w-full max-w-2xl my-8 p-6 border border-[var(--bw-line)]">
             <h2 className="text-[17px] font-semibold text-[var(--psu-navy)] mb-5">
               {editing.id ? "แก้ไขอุปกรณ์" : "เพิ่มอุปกรณ์ใหม่"}
             </h2>
@@ -358,7 +358,7 @@ export default function OfficeItemsClient({
 
               {msg && (
                 <div role="alert" className={`rounded-xl px-3.5 py-2.5 text-[12.5px] border ${
-                  msg.ok ? "bg-[#e8f5ee] border-[#c3e3d1] text-[#1f6b45]" : "bg-[#fdecea] border-[#f6c9c4] text-[#b3261e]"
+                  msg.ok ? "bg-[var(--c-ok-soft)] border-[var(--c-ok-line)] text-[var(--c-ok)]" : "bg-[var(--c-danger-soft)] border-[var(--c-danger-line)] text-[var(--c-danger)]"
                 }`}>
                   {msg.text}
                 </div>
@@ -372,7 +372,7 @@ export default function OfficeItemsClient({
                   <button
                     onClick={() => run(() => deleteBorrowItem(editing.id), true)}
                     disabled={pending}
-                    className="bw-btn bw-btn-ghost !text-[#b3261e] !border-[#f6c9c4]"
+                    className="bw-btn bw-btn-ghost !text-[var(--c-danger)] !border-[var(--c-danger-line)]"
                   >
                     ลบ
                   </button>

@@ -37,10 +37,10 @@ function CustomTooltip({ active, payload, label }: any) {
   const fee    = payload[0]?.value ?? 0;
   const orders = payload[1]?.value ?? 0;
   return (
-    <div className="bg-white border border-[#dfe7f2] rounded-xl px-3 py-2 shadow-lg text-xs space-y-0.5">
-      <p className="font-bold text-[#0f1e35] mb-1">{fmtDate(label)}</p>
+    <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-xl px-3 py-2 shadow-lg text-xs space-y-0.5">
+      <p className="font-bold text-[var(--c-ink)] mb-1">{fmtDate(label)}</p>
       <p className="text-purple-700 font-semibold">รายได้แพลตฟอร์ม: {baht(fee)}</p>
-      <p className="text-[#64748b]">คำสั่งซื้อ: {orders} รายการ</p>
+      <p className="text-[var(--c-muted)]">คำสั่งซื้อ: {orders} รายการ</p>
     </div>
   );
 }
@@ -50,11 +50,11 @@ export default function RevenueChart({ data }: RevenueChartProps) {
   const tickDates = data.filter((_, i) => i % 2 === 0).map((d) => d.date);
 
   return (
-    <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+    <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-bold text-[#0f1e35]">รายได้แพลตฟอร์ม (14 วัน)</h3>
-          <p className="text-xs text-[#64748b] mt-0.5">ค่าธรรมเนียมที่เก็บได้จากคำสั่งซื้อที่เสร็จสิ้น</p>
+          <h3 className="text-sm font-bold text-[var(--c-ink)]">รายได้แพลตฟอร์ม (14 วัน)</h3>
+          <p className="text-xs text-[var(--c-muted)] mt-0.5">ค่าธรรมเนียมที่เก็บได้จากคำสั่งซื้อที่เสร็จสิ้น</p>
         </div>
         <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-50 text-purple-700">
           Platform Fee
@@ -62,23 +62,23 @@ export default function RevenueChart({ data }: RevenueChartProps) {
       </div>
       <ResponsiveContainer width="100%" height={180}>
         <BarChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 0 }} barSize={14}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#eaf0f8" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--c-line-soft)" vertical={false} />
           <XAxis
             dataKey="date"
             ticks={tickDates}
             tickFormatter={fmtDate}
-            tick={{ fontSize: 10, fill: "#64748b" }}
+            tick={{ fontSize: 10, fill: "var(--c-muted)" }}
             axisLine={false}
             tickLine={false}
           />
           <YAxis
             tickFormatter={(v) => `฿${v}`}
-            tick={{ fontSize: 10, fill: "#64748b" }}
+            tick={{ fontSize: 10, fill: "var(--c-muted)" }}
             axisLine={false}
             tickLine={false}
             width={48}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: "#f1f5fb" }} />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: "var(--c-canvas)" }} />
           <Bar dataKey="fee"    fill="#7c3aed" radius={[4, 4, 0, 0]} name="ค่าธรรมเนียม" />
           <Bar dataKey="orders" fill="#ddd6fe" radius={[4, 4, 0, 0]} name="คำสั่งซื้อ" yAxisId={0} hide />
         </BarChart>

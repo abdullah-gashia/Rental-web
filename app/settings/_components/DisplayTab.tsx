@@ -2,6 +2,8 @@
 
 import { useState, useTransition } from "react";
 import { updatePreferences } from "../actions";
+import { useLocaleStore } from "@/lib/stores/locale-store";
+import { useThemeStore } from "@/lib/stores/theme-store";
 
 interface Props {
   preferences: {
@@ -12,26 +14,50 @@ interface Props {
 }
 
 export default function DisplayTab({ preferences, showToast }: Props) {
+  const setLocale    = useLocaleStore((s) => s.setLocale);
+  const applyTheme   = useThemeStore((s) => s.setTheme);
+  const currentTheme = useThemeStore((s) => s.theme);
+
   const [language, setLanguage] = useState(preferences?.language ?? "th");
-  const [theme, setTheme]      = useState(preferences?.theme ?? "system");
+  const [theme, setTheme]       = useState(preferences?.theme ?? currentTheme ?? "system");
   const [pending, startTransition] = useTransition();
+
+  /** Preview the theme as soon as it is picked — waiting for Save to see what
+      you chose is a poor way to choose. Language cannot preview the same way:
+      server-rendered pages have to come back from the server first. */
+  function pickTheme(next: "light" | "dark" | "system") {
+    setTheme(next);
+    applyTheme(next);
+  }
 
   const handleSave = () => {
     startTransition(async () => {
-      const res = await updatePreferences({ language: language as "th" | "en", theme: theme as "light" | "dark" | "system" });
+      const res = await updatePreferences({
+        language: language as "th" | "en",
+        theme:    theme as "light" | "dark" | "system",
+      });
       showToast(res.success, res.success ? res.message : res.error);
+
+      if (res.success) {
+        applyTheme(theme as "light" | "dark" | "system");
+        // setLocale writes the cookie and reloads, so the server re-renders
+        // every page in the chosen language.
+        if (language !== useLocaleStore.getState().locale) {
+          setLocale(language as "th" | "en");
+        }
+      }
     });
   };
 
   return (
     <div className="p-5 sm:p-6 space-y-6">
-      <h2 className="text-lg font-bold text-[#0f1e35] flex items-center gap-2">
+      <h2 className="text-lg font-bold text-[var(--c-ink)] flex items-center gap-2">
         <span>🎨</span> การแสดงผล
       </h2>
 
       {/* Language */}
       <div>
-        <h3 className="text-sm font-semibold text-[#3d4d66] mb-3">ภาษา</h3>
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">ภาษา</h3>
         <div className="space-y-2">
           <RadioOption
             id="lang-th"
@@ -53,14 +79,14 @@ export default function DisplayTab({ preferences, showToast }: Props) {
       </div>
 
       {/* Theme */}
-      <div className="border-t border-[#dfe7f2] pt-5">
-        <h3 className="text-sm font-semibold text-[#3d4d66] mb-3">ธีม</h3>
+      <div className="border-t border-[var(--c-line)] pt-5">
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">ธีม</h3>
         <div className="space-y-2">
           <RadioOption
             id="theme-light"
             name="theme"
             checked={theme === "light"}
-            onChange={() => setTheme("light")}
+            onChange={() => pickTheme("light")}
             label="☀️ สว่าง"
             description="ใช้ธีมสว่างตลอด"
           />
@@ -68,7 +94,7 @@ export default function DisplayTab({ preferences, showToast }: Props) {
             id="theme-dark"
             name="theme"
             checked={theme === "dark"}
-            onChange={() => setTheme("dark")}
+            onChange={() => pickTheme("dark")}
             label="🌙 มืด"
             description="ใช้ธีมมืดตลอด"
           />
@@ -76,18 +102,18 @@ export default function DisplayTab({ preferences, showToast }: Props) {
             id="theme-system"
             name="theme"
             checked={theme === "system"}
-            onChange={() => setTheme("system")}
+            onChange={() => pickTheme("system")}
             label="💻 ตามระบบ"
             description="ปรับตามการตั้งค่าของอุปกรณ์อัตโนมัติ"
           />
         </div>
       </div>
 
-      <p className="text-[11px] text-[#64748b] flex items-center gap-1">
+      <p className="text-[11px] text-[var(--c-muted)] flex items-center gap-1">
         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        การเปลี่ยนธีมและภาษาจะมีผลในครั้งถัดไปที่โหลดหน้าเว็บ
+        ธีมเปลี่ยนทันทีที่เลือก ส่วนภาษาจะมีผลหลังกดบันทึกและโหลดหน้าใหม่
       </p>
 
       {/* Save */}
@@ -95,7 +121,7 @@ export default function DisplayTab({ preferences, showToast }: Props) {
         <button
           onClick={handleSave}
           disabled={pending}
-          className="px-6 py-2.5 bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded-xl text-sm font-bold transition disabled:opacity-50 flex items-center gap-2"
+          className="px-6 py-2.5 bg-[var(--c-accent)] hover:bg-[var(--c-accent-str)] text-white rounded-xl text-sm font-bold transition disabled:opacity-50 flex items-center gap-2"
         >
           {pending && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
           บันทึกการเปลี่ยนแปลง
@@ -122,8 +148,8 @@ function RadioOption({
       htmlFor={id}
       className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition border ${
         checked
-          ? "border-[#2563eb]/40 bg-orange-50/40"
-          : "border-transparent hover:bg-[#f7f9fd]"
+          ? "border-[var(--c-accent)] bg-[var(--c-accent-soft)]"
+          : "border-transparent hover:bg-[var(--c-subtle)]"
       }`}
     >
       <input
@@ -132,11 +158,11 @@ function RadioOption({
         name={name}
         checked={checked}
         onChange={onChange}
-        className="w-4 h-4 text-[#2563eb] accent-[#2563eb]"
+        className="w-4 h-4 text-[var(--c-accent)] accent-[var(--c-accent)]"
       />
       <div>
-        <p className="text-sm font-medium text-[#1e2d47]">{label}</p>
-        <p className="text-[11px] text-[#64748b]">{description}</p>
+        <p className="text-sm font-medium text-[var(--c-ink-1)]">{label}</p>
+        <p className="text-[11px] text-[var(--c-muted)]">{description}</p>
       </div>
     </label>
   );

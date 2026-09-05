@@ -37,15 +37,15 @@ export default function Pagination({ meta }: PaginationProps) {
   const to   = Math.min(currentPage * pageSize, totalCount);
 
   const btnBase = "w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium transition";
-  const btnActive = "bg-[#2563eb] text-white";
-  const btnIdle   = "text-[#3d4d66] hover:bg-[#eaf0f8]";
-  const btnDisabled = "text-[#c2ccdb] cursor-not-allowed";
+  const btnActive = "bg-[var(--c-accent)] text-white";
+  const btnIdle   = "text-[var(--c-ink-2)] hover:bg-[var(--c-line-soft)]";
+  const btnDisabled = "text-[var(--c-line-str)] cursor-not-allowed";
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 px-1 py-3">
-      <p className="text-sm text-[#5b6b82]">
-        แสดง <span className="font-medium text-[#1e2d47]">{from}–{to}</span>{" "}
-        จาก <span className="font-medium text-[#1e2d47]">{totalCount.toLocaleString()}</span> รายการ
+      <p className="text-sm text-[var(--c-ink-3)]">
+        แสดง <span className="font-medium text-[var(--c-ink-1)]">{from}–{to}</span>{" "}
+        จาก <span className="font-medium text-[var(--c-ink-1)]">{totalCount.toLocaleString()}</span> รายการ
       </p>
 
       <div className="flex items-center gap-1">
@@ -61,7 +61,7 @@ export default function Pagination({ meta }: PaginationProps) {
 
         {pages.map((p, i) =>
           p === "…" ? (
-            <span key={`d${i}`} className="w-8 text-center text-[#94a3b8] text-sm">…</span>
+            <span key={`d${i}`} className="w-8 text-center text-[var(--c-faint)] text-sm">…</span>
           ) : (
             <button
               key={p}

@@ -1,7 +1,10 @@
 import { auth } from "@/lib/auth";
+import AppearanceMenu from "@/components/layout/AppearanceMenu";
+import Brand from "@/components/layout/Brand";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import ConsoleSidebar, { type NavGroup } from "@/components/layout/ConsoleSidebar";
+import { getT } from "@/lib/i18n/server";
 
 /**
  * The signed-in console.
@@ -19,6 +22,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!session?.user?.id) redirect("/?login=1");
 
   const user = session.user as { id: string; name?: string | null; email?: string | null };
+  const t = await getT();
 
   const [pendingItems, toShip, buying, activeRentals, openBorrows] = await Promise.all([
     prisma.item.count({ where: { sellerId: user.id, status: "PENDING" } }),
@@ -49,53 +53,47 @@ export default async function DashboardLayout({ children }: { children: React.Re
   ]);
 
   const groups: NavGroup[] = [
+    { items: [{ href: "/dashboard", label: t("nav_overview"), icon: "home", exact: true }] },
     {
+      title: t("nav_group_buy"),
       items: [
-        { href: "/dashboard", label: "ภาพรวม", icon: "home", exact: true },
+        { href: "/dashboard/orders?tab=buying", label: t("nav_my_orders"),  icon: "cart",  badge: buying },
+        { href: "/dashboard/borrows",           label: t("nav_my_borrows"), icon: "hands", badge: openBorrows },
       ],
     },
     {
-      title: "ที่ฉันซื้อ",
+      title: t("nav_group_sell"),
       items: [
-        { href: "/dashboard/orders?tab=buying", label: "คำสั่งซื้อของฉัน", icon: "cart",  badge: buying },
-        { href: "/dashboard/borrows",           label: "ของที่ยืม",        icon: "hands", badge: openBorrows },
+        { href: "/dashboard/my-items",           label: t("nav_my_listings"), icon: "box", badge: pendingItems },
+        { href: "/dashboard/orders?tab=selling", label: t("nav_my_sales"),    icon: "tag", badge: toShip },
+        { href: "/dashboard/rentals",            label: t("nav_my_rentals"),  icon: "key", badge: activeRentals },
       ],
     },
     {
-      title: "ที่ฉันขาย",
-      items: [
-        { href: "/dashboard/my-items",           label: "ประกาศของฉัน", icon: "box",  badge: pendingItems },
-        { href: "/dashboard/orders?tab=selling", label: "รายการที่ขาย",  icon: "tag",  badge: toShip },
-        { href: "/dashboard/rentals",            label: "การปล่อยเช่า",  icon: "key",  badge: activeRentals },
-      ],
-    },
-    {
-      title: "บัญชี",
-      items: [
-        { href: "/settings", label: "ตั้งค่า", icon: "gear" },
-      ],
+      title: t("nav_group_acct"),
+      items: [{ href: "/settings", label: t("nav_settings"), icon: "gear" }],
     },
   ];
 
   return (
     <div className="ui-shell flex flex-col">
-      <header className="sticky top-0 z-50 bg-white border-b border-[var(--hp-border)]">
+      <header className="sticky top-0 z-50 bg-[var(--c-surface)] border-b border-[var(--hp-border)]">
         <div className="max-w-[1200px] mx-auto px-5 h-14 flex items-center gap-3 pl-14 md:pl-5">
-          <a href="/" className="text-[15px] font-extrabold tracking-tighter text-[var(--psu-navy)]">
-            PSU<span className="text-[var(--psu-blue)]">.</span>STORE
-          </a>
+          <Brand size={26} />
           <span className="text-[var(--hp-border-str)]" aria-hidden>/</span>
-          <span className="text-[13.5px] font-semibold text-[var(--psu-blue)]">บัญชีของฉัน</span>
+          <span className="text-[13.5px] font-semibold text-[var(--psu-blue)]">{t("shell_my_account")}</span>
 
-          <a href="/" className="ui-btn ui-btn-ghost ui-btn-sm ml-auto">
-            เปิดหน้าร้าน
-          </a>
+          <div className="ml-auto flex items-center gap-2">
+            <AppearanceMenu />
+            <a href="/" className="ui-btn ui-btn-ghost ui-btn-sm">{t("shell_storefront")}</a>
+          </div>
         </div>
       </header>
 
       <div className="flex flex-1 max-w-[1200px] mx-auto w-full px-5 py-7 gap-6">
         <ConsoleSidebar
-          title="เมนู"
+          title={t("shell_menu")}
+          backLabel={t("shell_back_store")}
           groups={groups}
           user={{ name: user.name ?? null, email: user.email ?? "" }}
         />

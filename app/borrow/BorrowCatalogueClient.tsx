@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import SideRail from "@/components/layout/SideRail";
 import Footer from "@/components/layout/Footer";
-import { BORROW_CATEGORY_LABEL, ITEM_STATUS_LABEL } from "@/lib/borrow-config";
+import { useLocaleStore } from "@/lib/stores/locale-store";
+import { borrowCategory, lendItemStatus } from "@/lib/i18n/labels";
 import type { CatalogueItem } from "@/lib/actions/borrow-items";
 
 interface Props {
@@ -27,6 +28,8 @@ function baht(n: number) {
 
 export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }: Props) {
   const router = useRouter();
+  const t      = useLocaleStore((s) => s.t);
+  const locale = useLocaleStore((s) => s.locale);
   const [query, setQuery]   = useState("");
   const [cat, setCat]       = useState("all");
   const [onlyFree, setFree] = useState(false);
@@ -56,7 +59,7 @@ export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }
       <Navbar
         searchQuery={query}
         onSearchChange={setQuery}
-        searchPlaceholder="ค้นหาอุปกรณ์ให้ยืม…"
+        searchPlaceholder={t("bw_search")}
         hideCategories
         activeCat="borrow"
         onCatChange={(c) => router.push(c === "all" ? "/" : `/?cat=${c}`)}
@@ -70,11 +73,10 @@ export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }
           <header className="mb-6">
             <p className="bw-label mb-2">งานภัทร · มหาวิทยาลัยสงขลานครินทร์</p>
             <h1 className="text-[26px] sm:text-[32px] font-semibold tracking-[-0.02em] text-[var(--psu-navy)] leading-tight">
-              ยืมอุปกรณ์ฟรี
+              {t("bw_free_title")}
             </h1>
             <p className="text-[14.5px] text-[var(--bw-muted)] mt-2 max-w-[58ch] leading-[1.9]">
-              อุปกรณ์เหล่านี้ซื้อด้วยค่าธรรมเนียมที่ PSU Store เก็บได้จากการซื้อขายและการเช่า
-              นักศึกษายืมได้โดยไม่ต้องวางมัดจำ และไม่มีค่าปรับหากคืนช้า
+{t("bw_intro")}
             </p>
           </header>
 
@@ -82,9 +84,9 @@ export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }
           <section className="bw-panel mb-6 !p-0 overflow-hidden">
             <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[var(--bw-line)]">
               {[
-                { k: "ค่าธรรมเนียมที่เก็บได้", v: baht(fund.raised),                 note: "จากการซื้อขายและการเช่าในระบบ" },
-                { k: "กลายเป็นอุปกรณ์",       v: `${fund.itemsTotal} ชิ้น`,          note: "อยู่ในคลังให้ยืมตอนนี้" },
-                { k: "ให้ยืมไปแล้ว",          v: `${fund.timesLent} ครั้ง`,          note: "รายการที่คืนครบเรียบร้อย" },
+                { k: t("bw_raised"), v: baht(fund.raised),            note: t("bw_raised_s") },
+                { k: t("bw_became"), v: `${fund.itemsTotal}`,          note: t("bw_became_s") },
+                { k: t("bw_lent"),   v: `${fund.timesLent}`,           note: t("bw_lent_s") },
               ].map((s) => (
                 <div key={s.k} className="px-5 py-4">
                   <p className="bw-label">{s.k}</p>
@@ -111,7 +113,7 @@ export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }
               onClick={() => setCat("all")}
               className={`bw-pill !text-[12px] !px-3 !py-1.5 ${cat === "all" ? "bw-pill-go" : "bw-pill-done"}`}
             >
-              ทั้งหมด <span className="bw-num opacity-60">{items.length}</span>
+              {t("c_all")} <span className="bw-num opacity-60">{items.length}</span>
             </button>
             {cats.map(([c, n]) => (
               <button
@@ -119,7 +121,7 @@ export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }
                 onClick={() => setCat(c)}
                 className={`bw-pill !text-[12px] !px-3 !py-1.5 ${cat === c ? "bw-pill-go" : "bw-pill-done"}`}
               >
-                {BORROW_CATEGORY_LABEL[c] ?? c} <span className="bw-num opacity-60">{n}</span>
+                {borrowCategory(locale, c)} <span className="bw-num opacity-60">{n}</span>
               </button>
             ))}
 
@@ -130,7 +132,7 @@ export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }
                 onChange={(e) => setFree(e.target.checked)}
                 className="accent-[var(--psu-blue)]"
               />
-              แสดงเฉพาะที่ว่าง
+              {t("bw_only_free")}
             </label>
           </div>
 
@@ -139,15 +141,15 @@ export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }
             <div className="bw-panel text-center py-16">
               <p className="text-[14px] text-[var(--bw-muted)]">
                 {items.length === 0
-                  ? "ยังไม่มีอุปกรณ์ให้ยืมในตอนนี้ กลับมาดูใหม่อีกครั้งนะครับ"
-                  : "ไม่พบอุปกรณ์ที่ตรงกับเงื่อนไข"}
+                  ? t("bw_empty")
+                  : t("bw_no_match")}
               </p>
               {items.length > 0 && (
                 <button
                   onClick={() => { setQuery(""); setCat("all"); setFree(false); }}
                   className="text-[13px] font-semibold text-[var(--psu-blue)] hover:underline mt-2"
                 >
-                  ล้างตัวกรอง
+                  {t("bw_clear")}
                 </button>
               )}
             </div>
@@ -173,21 +175,21 @@ export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }
                           {i.title}
                         </p>
                         <span className={`bw-pill ${STATUS_PILL[i.status] ?? "bw-pill-off"} flex-shrink-0`}>
-                          {ITEM_STATUS_LABEL[i.status] ?? i.status}
+                          {lendItemStatus(locale, i.status)}
                         </span>
                       </div>
 
                       <p className="text-[11.5px] text-[var(--bw-muted)]">
-                        {BORROW_CATEGORY_LABEL[i.category] ?? i.category}
+                        {borrowCategory(locale, i.category)}
                         {i.assetTag ? ` · ${i.assetTag}` : ""}
                       </p>
 
                       <div className="mt-auto pt-2 border-t border-[var(--bw-line)] flex items-center justify-between">
                         <span className={`text-[12.5px] font-semibold ${free ? "text-[var(--psu-blue)]" : "text-[var(--bw-muted)]"}`}>
-                          {free ? "ยืมฟรี" : "ไม่ว่าง"}
+                          {free ? t("bw_free") : t("bw_unavailable")}
                         </span>
                         <span className="text-[11px] text-[var(--bw-muted)]">
-                          ยืมได้ {i.maxDays} วัน
+                          {t("bw_max_days", { n: i.maxDays })}
                         </span>
                       </div>
                     </div>
@@ -199,13 +201,13 @@ export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }
 
           {/* ── How it works ───────────────────────────────────────────── */}
           <section className="mt-10">
-            <h2 className="bw-h">ยืมยังไง</h2>
+            <h2 className="bw-h">{t("bw_how")}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {[
-                { n: 1, t: "เลือกของแล้วกดขอยืม", d: "บอกว่าจะยืมกี่วัน และเอาไปใช้ทำอะไร" },
-                { n: 2, t: "รอเจ้าหน้าที่อนุมัติ",   d: "ถ้าไม่ตอบใน 7 วัน ระบบยกเลิกให้เอง" },
-                { n: 3, t: "นัดรับของ",             d: "ยืนยันสองฝ่ายพร้อมถ่ายรูปสภาพของ" },
-                { n: 4, t: "คืนตามกำหนด",           d: "ไม่มีค่าปรับ แต่คืนช้าจะยืมชิ้นใหม่ไม่ได้" },
+                { n: 1, t: t("bw_how_1"), d: t("bw_how_1s") },
+                { n: 2, t: t("bw_how_2"), d: t("bw_how_2s") },
+                { n: 3, t: t("bw_how_3"), d: t("bw_how_3s") },
+                { n: 4, t: t("bw_how_4"), d: t("bw_how_4s") },
               ].map((s) => (
                 <div key={s.n} className="bw-panel">
                   <span className="w-7 h-7 rounded-full bg-[var(--bw-tint)] text-[var(--psu-blue-700)] text-[12px] font-bold flex items-center justify-center">
@@ -217,7 +219,7 @@ export default function BorrowCatalogueClient({ items, stats, fund, viewerRole }
               ))}
             </div>
             <p className="text-[12px] text-[var(--bw-muted)] mt-3">
-              ยืมพร้อมกันได้สูงสุด 3 ชิ้น · นานที่สุด 14 วัน · ต่ออายุได้ 1 ครั้ง
+              {t("bw_limits", { max: 3, days: 14, renew: 1 })}
             </p>
           </section>
         </main>

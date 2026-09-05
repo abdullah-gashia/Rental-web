@@ -65,7 +65,7 @@ export default function BorrowPromo({ items, raised, itemsTotal, timesLent }: Pr
                 <a
                   key={i.id}
                   href={`/borrow/${i.id}`}
-                  className="group rounded-xl border border-[var(--hp-border)] bg-white overflow-hidden hover:border-[var(--psu-blue)] transition-colors"
+                  className="group rounded-xl border border-[var(--hp-border)] bg-[var(--c-surface)] overflow-hidden hover:border-[var(--psu-blue)] transition-colors"
                 >
                   <div className="bw-thumb aspect-square !rounded-none !border-0 !border-b border-[var(--hp-border)]">
                     {i.image

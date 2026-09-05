@@ -1327,3 +1327,236 @@ select.ui-input { padding-right: 30px; }
 @media (prefers-reduced-motion: reduce) {
   .ui-btn, .ui-chip, .ui-nav-item, .ui-stat, .ui-table tbody tr { transition: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Themes
+   ═══════════════════════════════════════════════════════════════════════════
+   Every colour in the app now names a role rather than a value, which is what
+   makes a second theme possible at all — a literal cannot be redefined.
+
+   Three states, not two. An explicit choice stamps data-theme on <html>; the
+   default "ตามระบบ" stamps nothing and lets prefers-color-scheme decide. The
+   dark values are deep navy rather than grey, so the two themes read as the
+   same product at different times of day.
+*/
+
+:root {
+  /* surfaces */
+  --c-canvas:      #f1f5fb;
+  --c-surface:     #ffffff;
+  --c-subtle:      #f7f9fd;
+  --c-subtle-2:    #eef2f8;
+
+  /* lines */
+  --c-line:        #dfe7f2;
+  --c-line-soft:   #eaf0f8;
+  --c-line-str:    #c3d0e2;
+
+  /* ink — 15.4:1, 12.9:1, 8.8:1, 5.6:1, 4.8:1 on white */
+  --c-ink:         #0f1e35;
+  --c-ink-1:       #1e2d47;
+  --c-ink-2:       #3d4d66;
+  --c-ink-3:       #5b6b82;
+  --c-muted:       #64748b;
+  --c-faint:       #94a3b8;
+  --c-faint-2:     #a3b0c2;
+  --c-heading:     #0a2b5e;
+
+  /* accent */
+  --c-accent:      #2563eb;
+  --c-accent-str:  #1d4ed8;
+  --c-accent-lite: #60a5fa;
+  --c-accent-soft: #eef4ff;
+
+  /* semantic — these mean something, so they exist in both themes */
+  --c-danger:      #b3261e;
+  --c-danger-soft: #fdecea;
+  --c-danger-line: #f6c9c4;
+  --c-ok:          #1f6b45;
+  --c-ok-soft:     #e8f5ee;
+  --c-ok-line:     #c3e3d1;
+  --c-warn:        #92620e;
+  --c-warn-soft:   #fff8e6;
+  --c-warn-line:   #f3e2b7;
+}
+
+:root[data-theme="dark"] {
+  --c-canvas:      #0a1120;
+  --c-surface:     #111c30;
+  --c-subtle:      #16223a;
+  --c-subtle-2:    #1a2842;
+
+  --c-line:        #24344f;
+  --c-line-soft:   #1d2b43;
+  --c-line-str:    #33455f;
+
+  --c-ink:         #e8eefb;
+  --c-ink-1:       #d6e0f0;
+  --c-ink-2:       #b6c5dc;
+  --c-ink-3:       #9aabc4;
+  --c-muted:       #8496b0;
+  --c-faint:       #6f8199;
+  --c-faint-2:     #5d7089;
+  --c-heading:     #bcd4ff;
+
+  --c-accent:      #5b95f8;
+  --c-accent-str:  #7fadfb;
+  --c-accent-lite: #97bffc;
+  --c-accent-soft: #16274a;
+
+  --c-danger:      #f4938b;
+  --c-danger-soft: #2d1719;
+  --c-danger-line: #4b262a;
+  --c-ok:          #74d3a4;
+  --c-ok-soft:     #10281e;
+  --c-ok-line:     #1f4938;
+  --c-warn:        #e3ba6e;
+  --c-warn-soft:   #2b2214;
+  --c-warn-line:   #48381b;
+
+  /* The legacy and section-scoped names follow the same swap, so pages that
+     still say var(--hp-*) or var(--bw-*) darken with everything else. */
+  --hp-bg:         #111c30;
+  --hp-canvas:     #0a1120;
+  --hp-subtle:     #16223a;
+  --hp-border:     #24344f;
+  --hp-border-str: #33455f;
+  --hp-ink:        #e8eefb;
+  --hp-ink-2:      #b6c5dc;
+  --hp-muted:      #8496b0;
+
+  --psu-navy:      #bcd4ff;
+  --psu-navy-800:  #a8c6ff;
+  --psu-indigo:    #9dbdfb;
+  --psu-blue:      #5b95f8;
+  --psu-blue-700:  #7fadfb;
+  --psu-sky:       #16274a;
+  --psu-sky-200:   #2b4372;
+
+  --paper:         #0a1120;
+  --paper-dark:    #16223a;
+  --ink:           #e8eefb;
+  --ink-soft:      #d6e0f0;
+  --muted:         #8496b0;
+  --border:        #24344f;
+  --border-light:  #1d2b43;
+  --accent:        #5b95f8;
+  --accent-light:  #16274a;
+  --accent-dark:   #7fadfb;
+
+  --bw-ground:     #0a1120;
+  --bw-surface:    #111c30;
+  --bw-line:       #24344f;
+  --bw-line-2:     #33455f;
+  --bw-ink:        #e8eefb;
+  --bw-ink-2:      #b6c5dc;
+  --bw-muted:      #8496b0;
+  --bw-tint:       #16274a;
+  --bw-accent:     #5b95f8;
+  --bw-deep:       #bcd4ff;
+
+  --code-bg:       #16223a;
+
+  color-scheme: dark;
+}
+
+/* "ตามระบบ" — no stamp on <html>, so the OS decides. Guarded so an explicit
+   light choice still wins on a machine set to dark. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --c-canvas:      #0a1120;
+    --c-surface:     #111c30;
+    --c-subtle:      #16223a;
+    --c-subtle-2:    #1a2842;
+
+    --c-line:        #24344f;
+    --c-line-soft:   #1d2b43;
+    --c-line-str:    #33455f;
+
+    --c-ink:         #e8eefb;
+    --c-ink-1:       #d6e0f0;
+    --c-ink-2:       #b6c5dc;
+    --c-ink-3:       #9aabc4;
+    --c-muted:       #8496b0;
+    --c-faint:       #6f8199;
+    --c-faint-2:     #5d7089;
+    --c-heading:     #bcd4ff;
+
+    --c-accent:      #5b95f8;
+    --c-accent-str:  #7fadfb;
+    --c-accent-lite: #97bffc;
+    --c-accent-soft: #16274a;
+
+    --c-danger:      #f4938b;
+    --c-danger-soft: #2d1719;
+    --c-danger-line: #4b262a;
+    --c-ok:          #74d3a4;
+    --c-ok-soft:     #10281e;
+    --c-ok-line:     #1f4938;
+    --c-warn:        #e3ba6e;
+    --c-warn-soft:   #2b2214;
+    --c-warn-line:   #48381b;
+
+    --hp-bg:         #111c30;
+    --hp-canvas:     #0a1120;
+    --hp-subtle:     #16223a;
+    --hp-border:     #24344f;
+    --hp-border-str: #33455f;
+    --hp-ink:        #e8eefb;
+    --hp-ink-2:      #b6c5dc;
+    --hp-muted:      #8496b0;
+
+    --psu-navy:      #bcd4ff;
+    --psu-navy-800:  #a8c6ff;
+    --psu-indigo:    #9dbdfb;
+    --psu-blue:      #5b95f8;
+    --psu-blue-700:  #7fadfb;
+    --psu-sky:       #16274a;
+    --psu-sky-200:   #2b4372;
+
+    --paper:         #0a1120;
+    --paper-dark:    #16223a;
+    --ink:           #e8eefb;
+    --ink-soft:      #d6e0f0;
+    --muted:         #8496b0;
+    --border:        #24344f;
+    --border-light:  #1d2b43;
+    --accent:        #5b95f8;
+    --accent-light:  #16274a;
+    --accent-dark:   #7fadfb;
+
+    --bw-ground:     #0a1120;
+    --bw-surface:    #111c30;
+    --bw-line:       #24344f;
+    --bw-line-2:     #33455f;
+    --bw-ink:        #e8eefb;
+    --bw-ink-2:      #b6c5dc;
+    --bw-muted:      #8496b0;
+    --bw-tint:       #16274a;
+    --bw-accent:     #5b95f8;
+    --bw-deep:       #bcd4ff;
+
+    --code-bg:       #16223a;
+
+    color-scheme: dark;
+  }
+}
+
+/* A few places still paint pure white or a shadow tuned for a light ground. */
+:root[data-theme="dark"] .shadow-sm,
+:root[data-theme="dark"] .shadow-md,
+:root[data-theme="dark"] .shadow-lg,
+:root[data-theme="dark"] .shadow-xl {
+  box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+}
+
+/* The brand mark is drawn for a light ground; lift it slightly on dark so the
+   navy in the artwork does not disappear into the page. */
+:root[data-theme="dark"] img[alt="PSU Store"] {
+  filter: brightness(1.35) saturate(1.1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) img[alt="PSU Store"] {
+    filter: brightness(1.35) saturate(1.1);
+  }
+}

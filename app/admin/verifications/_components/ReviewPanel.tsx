@@ -32,7 +32,7 @@ export default function ReviewPanel({ request }: Props) {
 
   if (request.status !== "PENDING") {
     return (
-      <div className="bg-[#eaf0f8] rounded-2xl p-5 text-sm text-[#64748b] text-center">
+      <div className="bg-[var(--c-line-soft)] rounded-2xl p-5 text-sm text-[var(--c-muted)] text-center">
         คำขอนี้ถูกตรวจสอบแล้ว ({request.status})
       </div>
     );
@@ -40,12 +40,12 @@ export default function ReviewPanel({ request }: Props) {
 
   if (done) {
     return (
-      <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center space-y-3">
+      <div className="bg-[var(--c-ok-soft)] border border-[var(--c-ok-line)] rounded-2xl p-6 text-center space-y-3">
         <p className="text-3xl">✅</p>
         <p className="font-semibold text-emerald-800">บันทึกผลเรียบร้อยแล้ว</p>
         <button
           onClick={() => router.push("/admin/verifications")}
-          className="text-sm text-emerald-700 underline"
+          className="text-sm text-[var(--c-ok)] underline"
         >
           กลับรายการ
         </button>
@@ -82,7 +82,7 @@ export default function ReviewPanel({ request }: Props) {
 
   return (
     <div className="space-y-5">
-      <h3 className="font-semibold text-[#0f1e35]">ผลการตรวจสอบ</h3>
+      <h3 className="font-semibold text-[var(--c-ink)]">ผลการตรวจสอบ</h3>
 
       {/* Decision buttons */}
       <div className="flex gap-3">
@@ -90,8 +90,8 @@ export default function ReviewPanel({ request }: Props) {
           onClick={() => setDecision("APPROVED")}
           className={`flex-1 py-3 rounded-xl font-semibold text-sm border-2 transition ${
             decision === "APPROVED"
-              ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-              : "border-[#dfe7f2] text-[#3d4d66] hover:border-emerald-300"
+              ? "border-emerald-500 bg-[var(--c-ok-soft)] text-[var(--c-ok)]"
+              : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:border-emerald-300"
           }`}
         >
           ✅ อนุมัติ
@@ -100,8 +100,8 @@ export default function ReviewPanel({ request }: Props) {
           onClick={() => { setDecision("REJECTED"); setRejection(""); }}
           className={`flex-1 py-3 rounded-xl font-semibold text-sm border-2 transition ${
             decision === "REJECTED"
-              ? "border-red-400 bg-red-50 text-red-700"
-              : "border-[#dfe7f2] text-[#3d4d66] hover:border-red-300"
+              ? "border-red-400 bg-[var(--c-danger-soft)] text-[var(--c-danger)]"
+              : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:border-[var(--c-danger-line)]"
           }`}
         >
           ❌ ปฏิเสธ
@@ -111,7 +111,7 @@ export default function ReviewPanel({ request }: Props) {
       {/* Rejection reasons */}
       {decision === "REJECTED" && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-[#1e2d47]">เหตุผลการปฏิเสธ</label>
+          <label className="text-sm font-medium text-[var(--c-ink-1)]">เหตุผลการปฏิเสธ</label>
           <div className="space-y-2">
             {REJECTION_REASONS.map((r) => (
               <label key={r} className="flex items-center gap-2.5 cursor-pointer">
@@ -123,7 +123,7 @@ export default function ReviewPanel({ request }: Props) {
                   onChange={() => setRejection(r)}
                   className="accent-red-500"
                 />
-                <span className="text-sm text-[#1e2d47]">{r}</span>
+                <span className="text-sm text-[var(--c-ink-1)]">{r}</span>
               </label>
             ))}
           </div>
@@ -133,7 +133,7 @@ export default function ReviewPanel({ request }: Props) {
               onChange={(e) => setCustomReason(e.target.value)}
               placeholder="ระบุเหตุผล..."
               rows={2}
-              className="w-full px-3 py-2 text-sm border border-[#dfe7f2] rounded-xl focus:outline-none focus:border-[#0f1e35] resize-none"
+              className="w-full px-3 py-2 text-sm border border-[var(--c-line)] rounded-xl focus:outline-none focus:border-[var(--c-ink)] resize-none"
             />
           )}
         </div>
@@ -141,18 +141,18 @@ export default function ReviewPanel({ request }: Props) {
 
       {/* Admin note */}
       <div className="space-y-1.5">
-        <label className="text-sm font-medium text-[#1e2d47]">บันทึกแอดมิน (ไม่บังคับ)</label>
+        <label className="text-sm font-medium text-[var(--c-ink-1)]">บันทึกแอดมิน (ไม่บังคับ)</label>
         <textarea
           value={adminNote}
           onChange={(e) => setAdminNote(e.target.value)}
           placeholder="บันทึกส่วนตัวสำหรับแอดมิน ผู้ใช้จะไม่เห็น..."
           rows={2}
-          className="w-full px-3 py-2 text-sm border border-[#dfe7f2] rounded-xl focus:outline-none focus:border-[#0f1e35] resize-none"
+          className="w-full px-3 py-2 text-sm border border-[var(--c-line)] rounded-xl focus:outline-none focus:border-[var(--c-ink)] resize-none"
         />
       </div>
 
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 rounded-xl px-3 py-2">{error}</p>
+        <p className="text-sm text-[var(--c-danger)] bg-[var(--c-danger-soft)] rounded-xl px-3 py-2">{error}</p>
       )}
 
       {/* Submit */}
@@ -164,7 +164,7 @@ export default function ReviewPanel({ request }: Props) {
             ? "bg-emerald-600 hover:bg-emerald-700 text-white"
             : decision === "REJECTED"
             ? "bg-red-600 hover:bg-red-700 text-white"
-            : "bg-[#0f1e35] text-white"
+            : "bg-[var(--c-ink)] text-white"
         }`}
       >
         {isPending ? "กำลังบันทึก…" : "บันทึกผล"}

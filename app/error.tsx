@@ -26,7 +26,7 @@ export default function GlobalError({
   return (
     <main className="ui-shell flex items-center justify-center px-5 py-20">
       <div className="w-full max-w-[480px] text-center">
-        <div className="ui-empty-icon !w-12 !h-12 !bg-[#fdecea] !text-[#b3261e]">
+        <div className="ui-empty-icon !w-12 !h-12 !bg-[var(--c-danger-soft)] !text-[var(--c-danger)]">
           <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="M12 9v4.5M12 17h.01M10.3 4.3 2.6 17.7A1.5 1.5 0 0 0 3.9 20h16.2a1.5 1.5 0 0 0 1.3-2.3L13.7 4.3a2 2 0 0 0-3.4 0z" />

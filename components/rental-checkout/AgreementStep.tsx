@@ -41,53 +41,53 @@ export default function AgreementStep({ state, item, pricing, onSetAgreement, on
       <div className="space-y-3">
 
         {/* Dates */}
-        <div className="flex items-start justify-between gap-4 bg-[#f7f9fd] rounded-xl p-3.5">
+        <div className="flex items-start justify-between gap-4 bg-[var(--c-subtle)] rounded-xl p-3.5">
           <div>
-            <p className="text-[11px] font-semibold text-[#8d9bb0] uppercase tracking-wide mb-0.5">ระยะเวลาเช่า</p>
-            <p className="text-sm font-semibold text-[#0f1e35]">
+            <p className="text-[11px] font-semibold text-[var(--c-faint)] uppercase tracking-wide mb-0.5">ระยะเวลาเช่า</p>
+            <p className="text-sm font-semibold text-[var(--c-ink)]">
               {startLabel} – {endLabel}
-              <span className="text-[#5b6b82] font-normal ml-1.5">({pricing.rentalDays} วัน)</span>
+              <span className="text-[var(--c-ink-3)] font-normal ml-1.5">({pricing.rentalDays} วัน)</span>
             </p>
           </div>
-          <button onClick={() => onGotoStep(1)} className="text-xs text-[#2563eb] hover:underline flex-shrink-0">
+          <button onClick={() => onGotoStep(1)} className="text-xs text-[var(--c-accent)] hover:underline flex-shrink-0">
             แก้ไข
           </button>
         </div>
 
         {/* Pickup */}
-        <div className="flex items-start justify-between gap-4 bg-[#f7f9fd] rounded-xl p-3.5">
+        <div className="flex items-start justify-between gap-4 bg-[var(--c-subtle)] rounded-xl p-3.5">
           <div>
-            <p className="text-[11px] font-semibold text-[#8d9bb0] uppercase tracking-wide mb-0.5">นัดรับ</p>
-            <p className="text-sm font-semibold text-[#0f1e35]">
+            <p className="text-[11px] font-semibold text-[var(--c-faint)] uppercase tracking-wide mb-0.5">นัดรับ</p>
+            <p className="text-sm font-semibold text-[var(--c-ink)]">
               📍 {state.pickupLocation || "—"}
             </p>
-            <p className="text-xs text-[#5b6b82]">{pickupDateLabel}</p>
+            <p className="text-xs text-[var(--c-ink-3)]">{pickupDateLabel}</p>
           </div>
-          <button onClick={() => onGotoStep(2)} className="text-xs text-[#2563eb] hover:underline flex-shrink-0">
+          <button onClick={() => onGotoStep(2)} className="text-xs text-[var(--c-accent)] hover:underline flex-shrink-0">
             แก้ไข
           </button>
         </div>
 
         {/* Financial */}
-        <div className="bg-[#f7f9fd] rounded-xl p-3.5 space-y-1.5 text-sm">
-          <p className="text-[11px] font-semibold text-[#8d9bb0] uppercase tracking-wide mb-2">รายละเอียดค่าใช้จ่าย</p>
-          <div className="flex justify-between text-[#3d4d66]">
+        <div className="bg-[var(--c-subtle)] rounded-xl p-3.5 space-y-1.5 text-sm">
+          <p className="text-[11px] font-semibold text-[var(--c-faint)] uppercase tracking-wide mb-2">รายละเอียดค่าใช้จ่าย</p>
+          <div className="flex justify-between text-[var(--c-ink-2)]">
             <span>ค่าเช่า (฿{item.lateFeePerDay ?? pricing.rentalFee / pricing.rentalDays} × {pricing.rentalDays} วัน)</span>
             <span>฿{pricing.rentalFee.toLocaleString()}</span>
           </div>
-          <div className="flex justify-between text-[#3d4d66]">
+          <div className="flex justify-between text-[var(--c-ink-2)]">
             <span>เงินมัดจำ</span>
             <span>฿{pricing.securityDeposit.toLocaleString()}</span>
           </div>
-          <div className="flex justify-between text-[#3d4d66]">
+          <div className="flex justify-between text-[var(--c-ink-2)]">
             <span>ค่าธรรมเนียม (5%)</span>
             <span>฿{pricing.platformFee.toLocaleString()}</span>
           </div>
-          <div className="border-t border-[#dfe7f2] pt-1.5 flex justify-between font-bold text-[#0f1e35]">
+          <div className="border-t border-[var(--c-line)] pt-1.5 flex justify-between font-bold text-[var(--c-ink)]">
             <span>ยอดชำระทั้งหมด</span>
-            <span className="text-[#2563eb]">฿{pricing.totalPaid.toLocaleString()}</span>
+            <span className="text-[var(--c-accent)]">฿{pricing.totalPaid.toLocaleString()}</span>
           </div>
-          <div className="flex justify-between text-xs text-[#8d9bb0]">
+          <div className="flex justify-between text-xs text-[var(--c-faint)]">
             <span>วิธีชำระ</span>
             <span>{state.paymentMethod === "ESCROW" ? "💳 Escrow" : "💵 COD (มัดจำผ่านระบบ)"}</span>
           </div>
@@ -95,12 +95,12 @@ export default function AgreementStep({ state, item, pricing, onSetAgreement, on
       </div>
 
       {/* Rental Agreement */}
-      <div className="border border-[#dfe7f2] rounded-xl overflow-hidden">
-        <div className="bg-[#f1f5fb] px-4 py-2.5 flex items-center gap-2">
+      <div className="border border-[var(--c-line)] rounded-xl overflow-hidden">
+        <div className="bg-[var(--c-canvas)] px-4 py-2.5 flex items-center gap-2">
           <span className="text-sm">📜</span>
-          <p className="text-xs font-bold text-[#1e2d47]">เงื่อนไขการเช่า (สัญญาเช่าดิจิทัล)</p>
+          <p className="text-xs font-bold text-[var(--c-ink-1)]">เงื่อนไขการเช่า (สัญญาเช่าดิจิทัล)</p>
         </div>
-        <div className={`px-4 py-3 text-xs text-[#3d4d66] space-y-1.5 leading-relaxed ${
+        <div className={`px-4 py-3 text-xs text-[var(--c-ink-2)] space-y-1.5 leading-relaxed ${
           expanded ? "" : "max-h-40 overflow-hidden"
         }`}>
           <p>1. ผู้เช่าตกลงเช่าสินค้าตามระยะเวลาที่ระบุข้างต้น</p>
@@ -115,8 +115,8 @@ export default function AgreementStep({ state, item, pricing, onSetAgreement, on
           <p>8. ค่าธรรมเนียมระบบ 5% จากค่าเช่า ไม่สามารถขอคืนได้เมื่อเจ้าของตอบรับแล้ว</p>
           {item.rentalTerms && (
             <>
-              <div className="border-t border-[#dfe7f2] pt-1.5 mt-1.5">
-                <p className="font-semibold text-[#1e2d47] mb-1">เงื่อนไขเพิ่มเติมจากเจ้าของ:</p>
+              <div className="border-t border-[var(--c-line)] pt-1.5 mt-1.5">
+                <p className="font-semibold text-[var(--c-ink-1)] mb-1">เงื่อนไขเพิ่มเติมจากเจ้าของ:</p>
                 <p className="whitespace-pre-line">{item.rentalTerms}</p>
               </div>
             </>
@@ -125,7 +125,7 @@ export default function AgreementStep({ state, item, pricing, onSetAgreement, on
         <button
           type="button"
           onClick={() => setExpanded(!expanded)}
-          className="w-full py-2 text-xs text-[#2563eb] hover:bg-[#f7f9fd] transition border-t border-[#dfe7f2]"
+          className="w-full py-2 text-xs text-[var(--c-accent)] hover:bg-[var(--c-subtle)] transition border-t border-[var(--c-line)]"
         >
           {expanded ? "ย่อลง ▲" : "อ่านเพิ่มเติม ▼"}
         </button>
@@ -137,10 +137,10 @@ export default function AgreementStep({ state, item, pricing, onSetAgreement, on
           type="checkbox"
           checked={state.agreementAccepted}
           onChange={(e) => onSetAgreement(e.target.checked)}
-          className="w-4 h-4 mt-0.5 accent-[#2563eb] flex-shrink-0"
+          className="w-4 h-4 mt-0.5 accent-[var(--c-accent)] flex-shrink-0"
         />
-        <span className="text-sm text-[#1e2d47]">
-          ข้าพเจ้าได้อ่านและยอมรับเงื่อนไขการเช่าข้างต้นทุกประการ <span className="text-red-500">*</span>
+        <span className="text-sm text-[var(--c-ink-1)]">
+          ข้าพเจ้าได้อ่านและยอมรับเงื่อนไขการเช่าข้างต้นทุกประการ <span className="text-[var(--c-danger)]">*</span>
         </span>
       </label>
     </div>

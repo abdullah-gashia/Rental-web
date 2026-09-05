@@ -85,22 +85,22 @@ export default async function AdminLendingPage({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-[#0f1e35] flex items-center gap-2">
+        <h1 className="text-xl font-bold text-[var(--c-ink)] flex items-center gap-2">
           🔑 ระบบปล่อยเช่า
         </h1>
-        <p className="text-sm text-[#64748b] mt-1">ภาพรวม Rental System — สินค้าเช่าในตลาด</p>
+        <p className="text-sm text-[var(--c-muted)] mt-1">ภาพรวม Rental System — สินค้าเช่าในตลาด</p>
       </div>
 
       {/* KPI — row 1 */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: "รายการเช่าทั้งหมด",  value: totalRentalItems, color: "text-blue-600"  },
-          { label: "คำสั่งเช่าทั้งหมด",  value: totalOrders,      color: "text-[#0f1e35]"   },
-          { label: "กำลังดำเนินการ",      value: activeOrders,     color: "text-green-600"},
-          { label: "เกินกำหนดคืน",        value: overdueOrders,    color: "text-red-600"  },
+          { label: "รายการเช่าทั้งหมด",  value: totalRentalItems, color: "text-[var(--c-accent)]"  },
+          { label: "คำสั่งเช่าทั้งหมด",  value: totalOrders,      color: "text-[var(--c-ink)]"   },
+          { label: "กำลังดำเนินการ",      value: activeOrders,     color: "text-[var(--c-ok)]"},
+          { label: "เกินกำหนดคืน",        value: overdueOrders,    color: "text-[var(--c-danger)]"  },
         ].map(({ label, value, color }) => (
-          <div key={label} className="bg-white rounded-2xl border border-[#dfe7f2] p-4">
-            <p className="text-xs text-[#64748b] mb-1">{label}</p>
+          <div key={label} className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-4">
+            <p className="text-xs text-[var(--c-muted)] mb-1">{label}</p>
             <p className={`text-2xl font-extrabold ${color}`}>{value}</p>
           </div>
         ))}
@@ -109,21 +109,21 @@ export default async function AdminLendingPage({
       {/* KPI — row 2 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {[
-          { label: "รอเจ้าของอนุมัติ",    value: pendingApprovals,                      color: "text-amber-600" },
+          { label: "รอเจ้าของอนุมัติ",    value: pendingApprovals,                      color: "text-[var(--c-warn)]" },
           { label: "มัดจำค้างในระบบ",      value: `฿${depositsHeld.toLocaleString()}`,   color: "text-purple-600"},
-          { label: "ค่าธรรมเนียมสะสม",    value: `฿${totalRevenue.toLocaleString()}`,   color: "text-emerald-600"},
+          { label: "ค่าธรรมเนียมสะสม",    value: `฿${totalRevenue.toLocaleString()}`,   color: "text-[var(--c-ok)]"},
         ].map(({ label, value, color }) => (
-          <div key={label} className="bg-white rounded-2xl border border-[#dfe7f2] p-4">
-            <p className="text-xs text-[#64748b] mb-1">{label}</p>
+          <div key={label} className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-4">
+            <p className="text-xs text-[var(--c-muted)] mb-1">{label}</p>
             <p className={`text-xl font-extrabold ${color}`}>{value}</p>
           </div>
         ))}
       </div>
 
       {/* Recent orders */}
-      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+      <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <h2 className="text-sm font-bold text-[#1e2d47]">คำสั่งเช่าล่าสุด</h2>
+          <h2 className="text-sm font-bold text-[var(--c-ink-1)]">คำสั่งเช่าล่าสุด</h2>
           <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
             {FILTERS.map((x) => (
               <Link
@@ -131,8 +131,8 @@ export default async function AdminLendingPage({
                 href={x.key === "all" ? "/admin/lending" : `/admin/lending?f=${x.key}`}
                 className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition ${
                   activeFilter.key === x.key
-                    ? "bg-[#2563eb] border-[#2563eb] text-white"
-                    : "bg-white border-[#dfe7f2] text-[#3d4d66] hover:border-[#c3d0e2]"
+                    ? "bg-[var(--c-accent)] border-[var(--c-accent)] text-white"
+                    : "bg-[var(--c-surface)] border-[var(--c-line)] text-[var(--c-ink-2)] hover:border-[var(--c-line-str)]"
                 }`}
               >
                 {x.label}
@@ -142,19 +142,19 @@ export default async function AdminLendingPage({
         </div>
 
         {recentOrders.length === 0 ? (
-          <div className="py-10 text-center text-[#94a3b8] text-sm">
+          <div className="py-10 text-center text-[var(--c-faint)] text-sm">
             ไม่มีคำสั่งเช่าในหมวด &ldquo;{activeFilter.label}&rdquo;
           </div>
         ) : (
           <div className="space-y-1">
             {recentOrders.map((order) => (
-              <div key={order.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#f7f9fd] transition">
-                <div className="w-10 h-10 rounded-xl bg-[#eaf0f8] flex items-center justify-center text-xl flex-shrink-0">
+              <div key={order.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-[var(--c-subtle)] transition">
+                <div className="w-10 h-10 rounded-xl bg-[var(--c-line-soft)] flex items-center justify-center text-xl flex-shrink-0">
                   {order.item.emoji ?? "📦"}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[#0f1e35] truncate">{order.item.title}</p>
-                  <p className="text-xs text-[#8d9bb0]">
+                  <p className="text-sm font-medium text-[var(--c-ink)] truncate">{order.item.title}</p>
+                  <p className="text-xs text-[var(--c-faint)]">
                     {order.renter.name ?? "—"} → {order.owner.name ?? "—"}
                     {" · "}฿{order.dailyRate}/วัน × {order.rentalDays} วัน
                   </p>
@@ -164,7 +164,7 @@ export default async function AdminLendingPage({
                 </span>
                 <Link
                   href={`/admin/lending/${order.id}`}
-                  className="text-xs font-semibold text-[#2563eb] hover:underline flex-shrink-0"
+                  className="text-xs font-semibold text-[var(--c-accent)] hover:underline flex-shrink-0"
                 >
                   ดูรายละเอียด →
                 </Link>

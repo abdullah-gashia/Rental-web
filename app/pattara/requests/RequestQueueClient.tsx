@@ -49,7 +49,7 @@ export default function RequestQueueClient({
 
       {msg && (
         <div role="status" className={`rounded-xl px-4 py-3 text-[13px] border ${
-          msg.ok ? "bg-[#e8f5ee] border-[#c3e3d1] text-[#1f6b45]" : "bg-[#fdecea] border-[#f6c9c4] text-[#b3261e]"
+          msg.ok ? "bg-[var(--c-ok-soft)] border-[var(--c-ok-line)] text-[var(--c-ok)]" : "bg-[var(--c-danger-soft)] border-[var(--c-danger-line)] text-[var(--c-danger)]"
         }`}>
           {msg.text}
         </div>
@@ -94,7 +94,7 @@ export default function RequestQueueClient({
                       </span>
                       <span className="text-[var(--bw-muted)]">คะแนน {o.borrower.trustScore}</span>
                       <span className="text-[var(--bw-muted)]">เคยยืมสำเร็จ {h.completed} ครั้ง</span>
-                      {h.late > 0 && <span className="text-[#b3261e] font-medium">เคยคืนช้า {h.late} ครั้ง</span>}
+                      {h.late > 0 && <span className="text-[var(--c-danger)] font-medium">เคยคืนช้า {h.late} ครั้ง</span>}
                       {h.open > 1 && <span className="text-[var(--bw-muted)]">กำลังยืมอยู่ {h.open - 1} ชิ้น</span>}
                     </div>
 
@@ -114,7 +114,7 @@ export default function RequestQueueClient({
                       </button>
                       <button
                         onClick={() => { setOpen(open === o.id ? null : o.id); setMode("reject"); }}
-                        className="bw-btn bw-btn-ghost !h-9 !text-[#b3261e] !border-[#f6c9c4]"
+                        className="bw-btn bw-btn-ghost !h-9 !text-[var(--c-danger)] !border-[var(--c-danger-line)]"
                       >
                         ไม่อนุมัติ
                       </button>
@@ -159,7 +159,7 @@ export default function RequestQueueClient({
                         <button
                           onClick={() => run(() => rejectBorrow(o.id, note))}
                           disabled={pending || !note.trim()}
-                          className="bw-btn bw-btn-ghost !text-[#b3261e] !border-[#f6c9c4] self-start"
+                          className="bw-btn bw-btn-ghost !text-[var(--c-danger)] !border-[var(--c-danger-line)] self-start"
                         >
                           {pending ? "กำลังบันทึก…" : "ยืนยันการปฏิเสธ"}
                         </button>

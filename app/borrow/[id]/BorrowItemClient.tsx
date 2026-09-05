@@ -235,7 +235,7 @@ export default function BorrowItemClient({ item }: { item: any }) {
                     </div>
 
                     {error && (
-                      <div role="alert" className="text-[12.5px] text-[#b3261e] bg-[#fdecea] border border-[#f6c9c4] rounded-xl px-3.5 py-2.5 leading-[1.7]">
+                      <div role="alert" className="text-[12.5px] text-[var(--c-danger)] bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-3.5 py-2.5 leading-[1.7]">
                         {error}
                       </div>
                     )}

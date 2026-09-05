@@ -13,10 +13,10 @@ export default function ImageGallery({ images }: Props) {
 
   if (images.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6">
-        <h3 className="text-sm font-semibold text-[#3d4d66] mb-3">รูปภาพ</h3>
-        <div className="aspect-[4/3] rounded-xl bg-[#f1f5fb] flex items-center justify-center">
-          <div className="text-center text-[#94a3b8]">
+      <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">รูปภาพ</h3>
+        <div className="aspect-[4/3] rounded-xl bg-[var(--c-canvas)] flex items-center justify-center">
+          <div className="text-center text-[var(--c-faint)]">
             <span className="text-4xl block mb-2">📷</span>
             <span className="text-sm">ไม่มีรูปภาพ</span>
           </div>
@@ -29,15 +29,15 @@ export default function ImageGallery({ images }: Props) {
 
   return (
     <>
-      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6">
-        <h3 className="text-sm font-semibold text-[#3d4d66] mb-3">
+      <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">
           รูปภาพ
-          <span className="text-[#94a3b8] font-normal ml-1">({images.length})</span>
+          <span className="text-[var(--c-faint)] font-normal ml-1">({images.length})</span>
         </h3>
 
         {/* Main Image */}
         <div
-          className="relative aspect-[4/3] rounded-xl overflow-hidden bg-[#f1f5fb] cursor-zoom-in group"
+          className="relative aspect-[4/3] rounded-xl overflow-hidden bg-[var(--c-canvas)] cursor-zoom-in group"
           onClick={() => setLightbox(true)}
         >
           <Image
@@ -62,7 +62,7 @@ export default function ImageGallery({ images }: Props) {
                 onClick={() => setActiveIdx(idx)}
                 className={`relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-all ${
                   idx === activeIdx
-                    ? "border-[#2563eb] shadow-md"
+                    ? "border-[var(--c-accent)] shadow-md"
                     : "border-transparent hover:border-[#d5d2cc]"
                 }`}
               >
@@ -88,7 +88,7 @@ export default function ImageGallery({ images }: Props) {
           {/* Close button */}
           <button
             onClick={() => setLightbox(false)}
-            className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white text-xl transition-colors"
+            className="absolute top-4 right-4 z-10 w-10 h-10 bg-[var(--c-surface)]/10 hover:bg-[var(--c-surface)]/20 rounded-full flex items-center justify-center text-white text-xl transition-colors"
           >
             ✕
           </button>
@@ -101,7 +101,7 @@ export default function ImageGallery({ images }: Props) {
                   e.stopPropagation();
                   setActiveIdx((prev) => (prev - 1 + images.length) % images.length);
                 }}
-                className="absolute left-4 z-10 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white text-xl transition-colors"
+                className="absolute left-4 z-10 w-10 h-10 bg-[var(--c-surface)]/10 hover:bg-[var(--c-surface)]/20 rounded-full flex items-center justify-center text-white text-xl transition-colors"
               >
                 ‹
               </button>
@@ -110,7 +110,7 @@ export default function ImageGallery({ images }: Props) {
                   e.stopPropagation();
                   setActiveIdx((prev) => (prev + 1) % images.length);
                 }}
-                className="absolute right-4 z-10 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white text-xl transition-colors"
+                className="absolute right-4 z-10 w-10 h-10 bg-[var(--c-surface)]/10 hover:bg-[var(--c-surface)]/20 rounded-full flex items-center justify-center text-white text-xl transition-colors"
               >
                 ›
               </button>

@@ -411,7 +411,7 @@ function EmptyState({ query }: { query: string }) {
 
   return (
     <div className="border border-[var(--hp-border)] rounded-lg bg-[var(--hp-subtle)] py-16 px-6 flex flex-col items-center text-center">
-      <div className="w-10 h-10 rounded-lg bg-white border border-[var(--hp-border)] flex items-center justify-center mb-4">
+      <div className="w-10 h-10 rounded-lg bg-[var(--c-surface)] border border-[var(--hp-border)] flex items-center justify-center mb-4">
         <svg className="w-4 h-4 text-[var(--hp-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>

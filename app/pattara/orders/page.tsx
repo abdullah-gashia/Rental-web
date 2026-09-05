@@ -102,7 +102,7 @@ export default async function OfficeOrdersPage({
                         {o.dueDate ? (
                           <>
                             <p className="bw-num">{new Date(o.dueDate).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "2-digit" })}</p>
-                            <p className={`text-[11px] ${left !== null && left < 0 ? "text-[#b3261e] font-semibold" : "text-[var(--bw-muted)]"}`}>
+                            <p className={`text-[11px] ${left !== null && left < 0 ? "text-[var(--c-danger)] font-semibold" : "text-[var(--bw-muted)]"}`}>
                               {left === null ? "" : left < 0 ? `เลย ${Math.abs(left)} วัน` : left === 0 ? "วันนี้" : `อีก ${left} วัน`}
                             </p>
                           </>

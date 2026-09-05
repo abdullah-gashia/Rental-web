@@ -68,7 +68,7 @@ function ShippingCard({ data }: { data: ShippingPayload }) {
   }
 
   return (
-    <div className="w-full rounded-2xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-blue-50/60 overflow-hidden shadow-sm">
+    <div className="w-full rounded-2xl border-2 border-[var(--c-line-str)] bg-gradient-to-br from-blue-50 to-blue-50/60 overflow-hidden shadow-sm">
       {/* Header bar */}
       <div className="bg-blue-600 px-4 py-2.5 flex items-center gap-2">
         <svg className="w-4 h-4 text-white flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,34 +83,34 @@ function ShippingCard({ data }: { data: ShippingPayload }) {
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <p className="text-[10px] text-blue-500 font-semibold uppercase tracking-wider">สินค้า</p>
-            <p className="text-sm font-bold text-[#0f1e35] truncate">{data.itemTitle}</p>
+            <p className="text-sm font-bold text-[var(--c-ink)] truncate">{data.itemTitle}</p>
           </div>
           <div className="text-right flex-shrink-0">
             <p className="text-[10px] text-blue-500 font-semibold uppercase tracking-wider">ราคา</p>
-            <p className="text-sm font-bold text-[#0f1e35]">฿{data.amount.toLocaleString()}</p>
+            <p className="text-sm font-bold text-[var(--c-ink)]">฿{data.amount.toLocaleString()}</p>
           </div>
         </div>
 
         {/* Shipping method */}
-        <div className="flex items-center gap-2 bg-white rounded-xl px-3 py-2 border border-blue-100">
-          <span className="text-blue-600 text-sm">🚚</span>
+        <div className="flex items-center gap-2 bg-[var(--c-surface)] rounded-xl px-3 py-2 border border-blue-100">
+          <span className="text-[var(--c-accent)] text-sm">🚚</span>
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] text-[#64748b]">วิธีจัดส่ง</p>
-            <p className="text-sm font-semibold text-[#0f1e35]">{data.methodLabel}</p>
+            <p className="text-[10px] text-[var(--c-muted)]">วิธีจัดส่ง</p>
+            <p className="text-sm font-semibold text-[var(--c-ink)]">{data.methodLabel}</p>
           </div>
         </div>
 
         {/* Tracking number */}
         {data.trackingNumber && (
-          <div className="flex items-center gap-2 bg-white rounded-xl px-3 py-2 border border-blue-100">
-            <span className="text-blue-600 text-sm">🔢</span>
+          <div className="flex items-center gap-2 bg-[var(--c-surface)] rounded-xl px-3 py-2 border border-blue-100">
+            <span className="text-[var(--c-accent)] text-sm">🔢</span>
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] text-[#64748b]">หมายเลขพัสดุ</p>
-              <p className="text-sm font-mono font-bold text-[#0f1e35] truncate">{data.trackingNumber}</p>
+              <p className="text-[10px] text-[var(--c-muted)]">หมายเลขพัสดุ</p>
+              <p className="text-sm font-mono font-bold text-[var(--c-ink)] truncate">{data.trackingNumber}</p>
             </div>
             <button
               onClick={copyTracking}
-              className="flex-shrink-0 px-2.5 py-1 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 text-[10px] font-bold transition"
+              className="flex-shrink-0 px-2.5 py-1 rounded-lg bg-[var(--c-accent-soft)] hover:bg-blue-200 text-[var(--c-accent-str)] text-[10px] font-bold transition"
               title="คัดลอกหมายเลข"
             >
               คัดลอก
@@ -121,7 +121,7 @@ function ShippingCard({ data }: { data: ShippingPayload }) {
         {/* Proof image */}
         {data.proofUrl && (
           <div className="space-y-1.5">
-            <p className="text-[10px] text-[#64748b] font-semibold">🖼️ รูปหลักฐานการจัดส่ง</p>
+            <p className="text-[10px] text-[var(--c-muted)] font-semibold">🖼️ รูปหลักฐานการจัดส่ง</p>
             <a href={data.proofUrl} target="_blank" rel="noopener noreferrer" className="block">
               <img
                 src={data.proofUrl}
@@ -134,8 +134,8 @@ function ShippingCard({ data }: { data: ShippingPayload }) {
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-1 border-t border-blue-100">
-          <span className="text-[10px] text-[#64748b]">จัดส่งเมื่อ {shippedDate}</span>
-          <span className="text-[10px] bg-blue-100 text-blue-700 font-semibold px-2 py-0.5 rounded-full">
+          <span className="text-[10px] text-[var(--c-muted)]">จัดส่งเมื่อ {shippedDate}</span>
+          <span className="text-[10px] bg-[var(--c-accent-soft)] text-[var(--c-accent-str)] font-semibold px-2 py-0.5 rounded-full">
             🔒 ข้อมูลอย่างเป็นทางการ
           </span>
         </div>
@@ -155,7 +155,7 @@ function ReceiptCard({ data }: { data: ReceiptPayload }) {
   const shortId = data.orderId.slice(-8).toUpperCase();
 
   return (
-    <div className="w-full rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-emerald-50/60 overflow-hidden shadow-sm">
+    <div className="w-full rounded-2xl border-2 border-[var(--c-ok-line)] bg-gradient-to-br from-emerald-50 to-emerald-50/60 overflow-hidden shadow-sm">
       {/* Header bar */}
       <div className="bg-emerald-600 px-4 py-2.5 flex items-center gap-2">
         <svg className="w-4 h-4 text-white flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,8 +169,8 @@ function ReceiptCard({ data }: { data: ReceiptPayload }) {
         {/* Order ref */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[10px] text-emerald-600 font-semibold uppercase tracking-wider">หมายเลขอ้างอิง</p>
-            <p className="text-sm font-mono font-bold text-[#0f1e35]">#{shortId}</p>
+            <p className="text-[10px] text-[var(--c-ok)] font-semibold uppercase tracking-wider">หมายเลขอ้างอิง</p>
+            <p className="text-sm font-mono font-bold text-[var(--c-ink)]">#{shortId}</p>
           </div>
           <span className="flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">
             ✅ PAID via Escrow
@@ -178,32 +178,32 @@ function ReceiptCard({ data }: { data: ReceiptPayload }) {
         </div>
 
         {/* Item */}
-        <div className="bg-white rounded-xl border border-emerald-100 px-3 py-2.5 space-y-2">
+        <div className="bg-[var(--c-surface)] rounded-xl border border-emerald-100 px-3 py-2.5 space-y-2">
           <div className="flex justify-between items-start">
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] text-[#64748b]">สินค้า</p>
-              <p className="text-sm font-semibold text-[#0f1e35] truncate">{data.itemTitle}</p>
+              <p className="text-[10px] text-[var(--c-muted)]">สินค้า</p>
+              <p className="text-sm font-semibold text-[var(--c-ink)] truncate">{data.itemTitle}</p>
             </div>
-            <p className="text-sm font-extrabold text-emerald-700 flex-shrink-0 ml-4">
+            <p className="text-sm font-extrabold text-[var(--c-ok)] flex-shrink-0 ml-4">
               ฿{data.amount.toLocaleString()}
             </p>
           </div>
           <div className="grid grid-cols-2 gap-2 pt-2 border-t border-emerald-50">
             <div>
-              <p className="text-[10px] text-[#64748b]">ผู้ซื้อ</p>
-              <p className="text-xs font-semibold text-[#1e2d47] truncate">{data.buyerName || "ไม่ระบุ"}</p>
+              <p className="text-[10px] text-[var(--c-muted)]">ผู้ซื้อ</p>
+              <p className="text-xs font-semibold text-[var(--c-ink-1)] truncate">{data.buyerName || "ไม่ระบุ"}</p>
             </div>
             <div>
-              <p className="text-[10px] text-[#64748b]">ผู้ขาย</p>
-              <p className="text-xs font-semibold text-[#1e2d47] truncate">{data.sellerName || "ไม่ระบุ"}</p>
+              <p className="text-[10px] text-[var(--c-muted)]">ผู้ขาย</p>
+              <p className="text-xs font-semibold text-[var(--c-ink-1)] truncate">{data.sellerName || "ไม่ระบุ"}</p>
             </div>
           </div>
         </div>
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-1 border-t border-emerald-100">
-          <span className="text-[10px] text-[#64748b]">เสร็จสิ้น {completedDate}</span>
-          <span className="text-[10px] bg-emerald-100 text-emerald-700 font-semibold px-2 py-0.5 rounded-full">
+          <span className="text-[10px] text-[var(--c-muted)]">เสร็จสิ้น {completedDate}</span>
+          <span className="text-[10px] bg-emerald-100 text-[var(--c-ok)] font-semibold px-2 py-0.5 rounded-full">
             🔒 ข้อมูลอย่างเป็นทางการ
           </span>
         </div>
@@ -220,7 +220,7 @@ export default function SystemMessage({ content }: { content: string }) {
     // Graceful fallback — show as muted system notice
     return (
       <div className="w-full text-center py-1">
-        <span className="text-[10px] text-[#64748b] italic">[ข้อความระบบ]</span>
+        <span className="text-[10px] text-[var(--c-muted)] italic">[ข้อความระบบ]</span>
       </div>
     );
   }

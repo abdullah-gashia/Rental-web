@@ -11,7 +11,7 @@ export default function RefreshButton() {
     <button
       onClick={() => startTransition(() => router.refresh())}
       disabled={isPending}
-      className="flex items-center gap-2 text-sm font-medium text-[#3d4d66] border border-[#dfe7f2] bg-white hover:bg-[#f1f5fb] px-4 py-2 rounded-xl transition disabled:opacity-50"
+      className="flex items-center gap-2 text-sm font-medium text-[var(--c-ink-2)] border border-[var(--c-line)] bg-[var(--c-surface)] hover:bg-[var(--c-canvas)] px-4 py-2 rounded-xl transition disabled:opacity-50"
       aria-label="รีเฟรชข้อมูล"
     >
       <svg

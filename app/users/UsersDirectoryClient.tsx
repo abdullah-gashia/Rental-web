@@ -21,9 +21,9 @@ function Stars({ rating, className = "" }: { rating: number; className?: string 
 }
 
 function trustTone(score: number) {
-  if (score >= 120) return { label: "น่าเชื่อถือสูง", cls: "bg-[#e8f5ee] text-[#1f6b45] border-[#c3e3d1]" };
+  if (score >= 120) return { label: "น่าเชื่อถือสูง", cls: "bg-[var(--c-ok-soft)] text-[var(--c-ok)] border-[var(--c-ok-line)]" };
   if (score >= 80)  return { label: "ปกติ",          cls: "bg-[var(--hp-subtle)] text-[var(--hp-ink-2)] border-[var(--hp-border)]" };
-  return              { label: "ควรระวัง",      cls: "bg-[#fff7e6] text-[#92620e] border-[#f5e3b8]" };
+  return              { label: "ควรระวัง",      cls: "bg-[#fff7e6] text-[var(--c-warn)] border-[#f5e3b8]" };
 }
 
 export default function UsersDirectoryClient({ users }: { users: DirectoryUser[] }) {
@@ -91,7 +91,7 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
             className={`text-[12px] font-semibold px-3.5 py-1.5 rounded-full border transition ${
               kind === t.k
                 ? "bg-[var(--psu-navy)] border-[var(--psu-navy)] text-white"
-                : "bg-white border-[var(--hp-border)] text-[var(--hp-ink-2)] hover:border-[var(--hp-border-str)]"
+                : "bg-[var(--c-surface)] border-[var(--hp-border)] text-[var(--hp-ink-2)] hover:border-[var(--hp-border-str)]"
             }`}
           >
             {t.label} <span className="hp-num opacity-65">{t.n}</span>
@@ -149,7 +149,7 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
                         {u.officeLocation ?? (th ? "ให้ยืมอุปกรณ์ฟรีสำหรับนักศึกษา" : "Free equipment lending")}
                       </p>
                       <div className="flex items-center gap-2 mt-2 flex-wrap">
-                        <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded-md border bg-[#eef4ff] text-[#1d4ed8] border-[#cfe0ff]">
+                        <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded-md border bg-[var(--c-accent-soft)] text-[var(--c-accent-str)] border-[#cfe0ff]">
                           {th ? `อุปกรณ์ ${u.lendItemCount} ชิ้น` : `${u.lendItemCount} items`}
                         </span>
                         <span className="text-[11px] text-[var(--hp-muted)]">

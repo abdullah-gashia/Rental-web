@@ -13,13 +13,13 @@ interface RecentOrdersTableProps {
 
 // Status → Thai label + Tailwind badge classes
 const STATUS_META: Record<string, { label: string; cls: string }> = {
-  FUNDS_HELD:        { label: "ชำระแล้ว",         cls: "bg-blue-50   text-blue-700   border-blue-200"  },
-  SHIPPED:           { label: "จัดส่งแล้ว",        cls: "bg-indigo-50 text-indigo-700 border-indigo-200"},
-  COMPLETED:         { label: "สำเร็จ",            cls: "bg-green-50  text-green-700  border-green-200" },
-  DISPUTED:          { label: "มีข้อพิพาท",        cls: "bg-orange-50 text-orange-700 border-orange-200"},
+  FUNDS_HELD:        { label: "ชำระแล้ว",         cls: "bg-[var(--c-accent-soft)]   text-[var(--c-accent-str)]   border-[var(--c-line-str)]"  },
+  SHIPPED:           { label: "จัดส่งแล้ว",        cls: "bg-[var(--c-accent-soft)] text-[var(--c-accent-str)] border-indigo-200"},
+  COMPLETED:         { label: "สำเร็จ",            cls: "bg-[var(--c-ok-soft)]  text-[var(--c-ok)]  border-[var(--c-ok-line)]" },
+  DISPUTED:          { label: "มีข้อพิพาท",        cls: "bg-[var(--c-warn-soft)] text-[var(--c-warn)] border-[var(--c-warn-line)]"},
   REFUNDED:          { label: "คืนเงินแล้ว",       cls: "bg-purple-50 text-purple-700 border-purple-200"},
-  CANCELLED:         { label: "ยกเลิก",            cls: "bg-red-50    text-red-700    border-red-200"   },
-  CANCELLED_BY_ADMIN:{ label: "ยกเลิกโดยแอดมิน",  cls: "bg-red-50    text-red-700    border-red-200"   },
+  CANCELLED:         { label: "ยกเลิก",            cls: "bg-[var(--c-danger-soft)]    text-[var(--c-danger)]    border-[var(--c-danger-line)]"   },
+  CANCELLED_BY_ADMIN:{ label: "ยกเลิกโดยแอดมิน",  cls: "bg-[var(--c-danger-soft)]    text-[var(--c-danger)]    border-[var(--c-danger-line)]"   },
 };
 
 function formatBaht(v: number): string {
@@ -43,33 +43,33 @@ function relativeTime(iso: string): string {
 export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
   if (orders.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 shadow-sm">
-        <h3 className="text-sm font-semibold text-[#1e2d47] mb-4">รายการล่าสุด</h3>
-        <p className="text-sm text-[#64748b] text-center py-8">ยังไม่มีรายการ</p>
+      <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 shadow-sm">
+        <h3 className="text-sm font-semibold text-[var(--c-ink-1)] mb-4">รายการล่าสุด</h3>
+        <p className="text-sm text-[var(--c-muted)] text-center py-8">ยังไม่มีรายการ</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-[#dfe7f2] shadow-sm overflow-hidden">
-      <div className="px-5 py-4 border-b border-[#dfe7f2]">
-        <h3 className="text-sm font-semibold text-[#1e2d47]">รายการล่าสุด</h3>
+    <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] shadow-sm overflow-hidden">
+      <div className="px-5 py-4 border-b border-[var(--c-line)]">
+        <h3 className="text-sm font-semibold text-[var(--c-ink-1)]">รายการล่าสุด</h3>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm" aria-label="รายการ Escrow ล่าสุด">
           <thead>
-            <tr className="border-b border-[#dfe7f2] bg-[#f1f5fb]">
-              <th className="text-left px-5 py-3 text-xs font-semibold text-[#5b6b82] uppercase tracking-wide">
+            <tr className="border-b border-[var(--c-line)] bg-[var(--c-canvas)]">
+              <th className="text-left px-5 py-3 text-xs font-semibold text-[var(--c-ink-3)] uppercase tracking-wide">
                 รหัสคำสั่ง
               </th>
-              <th className="text-right px-5 py-3 text-xs font-semibold text-[#5b6b82] uppercase tracking-wide">
+              <th className="text-right px-5 py-3 text-xs font-semibold text-[var(--c-ink-3)] uppercase tracking-wide">
                 จำนวนเงิน
               </th>
-              <th className="text-center px-5 py-3 text-xs font-semibold text-[#5b6b82] uppercase tracking-wide">
+              <th className="text-center px-5 py-3 text-xs font-semibold text-[var(--c-ink-3)] uppercase tracking-wide">
                 สถานะ
               </th>
-              <th className="text-right px-5 py-3 text-xs font-semibold text-[#5b6b82] uppercase tracking-wide">
+              <th className="text-right px-5 py-3 text-xs font-semibold text-[var(--c-ink-3)] uppercase tracking-wide">
                 วันที่
               </th>
             </tr>
@@ -78,23 +78,23 @@ export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
             {orders.map((order, idx) => {
               const meta = STATUS_META[order.status] ?? {
                 label: order.status,
-                cls:   "bg-gray-50 text-gray-700 border-gray-200",
+                cls:   "bg-[var(--c-subtle)] text-[var(--c-ink-2)] border-[var(--c-line)]",
               };
               return (
                 <tr
                   key={order.id}
-                  className={`border-b border-[#eaf0f8] hover:bg-[#f7f9fd] transition-colors ${
+                  className={`border-b border-[var(--c-line-soft)] hover:bg-[var(--c-subtle)] transition-colors ${
                     idx === orders.length - 1 ? "border-b-0" : ""
                   }`}
                 >
                   {/* Order ID — show last 8 chars to keep it short */}
                   <td className="px-5 py-3.5">
-                    <span className="font-mono text-xs text-[#3d4d66] bg-[#eaf0f8] px-2 py-0.5 rounded-lg">
+                    <span className="font-mono text-xs text-[var(--c-ink-2)] bg-[var(--c-line-soft)] px-2 py-0.5 rounded-lg">
                       #{order.id.slice(-8).toUpperCase()}
                     </span>
                   </td>
 
-                  <td className="px-5 py-3.5 text-right font-semibold text-[#0f1e35] tabular-nums">
+                  <td className="px-5 py-3.5 text-right font-semibold text-[var(--c-ink)] tabular-nums">
                     {formatBaht(order.amount)}
                   </td>
 
@@ -106,7 +106,7 @@ export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
                     </span>
                   </td>
 
-                  <td className="px-5 py-3.5 text-right text-xs text-[#64748b] whitespace-nowrap">
+                  <td className="px-5 py-3.5 text-right text-xs text-[var(--c-muted)] whitespace-nowrap">
                     {relativeTime(order.createdAt)}
                   </td>
                 </tr>

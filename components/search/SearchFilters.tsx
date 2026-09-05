@@ -138,7 +138,7 @@ export default function SearchFilters({
       </select>
 
       {/* Price range — one grouped control, like a real filter bar */}
-      <div className="flex items-center h-8 rounded-md border border-[var(--hp-border)] bg-white overflow-hidden">
+      <div className="flex items-center h-8 rounded-md border border-[var(--hp-border)] bg-[var(--c-surface)] overflow-hidden">
         <span className="text-[12px] text-[var(--hp-muted)] pl-2.5 pr-1.5 hidden sm:block">฿</span>
         <input
           type="number"
@@ -148,7 +148,7 @@ export default function SearchFilters({
           onChange={(e) => setMinPrice(e.target.value)}
           onKeyDown={handlePriceKeyDown}
           aria-label="ราคาต่ำสุด"
-          className="hp-num w-[74px] h-full px-2 text-[13px] bg-transparent border-0 focus:outline-none placeholder:font-sans placeholder:text-[#64748b]"
+          className="hp-num w-[74px] h-full px-2 text-[13px] bg-transparent border-0 focus:outline-none placeholder:font-sans placeholder:text-[var(--c-muted)]"
         />
         <span className="w-px h-4 bg-[var(--hp-border)]" />
         <input
@@ -159,7 +159,7 @@ export default function SearchFilters({
           onChange={(e) => setMaxPrice(e.target.value)}
           onKeyDown={handlePriceKeyDown}
           aria-label="ราคาสูงสุด"
-          className="hp-num w-[74px] h-full px-2 text-[13px] bg-transparent border-0 focus:outline-none placeholder:font-sans placeholder:text-[#64748b]"
+          className="hp-num w-[74px] h-full px-2 text-[13px] bg-transparent border-0 focus:outline-none placeholder:font-sans placeholder:text-[var(--c-muted)]"
         />
       </div>
 

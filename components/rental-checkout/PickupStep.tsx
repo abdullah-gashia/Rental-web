@@ -56,8 +56,8 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
     <div className="space-y-5">
       {/* Pickup location */}
       <div>
-        <label className="block text-xs font-semibold text-[#3d4d66] mb-2">
-          📍 สถานที่นัดรับ <span className="text-red-500">*</span>
+        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-2">
+          📍 สถานที่นัดรับ <span className="text-[var(--c-danger)]">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2 mb-2">
           {CAMPUS_MEETUP_LOCATIONS.map((loc) => (
@@ -73,8 +73,8 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
               }}
               className={`p-2.5 rounded-xl border text-left transition text-xs ${
                 !useCustomPickup && state.pickupLocation === loc.label
-                  ? "bg-[#2563eb]/10 border-[#2563eb] text-[#2563eb]"
-                  : "border-[#dfe7f2] text-[#3d4d66] hover:border-[#94a3b8]"
+                  ? "bg-[var(--c-accent)]/10 border-[var(--c-accent)] text-[var(--c-accent)]"
+                  : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:border-[var(--c-faint)]"
               }`}
             >
               <p className="font-semibold">{loc.label}</p>
@@ -87,8 +87,8 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
             onClick={() => setUseCustomPickup(true)}
             className={`p-2.5 rounded-xl border text-left transition text-xs ${
               useCustomPickup
-                ? "bg-[#2563eb]/10 border-[#2563eb] text-[#2563eb]"
-                : "border-[#dfe7f2] text-[#3d4d66] hover:border-[#94a3b8]"
+                ? "bg-[var(--c-accent)]/10 border-[var(--c-accent)] text-[var(--c-accent)]"
+                : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:border-[var(--c-faint)]"
             }`}
           >
             <p className="font-semibold">✏️ กำหนดเอง</p>
@@ -104,26 +104,26 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
               pickupLocation: e.target.value,
               returnLocation: state.sameReturnLocation ? e.target.value : state.returnLocation,
             })}
-            className="w-full px-3 py-2.5 border border-[#dfe7f2] rounded-xl text-sm mt-1
-                       focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb]"
+            className="w-full px-3 py-2.5 border border-[var(--c-line)] rounded-xl text-sm mt-1
+                       focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)]"
           />
         )}
       </div>
 
       {/* Pickup time — date is locked to rentalStartDate from Step 1 */}
       <div>
-        <label className="block text-xs font-semibold text-[#3d4d66] mb-1.5">
-          🕐 เวลานัดรับ <span className="text-red-500">*</span>
+        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">
+          🕐 เวลานัดรับ <span className="text-[var(--c-danger)]">*</span>
         </label>
 
         {/* Static date display */}
-        <div className="flex items-center gap-2 bg-[#f7f9fd] border border-[#dfe7f2] rounded-xl px-3 py-2.5 mb-2">
+        <div className="flex items-center gap-2 bg-[var(--c-subtle)] border border-[var(--c-line)] rounded-xl px-3 py-2.5 mb-2">
           <span className="text-sm">📅</span>
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] text-[#94a3b8] font-medium uppercase tracking-wide">วันที่นัดรับ</p>
-            <p className="text-sm font-semibold text-[#0f1e35] truncate">{formattedStartDate}</p>
+            <p className="text-[10px] text-[var(--c-faint)] font-medium uppercase tracking-wide">วันที่นัดรับ</p>
+            <p className="text-sm font-semibold text-[var(--c-ink)] truncate">{formattedStartDate}</p>
           </div>
-          <span className="text-[10px] text-[#2563eb] bg-[#2563eb]/10 px-2 py-0.5 rounded-full font-semibold flex-shrink-0">
+          <span className="text-[10px] text-[var(--c-accent)] bg-[var(--c-accent)]/10 px-2 py-0.5 rounded-full font-semibold flex-shrink-0">
             ล็อกจาก Step 1
           </span>
         </div>
@@ -133,15 +133,15 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
           type="time"
           value={pickupTime}
           onChange={(e) => handleTimeChange(e.target.value)}
-          className="w-full px-3 py-2.5 border border-[#dfe7f2] rounded-xl text-sm
-                     focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb]"
+          className="w-full px-3 py-2.5 border border-[var(--c-line)] rounded-xl text-sm
+                     focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)]"
         />
-        <p className="text-[11px] text-[#8d9bb0] mt-1">เลือกเวลาที่สะดวกนัดรับของในวันดังกล่าว</p>
+        <p className="text-[11px] text-[var(--c-faint)] mt-1">เลือกเวลาที่สะดวกนัดรับของในวันดังกล่าว</p>
       </div>
 
       {/* Return location */}
       <div>
-        <label className="block text-xs font-semibold text-[#3d4d66] mb-2">
+        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-2">
           📦 สถานที่คืนของ
         </label>
         <label className="flex items-center gap-2 cursor-pointer mb-3">
@@ -155,9 +155,9 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
               });
               if (e.target.checked) setUseCustomReturn(false);
             }}
-            className="w-4 h-4 accent-[#2563eb]"
+            className="w-4 h-4 accent-[var(--c-accent)]"
           />
-          <span className="text-sm text-[#3d4d66]">คืนที่เดียวกับที่รับ</span>
+          <span className="text-sm text-[var(--c-ink-2)]">คืนที่เดียวกับที่รับ</span>
         </label>
 
         {!state.sameReturnLocation && (
@@ -173,8 +173,8 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
                   }}
                   className={`p-2.5 rounded-xl border text-left transition text-xs ${
                     !useCustomReturn && state.returnLocation === loc.label
-                      ? "bg-blue-50 border-blue-400 text-blue-700"
-                      : "border-[#dfe7f2] text-[#3d4d66] hover:border-[#94a3b8]"
+                      ? "bg-[var(--c-accent-soft)] border-blue-400 text-[var(--c-accent-str)]"
+                      : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:border-[var(--c-faint)]"
                   }`}
                 >
                   <p className="font-semibold">{loc.label}</p>
@@ -186,8 +186,8 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
                 onClick={() => setUseCustomReturn(true)}
                 className={`p-2.5 rounded-xl border text-left transition text-xs ${
                   useCustomReturn
-                    ? "bg-blue-50 border-blue-400 text-blue-700"
-                    : "border-[#dfe7f2] text-[#3d4d66] hover:border-[#94a3b8]"
+                    ? "bg-[var(--c-accent-soft)] border-blue-400 text-[var(--c-accent-str)]"
+                    : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:border-[var(--c-faint)]"
                 }`}
               >
                 <p className="font-semibold">✏️ กำหนดเอง</p>
@@ -199,7 +199,7 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
                 placeholder="ระบุสถานที่คืนของ..."
                 value={state.returnLocation}
                 onChange={(e) => patch({ returnLocation: e.target.value })}
-                className="w-full px-3 py-2.5 border border-[#dfe7f2] rounded-xl text-sm
+                className="w-full px-3 py-2.5 border border-[var(--c-line)] rounded-xl text-sm
                            focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400"
               />
             )}
@@ -209,14 +209,14 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
 
       {/* Note */}
       <div>
-        <label className="block text-xs font-semibold text-[#3d4d66] mb-1.5">หมายเหตุ (ไม่บังคับ)</label>
+        <label className="block text-xs font-semibold text-[var(--c-ink-2)] mb-1.5">หมายเหตุ (ไม่บังคับ)</label>
         <textarea
           value={state.pickupNote}
           onChange={(e) => patch({ pickupNote: e.target.value })}
           rows={2}
           placeholder='เช่น "ใส่เสื้อสีแดง" หรือ "จะโทรก่อนถึง 10 นาที"'
-          className="w-full px-3 py-2.5 border border-[#dfe7f2] rounded-xl text-sm resize-none
-                     focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30"
+          className="w-full px-3 py-2.5 border border-[var(--c-line)] rounded-xl text-sm resize-none
+                     focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30"
         />
       </div>
     </div>

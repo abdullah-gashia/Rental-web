@@ -45,13 +45,13 @@ export default function NotificationsTab({ preferences, showToast }: Props) {
 
   return (
     <div className="p-5 sm:p-6 space-y-6">
-      <h2 className="text-lg font-bold text-[#0f1e35] flex items-center gap-2">
+      <h2 className="text-lg font-bold text-[var(--c-ink)] flex items-center gap-2">
         <span>🔔</span> การแจ้งเตือน
       </h2>
 
       {/* In-app notifications */}
       <div>
-        <h3 className="text-sm font-semibold text-[#3d4d66] mb-3">
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">
           การแจ้งเตือนในแอป
         </h3>
         <div className="space-y-0.5">
@@ -83,8 +83,8 @@ export default function NotificationsTab({ preferences, showToast }: Props) {
       </div>
 
       {/* Email notifications */}
-      <div className="border-t border-[#dfe7f2] pt-5">
-        <h3 className="text-sm font-semibold text-[#3d4d66] mb-3">
+      <div className="border-t border-[var(--c-line)] pt-5">
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-3">
           การแจ้งเตือนทางอีเมล
         </h3>
         <div className="space-y-0.5">
@@ -114,7 +114,7 @@ export default function NotificationsTab({ preferences, showToast }: Props) {
         <button
           onClick={handleSave}
           disabled={pending}
-          className="px-6 py-2.5 bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded-xl text-sm font-bold transition disabled:opacity-50 flex items-center gap-2"
+          className="px-6 py-2.5 bg-[var(--c-accent)] hover:bg-[var(--c-accent-str)] text-white rounded-xl text-sm font-bold transition disabled:opacity-50 flex items-center gap-2"
         >
           {pending && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
           บันทึกการเปลี่ยนแปลง
@@ -135,11 +135,11 @@ function ToggleRow({
   onChange: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between py-3 px-3 rounded-lg hover:bg-[#f7f9fd] transition">
+    <div className="flex items-center justify-between py-3 px-3 rounded-lg hover:bg-[var(--c-subtle)] transition">
       <div className="min-w-0 flex-1 pr-4">
-        <p className="text-sm font-medium text-[#1e2d47]">{label}</p>
+        <p className="text-sm font-medium text-[var(--c-ink-1)]">{label}</p>
         {description && (
-          <p className="text-[11px] text-[#64748b] mt-0.5">{description}</p>
+          <p className="text-[11px] text-[var(--c-muted)] mt-0.5">{description}</p>
         )}
       </div>
       <button
@@ -147,12 +147,12 @@ function ToggleRow({
         role="switch"
         aria-checked={checked}
         onClick={onChange}
-        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 ${
-          checked ? "bg-[#2563eb]" : "bg-[#ddd]"
+        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 ${
+          checked ? "bg-[var(--c-accent)]" : "bg-[#ddd]"
         }`}
       >
         <span
-          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out mt-0.5 ${
+          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-[var(--c-surface)] shadow ring-0 transition duration-200 ease-in-out mt-0.5 ${
             checked ? "translate-x-[22px]" : "translate-x-0.5"
           }`}
         />

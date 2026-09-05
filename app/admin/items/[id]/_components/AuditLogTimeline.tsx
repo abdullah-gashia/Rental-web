@@ -25,11 +25,11 @@ export default function AuditLogTimeline({ auditLog, itemCreatedAt }: Props) {
     : [{ action: "สร้างสินค้าใหม่", adminName: "ระบบ", note: null, createdAt: itemCreatedAt }];
 
   return (
-    <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6">
-      <h3 className="text-sm font-semibold text-[#3d4d66] mb-4">
+    <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
+      <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-4">
         บันทึกกิจกรรม
         {auditLog.length === 0 && (
-          <span className="text-[#94a3b8] font-normal ml-1 text-xs">(ยังไม่มีบันทึก)</span>
+          <span className="text-[var(--c-faint)] font-normal ml-1 text-xs">(ยังไม่มีบันทึก)</span>
         )}
       </h3>
 
@@ -38,29 +38,29 @@ export default function AuditLogTimeline({ auditLog, itemCreatedAt }: Props) {
           <div key={idx} className="flex gap-3 text-sm relative">
             {/* Timeline line */}
             {idx < entries.length - 1 && (
-              <div className="absolute left-[5px] top-[14px] bottom-0 w-[1px] bg-[#dfe7f2]" />
+              <div className="absolute left-[5px] top-[14px] bottom-0 w-[1px] bg-[var(--c-line)]" />
             )}
 
             {/* Dot */}
             <div className="w-[11px] flex-shrink-0 pt-[6px]">
               <div className={`w-[11px] h-[11px] rounded-full border-2 ${
                 idx === 0
-                  ? "bg-[#2563eb] border-[#2563eb]"
-                  : "bg-white border-[#d5d2cc]"
+                  ? "bg-[var(--c-accent)] border-[var(--c-accent)]"
+                  : "bg-[var(--c-surface)] border-[#d5d2cc]"
               }`} />
             </div>
 
             {/* Content */}
             <div className="pb-4 min-w-0">
-              <p className="text-[#1e2d47]">
+              <p className="text-[var(--c-ink-1)]">
                 <span className="font-medium">{entry.adminName}</span>
-                <span className="mx-1 text-[#94a3b8]">—</span>
+                <span className="mx-1 text-[var(--c-faint)]">—</span>
                 <span>{entry.action}</span>
               </p>
               {entry.note && (
-                <p className="text-[#8494a9] text-xs mt-0.5 italic">&ldquo;{entry.note}&rdquo;</p>
+                <p className="text-[var(--c-faint)] text-xs mt-0.5 italic">&ldquo;{entry.note}&rdquo;</p>
               )}
-              <p className="text-[#94a3b8] text-xs mt-0.5">{fmtDate(entry.createdAt)}</p>
+              <p className="text-[var(--c-faint)] text-xs mt-0.5">{fmtDate(entry.createdAt)}</p>
             </div>
           </div>
         ))}

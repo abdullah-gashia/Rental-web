@@ -38,8 +38,8 @@ export default function StatusGroupTabs({ active }: { active: string }) {
             onClick={() => handleClick(tab.key)}
             className={`px-3.5 py-1.5 rounded-full text-sm font-semibold transition whitespace-nowrap border ${
               isActive
-                ? "bg-[#0f1e35] text-white border-[#0f1e35]"
-                : "bg-white text-[#3d4d66] border-[#dfe7f2] hover:border-[#0f1e35] hover:text-[#0f1e35]"
+                ? "bg-[var(--c-ink)] text-white border-[var(--c-ink)]"
+                : "bg-[var(--c-surface)] text-[var(--c-ink-2)] border-[var(--c-line)] hover:border-[var(--c-ink)] hover:text-[var(--c-ink)]"
             }`}
           >
             {tab.label}

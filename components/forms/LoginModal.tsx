@@ -85,19 +85,19 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
       <div className="flex justify-between items-start mb-6">
         <div>
           <h2 className="text-xl font-bold">{t("login_title")}</h2>
-          <p className="text-sm text-[#64748b] mt-1">{t("login_sub")}</p>
+          <p className="text-sm text-[var(--c-muted)] mt-1">{t("login_sub")}</p>
         </div>
-        <button onClick={onClose} className="text-[#64748b] hover:text-[#0f1e35] text-xl leading-none">✕</button>
+        <button onClick={onClose} className="text-[var(--c-muted)] hover:text-[var(--c-ink)] text-xl leading-none">✕</button>
       </div>
       <div className="flex flex-col gap-3 mb-6">
         <button
           type="button"
           onClick={handleGoogle}
           disabled={googleLoading}
-          className="w-full border border-[#dfe7f2] rounded-xl py-3 flex items-center justify-center gap-3 text-sm font-medium hover:bg-[#f1f5fb] transition disabled:opacity-60"
+          className="w-full border border-[var(--c-line)] rounded-xl py-3 flex items-center justify-center gap-3 text-sm font-medium hover:bg-[var(--c-canvas)] transition disabled:opacity-60"
         >
           {googleLoading ? (
-            <span className="w-4 h-4 border-2 border-[#64748b] border-t-transparent rounded-full animate-spin" />
+            <span className="w-4 h-4 border-2 border-[var(--c-muted)] border-t-transparent rounded-full animate-spin" />
           ) : (
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -113,21 +113,21 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
           type="button"
           disabled
           title="ยังไม่เปิดใช้งาน"
-          className="w-full border border-[#dfe7f2] rounded-xl py-3 flex items-center justify-center gap-3 text-sm font-medium opacity-45 cursor-not-allowed"
+          className="w-full border border-[var(--c-line)] rounded-xl py-3 flex items-center justify-center gap-3 text-sm font-medium opacity-45 cursor-not-allowed"
         >
           <span className="text-lg">🎓</span>
           <span>{t("login_psu")}</span>
-          <span className="text-[10px] font-semibold text-[#64748b] border border-[#dfe7f2] rounded px-1.5 py-0.5">
+          <span className="text-[10px] font-semibold text-[var(--c-muted)] border border-[var(--c-line)] rounded px-1.5 py-0.5">
             เร็วๆ นี้
           </span>
         </button>
       </div>
       <div className="relative mb-6">
-        <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[#dfe7f2]" /></div>
-        <div className="relative flex justify-center"><span className="bg-white px-3 text-xs text-[#64748b]">{t("or")}</span></div>
+        <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[var(--c-line)]" /></div>
+        <div className="relative flex justify-center"><span className="bg-[var(--c-surface)] px-3 text-xs text-[var(--c-muted)]">{t("or")}</span></div>
       </div>
       {error && (
-        <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+        <div className="mb-3 p-3 bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl text-sm text-[var(--c-danger)]">
           ⚠️ {error}
         </div>
       )}
@@ -137,7 +137,7 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder={t("login_email_placeholder")}
-          className="w-full border border-[#dfe7f2] rounded-xl px-4 py-2.5 text-sm"
+          className="w-full border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm"
           required
         />
         <input
@@ -145,18 +145,18 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder={t("login_password_placeholder")}
-          className="w-full border border-[#dfe7f2] rounded-xl px-4 py-2.5 text-sm"
+          className="w-full border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm"
           required
         />
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[#0f1e35] text-white font-semibold py-3 rounded-xl hover:bg-[#1e2d47] transition mt-1 disabled:opacity-50"
+          className="w-full bg-[var(--c-ink)] text-white font-semibold py-3 rounded-xl hover:bg-[var(--c-ink-1)] transition mt-1 disabled:opacity-50"
         >
           {loading ? "กำลังเข้าสู่ระบบ…" : t("login_btn")}
         </button>
       </form>
-      <p className="text-xs text-center text-[#94a3b8] mt-4">
+      <p className="text-xs text-center text-[var(--c-faint)] mt-4">
         ทดสอบ: somchai.p@psu.ac.th / password123
       </p>
     </Modal>

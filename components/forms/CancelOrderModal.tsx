@@ -92,17 +92,17 @@ export default function CancelOrderModal({
     <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
 
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-[#dfe7f2] px-6 py-4 flex items-start justify-between rounded-t-2xl z-10">
+        <div className="sticky top-0 bg-[var(--c-surface)] border-b border-[var(--c-line)] px-6 py-4 flex items-start justify-between rounded-t-2xl z-10">
           <div>
-            <h3 className="text-lg font-bold text-[#0f1e35]">ยกเลิกคำสั่งซื้อ</h3>
-            <p className="text-xs text-[#64748b] mt-0.5 truncate max-w-xs">{itemTitle}</p>
+            <h3 className="text-lg font-bold text-[var(--c-ink)]">ยกเลิกคำสั่งซื้อ</h3>
+            <p className="text-xs text-[var(--c-muted)] mt-0.5 truncate max-w-xs">{itemTitle}</p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-[#64748b] hover:bg-[#eaf0f8] hover:text-[#0f1e35] transition flex-shrink-0 ml-3"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--c-muted)] hover:bg-[var(--c-line-soft)] hover:text-[var(--c-ink)] transition flex-shrink-0 ml-3"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -114,11 +114,11 @@ export default function CancelOrderModal({
 
           {/* Meetup no-show grace-period notice (seller only) */}
           {role === "seller" && isMeetupOrder && sellerGraceHint && (
-            <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+            <div className="flex items-start gap-3 bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-4 py-3">
               <span className="text-amber-500 text-lg leading-none mt-0.5">⏳</span>
               <div>
                 <p className="text-sm font-semibold text-amber-800">ยังไม่ถึงเวลายกเลิก</p>
-                <p className="text-xs text-amber-700 mt-0.5 leading-relaxed">
+                <p className="text-xs text-[var(--c-warn)] mt-0.5 leading-relaxed">
                   กรุณารอจนถึง <span className="font-bold">{sellerGraceHint} น.</span> (30 นาทีหลังเวลานัดรับ)
                   เพื่อให้ผู้ซื้อมีเวลาเดินทาง
                 </p>
@@ -128,24 +128,24 @@ export default function CancelOrderModal({
 
           {/* Refund / no-refund notice */}
           {isEscrow ? (
-            <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3">
-              <span className="text-emerald-600 text-lg">💰</span>
+            <div className="flex items-center gap-3 bg-[var(--c-ok-soft)] border border-[var(--c-ok-line)] rounded-xl px-4 py-3">
+              <span className="text-[var(--c-ok)] text-lg">💰</span>
               <div>
                 <p className="text-sm font-semibold text-emerald-800">คืนเงินอัตโนมัติ</p>
-                <p className="text-xs text-emerald-600">฿{amount.toLocaleString()} จะคืนเข้ากระเป๋าผู้ซื้อทันที</p>
+                <p className="text-xs text-[var(--c-ok)]">฿{amount.toLocaleString()} จะคืนเข้ากระเป๋าผู้ซื้อทันที</p>
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-3 bg-[#f1f5fb] border border-[#dfe7f2] rounded-xl px-4 py-3">
-              <span className="text-[#64748b] text-lg">💵</span>
-              <p className="text-xs text-[#5b6b82]">คำสั่งซื้อ COD — ไม่มีการโอนเงินผ่านระบบ</p>
+            <div className="flex items-center gap-3 bg-[var(--c-canvas)] border border-[var(--c-line)] rounded-xl px-4 py-3">
+              <span className="text-[var(--c-muted)] text-lg">💵</span>
+              <p className="text-xs text-[var(--c-ink-3)]">คำสั่งซื้อ COD — ไม่มีการโอนเงินผ่านระบบ</p>
             </div>
           )}
 
           {/* Reason selector */}
           <div>
-            <label className="block text-sm font-semibold text-[#1e2d47] mb-2">
-              เหตุผล <span className="text-red-500">*</span>
+            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-2">
+              เหตุผล <span className="text-[var(--c-danger)]">*</span>
             </label>
             <div className="space-y-2">
               {reasons.map((r) => (
@@ -153,8 +153,8 @@ export default function CancelOrderModal({
                   key={r}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 cursor-pointer transition ${
                     selected === r
-                      ? "border-red-400 bg-red-50"
-                      : "border-[#dfe7f2] hover:border-red-200 hover:bg-red-50/30"
+                      ? "border-red-400 bg-[var(--c-danger-soft)]"
+                      : "border-[var(--c-line)] hover:border-[var(--c-danger-line)] hover:bg-[var(--c-danger-soft)]/30"
                   }`}
                 >
                   <input
@@ -165,7 +165,7 @@ export default function CancelOrderModal({
                     onChange={() => { setSelected(r); setFormError(null); }}
                     className="accent-red-500"
                   />
-                  <span className="text-sm text-[#1e2d47]">{r}</span>
+                  <span className="text-sm text-[var(--c-ink-1)]">{r}</span>
                 </label>
               ))}
             </div>
@@ -176,14 +176,14 @@ export default function CancelOrderModal({
                 onChange={(e) => { setCustom(e.target.value); setFormError(null); }}
                 rows={3}
                 placeholder="โปรดระบุเหตุผล…"
-                className="mt-3 w-full border border-[#dfe7f2] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/30 focus:border-red-400 transition resize-none"
+                className="mt-3 w-full border border-[var(--c-line)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/30 focus:border-red-400 transition resize-none"
               />
             )}
           </div>
 
           {/* Warning note */}
-          <div className="bg-[#f1f5fb] rounded-xl px-4 py-3 text-xs text-[#5b6b82] leading-relaxed">
-            <span className="font-semibold text-[#3d4d66]">หมายเหตุ:</span>{" "}
+          <div className="bg-[var(--c-canvas)] rounded-xl px-4 py-3 text-xs text-[var(--c-ink-3)] leading-relaxed">
+            <span className="font-semibold text-[var(--c-ink-2)]">หมายเหตุ:</span>{" "}
             {role === "buyer"
               ? "การยกเลิกจะคืนเงินเข้ากระเป๋าของคุณทันที และสินค้าจะกลับไปแสดงในตลาดใหม่"
               : "การยกเลิกจะคืนเงินให้ผู้ซื้อทันที และสินค้าจะกลับไปแสดงในตลาดให้ผู้อื่นซื้อได้"}
@@ -191,9 +191,9 @@ export default function CancelOrderModal({
 
           {/* Error */}
           {formError && (
-            <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-              <span className="text-red-500 flex-shrink-0">⚠️</span>
-              <p className="text-sm text-red-700 font-medium">{formError}</p>
+            <div className="flex items-start gap-2 bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-4 py-3">
+              <span className="text-[var(--c-danger)] flex-shrink-0">⚠️</span>
+              <p className="text-sm text-[var(--c-danger)] font-medium">{formError}</p>
             </div>
           )}
 
@@ -203,7 +203,7 @@ export default function CancelOrderModal({
               type="button"
               onClick={onClose}
               disabled={isPending}
-              className="flex-1 py-3 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
+              className="flex-1 py-3 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
             >
               ไม่ยกเลิก
             </button>

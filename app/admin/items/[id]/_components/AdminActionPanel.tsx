@@ -102,12 +102,12 @@ export default function AdminActionPanel({ item }: Props) {
         </div>
       )}
 
-      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6">
-        <h3 className="text-sm font-semibold text-[#3d4d66] mb-4">การจัดการ</h3>
+      <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
+        <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-4">การจัดการ</h3>
 
         {/* Removed banner */}
         {isRemoved && (
-          <div className="mb-4 bg-gray-100 border border-gray-300 rounded-xl px-3 py-2.5 text-sm text-gray-600 text-center font-medium">
+          <div className="mb-4 bg-[var(--c-line-soft)] border border-[var(--c-line-str)] rounded-xl px-3 py-2.5 text-sm text-[var(--c-ink-3)] text-center font-medium">
             🗑️ สินค้านี้ถูกลบแล้ว
           </div>
         )}
@@ -131,8 +131,8 @@ export default function AdminActionPanel({ item }: Props) {
             <button
               onClick={() => setRejectOpen(true)}
               disabled={pending}
-              className="w-full px-4 py-2.5 border border-red-300 text-red-600 rounded-xl font-medium
-                         hover:bg-red-50 transition-colors flex items-center justify-center gap-2
+              className="w-full px-4 py-2.5 border border-[var(--c-danger-line)] text-[var(--c-danger)] rounded-xl font-medium
+                         hover:bg-[var(--c-danger-soft)] transition-colors flex items-center justify-center gap-2
                          disabled:opacity-50 text-sm"
             >
               ❌ ปฏิเสธสินค้า
@@ -144,8 +144,8 @@ export default function AdminActionPanel({ item }: Props) {
             <button
               onClick={() => setSuspendOpen(true)}
               disabled={pending}
-              className="w-full px-4 py-2.5 border border-amber-300 text-amber-700 rounded-xl font-medium
-                         hover:bg-amber-50 transition-colors flex items-center justify-center gap-2
+              className="w-full px-4 py-2.5 border border-amber-300 text-[var(--c-warn)] rounded-xl font-medium
+                         hover:bg-[var(--c-warn-soft)] transition-colors flex items-center justify-center gap-2
                          disabled:opacity-50 text-sm"
             >
               ⚠️ ระงับการขาย
@@ -179,13 +179,13 @@ export default function AdminActionPanel({ item }: Props) {
           )}
 
           {/* ── Trending Toggle ── */}
-          <div className="border-t border-[#eaf0f8] my-2" />
+          <div className="border-t border-[var(--c-line-soft)] my-2" />
           {trending ? (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs text-[#3d4d66] bg-orange-50 border border-orange-200 rounded-xl px-3 py-2.5">
+              <div className="flex items-center justify-between text-xs text-[var(--c-ink-2)] bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-3 py-2.5">
                 <div>
-                  <p className="font-semibold text-orange-700">🔥 อยู่ในรายการมาแรง</p>
-                  <p className="text-orange-600 mt-0.5">ตำแหน่ง #{trending.position}</p>
+                  <p className="font-semibold text-[var(--c-warn)]">🔥 อยู่ในรายการมาแรง</p>
+                  <p className="text-[var(--c-warn)] mt-0.5">ตำแหน่ง #{trending.position}</p>
                 </div>
                 <button
                   onClick={() => startTransition(async () => {
@@ -194,7 +194,7 @@ export default function AdminActionPanel({ item }: Props) {
                     else showToast(false, res.error);
                   })}
                   disabled={pending}
-                  className="text-xs text-red-500 hover:text-red-700 font-medium disabled:opacity-40"
+                  className="text-xs text-[var(--c-danger)] hover:text-[var(--c-danger)] font-medium disabled:opacity-40"
                 >
                   ลบออก
                 </button>
@@ -214,8 +214,8 @@ export default function AdminActionPanel({ item }: Props) {
               })}
               disabled={pending || item.status !== "APPROVED"}
               title={item.status !== "APPROVED" ? "สินค้าต้องได้รับการอนุมัติก่อน" : undefined}
-              className="w-full px-4 py-2.5 border border-orange-300 text-orange-700 rounded-xl font-medium
-                         hover:bg-orange-50 transition-colors flex items-center justify-center gap-2
+              className="w-full px-4 py-2.5 border border-orange-300 text-[var(--c-warn)] rounded-xl font-medium
+                         hover:bg-[var(--c-warn-soft)] transition-colors flex items-center justify-center gap-2
                          disabled:opacity-40 text-sm"
             >
               🔥 เพิ่มเป็นสินค้ามาแรง
@@ -225,12 +225,12 @@ export default function AdminActionPanel({ item }: Props) {
           {/* ── Delete (always, unless already removed) ── */}
           {!isRemoved && (
             <>
-              <div className="border-t border-[#eaf0f8] my-2" />
+              <div className="border-t border-[var(--c-line-soft)] my-2" />
               <button
                 onClick={() => setDeleteOpen(true)}
                 disabled={pending}
-                className="w-full px-4 py-2.5 border border-red-300 text-red-600 rounded-xl font-medium
-                           hover:bg-red-50 transition-colors flex items-center justify-center gap-2
+                className="w-full px-4 py-2.5 border border-[var(--c-danger-line)] text-[var(--c-danger)] rounded-xl font-medium
+                           hover:bg-[var(--c-danger-soft)] transition-colors flex items-center justify-center gap-2
                            disabled:opacity-50 text-sm"
               >
                 🗑️ ลบสินค้าถาวร
@@ -243,8 +243,8 @@ export default function AdminActionPanel({ item }: Props) {
             href={`/items/${item.id}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full px-4 py-2.5 border border-[#dfe7f2] text-[#3d4d66] rounded-xl
-                       hover:bg-[#f7f9fd] transition-colors flex items-center justify-center gap-2 text-xs font-medium"
+            className="w-full px-4 py-2.5 border border-[var(--c-line)] text-[var(--c-ink-2)] rounded-xl
+                       hover:bg-[var(--c-subtle)] transition-colors flex items-center justify-center gap-2 text-xs font-medium"
           >
             🔗 ดูหน้าสินค้าจริง (เปิดแท็บใหม่)
           </a>

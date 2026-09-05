@@ -17,20 +17,20 @@ function PendingCard({ submittedAt }: { submittedAt: Date | string }) {
   return (
     <div className="max-w-md mx-auto text-center space-y-6 py-12 px-4">
       <div className="text-6xl">⏳</div>
-      <h1 className="text-2xl font-bold text-[#0f1e35]">รอการตรวจสอบ</h1>
-      <p className="text-[#3d4d66]">
+      <h1 className="text-2xl font-bold text-[var(--c-ink)]">รอการตรวจสอบ</h1>
+      <p className="text-[var(--c-ink-2)]">
         คำขอของคุณอยู่ระหว่างการตรวจสอบโดยแอดมิน กรุณารอผลภายใน 24 ชั่วโมง
       </p>
-      <div className="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 text-sm text-amber-800">
+      <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-2xl px-5 py-4 text-sm text-amber-800">
         <p className="font-semibold mb-1">ส่งคำขอเมื่อ</p>
         <p>{date}</p>
       </div>
-      <p className="text-xs text-[#64748b]">
+      <p className="text-xs text-[var(--c-muted)]">
         คุณจะได้รับการแจ้งเตือนเมื่อผลการตรวจสอบออก
       </p>
       <Link
         href="/dashboard"
-        className="inline-block px-6 py-2.5 bg-[#f1f5fb] rounded-xl text-sm font-semibold text-[#1e2d47] hover:bg-[#eee] transition"
+        className="inline-block px-6 py-2.5 bg-[var(--c-canvas)] rounded-xl text-sm font-semibold text-[var(--c-ink-1)] hover:bg-[#eee] transition"
       >
         กลับหน้าหลัก
       </Link>
@@ -60,20 +60,20 @@ function ApprovedCard({
   return (
     <div className="max-w-md mx-auto text-center space-y-6 py-12 px-4">
       <div className="text-6xl">✅</div>
-      <h1 className="text-2xl font-bold text-[#0f1e35]">ยืนยันตัวตนแล้ว</h1>
-      <p className="text-[#3d4d66]">บัญชีของคุณผ่านการยืนยันตัวตนเรียบร้อยแล้ว คุณสามารถลงขายสินค้าได้</p>
+      <h1 className="text-2xl font-bold text-[var(--c-ink)]">ยืนยันตัวตนแล้ว</h1>
+      <p className="text-[var(--c-ink-2)]">บัญชีของคุณผ่านการยืนยันตัวตนเรียบร้อยแล้ว คุณสามารถลงขายสินค้าได้</p>
 
-      <div className="bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-4 text-sm text-emerald-800 space-y-2">
+      <div className="bg-[var(--c-ok-soft)] border border-[var(--c-ok-line)] rounded-2xl px-5 py-4 text-sm text-emerald-800 space-y-2">
         <div className="flex justify-between">
-          <span className="text-emerald-700">ประเภท</span>
+          <span className="text-[var(--c-ok)]">ประเภท</span>
           <span className="font-semibold">{psuIdType === "STUDENT" ? "นักศึกษา" : "บุคลากร"}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-emerald-700">รหัสประจำตัว</span>
+          <span className="text-[var(--c-ok)]">รหัสประจำตัว</span>
           <span className="font-semibold font-mono">{masked}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-emerald-700">ยืนยันเมื่อ</span>
+          <span className="text-[var(--c-ok)]">ยืนยันเมื่อ</span>
           <span className="font-semibold">{date}</span>
         </div>
       </div>
@@ -100,15 +100,15 @@ function RejectedBanner({
   });
 
   return (
-    <div className="max-w-lg mx-auto mb-6 bg-red-50 border border-red-200 rounded-2xl px-5 py-4">
+    <div className="max-w-lg mx-auto mb-6 bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-2xl px-5 py-4">
       <div className="flex items-start gap-3">
         <span className="text-2xl mt-0.5">❌</span>
         <div>
-          <p className="font-semibold text-red-800">คำขอถูกปฏิเสธ</p>
+          <p className="font-semibold text-[var(--c-danger)]">คำขอถูกปฏิเสธ</p>
           {reason && (
-            <p className="text-sm text-red-700 mt-1">เหตุผล: {reason}</p>
+            <p className="text-sm text-[var(--c-danger)] mt-1">เหตุผล: {reason}</p>
           )}
-          <p className="text-xs text-red-500 mt-1">ส่งคำขอเมื่อ {date} — คุณสามารถส่งคำขอใหม่ได้</p>
+          <p className="text-xs text-[var(--c-danger)] mt-1">ส่งคำขอเมื่อ {date} — คุณสามารถส่งคำขอใหม่ได้</p>
         </div>
       </div>
     </div>
@@ -133,7 +133,7 @@ export default async function VerifyPage({
   // ── Submitted success state ──────────────────────────────────────────────
   if (sp.submitted === "1") {
     return (
-      <main className="min-h-screen bg-[#f7f9fd] flex items-center justify-center">
+      <main className="min-h-screen bg-[var(--c-subtle)] flex items-center justify-center">
         <PendingCard submittedAt={data?.latestRequest?.submittedAt ?? new Date()} />
       </main>
     );
@@ -142,7 +142,7 @@ export default async function VerifyPage({
   // ── Pending ───────────────────────────────────────────────────────────────
   if (status === "PENDING") {
     return (
-      <main className="min-h-screen bg-[#f7f9fd] flex items-center justify-center">
+      <main className="min-h-screen bg-[var(--c-subtle)] flex items-center justify-center">
         <PendingCard submittedAt={data?.latestRequest?.submittedAt ?? new Date()} />
       </main>
     );
@@ -151,7 +151,7 @@ export default async function VerifyPage({
   // ── Approved ──────────────────────────────────────────────────────────────
   if (status === "APPROVED") {
     return (
-      <main className="min-h-screen bg-[#f7f9fd] flex items-center justify-center">
+      <main className="min-h-screen bg-[var(--c-subtle)] flex items-center justify-center">
         <ApprovedCard
           psuIdNumber={data?.user?.psuIdNumber ?? null}
           psuIdType={data?.user?.psuIdType ?? null}
@@ -163,12 +163,12 @@ export default async function VerifyPage({
 
   // ── UNVERIFIED or REJECTED — show wizard ─────────────────────────────────
   return (
-    <main className="min-h-screen bg-[#f7f9fd]">
+    <main className="min-h-screen bg-[var(--c-subtle)]">
       <div className="max-w-lg mx-auto px-4 py-10">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-[#0f1e35]">ยืนยันตัวตน PSU</h1>
-          <p className="text-sm text-[#64748b] mt-1">
+          <h1 className="text-2xl font-bold text-[var(--c-ink)]">ยืนยันตัวตน PSU</h1>
+          <p className="text-sm text-[var(--c-muted)] mt-1">
             กรุณายืนยันตัวตนก่อนลงขายสินค้า
           </p>
         </div>

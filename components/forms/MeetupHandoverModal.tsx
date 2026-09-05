@@ -45,7 +45,7 @@ function SignaturePad({
         const ctx = canvas.getContext("2d");
         if (ctx) {
           ctx.scale(ratio, ratio);
-          ctx.strokeStyle = "#0f1e35";
+          ctx.strokeStyle = "var(--c-ink)";
           ctx.lineWidth   = 2;
           ctx.lineCap     = "round";
           ctx.lineJoin    = "round";
@@ -104,16 +104,16 @@ function SignaturePad({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold text-[#3d4d66]">✍️ ลายเซ็นผู้ซื้อ</p>
+        <p className="text-xs font-semibold text-[var(--c-ink-2)]">✍️ ลายเซ็นผู้ซื้อ</p>
         <button
           type="button"
           onClick={clearPad}
-          className="text-[10px] font-semibold text-[#64748b] hover:text-red-500 transition px-2 py-1 rounded-lg hover:bg-red-50"
+          className="text-[10px] font-semibold text-[var(--c-muted)] hover:text-[var(--c-danger)] transition px-2 py-1 rounded-lg hover:bg-[var(--c-danger-soft)]"
         >
           ล้างลายเซ็น
         </button>
       </div>
-      <div className="relative rounded-2xl border-2 border-dashed border-[#dfe7f2] bg-[#fafaf8] overflow-hidden">
+      <div className="relative rounded-2xl border-2 border-dashed border-[var(--c-line)] bg-[#fafaf8] overflow-hidden">
         <canvas
           ref={canvasRef}
           className="w-full touch-none"
@@ -134,7 +134,7 @@ function SignaturePad({
           </div>
         )}
       </div>
-      <p className="text-[10px] text-[#64748b]">ผู้ซื้อลงนามยืนยันรับสินค้าบนหน้าจอนี้</p>
+      <p className="text-[10px] text-[var(--c-muted)]">ผู้ซื้อลงนามยืนยันรับสินค้าบนหน้าจอนี้</p>
     </div>
   );
 }
@@ -182,12 +182,12 @@ function PhotoUpload({
 
   return (
     <div className="space-y-2">
-      <p className="text-xs font-semibold text-[#3d4d66]">📸 ภาพหลักฐานการส่งมอบ <span className="text-[#64748b] font-normal">(ไม่บังคับ)</span></p>
+      <p className="text-xs font-semibold text-[var(--c-ink-2)]">📸 ภาพหลักฐานการส่งมอบ <span className="text-[var(--c-muted)] font-normal">(ไม่บังคับ)</span></p>
       <div
         className={`relative rounded-2xl border-2 border-dashed transition cursor-pointer overflow-hidden ${
           photoUrl
-            ? "border-emerald-300 bg-emerald-50"
-            : "border-[#dfe7f2] bg-[#fafaf8] hover:border-[#c2ccdb]"
+            ? "border-emerald-300 bg-[var(--c-ok-soft)]"
+            : "border-[var(--c-line)] bg-[#fafaf8] hover:border-[var(--c-line-str)]"
         }`}
         style={{ minHeight: 110 }}
         onClick={() => !uploading && inputRef.current?.click()}
@@ -214,7 +214,7 @@ function PhotoUpload({
         ) : (
           <div className="flex flex-col items-center justify-center gap-2 py-6">
             {uploading ? (
-              <svg className="w-6 h-6 text-[#64748b] animate-spin" fill="none" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-[var(--c-muted)] animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>
@@ -224,7 +224,7 @@ function PhotoUpload({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             )}
-            <p className="text-xs text-[#64748b]">
+            <p className="text-xs text-[var(--c-muted)]">
               {uploading ? "กำลังอัปโหลด..." : "แตะเพื่อถ่ายภาพ หรือลากไฟล์มาวาง"}
             </p>
           </div>
@@ -302,7 +302,7 @@ export default function MeetupHandoverModal({
       onClick={(e) => { if (e.target === e.currentTarget && !submitting) onClose(); }}
     >
       <div
-        className="relative bg-white w-full sm:max-w-[480px] rounded-t-3xl sm:rounded-3xl flex flex-col overflow-hidden"
+        className="relative bg-[var(--c-surface)] w-full sm:max-w-[480px] rounded-t-3xl sm:rounded-3xl flex flex-col overflow-hidden"
         style={{
           maxHeight: "92dvh",
           boxShadow: "0 -8px 40px rgba(0,0,0,0.14), 0 24px 60px rgba(0,0,0,0.16)",
@@ -319,7 +319,7 @@ export default function MeetupHandoverModal({
           onClick={onClose}
           disabled={submitting}
           aria-label="ปิด"
-          className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-[#eaf0f8] hover:bg-[#dfe7f2] flex items-center justify-center text-[#5b6b82] hover:text-[#0f1e35] transition disabled:opacity-40"
+          className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-[var(--c-line-soft)] hover:bg-[var(--c-line)] flex items-center justify-center text-[var(--c-ink-3)] hover:text-[var(--c-ink)] transition disabled:opacity-40"
         >
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -330,11 +330,11 @@ export default function MeetupHandoverModal({
         <div className="px-6 pt-5 pb-3 flex-shrink-0 pr-14">
           <div className="flex items-center gap-2.5 mb-1">
             <div className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center text-base">🤝</div>
-            <h2 className="text-base font-extrabold text-[#0f1e35] tracking-tight">ยืนยันการส่งมอบสินค้า</h2>
+            <h2 className="text-base font-extrabold text-[var(--c-ink)] tracking-tight">ยืนยันการส่งมอบสินค้า</h2>
           </div>
-          <p className="text-xs text-[#64748b]">
-            <span className="font-semibold text-[#3d4d66]">{itemTitle}</span>
-            {" · "}ผู้ซื้อ: <span className="font-semibold text-[#3d4d66]">{buyerName}</span>
+          <p className="text-xs text-[var(--c-muted)]">
+            <span className="font-semibold text-[var(--c-ink-2)]">{itemTitle}</span>
+            {" · "}ผู้ซื้อ: <span className="font-semibold text-[var(--c-ink-2)]">{buyerName}</span>
           </p>
         </div>
 
@@ -342,9 +342,9 @@ export default function MeetupHandoverModal({
         <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-4 space-y-5">
 
           {/* Info banner */}
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-xs text-amber-700 leading-relaxed">
+          <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-2xl px-4 py-3 text-xs text-[var(--c-warn)] leading-relaxed">
             <p className="font-semibold mb-0.5">ก่อนกดยืนยัน:</p>
-            <ul className="list-disc list-inside space-y-0.5 text-amber-600">
+            <ul className="list-disc list-inside space-y-0.5 text-[var(--c-warn)]">
               <li>ตรวจสอบว่าผู้ซื้อได้รับสินค้าครบถ้วนแล้ว</li>
               <li>ขอให้ผู้ซื้อลงนามยืนยันบนหน้าจอนี้</li>
               <li>ถ่ายภาพหลักฐานการส่งมอบ (แนะนำ)</li>
@@ -368,7 +368,7 @@ export default function MeetupHandoverModal({
 
           {/* Error */}
           {error && (
-            <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700 font-medium">
+            <div className="px-4 py-3 rounded-xl bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] text-sm text-[var(--c-danger)] font-medium">
               ❌ {error}
             </div>
           )}
@@ -376,14 +376,14 @@ export default function MeetupHandoverModal({
 
         {/* Footer */}
         <div
-          className="flex-shrink-0 px-6 py-4 border-t border-[#dfe7f2] bg-white"
+          className="flex-shrink-0 px-6 py-4 border-t border-[var(--c-line)] bg-[var(--c-surface)]"
           style={{ paddingBottom: "max(16px, env(safe-area-inset-bottom))" }}
         >
           <div className="flex gap-3">
             <button
               onClick={onClose}
               disabled={submitting}
-              className="flex-1 py-3 rounded-2xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-40"
+              className="flex-1 py-3 rounded-2xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-40"
             >
               ยกเลิก
             </button>

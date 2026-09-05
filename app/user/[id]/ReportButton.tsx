@@ -34,7 +34,7 @@ export default function ReportButton({
 
   if (done) {
     return (
-      <span className="inline-flex items-center gap-1.5 text-xs text-[#64748b] border border-[#dfe7f2] rounded-xl px-3 py-2">
+      <span className="inline-flex items-center gap-1.5 text-xs text-[var(--c-muted)] border border-[var(--c-line)] rounded-xl px-3 py-2">
         🚩 รายงานแล้ว — ทีมงานกำลังตรวจสอบ
       </span>
     );
@@ -56,29 +56,29 @@ export default function ReportButton({
     <>
       <button
         onClick={() => (signedIn ? setOpen(true) : setError("กรุณาเข้าสู่ระบบก่อนรายงาน"))}
-        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#b3261e] border border-red-200 bg-red-50/60 rounded-xl px-3 py-2 hover:bg-red-50 transition"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--c-danger)] border border-[var(--c-danger-line)] bg-[var(--c-danger-soft)]/60 rounded-xl px-3 py-2 hover:bg-[var(--c-danger-soft)] transition"
       >
         🚩 รายงานผู้ใช้นี้
       </button>
 
       {!signedIn && error && (
-        <p className="text-[11px] text-red-600 mt-1.5">{error}</p>
+        <p className="text-[11px] text-[var(--c-danger)] mt-1.5">{error}</p>
       )}
 
       {open && (
         <div className="fixed inset-0 z-[500] flex items-center justify-center p-4" role="dialog" aria-modal>
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={pending ? undefined : () => setOpen(false)} />
 
-          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
+          <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
             <div>
-              <h3 className="text-base font-bold text-[#0f1e35]">รายงาน {reportedName}</h3>
-              <p className="text-xs text-[#64748b] mt-1">
+              <h3 className="text-base font-bold text-[var(--c-ink)]">รายงาน {reportedName}</h3>
+              <p className="text-xs text-[var(--c-muted)] mt-1">
                 เฉพาะผู้ดูแลระบบเท่านั้นที่เห็นรายงานนี้ ผู้ถูกรายงานจะไม่รู้ว่าใครเป็นคนรายงาน
               </p>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[#1e2d47] mb-1.5">หัวข้อ</label>
+              <label className="block text-xs font-medium text-[var(--c-ink-1)] mb-1.5">หัวข้อ</label>
               <div className="grid grid-cols-2 gap-2">
                 {REPORT_CATEGORIES.map((c) => (
                   <button
@@ -87,8 +87,8 @@ export default function ReportButton({
                     onClick={() => { setCategory(c.value); setError(null); }}
                     className={`text-[12px] px-3 py-2 rounded-xl border text-left transition ${
                       category === c.value
-                        ? "border-[#b3261e] bg-red-50 text-[#b3261e] font-semibold"
-                        : "border-[#dfe7f2] text-[#3d4d66] hover:bg-[#f1f5fb]"
+                        ? "border-[var(--c-danger)] bg-[var(--c-danger-soft)] text-[var(--c-danger)] font-semibold"
+                        : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)]"
                     }`}
                   >
                     {c.label}
@@ -98,20 +98,20 @@ export default function ReportButton({
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[#1e2d47] mb-1.5">
-                รายละเอียด <span className="text-[#94a3b8]">({reason.trim().length}/10 ขั้นต่ำ)</span>
+              <label className="block text-xs font-medium text-[var(--c-ink-1)] mb-1.5">
+                รายละเอียด <span className="text-[var(--c-faint)]">({reason.trim().length}/10 ขั้นต่ำ)</span>
               </label>
               <textarea
                 value={reason}
                 onChange={(e) => { setReason(e.target.value.slice(0, 2000)); setError(null); }}
                 rows={4}
                 placeholder="เกิดอะไรขึ้น? ยิ่งละเอียดยิ่งตรวจสอบได้เร็ว"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#dfe7f2] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--c-line)] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-[var(--c-danger-line)] transition"
               />
             </div>
 
             {error && (
-              <div role="alert" className="text-[13px] text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
+              <div role="alert" className="text-[13px] text-[var(--c-danger)] bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-3 py-2">
                 {error}
               </div>
             )}
@@ -120,14 +120,14 @@ export default function ReportButton({
               <button
                 onClick={() => setOpen(false)}
                 disabled={pending}
-                className="flex-1 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
+                className="flex-1 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
               >
                 ยกเลิก
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={pending}
-                className="flex-1 py-2.5 rounded-xl bg-[#b3261e] text-sm font-bold text-white hover:bg-[#8f1d17] transition disabled:opacity-50"
+                className="flex-1 py-2.5 rounded-xl bg-[var(--c-danger)] text-sm font-bold text-white hover:bg-[var(--c-danger)] transition disabled:opacity-50"
               >
                 {pending ? "กำลังส่ง…" : "ส่งรายงาน"}
               </button>

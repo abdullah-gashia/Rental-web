@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { DM_Sans, DM_Mono } from "next/font/google";
+import { Sarabun } from "next/font/google";
 import "./globals.css";
 import ToastContainer from "@/components/ui/Toast";
 import AuthInitializer from "@/components/auth/AuthInitializer";
+import { getLocale, getTheme } from "@/lib/i18n/server";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -15,19 +17,36 @@ const dmMono = DM_Mono({
   variable: "--font-dm-mono",
 });
 
+// DM Sans has no Thai. Without a Thai face the whole site falls back to
+// whatever the OS picks, which is why Thai text rendered inconsistently
+// between machines.
+const sarabun = Sarabun({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["thai", "latin"],
+  variable: "--font-thai",
+});
+
 export const metadata: Metadata = {
   title: "PSU Store — University Marketplace",
-  description:
-    "ตลาดซื้อขายสินค้าของนักศึกษา PSU ปลอดภัย ง่าย ไว",
+  description: "ตลาดซื้อขายสินค้าของนักศึกษา PSU ปลอดภัย ง่าย ไว",
+  icons: { icon: "/brand/psu-store-logo.png" },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [locale, theme] = await Promise.all([getLocale(), getTheme()]);
+
   return (
-    <html lang="th" className={`${dmSans.variable} ${dmMono.variable}`}>
+    <html
+      lang={locale}
+      // "system" deliberately stamps nothing, so prefers-color-scheme decides.
+      {...(theme === "system" ? {} : { "data-theme": theme })}
+      className={`${dmSans.variable} ${dmMono.variable} ${sarabun.variable}`}
+      suppressHydrationWarning
+    >
       <body className="font-sans">
         <AuthInitializer />
         {children}

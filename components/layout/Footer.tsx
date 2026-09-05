@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocaleStore } from "@/lib/stores/locale-store";
+import Brand from "@/components/layout/Brand";
 
 export default function Footer() {
   const t = useLocaleStore((s) => s.t);
@@ -27,14 +28,7 @@ export default function Footer() {
     <footer className="border-t border-[var(--hp-border)] mt-16">
       <div className="max-w-[1240px] mx-auto px-5 py-10 flex flex-col md:flex-row justify-between gap-10">
         <div className="max-w-xs">
-          <div className="flex items-center gap-2.5">
-            <span className="w-6 h-6 rounded bg-[var(--psu-navy)] text-white flex items-center justify-center text-[10px] font-bold">
-              ม.อ.
-            </span>
-            <span className="text-[14px] font-semibold tracking-tight text-[var(--psu-navy)]">
-              PSU Store
-            </span>
-          </div>
+          <Brand size={30} href={null} />
           <p className="text-[13px] text-[var(--hp-muted)] mt-3 leading-relaxed">
             {t("footer_tagline")}
           </p>

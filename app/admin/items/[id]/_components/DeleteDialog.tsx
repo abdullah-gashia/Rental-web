@@ -42,27 +42,27 @@ export default function DeleteDialog({
       />
 
       {/* Panel */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
-        <h3 className="text-base font-bold text-[#0f1e35] flex items-center gap-2">
+      <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
+        <h3 className="text-base font-bold text-[var(--c-ink)] flex items-center gap-2">
           🗑️ ลบสินค้า &ldquo;{itemTitle}&rdquo; ถาวร
         </h3>
 
         {/* Danger warning */}
-        <div className="bg-red-50 border border-red-200 rounded-xl px-3 py-2.5 text-sm text-red-700 flex items-start gap-2">
+        <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-3 py-2.5 text-sm text-[var(--c-danger)] flex items-start gap-2">
           <span className="mt-0.5">⚠️</span>
           <div>
             <p className="font-medium">การลบนี้ไม่สามารถย้อนกลับได้</p>
-            <p className="text-xs mt-0.5 text-red-600">สินค้าจะถูกเปลี่ยนสถานะเป็น &quot;ถูกลบ&quot; และไม่แสดงในระบบ</p>
+            <p className="text-xs mt-0.5 text-[var(--c-danger)]">สินค้าจะถูกเปลี่ยนสถานะเป็น &quot;ถูกลบ&quot; และไม่แสดงในระบบ</p>
           </div>
         </div>
 
         {/* Reason textarea */}
         <div>
-          <label className="text-sm text-[#3d4d66] font-medium block mb-1.5">
-            เหตุผลในการลบ <span className="text-red-500">*</span>
+          <label className="text-sm text-[var(--c-ink-2)] font-medium block mb-1.5">
+            เหตุผลในการลบ <span className="text-[var(--c-danger)]">*</span>
           </label>
           <textarea
-            className="w-full border border-[#dfe7f2] rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-400 transition"
+            className="w-full border border-[var(--c-line)] rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-400 transition"
             placeholder="ระบุเหตุผลในการลบ..."
             rows={2}
             value={reason}
@@ -73,15 +73,15 @@ export default function DeleteDialog({
 
         {/* Type-to-confirm */}
         <div>
-          <label className="text-sm text-[#3d4d66] font-medium block mb-1.5">
-            พิมพ์ชื่อสินค้า &ldquo;<span className="font-bold text-[#0f1e35]">{itemTitle}</span>&rdquo; เพื่อยืนยัน:
+          <label className="text-sm text-[var(--c-ink-2)] font-medium block mb-1.5">
+            พิมพ์ชื่อสินค้า &ldquo;<span className="font-bold text-[var(--c-ink)]">{itemTitle}</span>&rdquo; เพื่อยืนยัน:
           </label>
           <input
             type="text"
             className={`w-full border rounded-xl p-3 text-sm focus:outline-none focus:ring-2 transition ${
               confirmText.length > 0 && !nameMatch
-                ? "border-red-300 focus:ring-red-200 focus:border-red-400"
-                : "border-[#dfe7f2] focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
+                ? "border-[var(--c-danger-line)] focus:ring-red-200 focus:border-red-400"
+                : "border-[var(--c-line)] focus:ring-[var(--c-accent)]/20 focus:border-[var(--c-accent)]"
             }`}
             placeholder={itemTitle}
             value={confirmText}
@@ -90,7 +90,7 @@ export default function DeleteDialog({
         </div>
 
         {/* Warning */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 text-xs text-amber-700 flex items-start gap-2">
+        <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-3 py-2 text-xs text-[var(--c-warn)] flex items-start gap-2">
           <span className="mt-0.5">⚠️</span>
           <span>ผู้ขายจะได้รับแจ้งเตือนการลบพร้อมเหตุผล</span>
         </div>
@@ -101,7 +101,7 @@ export default function DeleteDialog({
             type="button"
             onClick={handleClose}
             disabled={loading}
-            className="flex-1 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
+            className="flex-1 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
           >
             ยกเลิก
           </button>

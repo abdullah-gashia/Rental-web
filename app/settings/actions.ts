@@ -473,3 +473,34 @@ export async function updateSavedAddress(
     return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
   }
 }
+
+// ─── updateAvatar ─────────────────────────────────────────────────────────────
+
+/**
+ * Stores the square the user framed in the avatar editor.
+ *
+ * The URL has to be one of ours: accepting an arbitrary string here would let
+ * anyone point their avatar at a tracking pixel on someone else's server, which
+ * then loads for every visitor who sees their name.
+ */
+export async function updateAvatar(url: string): Promise<ActionResult> {
+  try {
+    const sessionUser = await requireUser();
+
+    const clean = url.trim();
+    if (!clean.startsWith("/uploads/") || clean.includes("..")) {
+      return { success: false, error: "ที่อยู่รูปไม่ถูกต้อง" };
+    }
+
+    await prisma.user.update({
+      where: { id: sessionUser.id },
+      data:  { image: clean },
+    });
+
+    revalidatePath("/settings");
+    revalidatePath("/");
+    return { success: true, message: "อัปเดตรูปโปรไฟล์แล้ว" };
+  } catch (e) {
+    return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
+  }
+}

@@ -99,22 +99,22 @@ const METHOD_LABELS: Record<string, string> = {
 // ─── Status Badge ─────────────────────────────────────────────────────────────
 
 const STATUS_META: Record<EscrowStatus, { label: string; bg: string; text: string; dot: string }> = {
-  FUNDS_HELD:           { label: "รอจัดส่ง",           bg: "bg-amber-50",   text: "text-amber-700",   dot: "bg-amber-400"   },
-  SHIPPED:              { label: "จัดส่งแล้ว",          bg: "bg-blue-50",    text: "text-blue-700",    dot: "bg-blue-500"    },
-  COMPLETED:            { label: "เสร็จสิ้น",           bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-emerald-500" },
-  DISPUTED:             { label: "มีข้อพิพาท",          bg: "bg-red-50",     text: "text-red-700",     dot: "bg-red-500"     },
+  FUNDS_HELD:           { label: "รอจัดส่ง",           bg: "bg-[var(--c-warn-soft)]",   text: "text-[var(--c-warn)]",   dot: "bg-amber-400"   },
+  SHIPPED:              { label: "จัดส่งแล้ว",          bg: "bg-[var(--c-accent-soft)]",    text: "text-[var(--c-accent-str)]",    dot: "bg-blue-500"    },
+  COMPLETED:            { label: "เสร็จสิ้น",           bg: "bg-[var(--c-ok-soft)]", text: "text-[var(--c-ok)]", dot: "bg-emerald-500" },
+  DISPUTED:             { label: "มีข้อพิพาท",          bg: "bg-[var(--c-danger-soft)]",     text: "text-[var(--c-danger)]",     dot: "bg-red-500"     },
   REFUNDED:             { label: "คืนเงินแล้ว",         bg: "bg-purple-50",  text: "text-purple-700",  dot: "bg-purple-500"  },
-  CANCELLED_BY_ADMIN:   { label: "ยกเลิกโดย Admin",    bg: "bg-slate-50",   text: "text-slate-600",   dot: "bg-slate-400"   },
-  CANCELLED:            { label: "ยกเลิกแล้ว",          bg: "bg-slate-50",   text: "text-slate-500",   dot: "bg-slate-400"   },
-  PENDING_CONFIRMATION: { label: "รอยืนยัน",           bg: "bg-yellow-50",  text: "text-yellow-700",  dot: "bg-yellow-400"  },
+  CANCELLED_BY_ADMIN:   { label: "ยกเลิกโดย Admin",    bg: "bg-[var(--c-subtle)]",   text: "text-[var(--c-ink-3)]",   dot: "bg-slate-400"   },
+  CANCELLED:            { label: "ยกเลิกแล้ว",          bg: "bg-[var(--c-subtle)]",   text: "text-[var(--c-muted)]",   dot: "bg-slate-400"   },
+  PENDING_CONFIRMATION: { label: "รอยืนยัน",           bg: "bg-[var(--c-warn-soft)]",  text: "text-[var(--c-warn)]",  dot: "bg-yellow-400"  },
   DELIVERED:            { label: "รับสินค้าแล้ว",       bg: "bg-teal-50",    text: "text-teal-700",    dot: "bg-teal-500"    },
-  MEETUP_SCHEDULED:     { label: "นัดพบแล้ว",          bg: "bg-blue-50",    text: "text-blue-700",    dot: "bg-blue-500"    },
-  MEETUP_COMPLETED:     { label: "พบกันสำเร็จ",        bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-emerald-500" },
-  AWAITING_SHIPMENT:    { label: "รอจัดส่ง (COD)",     bg: "bg-amber-50",   text: "text-amber-700",   dot: "bg-amber-400"   },
-  COD_SHIPPED:          { label: "จัดส่งแล้ว (COD)",   bg: "bg-blue-50",    text: "text-blue-700",    dot: "bg-blue-500"    },
+  MEETUP_SCHEDULED:     { label: "นัดพบแล้ว",          bg: "bg-[var(--c-accent-soft)]",    text: "text-[var(--c-accent-str)]",    dot: "bg-blue-500"    },
+  MEETUP_COMPLETED:     { label: "พบกันสำเร็จ",        bg: "bg-[var(--c-ok-soft)]", text: "text-[var(--c-ok)]", dot: "bg-emerald-500" },
+  AWAITING_SHIPMENT:    { label: "รอจัดส่ง (COD)",     bg: "bg-[var(--c-warn-soft)]",   text: "text-[var(--c-warn)]",   dot: "bg-amber-400"   },
+  COD_SHIPPED:          { label: "จัดส่งแล้ว (COD)",   bg: "bg-[var(--c-accent-soft)]",    text: "text-[var(--c-accent-str)]",    dot: "bg-blue-500"    },
   COD_DELIVERED:        { label: "รับ COD แล้ว",       bg: "bg-teal-50",    text: "text-teal-700",    dot: "bg-teal-500"    },
-  MEETUP_ARRANGED:      { label: "นัดพบ (COD)",        bg: "bg-sky-50",     text: "text-sky-700",     dot: "bg-sky-500"     },
-  MEETUP_CASH_COMPLETED:{ label: "พบกัน + รับเงิน",   bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-emerald-500" },
+  MEETUP_ARRANGED:      { label: "นัดพบ (COD)",        bg: "bg-[var(--c-accent-soft)]",     text: "text-sky-700",     dot: "bg-sky-500"     },
+  MEETUP_CASH_COMPLETED:{ label: "พบกัน + รับเงิน",   bg: "bg-[var(--c-ok-soft)]", text: "text-[var(--c-ok)]", dot: "bg-emerald-500" },
 };
 
 function StatusBadge({ status }: { status: EscrowStatus }) {
@@ -132,7 +132,7 @@ function StatusBadge({ status }: { status: EscrowStatus }) {
 function Thumb({ item }: { item: OrderItem }) {
   const src = item.images[0]?.url;
   return (
-    <div className="w-14 h-14 rounded-xl overflow-hidden bg-[#eaf0f8] flex-shrink-0 flex items-center justify-center text-2xl">
+    <div className="w-14 h-14 rounded-xl overflow-hidden bg-[var(--c-line-soft)] flex-shrink-0 flex items-center justify-center text-2xl">
       {src
         ? <img src={src} alt={item.title} className="w-full h-full object-contain" />
         : <span>{item.emoji ?? "📦"}</span>
@@ -147,17 +147,17 @@ function ShippingDetails({ order }: { order: BaseOrder }) {
   if (!order.shippingMethod) return null;
   const methodName = METHOD_LABELS[order.shippingMethod] ?? order.shippingMethod;
   return (
-    <div className="mt-2 bg-blue-50 border border-blue-100 rounded-xl px-3 py-2 space-y-1.5 text-xs">
-      <div className="flex items-center gap-1.5 text-blue-700 font-semibold">
+    <div className="mt-2 bg-[var(--c-accent-soft)] border border-blue-100 rounded-xl px-3 py-2 space-y-1.5 text-xs">
+      <div className="flex items-center gap-1.5 text-[var(--c-accent-str)] font-semibold">
         <span>🚚</span><span>{methodName}</span>
       </div>
       {order.trackingNumber && (
         <div className="flex items-center gap-2">
-          <span className="text-[#64748b]">หมายเลขพัสดุ:</span>
-          <span className="font-mono font-bold text-[#0f1e35]">{order.trackingNumber}</span>
+          <span className="text-[var(--c-muted)]">หมายเลขพัสดุ:</span>
+          <span className="font-mono font-bold text-[var(--c-ink)]">{order.trackingNumber}</span>
           <button
             onClick={() => navigator.clipboard.writeText(order.trackingNumber!).catch(() => {})}
-            className="px-2 py-0.5 rounded-md bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold transition text-[10px]"
+            className="px-2 py-0.5 rounded-md bg-[var(--c-accent-soft)] hover:bg-blue-200 text-[var(--c-accent-str)] font-bold transition text-[10px]"
           >
             คัดลอก
           </button>
@@ -168,7 +168,7 @@ function ShippingDetails({ order }: { order: BaseOrder }) {
           <img
             src={order.shippingProofImage}
             alt="หลักฐานจัดส่ง"
-            className="w-full max-h-24 object-contain rounded-lg border border-blue-200 mt-1 hover:opacity-90 transition"
+            className="w-full max-h-24 object-contain rounded-lg border border-[var(--c-line-str)] mt-1 hover:opacity-90 transition"
           />
         </a>
       )}
@@ -187,20 +187,20 @@ function MeetupDetails({ order }: { order: BaseOrder }) {
       })
     : null;
   return (
-    <div className="mt-2 bg-sky-50 border border-sky-100 rounded-xl px-3 py-2 space-y-1 text-xs">
+    <div className="mt-2 bg-[var(--c-accent-soft)] border border-sky-100 rounded-xl px-3 py-2 space-y-1 text-xs">
       <div className="flex items-center gap-1.5 text-sky-700 font-semibold">
         <span>🤝</span><span>นัดรับสินค้า</span>
       </div>
-      <div className="flex items-center gap-1.5 text-[#3d4d66]">
+      <div className="flex items-center gap-1.5 text-[var(--c-ink-2)]">
         <span>📍</span><span>{order.meetupLocation}</span>
       </div>
       {dt && (
-        <div className="flex items-center gap-1.5 text-[#3d4d66]">
+        <div className="flex items-center gap-1.5 text-[var(--c-ink-2)]">
           <span>🕐</span><span>{dt}</span>
         </div>
       )}
       {order.meetupNote && (
-        <div className="flex items-center gap-1.5 text-[#64748b]">
+        <div className="flex items-center gap-1.5 text-[var(--c-muted)]">
           <span>💬</span><span>{order.meetupNote}</span>
         </div>
       )}
@@ -299,8 +299,8 @@ function OrderCard({
   const showMeetup   = isMeetup && !!order.meetupLocation;
 
   return (
-    <div className={`bg-white rounded-2xl border p-4 space-y-3 ${
-      isTerminal ? "border-[#eaf0f8] opacity-80" : "border-[#dfe7f2]"
+    <div className={`bg-[var(--c-surface)] rounded-2xl border p-4 space-y-3 ${
+      isTerminal ? "border-[var(--c-line-soft)] opacity-80" : "border-[var(--c-line)]"
     }`}>
       <div className="flex gap-4">
         <Thumb item={order.item} />
@@ -308,24 +308,24 @@ function OrderCard({
         <div className="flex-1 min-w-0 space-y-1.5">
           {/* Title + badge */}
           <div className="flex flex-wrap items-start justify-between gap-2">
-            <p className="text-sm font-bold text-[#0f1e35] truncate max-w-[200px]">{order.item.title}</p>
+            <p className="text-sm font-bold text-[var(--c-ink)] truncate max-w-[200px]">{order.item.title}</p>
             <StatusBadge status={order.status} />
           </div>
 
           {/* Meta row */}
-          <div className="flex flex-wrap items-center gap-2 text-xs text-[#64748b]">
-            <span className="font-bold text-[#0f1e35] text-sm">฿{order.amount.toLocaleString()}</span>
+          <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--c-muted)]">
+            <span className="font-bold text-[var(--c-ink)] text-sm">฿{order.amount.toLocaleString()}</span>
             <span>·</span>
             <span>{role === "buyer" ? "ขายโดย" : "ซื้อโดย"} {counterparty?.name ?? "ไม่ระบุชื่อ"}</span>
-            {isMeetup && <span className="px-2 py-0.5 rounded-full bg-sky-50 text-sky-600 font-semibold">🤝 นัดพบ</span>}
-            {isCOD    && <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 font-semibold">💵 COD</span>}
+            {isMeetup && <span className="px-2 py-0.5 rounded-full bg-[var(--c-accent-soft)] text-sky-600 font-semibold">🤝 นัดพบ</span>}
+            {isCOD    && <span className="px-2 py-0.5 rounded-full bg-[var(--c-warn-soft)] text-[var(--c-warn)] font-semibold">💵 COD</span>}
             <span>·</span>
             <span>{date}</span>
           </div>
 
           {/* Disputed notice */}
           {order.status === "DISPUTED" && (
-            <p className="text-xs text-red-600 font-medium">
+            <p className="text-xs text-[var(--c-danger)] font-medium">
               🔒 เงินถูกอายัด — รอผู้ดูแลระบบตัดสิน
             </p>
           )}
@@ -357,7 +357,7 @@ function OrderCard({
 
               {/* Meetup: buyer sees waiting badge */}
               {buyerWaitingMeetup && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-50 border border-sky-200 text-xs font-semibold text-sky-700">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--c-accent-soft)] border border-sky-200 text-xs font-semibold text-sky-700">
                   <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
                   รอผู้ขายส่งมอบ
                 </span>
@@ -378,7 +378,7 @@ function OrderCard({
                 <button
                   onClick={() => onDispute(order)}
                   disabled={pending}
-                  className="px-4 py-2 rounded-xl text-xs font-bold bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition disabled:opacity-40"
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[var(--c-danger-soft)] text-[var(--c-danger)] border border-[var(--c-danger-line)] hover:bg-[var(--c-danger-soft)] transition disabled:opacity-40"
                 >
                   ⚠️ แจ้งปัญหา
                 </button>
@@ -388,7 +388,7 @@ function OrderCard({
                 <button
                   onClick={() => onCancel(order)}
                   disabled={pending}
-                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[#f1f5fb] text-[#5b6b82] border border-[#dfe7f2] hover:bg-[#eaf0f8] transition disabled:opacity-40"
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[var(--c-canvas)] text-[var(--c-ink-3)] border border-[var(--c-line)] hover:bg-[var(--c-line-soft)] transition disabled:opacity-40"
                 >
                   ยกเลิก
                 </button>
@@ -396,7 +396,7 @@ function OrderCard({
 
               {/* Seller meetup — show locked hint until 30-min grace period passes */}
               {sellerMeetupWaiting && meetupCutoffTime && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-700">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] text-xs font-semibold text-[var(--c-warn)]">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
                   ยกเลิกได้หลัง {meetupCutoffTime} น.
                 </span>
@@ -404,7 +404,7 @@ function OrderCard({
 
               {/* Seller waiting notice — shipped, no actions for seller */}
               {isSeller && (order.status === "SHIPPED" || order.status === "COD_SHIPPED") && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-700">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] text-xs font-semibold text-[var(--c-warn)]">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
                   รอผู้ซื้อยืนยันรับสินค้า
                 </span>
@@ -417,7 +417,7 @@ function OrderCard({
             <div className="flex flex-wrap gap-2 mt-1">
               <button
                 onClick={() => onReceipt(order)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-[var(--c-ok-soft)] text-[var(--c-ok)] border border-[var(--c-ok-line)] hover:bg-emerald-100 transition"
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -427,13 +427,13 @@ function OrderCard({
               {canReview && (
                 <button
                   onClick={() => onReview(order)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-[var(--c-warn-soft)] text-[var(--c-warn)] border border-[var(--c-warn-line)] hover:bg-[var(--c-warn-soft)] transition"
                 >
                   ⭐ {isSeller ? "ให้คะแนนผู้ซื้อ" : "ให้คะแนนผู้ขาย"}
                 </button>
               )}
               {isCompleted && order.myReview && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#f1f5fb] text-[#64748b] border border-[#dfe7f2]">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[var(--c-canvas)] text-[var(--c-muted)] border border-[var(--c-line)]">
                   {"⭐".repeat(order.myReview.rating)} รีวิวแล้ว
                 </span>
               )}
@@ -550,15 +550,15 @@ export default function OrdersClient({
               type="button"
               onClick={(e) => { e.stopPropagation(); toggleEscrowTooltip(); }}
               aria-label="Escrow information"
-              className="group relative flex-shrink-0 w-4 h-4 rounded-full bg-[#dfe7f2] hover:bg-amber-200 flex items-center justify-center transition focus:outline-none focus:ring-2 focus:ring-amber-400"
+              className="group relative flex-shrink-0 w-4 h-4 rounded-full bg-[var(--c-line)] hover:bg-amber-200 flex items-center justify-center transition focus:outline-none focus:ring-2 focus:ring-amber-400"
             >
-              <svg className="w-2.5 h-2.5 text-[#64748b] group-hover:text-amber-700 transition" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-2.5 h-2.5 text-[var(--c-muted)] group-hover:text-[var(--c-warn)] transition" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
             </button>
           </div>
 
-          <p className="ui-stat-v !text-[#92620e]">฿{escrowBalance.toLocaleString()}</p>
+          <p className="ui-stat-v !text-[var(--c-warn)]">฿{escrowBalance.toLocaleString()}</p>
           <p className="ui-stat-sub">
             {activeEscrowOrderCount > 0
               ? `${activeEscrowOrderCount} คำสั่งซื้อที่ถือเงินอยู่`
@@ -573,7 +573,7 @@ export default function OrdersClient({
               onClick={(e) => e.stopPropagation()}
             >
               <p className="font-bold text-amber-400 mb-1">ระบบ Escrow คืออะไร?</p>
-              <p className="text-[#c2ccdb]">
+              <p className="text-[var(--c-line-str)]">
                 เมื่อคุณซื้อสินค้า เงินจะถูกพักไว้กับ PSU.Store อย่างปลอดภัย
                 และจะโอนให้ผู้ขายก็ต่อเมื่อคุณยืนยันว่าได้รับสินค้าแล้วเท่านั้น
               </p>

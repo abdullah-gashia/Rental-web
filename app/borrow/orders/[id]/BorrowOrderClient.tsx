@@ -92,7 +92,7 @@ function PhotoPicker({ photos, onChange }: { photos: string[]; onChange: (p: str
           </span>
         </label>
       </div>
-      {err && <p className="text-[11.5px] text-[#b3261e]">{err}</p>}
+      {err && <p className="text-[11.5px] text-[var(--c-danger)]">{err}</p>}
     </div>
   );
 }
@@ -157,8 +157,8 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
           role="status"
           className={`rounded-xl px-4 py-3 text-[13px] border ${
             msg.ok
-              ? "bg-[#e8f5ee] border-[#c3e3d1] text-[#1f6b45]"
-              : "bg-[#fdecea] border-[#f6c9c4] text-[#b3261e]"
+              ? "bg-[var(--c-ok-soft)] border-[var(--c-ok-line)] text-[var(--c-ok)]"
+              : "bg-[var(--c-danger-soft)] border-[var(--c-danger-line)] text-[var(--c-danger)]"
           }`}
         >
           {msg.text}
@@ -168,21 +168,21 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
       {/* ── Countdown ────────────────────────────────────────────────── */}
       {!closed && order.dueDate && (
         <div className={`bw-panel !py-3.5 flex items-center justify-between gap-3 flex-wrap ${
-          left !== null && left < 0 ? "!border-[#f6c9c4] !bg-[#fdecea]" : ""
+          left !== null && left < 0 ? "!border-[var(--c-danger-line)] !bg-[var(--c-danger-soft)]" : ""
         }`}>
           <div>
             <p className="bw-label">กำหนดคืน</p>
             <p className="text-[15px] font-semibold mt-0.5">{fmtDate(order.dueDate)}</p>
           </div>
-          <p className={`text-[14px] font-semibold ${left !== null && left < 0 ? "text-[#b3261e]" : "text-[var(--psu-blue)]"}`}>
+          <p className={`text-[14px] font-semibold ${left !== null && left < 0 ? "text-[var(--c-danger)]" : "text-[var(--psu-blue)]"}`}>
             {left === null ? "" : left < 0 ? `เลยกำหนดมา ${Math.abs(left)} วัน` : left === 0 ? "ครบกำหนดวันนี้" : `เหลืออีก ${left} วัน`}
           </p>
         </div>
       )}
 
       {st === "OVERDUE" && (
-        <div className="bw-panel !border-[#f6c9c4] !bg-[#fdecea]">
-          <p className="text-[13px] text-[#b3261e] leading-[1.9]">
+        <div className="bw-panel !border-[var(--c-danger-line)] !bg-[var(--c-danger-soft)]">
+          <p className="text-[13px] text-[var(--c-danger)] leading-[1.9]">
             <strong>เลยกำหนดคืนแล้ว</strong> — ไม่มีค่าปรับเป็นเงิน แต่ถ้าเกิน {OVERDUE_GRACE_DAYS} วัน
             สิทธิ์การยืมจะถูกระงับจนกว่าจะคืนของ กรุณาติดต่องานภัทรเพื่อนัดคืน
           </p>
@@ -360,14 +360,14 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
 
             {/* Cancel */}
             {["REQUESTED", "APPROVED", "PICKUP_SCHEDULED"].includes(st) && (
-              <button onClick={() => setPanel(panel === "cancel" ? null : "cancel")} className="bw-btn bw-btn-ghost !text-[#b3261e] !border-[#f6c9c4]">
+              <button onClick={() => setPanel(panel === "cancel" ? null : "cancel")} className="bw-btn bw-btn-ghost !text-[var(--c-danger)] !border-[var(--c-danger-line)]">
                 ยกเลิก
               </button>
             )}
 
             {/* Lost */}
             {isOffice && ["OVERDUE", "ACTIVE", "RENEWED"].includes(st) && (
-              <button onClick={() => setPanel(panel === "lost" ? null : "lost")} className="bw-btn bw-btn-ghost !text-[#b3261e] !border-[#f6c9c4]">
+              <button onClick={() => setPanel(panel === "lost" ? null : "lost")} className="bw-btn bw-btn-ghost !text-[var(--c-danger)] !border-[var(--c-danger-line)]">
                 แจ้งสูญหาย
               </button>
             )}
@@ -484,7 +484,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
               <button
                 onClick={() => run(() => cancelBorrow(order.id, reason))}
                 disabled={pending}
-                className="bw-btn bw-btn-ghost !text-[#b3261e] !border-[#f6c9c4] self-start"
+                className="bw-btn bw-btn-ghost !text-[var(--c-danger)] !border-[var(--c-danger-line)] self-start"
               >
                 ยืนยันการยกเลิก
               </button>
@@ -507,7 +507,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
               <button
                 onClick={() => run(() => markBorrowLost(order.id, reason))}
                 disabled={pending || !reason.trim()}
-                className="bw-btn bw-btn-ghost !text-[#b3261e] !border-[#f6c9c4] self-start"
+                className="bw-btn bw-btn-ghost !text-[var(--c-danger)] !border-[var(--c-danger-line)] self-start"
               >
                 บันทึกว่าสูญหาย
               </button>

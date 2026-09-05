@@ -5,11 +5,11 @@ import { formatThaiDate, formatNumber } from "../../../_lib/utils";
 
 // Verification display mapping
 const VERIFICATION_TH: Record<string, { label: string; color: string }> = {
-  UNVERIFIED: { label: "ยังไม่ยืนยัน",  color: "text-gray-500" },
-  PENDING:    { label: "รอตรวจสอบ",     color: "text-yellow-600" },
-  APPROVED:   { label: "ยืนยันแล้ว",    color: "text-green-600" },
-  REJECTED:   { label: "ถูกปฏิเสธ",     color: "text-red-600" },
-  SUSPENDED:  { label: "ถูกระงับ",      color: "text-red-600" },
+  UNVERIFIED: { label: "ยังไม่ยืนยัน",  color: "text-[var(--c-muted)]" },
+  PENDING:    { label: "รอตรวจสอบ",     color: "text-[var(--c-warn)]" },
+  APPROVED:   { label: "ยืนยันแล้ว",    color: "text-[var(--c-ok)]" },
+  REJECTED:   { label: "ถูกปฏิเสธ",     color: "text-[var(--c-danger)]" },
+  SUSPENDED:  { label: "ถูกระงับ",      color: "text-[var(--c-danger)]" },
 };
 
 interface Props {
@@ -31,22 +31,22 @@ interface Props {
 
 export default function SellerCard({ seller }: Props) {
   const verification = VERIFICATION_TH[seller.verificationStatus] ?? {
-    label: seller.verificationStatus, color: "text-gray-500",
+    label: seller.verificationStatus, color: "text-[var(--c-muted)]",
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6">
-      <h3 className="text-sm font-semibold text-[#3d4d66] mb-4">ผู้ขาย</h3>
+    <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
+      <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-4">ผู้ขาย</h3>
 
       {/* Warnings */}
       {seller.isBanned && (
-        <div className="mb-4 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5 text-sm text-red-700 flex items-center gap-2">
+        <div className="mb-4 bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-3 py-2.5 text-sm text-[var(--c-danger)] flex items-center gap-2">
           <span>⚠️</span>
           <span className="font-medium">ผู้ขายรายนี้ถูกแบน</span>
         </div>
       )}
       {(seller.verificationStatus === "UNVERIFIED" || seller.verificationStatus === "REJECTED") && !seller.isBanned && (
-        <div className="mb-4 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5 text-sm text-amber-700 flex items-center gap-2">
+        <div className="mb-4 bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-3 py-2.5 text-sm text-[var(--c-warn)] flex items-center gap-2">
           <span>⚠️</span>
           <span className="font-medium">
             {seller.verificationStatus === "UNVERIFIED"
@@ -59,7 +59,7 @@ export default function SellerCard({ seller }: Props) {
       {/* Avatar + Name */}
       <div className="flex items-center gap-3 mb-4">
         {seller.image ? (
-          <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-[#eaf0f8]">
+          <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-[var(--c-line-soft)]">
             <Image
               src={seller.image}
               alt={seller.name ?? "ผู้ขาย"}
@@ -69,36 +69,36 @@ export default function SellerCard({ seller }: Props) {
             />
           </div>
         ) : (
-          <div className="w-12 h-12 rounded-full bg-[#eaf0f8] flex items-center justify-center text-xl flex-shrink-0">
+          <div className="w-12 h-12 rounded-full bg-[var(--c-line-soft)] flex items-center justify-center text-xl flex-shrink-0">
             👤
           </div>
         )}
         <div className="min-w-0">
-          <p className="font-semibold text-[#0f1e35] truncate">
+          <p className="font-semibold text-[var(--c-ink)] truncate">
             {seller.name ?? "ไม่ระบุชื่อ"}
           </p>
-          <p className="text-xs text-[#8494a9] truncate">{seller.email}</p>
+          <p className="text-xs text-[var(--c-faint)] truncate">{seller.email}</p>
         </div>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-3 gap-2 mb-4">
-        <div className="bg-[#f7f9fd] rounded-xl p-3 text-center">
-          <p className="text-xs text-[#8494a9]">ยืนยันตัวตน</p>
+        <div className="bg-[var(--c-subtle)] rounded-xl p-3 text-center">
+          <p className="text-xs text-[var(--c-faint)]">ยืนยันตัวตน</p>
           <p className={`text-xs font-semibold mt-0.5 ${verification.color}`}>
             {seller.verificationStatus === "APPROVED" ? "✅ " : ""}
             {verification.label}
           </p>
         </div>
-        <div className="bg-[#f7f9fd] rounded-xl p-3 text-center">
-          <p className="text-xs text-[#8494a9]">คะแนน</p>
-          <p className="text-sm font-semibold text-[#1e2d47] mt-0.5">
+        <div className="bg-[var(--c-subtle)] rounded-xl p-3 text-center">
+          <p className="text-xs text-[var(--c-faint)]">คะแนน</p>
+          <p className="text-sm font-semibold text-[var(--c-ink-1)] mt-0.5">
             {seller.trustScore}/100
           </p>
         </div>
-        <div className="bg-[#f7f9fd] rounded-xl p-3 text-center">
-          <p className="text-xs text-[#8494a9]">ขายแล้ว</p>
-          <p className="text-sm font-semibold text-[#1e2d47] mt-0.5">
+        <div className="bg-[var(--c-subtle)] rounded-xl p-3 text-center">
+          <p className="text-xs text-[var(--c-faint)]">ขายแล้ว</p>
+          <p className="text-sm font-semibold text-[var(--c-ink-1)] mt-0.5">
             {formatNumber(seller.completedSalesCount)} ชิ้น
           </p>
         </div>
@@ -107,35 +107,35 @@ export default function SellerCard({ seller }: Props) {
       {/* Details */}
       <div className="space-y-2 text-sm mb-4">
         <div className="flex items-center justify-between">
-          <span className="text-[#8494a9]">สถานะบัญชี</span>
+          <span className="text-[var(--c-faint)]">สถานะบัญชี</span>
           {seller.isBanned ? (
-            <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-red-50 text-red-700 border-red-200">
+            <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-[var(--c-danger-soft)] text-[var(--c-danger)] border-[var(--c-danger-line)]">
               ถูกแบน
             </span>
           ) : (
-            <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-green-50 text-green-700 border-green-200">
+            <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-[var(--c-ok-soft)] text-[var(--c-ok)] border-[var(--c-ok-line)]">
               ปกติ
             </span>
           )}
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-[#8494a9]">บทบาท</span>
+          <span className="text-[var(--c-faint)]">บทบาท</span>
           <StatusBadge status={seller.role} type="role" />
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-[#8494a9]">สินค้าทั้งหมด</span>
-          <span className="text-[#1e2d47]">{formatNumber(seller.itemCount)} ชิ้น</span>
+          <span className="text-[var(--c-faint)]">สินค้าทั้งหมด</span>
+          <span className="text-[var(--c-ink-1)]">{formatNumber(seller.itemCount)} ชิ้น</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-[#8494a9]">สมัครเมื่อ</span>
-          <span className="text-[#1e2d47]">{formatThaiDate(seller.createdAt)}</span>
+          <span className="text-[var(--c-faint)]">สมัครเมื่อ</span>
+          <span className="text-[var(--c-ink-1)]">{formatThaiDate(seller.createdAt)}</span>
         </div>
       </div>
 
       {/* Link to seller profile */}
       <Link
         href={`/admin/users?search=${encodeURIComponent(seller.email)}`}
-        className="w-full inline-flex items-center justify-center gap-1.5 text-sm font-medium text-[#2563eb] hover:text-[#1d4ed8] bg-[#fdf4ef] hover:bg-[#fce8da] rounded-xl py-2.5 transition-colors"
+        className="w-full inline-flex items-center justify-center gap-1.5 text-sm font-medium text-[var(--c-accent)] hover:text-[var(--c-accent-str)] bg-[#fdf4ef] hover:bg-[#fce8da] rounded-xl py-2.5 transition-colors"
       >
         ดูโปรไฟล์ผู้ขาย →
       </Link>

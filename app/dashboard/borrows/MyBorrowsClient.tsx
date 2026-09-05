@@ -76,9 +76,9 @@ export default function MyBorrowsClient({
 
           {/* ── Standing ───────────────────────────────────────────────── */}
           {suspended && (
-            <div className="bw-panel !border-[#f6c9c4] !bg-[#fdecea] mb-5">
-              <p className="text-[13.5px] font-semibold text-[#b3261e]">สิทธิ์การยืมถูกระงับ</p>
-              <p className="text-[12.5px] text-[#8f1d17] mt-1 leading-[1.9]">
+            <div className="bw-panel !border-[var(--c-danger-line)] !bg-[var(--c-danger-soft)] mb-5">
+              <p className="text-[13.5px] font-semibold text-[var(--c-danger)]">สิทธิ์การยืมถูกระงับ</p>
+              <p className="text-[12.5px] text-[var(--c-danger)] mt-1 leading-[1.9]">
                 คุณมีอุปกรณ์ที่ยังไม่ได้คืนเกินกำหนด — ไม่มีค่าปรับ
                 แต่จะยืมชิ้นใหม่ไม่ได้จนกว่าจะคืนของที่ค้างอยู่
               </p>
@@ -86,8 +86,8 @@ export default function MyBorrowsClient({
           )}
 
           {!suspended && tier === "RESTRICTED" && (
-            <div className="bw-panel !border-[#f3e2b7] !bg-[#fff8e6] mb-5">
-              <p className="text-[12.5px] text-[#92620e] leading-[1.9]">
+            <div className="bw-panel !border-[var(--c-warn-line)] !bg-[var(--c-warn-soft)] mb-5">
+              <p className="text-[12.5px] text-[var(--c-warn)] leading-[1.9]">
                 ประวัติการยืมของคุณถูกทำเครื่องหมายว่าต้องระวัง
                 เจ้าหน้าที่อาจใช้เวลาพิจารณาคำขอนานขึ้น — คืนของตรงเวลาสองสามครั้งก็กลับมาปกติ
               </p>
@@ -95,8 +95,8 @@ export default function MyBorrowsClient({
           )}
 
           {!suspended && soonest !== undefined && soonest <= 3 && (
-            <div className={`bw-panel mb-5 !py-3.5 ${soonest < 0 ? "!border-[#f6c9c4] !bg-[#fdecea]" : "!border-[#f3e2b7] !bg-[#fff8e6]"}`}>
-              <p className={`text-[13px] ${soonest < 0 ? "text-[#b3261e]" : "text-[#92620e]"}`}>
+            <div className={`bw-panel mb-5 !py-3.5 ${soonest < 0 ? "!border-[var(--c-danger-line)] !bg-[var(--c-danger-soft)]" : "!border-[var(--c-warn-line)] !bg-[var(--c-warn-soft)]"}`}>
+              <p className={`text-[13px] ${soonest < 0 ? "text-[var(--c-danger)]" : "text-[var(--c-warn)]"}`}>
                 {soonest < 0
                   ? `⚠️ คุณมีของเลยกำหนดคืนมา ${Math.abs(soonest)} วันแล้ว`
                   : soonest === 0
@@ -167,10 +167,10 @@ export default function MyBorrowsClient({
                       {live && o.dueDate ? (
                         <>
                           <p className="bw-label">คืนภายใน</p>
-                          <p className={`text-[13px] font-semibold mt-0.5 ${left !== null && left < 0 ? "text-[#b3261e]" : ""}`}>
+                          <p className={`text-[13px] font-semibold mt-0.5 ${left !== null && left < 0 ? "text-[var(--c-danger)]" : ""}`}>
                             {new Date(o.dueDate).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}
                           </p>
-                          <p className={`text-[11px] ${left !== null && left < 0 ? "text-[#b3261e]" : "text-[var(--bw-muted)]"}`}>
+                          <p className={`text-[11px] ${left !== null && left < 0 ? "text-[var(--c-danger)]" : "text-[var(--bw-muted)]"}`}>
                             {left === null ? "" : left < 0 ? `เลย ${Math.abs(left)} วัน` : left === 0 ? "วันนี้" : `อีก ${left} วัน`}
                           </p>
                         </>

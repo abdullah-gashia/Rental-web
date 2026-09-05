@@ -68,7 +68,7 @@ export default function ProductCard({ item, index = 0, onClick }: ProductCardPro
         <WishlistButton
           itemId={item.id}
           size="sm"
-          className="absolute top-2 right-2 w-[26px] h-[26px] bg-white/94 border border-[rgba(15,30,53,0.07)] rounded-md flex items-center justify-center transition-colors hover:bg-white"
+          className="absolute top-2 right-2 w-[26px] h-[26px] bg-[var(--c-surface)]/94 border border-[rgba(15,30,53,0.07)] rounded-md flex items-center justify-center transition-colors hover:bg-[var(--c-surface)]"
         />
       </div>
 

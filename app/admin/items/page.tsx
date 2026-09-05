@@ -31,8 +31,8 @@ export default async function AdminItemsPage({ searchParams }: Props) {
     <div className="space-y-5">
       {/* Heading */}
       <div>
-        <h1 className="text-xl font-bold text-[#0f1e35]">สินค้า</h1>
-        <p className="text-sm text-[#5b6b82] mt-0.5">จัดการรายการสินค้าทั้งหมด</p>
+        <h1 className="text-xl font-bold text-[var(--c-ink)]">สินค้า</h1>
+        <p className="text-sm text-[var(--c-ink-3)] mt-0.5">จัดการรายการสินค้าทั้งหมด</p>
       </div>
 
       {/* Toolbar */}
@@ -71,7 +71,7 @@ export default async function AdminItemsPage({ searchParams }: Props) {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-[#dfe7f2] overflow-hidden">
+      <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] overflow-hidden">
         <ItemsTable rows={result.data} />
       </div>
 

@@ -69,10 +69,12 @@ interface Props {
   /** Where the "back to the site" link goes. */
   backHref?:  string;
   backLabel?: string;
+  /** Fallback name shown when the account has none. */
+  userFallback?: string;
 }
 
 export default function ConsoleSidebar({
-  title, groups, user, backHref = "/", backLabel = "กลับหน้าร้าน",
+  title, groups, user, backHref = "/", backLabel = "กลับหน้าร้าน", userFallback = "ผู้ใช้",
 }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -115,7 +117,7 @@ export default function ConsoleSidebar({
         </div>
         <div className="min-w-0">
           <p className="text-[12.5px] font-semibold text-[var(--hp-ink)] truncate">
-            {user.name ?? "ผู้ใช้"}
+            {user.name ?? userFallback}
           </p>
           <p className="text-[10.5px] text-[var(--hp-muted)] truncate">{user.email}</p>
         </div>
@@ -134,9 +136,9 @@ export default function ConsoleSidebar({
     <>
       {/* Mobile trigger */}
       <button
-        className="md:hidden fixed top-3 left-4 z-[60] w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-[var(--hp-border-str)]"
+        className="md:hidden fixed top-3 left-4 z-[60] w-9 h-9 flex items-center justify-center rounded-lg bg-[var(--c-surface)] border border-[var(--hp-border-str)]"
         onClick={() => setOpen((o) => !o)}
-        aria-label={open ? "ปิดเมนู" : "เปิดเมนู"}
+        aria-label={open ? backLabel : title}
         aria-expanded={open}
       >
         <svg className="w-5 h-5 text-[var(--hp-ink)]" fill="none" stroke="currentColor" strokeWidth={2}
@@ -150,7 +152,7 @@ export default function ConsoleSidebar({
       )}
 
       <div
-        className={`md:hidden fixed top-0 left-0 h-full w-[248px] bg-white border-r border-[var(--hp-border)] z-[56] flex flex-col p-4 transition-transform duration-200 ${
+        className={`md:hidden fixed top-0 left-0 h-full w-[248px] bg-[var(--c-surface)] border-r border-[var(--hp-border)] z-[56] flex flex-col p-4 transition-transform duration-200 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >

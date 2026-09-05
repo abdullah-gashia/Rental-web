@@ -26,15 +26,15 @@ export default function SystemMetadataCard({ item }: Props) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6">
-      <h3 className="text-sm font-semibold text-[#3d4d66] mb-4">ข้อมูลระบบ</h3>
+    <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
+      <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-4">ข้อมูลระบบ</h3>
 
       <div className="space-y-3">
         {/* Item ID */}
         <Row label="Item ID">
           <button
             onClick={copyId}
-            className="text-xs text-[#8494a9] hover:text-[#3d4d66] transition-colors font-mono flex items-center gap-1"
+            className="text-xs text-[var(--c-faint)] hover:text-[var(--c-ink-2)] transition-colors font-mono flex items-center gap-1"
             title="คัดลอก ID"
           >
             {truncateId(item.id)}
@@ -44,21 +44,21 @@ export default function SystemMetadataCard({ item }: Props) {
 
         {/* Created */}
         <Row label="สร้างเมื่อ">
-          <span className="text-sm text-[#1e2d47]">
+          <span className="text-sm text-[var(--c-ink-1)]">
             {formatThaiDateWithTime(item.createdAt)}
           </span>
         </Row>
 
         {/* Updated */}
         <Row label="แก้ไขล่าสุด">
-          <span className="text-sm text-[#1e2d47]">
+          <span className="text-sm text-[var(--c-ink-1)]">
             {formatThaiDateWithTime(item.updatedAt)}
           </span>
         </Row>
 
         {/* Last viewed */}
         <Row label="เข้าชมล่าสุด">
-          <span className="text-sm text-[#1e2d47]">
+          <span className="text-sm text-[var(--c-ink-1)]">
             {item.lastViewedAt
               ? formatThaiDateWithTime(item.lastViewedAt)
               : "ยังไม่มีผู้เข้าชม"}
@@ -66,7 +66,7 @@ export default function SystemMetadataCard({ item }: Props) {
         </Row>
 
         {/* Divider */}
-        <div className="border-t border-[#eaf0f8] pt-3">
+        <div className="border-t border-[var(--c-line-soft)] pt-3">
           <div className="grid grid-cols-2 gap-3">
             <StatBox icon="👁" label="เข้าชม" value={`${formatNumber(item.viewCount)} ครั้ง`} />
             <StatBox icon="❤️" label="Wishlist" value={`${formatNumber(item.wishlistCount)}`} />
@@ -87,7 +87,7 @@ export default function SystemMetadataCard({ item }: Props) {
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-start justify-between gap-2">
-      <span className="text-sm text-[#8494a9] flex-shrink-0">{label}</span>
+      <span className="text-sm text-[var(--c-faint)] flex-shrink-0">{label}</span>
       <div className="text-right">{children}</div>
     </div>
   );
@@ -99,12 +99,12 @@ function StatBox({
   icon: string; label: string; value: string; danger?: boolean;
 }) {
   return (
-    <div className={`rounded-xl p-3 text-center ${danger ? "bg-red-50" : "bg-[#f7f9fd]"}`}>
+    <div className={`rounded-xl p-3 text-center ${danger ? "bg-[var(--c-danger-soft)]" : "bg-[var(--c-subtle)]"}`}>
       <span className="text-lg">{icon}</span>
-      <p className={`text-sm font-semibold mt-0.5 ${danger ? "text-red-600" : "text-[#1e2d47]"}`}>
+      <p className={`text-sm font-semibold mt-0.5 ${danger ? "text-[var(--c-danger)]" : "text-[var(--c-ink-1)]"}`}>
         {value}
       </p>
-      <p className="text-xs text-[#8494a9]">{label}</p>
+      <p className="text-xs text-[var(--c-faint)]">{label}</p>
     </div>
   );
 }

@@ -39,11 +39,11 @@ export default function ConfirmDialog({
       />
 
       {/* Panel */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
-        <h3 id="confirm-title" className="text-base font-bold text-[#0f1e35]">
+      <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
+        <h3 id="confirm-title" className="text-base font-bold text-[var(--c-ink)]">
           {title}
         </h3>
-        <p className="text-sm text-[#3d4d66] leading-relaxed">{description}</p>
+        <p className="text-sm text-[var(--c-ink-2)] leading-relaxed">{description}</p>
 
         {/* Optional extra content (reason input etc.) */}
         {children && <div>{children}</div>}
@@ -53,7 +53,7 @@ export default function ConfirmDialog({
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="flex-1 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
+            className="flex-1 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
           >
             ยกเลิก
           </button>
@@ -62,7 +62,7 @@ export default function ConfirmDialog({
             onClick={onConfirm}
             disabled={loading}
             className={`flex-1 py-2.5 rounded-xl text-sm font-bold text-white transition disabled:opacity-50 flex items-center justify-center gap-2 ${
-              danger ? "bg-red-600 hover:bg-red-700" : "bg-[#2563eb] hover:bg-[#1d4ed8]"
+              danger ? "bg-red-600 hover:bg-red-700" : "bg-[var(--c-accent)] hover:bg-[var(--c-accent-str)]"
             }`}
           >
             {loading && (

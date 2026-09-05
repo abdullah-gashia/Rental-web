@@ -38,7 +38,7 @@ export default function WishlistButton({
     <button onClick={handleClick} className={className}>
       <svg
         className={iconSize}
-        style={{ color: isWished ? "#ef4444" : "#64748b" }}
+        style={{ color: isWished ? "#ef4444" : "var(--c-muted)" }}
         fill={isWished ? "#ef4444" : "none"}
         stroke={isWished ? "#ef4444" : "currentColor"}
         viewBox="0 0 24 24"

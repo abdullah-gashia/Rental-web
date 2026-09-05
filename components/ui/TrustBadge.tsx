@@ -20,9 +20,9 @@ function getTier(score: number): Tier {
     return {
       label:   "น่าเชื่อถือสูง",
       icon:    "✦",
-      bg:      "bg-emerald-50",
-      text:    "text-emerald-700",
-      border:  "border-emerald-200",
+      bg:      "bg-[var(--c-ok-soft)]",
+      text:    "text-[var(--c-ok)]",
+      border:  "border-[var(--c-ok-line)]",
       tooltip: `คะแนน ${score} — ผู้ใช้คนนี้ผ่านธุรกรรมสำเร็จหลายครั้งและมีรีวิวดีเยี่ยม`,
     };
   }
@@ -30,18 +30,18 @@ function getTier(score: number): Tier {
     return {
       label:   "มาตรฐาน",
       icon:    "●",
-      bg:      "bg-amber-50",
-      text:    "text-amber-700",
-      border:  "border-amber-200",
+      bg:      "bg-[var(--c-warn-soft)]",
+      text:    "text-[var(--c-warn)]",
+      border:  "border-[var(--c-warn-line)]",
       tooltip: `คะแนน ${score} — ผู้ใช้ทั่วไป ควรตรวจสอบก่อนทำธุรกรรม`,
     };
   }
   return {
     label:   "ความน่าเชื่อถือต่ำ",
     icon:    "▼",
-    bg:      "bg-red-50",
-    text:    "text-red-700",
-    border:  "border-red-200",
+    bg:      "bg-[var(--c-danger-soft)]",
+    text:    "text-[var(--c-danger)]",
+    border:  "border-[var(--c-danger-line)]",
     tooltip: `คะแนน ${score} — ระวัง! ผู้ใช้คนนี้มีประวัติยกเลิกธุรกรรมหรือรีวิวแย่`,
   };
 }

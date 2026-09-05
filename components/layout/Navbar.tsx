@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocaleStore } from "@/lib/stores/locale-store";
+import Brand from "@/components/layout/Brand";
 import { useWishlistStore } from "@/lib/stores/wishlist-store";
 import { useModalStore } from "@/lib/stores/modal-store";
 import { useAuthStore } from "@/lib/stores/auth-store";
@@ -118,25 +119,20 @@ export default function Navbar({
       <header className="hp-topbar">
         <div className="w-full px-3 flex items-center gap-3">
           {/* Wordmark */}
-          <a href="/" className="flex items-center gap-2 flex-shrink-0 pl-1">
-            <span className="w-6 h-6 rounded bg-[var(--psu-navy)] text-white flex items-center justify-center text-[10px] font-bold">
-              ม.อ.
-            </span>
-            <span className="hidden sm:block text-[13.5px] font-semibold text-[var(--hp-ink)]">
-              PSU Store
-            </span>
-          </a>
+          <div className="flex-shrink-0 pl-1">
+            <Brand size={24} />
+          </div>
 
           {/* Search — centred in the window, like the Store's */}
           <div className="flex-1 flex justify-center min-w-0">
-            <div className="search-bar w-full max-w-[560px] bg-white border border-[var(--hp-border)] rounded-md h-8 px-2.5 flex items-center gap-2">
+            <div className="search-bar w-full max-w-[560px] bg-[var(--c-surface)] border border-[var(--hp-border)] rounded-md h-8 px-2.5 flex items-center gap-2">
               <input
                 id="searchInput"
                 type="text"
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
                 placeholder={searchPlaceholder ?? t("search_placeholder")}
-                className="bg-transparent text-[13px] w-full focus:outline-none text-[var(--hp-ink)] placeholder-[#64748b]"
+                className="bg-transparent text-[13px] w-full focus:outline-none text-[var(--hp-ink)] placeholder-[var(--c-muted)]"
               />
               <kbd className="hp-num hidden md:inline text-[9.5px] text-[var(--hp-muted)] bg-[var(--hp-subtle)] px-1.5 py-0.5 rounded border border-[var(--hp-border)]">
                 ⌘K

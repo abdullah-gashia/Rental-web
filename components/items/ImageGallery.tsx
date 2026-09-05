@@ -52,7 +52,7 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
     return (
       <div
         className="w-full aspect-square rounded-xl flex items-center justify-center"
-        style={{ background: color || "#dfe7f2" }}
+        style={{ background: color || "var(--c-line)" }}
       >
         <span className="text-[80px]">{emoji || "📦"}</span>
       </div>
@@ -68,7 +68,7 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
         <button
           type="button"
           onClick={() => setLightbox(true)}
-          className="relative w-full aspect-square rounded-xl overflow-hidden group bg-[#eef2f8] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]"
+          className="relative w-full aspect-square rounded-xl overflow-hidden group bg-[var(--c-subtle-2)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-accent)]"
           aria-label="ดูรูปขยาย"
         >
           <img
@@ -98,11 +98,11 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
                   aria-label={`รูปที่ ${idx + 1}`}
                   className={`w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 transition-all duration-150 focus:outline-none ${
                     isActive
-                      ? "ring-2 ring-[#2563eb] ring-offset-1 opacity-100"
-                      : "ring-1 ring-[#dfe7f2] opacity-60 hover:opacity-100 hover:ring-[#c2ccdb]"
+                      ? "ring-2 ring-[var(--c-accent)] ring-offset-1 opacity-100"
+                      : "ring-1 ring-[var(--c-line)] opacity-60 hover:opacity-100 hover:ring-[var(--c-line-str)]"
                   }`}
                 >
-                  <img src={img.url} alt="" className="w-full h-full object-contain bg-[#eef2f8]" />
+                  <img src={img.url} alt="" className="w-full h-full object-contain bg-[var(--c-subtle-2)]" />
                 </button>
               );
             })}
@@ -131,7 +131,7 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
             <button
               type="button"
               onClick={() => setLightbox(false)}
-              className="absolute -top-3 -right-3 w-9 h-9 bg-white hover:bg-gray-100 text-[#0f1e35] rounded-full shadow-lg flex items-center justify-center transition text-lg font-bold leading-none"
+              className="absolute -top-3 -right-3 w-9 h-9 bg-[var(--c-surface)] hover:bg-[var(--c-line-soft)] text-[var(--c-ink)] rounded-full shadow-lg flex items-center justify-center transition text-lg font-bold leading-none"
               aria-label="ปิด"
             >
               ✕
@@ -147,7 +147,7 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
                     const idx = images.findIndex((img) => img.id === active?.id);
                     setActive(images[(idx - 1 + images.length) % images.length]);
                   }}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/20 hover:bg-white/40 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-[var(--c-surface)]/20 hover:bg-[var(--c-surface)]/40 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition"
                   aria-label="รูปก่อนหน้า"
                 >
                   ‹
@@ -159,7 +159,7 @@ export default function ImageGallery({ images: rawImages, emoji, color, title }:
                     const idx = images.findIndex((img) => img.id === active?.id);
                     setActive(images[(idx + 1) % images.length]);
                   }}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/20 hover:bg-white/40 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-[var(--c-surface)]/20 hover:bg-[var(--c-surface)]/40 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition"
                   aria-label="รูปถัดไป"
                 >
                   ›

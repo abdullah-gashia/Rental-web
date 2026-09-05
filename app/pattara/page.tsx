@@ -51,12 +51,12 @@ export default async function PattaraOverview() {
             key={s.k}
             href={s.href}
             className={`bw-panel !py-4 hover:border-[var(--psu-sky-200)] transition-colors ${
-              s.bad ? "!border-[#f6c9c4] !bg-[#fdecea]" : s.hot ? "!border-[#f3e2b7] !bg-[#fff8e6]" : ""
+              s.bad ? "!border-[var(--c-danger-line)] !bg-[var(--c-danger-soft)]" : s.hot ? "!border-[var(--c-warn-line)] !bg-[var(--c-warn-soft)]" : ""
             }`}
           >
             <p className="bw-label">{s.k}</p>
             <p className={`bw-num text-[28px] font-semibold leading-none mt-1.5 ${
-              s.bad ? "text-[#b3261e]" : s.hot ? "text-[#92620e]" : "text-[var(--psu-navy)]"
+              s.bad ? "text-[var(--c-danger)]" : s.hot ? "text-[var(--c-warn)]" : "text-[var(--psu-navy)]"
             }`}>
               {s.v}
             </p>

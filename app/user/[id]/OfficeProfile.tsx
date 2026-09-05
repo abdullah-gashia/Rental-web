@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import Brand from "@/components/layout/Brand";
 import { BORROW_CATEGORY_LABEL, ITEM_STATUS_LABEL } from "@/lib/borrow-config";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -36,11 +37,9 @@ export default async function OfficeProfile({ user }: { user: any }) {
 
   return (
     <div className="bw-root min-h-screen">
-      <header className="sticky top-0 z-50 bg-white border-b border-[var(--bw-line)]">
+      <header className="sticky top-0 z-50 bg-[var(--c-surface)] border-b border-[var(--bw-line)]">
         <div className="max-w-3xl mx-auto px-5 h-14 flex items-center justify-between">
-          <a href="/" className="text-lg font-extrabold tracking-tighter text-[var(--psu-navy)]">
-            PSU<span className="text-[var(--psu-blue)]">.</span>STORE
-          </a>
+          <Brand size={26} />
           <a href="/borrow" className="text-[13px] font-semibold text-[var(--psu-blue)] hover:underline">
             อุปกรณ์ให้ยืมทั้งหมด →
           </a>

@@ -43,9 +43,9 @@ function Card({ title, children, right }: {
   right?: React.ReactNode;
 }) {
   return (
-    <section className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+    <section className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
       <div className="flex items-center justify-between gap-3 mb-4">
-        <h2 className="text-sm font-bold text-[#1e2d47]">{title}</h2>
+        <h2 className="text-sm font-bold text-[var(--c-ink-1)]">{title}</h2>
         {right}
       </div>
       {children}
@@ -60,8 +60,8 @@ function Row({ label, value, strong = false }: {
 }) {
   return (
     <div className="flex items-start justify-between gap-4 py-1.5 border-b border-[#f4f2ee] last:border-0">
-      <span className="text-xs text-[#64748b] flex-shrink-0">{label}</span>
-      <span className={`text-xs text-right ${strong ? "font-bold text-[#0f1e35]" : "text-[#1e2d47]"}`}>
+      <span className="text-xs text-[var(--c-muted)] flex-shrink-0">{label}</span>
+      <span className={`text-xs text-right ${strong ? "font-bold text-[var(--c-ink)]" : "text-[var(--c-ink-1)]"}`}>
         {value}
       </span>
     </div>
@@ -71,7 +71,7 @@ function Row({ label, value, strong = false }: {
 function Confirm({ ok, label }: { ok: boolean; label: string }) {
   return (
     <span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${
-      ok ? "bg-green-50 text-green-700 border-green-200" : "bg-gray-50 text-gray-500 border-gray-200"
+      ok ? "bg-[var(--c-ok-soft)] text-[var(--c-ok)] border-[var(--c-ok-line)]" : "bg-[var(--c-subtle)] text-[var(--c-muted)] border-[var(--c-line)]"
     }`}>
       {ok ? "✓" : "○"} {label}
     </span>
@@ -82,11 +82,11 @@ function Photos({ urls, label }: { urls: string[]; label: string }) {
   if (urls.length === 0) return null;
   return (
     <div className="mt-3">
-      <p className="text-[11px] text-[#64748b] mb-1.5">{label} ({urls.length})</p>
+      <p className="text-[11px] text-[var(--c-muted)] mb-1.5">{label} ({urls.length})</p>
       <div className="flex gap-2 flex-wrap">
         {urls.map((u) => (
           <a key={u} href={u} target="_blank" rel="noopener noreferrer"
-             className="w-20 h-20 rounded-lg border border-[#dfe7f2] overflow-hidden bg-[#eef2f8] flex items-center justify-center">
+             className="w-20 h-20 rounded-lg border border-[var(--c-line)] overflow-hidden bg-[var(--c-subtle-2)] flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={u} alt="" className="w-full h-full object-contain" />
           </a>
@@ -144,22 +144,22 @@ export default async function AdminLendingDetailPage({
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <Link href="/admin/lending" className="text-xs text-[#64748b] hover:text-[#3d4d66] transition">
+          <Link href="/admin/lending" className="text-xs text-[var(--c-muted)] hover:text-[var(--c-ink-2)] transition">
             ← ระบบปล่อยเช่า
           </Link>
-          <h1 className="text-xl font-bold text-[#0f1e35] mt-1 flex items-center gap-2 flex-wrap">
+          <h1 className="text-xl font-bold text-[var(--c-ink)] mt-1 flex items-center gap-2 flex-wrap">
             🔑 {order.item.title}
             <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${statusColor(order.status)}`}>
               {statusLabel(order.status)}
             </span>
           </h1>
-          <p className="text-xs text-[#64748b] mt-1 font-mono">{order.refCode}</p>
+          <p className="text-xs text-[var(--c-muted)] mt-1 font-mono">{order.refCode}</p>
         </div>
 
         <Link
           href={`/rental/orders/${order.id}`}
           target="_blank"
-          className="text-xs font-semibold text-[#2563eb] border border-[#2563eb]/30 bg-[#2563eb]/5 rounded-xl px-3.5 py-2 hover:bg-[#2563eb]/10 transition"
+          className="text-xs font-semibold text-[var(--c-accent)] border border-[var(--c-accent)]/30 bg-[var(--c-accent)]/5 rounded-xl px-3.5 py-2 hover:bg-[var(--c-accent)]/10 transition"
         >
           เปิดหน้าที่ผู้ใช้เห็น ↗
         </Link>
@@ -169,8 +169,8 @@ export default async function AdminLendingDetailPage({
       {order.status === "REQUESTED" && (
         <div className={`rounded-2xl px-4 py-3 border text-sm ${
           (waitingDays ?? 0) >= 5
-            ? "bg-red-50 border-red-200 text-red-700"
-            : "bg-amber-50 border-amber-200 text-amber-800"
+            ? "bg-[var(--c-danger-soft)] border-[var(--c-danger-line)] text-[var(--c-danger)]"
+            : "bg-[var(--c-warn-soft)] border-[var(--c-warn-line)] text-amber-800"
         }`}>
           ⏳ เจ้าของยังไม่ตอบรับ — รอมาแล้ว <span className="font-bold">{waitingDays} วัน</span>
           {order.expiresAt && (
@@ -195,14 +195,14 @@ export default async function AdminLendingDetailPage({
                 <li key={step.key} className="flex items-center gap-2 flex-shrink-0">
                   <div className="flex flex-col items-center w-[86px] text-center">
                     <span className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold border-2 ${
-                      current ? "bg-[#2563eb] border-[#2563eb] text-white"
-                      : done   ? "bg-green-50 border-green-400 text-green-700"
-                               : "bg-white border-[#dfe7f2] text-[#a8b4c4]"
+                      current ? "bg-[var(--c-accent)] border-[var(--c-accent)] text-white"
+                      : done   ? "bg-[var(--c-ok-soft)] border-green-400 text-[var(--c-ok)]"
+                               : "bg-[var(--c-surface)] border-[var(--c-line)] text-[var(--c-faint-2)]"
                     }`}>
                       {done && !current ? "✓" : i + 1}
                     </span>
                     <span className={`text-[10.5px] mt-1 leading-tight ${
-                      current ? "font-bold text-[#2563eb]" : done ? "text-[#3d4d66]" : "text-[#a8b4c4]"
+                      current ? "font-bold text-[var(--c-accent)]" : done ? "text-[var(--c-ink-2)]" : "text-[var(--c-faint-2)]"
                     }`}>
                       {step.label}
                     </span>
@@ -225,25 +225,25 @@ export default async function AdminLendingDetailPage({
             // There is no standalone item route — the marketplace opens the
             // listing from a search on its exact title.
             <Link href={`/?q=${encodeURIComponent(order.item.title)}`} target="_blank"
-                  className="text-[11px] text-[#2563eb] hover:underline">
+                  className="text-[11px] text-[var(--c-accent)] hover:underline">
               ดูประกาศ ↗
             </Link>
           }
         >
           <div className="flex gap-4">
-            <div className="w-24 h-24 flex-shrink-0 rounded-xl bg-[#eef2f8] border border-[#dfe7f2] overflow-hidden flex items-center justify-center text-3xl">
+            <div className="w-24 h-24 flex-shrink-0 rounded-xl bg-[var(--c-subtle-2)] border border-[var(--c-line)] overflow-hidden flex items-center justify-center text-3xl">
               {cover
                 // eslint-disable-next-line @next/next/no-img-element
                 ? <img src={cover} alt={order.item.title} className="w-full h-full object-contain" />
                 : (order.item.emoji ?? "📦")}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-[#0f1e35]">{order.item.title}</p>
-              <p className="text-xs text-[#64748b] mt-0.5">
+              <p className="text-sm font-semibold text-[var(--c-ink)]">{order.item.title}</p>
+              <p className="text-xs text-[var(--c-muted)] mt-0.5">
                 {order.item.category.nameTh}
                 {order.item.location ? ` · ${order.item.location}` : ""}
               </p>
-              <p className="text-xs text-[#5b6b82] mt-2 line-clamp-3 leading-relaxed">
+              <p className="text-xs text-[var(--c-ink-3)] mt-2 line-clamp-3 leading-relaxed">
                 {order.item.description}
               </p>
             </div>
@@ -261,22 +261,22 @@ export default async function AdminLendingDetailPage({
         <Card title="คู่สัญญา">
           <div className="space-y-4">
             {[
-              { role: "ผู้เช่า",  u: order.renter, tint: "bg-blue-50 text-blue-700 border-blue-200"    },
+              { role: "ผู้เช่า",  u: order.renter, tint: "bg-[var(--c-accent-soft)] text-[var(--c-accent-str)] border-[var(--c-line-str)]"    },
               { role: "เจ้าของ", u: order.owner,  tint: "bg-purple-50 text-purple-700 border-purple-200" },
             ].map(({ role, u, tint }) => (
-              <div key={role} className="rounded-xl border border-[#dfe7f2] p-3.5">
+              <div key={role} className="rounded-xl border border-[var(--c-line)] p-3.5">
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <span className={`text-[10.5px] font-semibold px-2 py-0.5 rounded-full border ${tint}`}>
                     {role}
                   </span>
                   <Link href={`/user/${u.id}`} target="_blank"
-                        className="text-[11px] text-[#2563eb] hover:underline">
+                        className="text-[11px] text-[var(--c-accent)] hover:underline">
                     โปรไฟล์ ↗
                   </Link>
                 </div>
-                <p className="text-sm font-semibold text-[#0f1e35]">{u.name ?? "—"}</p>
-                <p className="text-xs text-[#64748b] break-all">{u.email ?? "—"}</p>
-                <p className="text-xs text-[#64748b]">
+                <p className="text-sm font-semibold text-[var(--c-ink)]">{u.name ?? "—"}</p>
+                <p className="text-xs text-[var(--c-muted)] break-all">{u.email ?? "—"}</p>
+                <p className="text-xs text-[var(--c-muted)]">
                   {u.phone ?? "ไม่ระบุเบอร์"} · คะแนนความน่าเชื่อถือ {u.trustScore}
                 </p>
               </div>
@@ -290,8 +290,8 @@ export default async function AdminLendingDetailPage({
           <Row label="ค่าธรรมเนียมแพลตฟอร์ม" value={baht(order.platformFee)} />
           <Row label="เงินมัดจำ"              value={baht(order.securityDeposit)} />
           <Row label="ยอดชำระรวม"            value={baht(order.totalPaid)} strong />
-          <Row label="ค่าปรับคืนช้าสะสม"      value={order.lateFees   ? <span className="text-red-600 font-semibold">{baht(order.lateFees)}</span>   : "—"} />
-          <Row label="ค่าเสียหาย"            value={order.damageFees ? <span className="text-red-600 font-semibold">{baht(order.damageFees)}</span> : "—"} />
+          <Row label="ค่าปรับคืนช้าสะสม"      value={order.lateFees   ? <span className="text-[var(--c-danger)] font-semibold">{baht(order.lateFees)}</span>   : "—"} />
+          <Row label="ค่าเสียหาย"            value={order.damageFees ? <span className="text-[var(--c-danger)] font-semibold">{baht(order.damageFees)}</span> : "—"} />
           <Row label="คืนมัดจำแล้ว"           value={baht(order.depositRefund)} />
           <Row label="จ่ายเจ้าของแล้ว"         value={baht(order.ownerPayout)} />
         </Card>
@@ -349,13 +349,13 @@ export default async function AdminLendingDetailPage({
       {/* ── Timeline ───────────────────────────────────────────────────── */}
       <Card title={`ประวัติสถานะทั้งหมด (${history.length})`}>
         {history.length === 0 ? (
-          <p className="text-xs text-[#94a3b8] py-4 text-center">ยังไม่มีประวัติ</p>
+          <p className="text-xs text-[var(--c-faint)] py-4 text-center">ยังไม่มีประวัติ</p>
         ) : (
           <ol className="space-y-0">
             {[...history].reverse().map((h, i) => (
               <li key={i} className="flex gap-3 pb-4 last:pb-0 relative">
                 <div className="flex flex-col items-center flex-shrink-0">
-                  <span className={`w-2.5 h-2.5 rounded-full mt-1.5 ${i === 0 ? "bg-[#2563eb]" : "bg-[#d5d1c9]"}`} />
+                  <span className={`w-2.5 h-2.5 rounded-full mt-1.5 ${i === 0 ? "bg-[var(--c-accent)]" : "bg-[#d5d1c9]"}`} />
                   {i < history.length - 1 && <span className="flex-1 w-px bg-[#eae7e1] my-1" />}
                 </div>
                 <div className="min-w-0 pb-1">
@@ -363,11 +363,11 @@ export default async function AdminLendingDetailPage({
                     <span className={`text-[10.5px] font-semibold px-2 py-0.5 rounded-full border ${statusColor(h.status ?? "")}`}>
                       {statusLabel(h.status ?? "—")}
                     </span>
-                    <span className="text-[11px] text-[#64748b]">
+                    <span className="text-[11px] text-[var(--c-muted)]">
                       {h.changedAt ? dt(new Date(h.changedAt)) : "—"}
                     </span>
                   </div>
-                  {h.note && <p className="text-xs text-[#3d4d66] mt-1 leading-relaxed">{h.note}</p>}
+                  {h.note && <p className="text-xs text-[var(--c-ink-2)] mt-1 leading-relaxed">{h.note}</p>}
                 </div>
               </li>
             ))}
@@ -378,7 +378,7 @@ export default async function AdminLendingDetailPage({
       {/* ── The agreement text both sides accepted ─────────────────────── */}
       {order.agreementText && (
         <Card title="ข้อตกลงการเช่าที่ทั้งสองฝ่ายยอมรับ">
-          <pre className="text-[11.5px] leading-6 text-[#3d4d66] whitespace-pre-wrap font-sans bg-[#f7f9fd] border border-[#eaf0f8] rounded-xl p-4 max-h-72 overflow-y-auto">
+          <pre className="text-[11.5px] leading-6 text-[var(--c-ink-2)] whitespace-pre-wrap font-sans bg-[var(--c-subtle)] border border-[var(--c-line-soft)] rounded-xl p-4 max-h-72 overflow-y-auto">
             {order.agreementText}
           </pre>
         </Card>

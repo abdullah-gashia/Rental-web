@@ -28,17 +28,17 @@ interface Props {
 
 export default function ItemDetailsCard({ item }: Props) {
   return (
-    <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6">
-      <h3 className="text-sm font-semibold text-[#3d4d66] mb-4">รายละเอียดสินค้า</h3>
+    <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
+      <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-4">รายละเอียดสินค้า</h3>
 
       <div className="space-y-3.5">
         {/* Price */}
         <Row label="ราคา">
-          <span className="text-lg font-bold text-[#2563eb]">
+          <span className="text-lg font-bold text-[var(--c-accent)]">
             {formatCurrency(item.price)}
           </span>
           {item.negotiable && (
-            <span className="ml-2 text-xs text-[#5b6b82] bg-[#f1f5fb] rounded-full px-2 py-0.5">
+            <span className="ml-2 text-xs text-[var(--c-ink-3)] bg-[var(--c-canvas)] rounded-full px-2 py-0.5">
               ต่อรองได้
             </span>
           )}
@@ -46,7 +46,7 @@ export default function ItemDetailsCard({ item }: Props) {
 
         {/* Category */}
         <Row label="หมวดหมู่">
-          <span className="text-[#1e2d47]">
+          <span className="text-[var(--c-ink-1)]">
             {item.category.emoji && <span className="mr-1">{item.category.emoji}</span>}
             {item.category.nameTh}
           </span>
@@ -54,14 +54,14 @@ export default function ItemDetailsCard({ item }: Props) {
 
         {/* Condition */}
         <Row label="สภาพ">
-          <span className="text-[#1e2d47]">
+          <span className="text-[var(--c-ink-1)]">
             {CONDITION_TH[item.condition] || item.condition}
           </span>
         </Row>
 
         {/* Listing Type */}
         <Row label="ประเภท">
-          <span className="text-[#1e2d47]">
+          <span className="text-[var(--c-ink-1)]">
             {item.listingType === "SELL" ? "ขาย" : "เช่า"}
           </span>
         </Row>
@@ -73,15 +73,15 @@ export default function ItemDetailsCard({ item }: Props) {
 
         {/* Rejection reason */}
         {item.rejectReason && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm">
-            <span className="font-medium text-red-700">เหตุผล:</span>
-            <span className="text-red-600 ml-1">{item.rejectReason}</span>
+          <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl p-3 text-sm">
+            <span className="font-medium text-[var(--c-danger)]">เหตุผล:</span>
+            <span className="text-[var(--c-danger)] ml-1">{item.rejectReason}</span>
           </div>
         )}
 
         {/* Divider */}
-        <div className="border-t border-[#eaf0f8] pt-3.5">
-          <p className="text-xs font-semibold text-[#8494a9] uppercase tracking-wider mb-3">
+        <div className="border-t border-[var(--c-line-soft)] pt-3.5">
+          <p className="text-xs font-semibold text-[var(--c-faint)] uppercase tracking-wider mb-3">
             การจัดส่งและชำระเงิน
           </p>
 
@@ -94,14 +94,14 @@ export default function ItemDetailsCard({ item }: Props) {
           {/* Location */}
           {item.location && (
             <Row label="สถานที่">
-              <span className="text-[#1e2d47]">📍 {item.location}</span>
+              <span className="text-[var(--c-ink-1)]">📍 {item.location}</span>
             </Row>
           )}
 
           {/* Shipping note */}
           {item.shippingNote && (
             <Row label="หมายเหตุ">
-              <span className="text-[#3d4d66] text-xs italic">{item.shippingNote}</span>
+              <span className="text-[var(--c-ink-2)] text-xs italic">{item.shippingNote}</span>
             </Row>
           )}
         </div>
@@ -113,7 +113,7 @@ export default function ItemDetailsCard({ item }: Props) {
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-start justify-between gap-2">
-      <span className="text-sm text-[#8494a9] flex-shrink-0">{label}</span>
+      <span className="text-sm text-[var(--c-faint)] flex-shrink-0">{label}</span>
       <div className="text-sm text-right">{children}</div>
     </div>
   );
@@ -124,8 +124,8 @@ function DeliveryChip({ label, enabled }: { label: string; enabled: boolean }) {
     <div
       className={`text-center text-xs py-1.5 rounded-lg border transition-colors ${
         enabled
-          ? "bg-green-50 text-green-700 border-green-200"
-          : "bg-gray-50 text-gray-400 border-gray-200"
+          ? "bg-[var(--c-ok-soft)] text-[var(--c-ok)] border-[var(--c-ok-line)]"
+          : "bg-[var(--c-subtle)] text-[var(--c-faint)] border-[var(--c-line)]"
       }`}
     >
       {enabled ? "✅" : "❌"} {label}

@@ -40,19 +40,19 @@ export default function RenterActions({ orderId, status }: Props) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 space-y-3">
-      <h3 className="text-sm font-bold text-[#0f1e35]">การดำเนินการ</h3>
+    <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 space-y-3">
+      <h3 className="text-sm font-bold text-[var(--c-ink)]">การดำเนินการ</h3>
 
       {error && (
-        <div className="bg-red-50 text-red-700 text-xs px-3 py-2 rounded-xl">{error}</div>
+        <div className="bg-[var(--c-danger-soft)] text-[var(--c-danger)] text-xs px-3 py-2 rounded-xl">{error}</div>
       )}
 
       {canReturn && !cancelOpen && (
         <button
           onClick={handleReturn}
           disabled={isPending}
-          className="w-full py-3 bg-[#2563eb] text-white text-sm font-bold rounded-xl
-                     hover:bg-[#1d4ed8] transition disabled:opacity-50"
+          className="w-full py-3 bg-[var(--c-accent)] text-white text-sm font-bold rounded-xl
+                     hover:bg-[var(--c-accent-str)] transition disabled:opacity-50"
         >
           {isPending ? "กำลังดำเนินการ..." : "📦 แจ้งคืนของ"}
         </button>
@@ -62,8 +62,8 @@ export default function RenterActions({ orderId, status }: Props) {
         <button
           onClick={() => setCancelOpen(true)}
           disabled={isPending}
-          className="w-full py-2.5 border border-red-200 text-red-600 text-sm rounded-xl
-                     hover:bg-red-50 transition"
+          className="w-full py-2.5 border border-[var(--c-danger-line)] text-[var(--c-danger)] text-sm rounded-xl
+                     hover:bg-[var(--c-danger-soft)] transition"
         >
           ยกเลิกคำขอ
         </button>
@@ -71,20 +71,20 @@ export default function RenterActions({ orderId, status }: Props) {
 
       {cancelOpen && (
         <div className="space-y-3">
-          <p className="text-xs text-[#5b6b82]">เงินจะถูกคืนเข้ากระเป๋าหลังจากยกเลิก</p>
+          <p className="text-xs text-[var(--c-ink-3)]">เงินจะถูกคืนเข้ากระเป๋าหลังจากยกเลิก</p>
           <textarea
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             rows={3}
             placeholder="เหตุผลที่ยกเลิก..."
-            className="w-full px-3 py-2 text-sm border border-[#dfe7f2] rounded-xl resize-none
+            className="w-full px-3 py-2 text-sm border border-[var(--c-line)] rounded-xl resize-none
                        focus:outline-none focus:ring-2 focus:ring-red-300"
           />
           <div className="flex gap-3">
             <button
               onClick={() => { setCancelOpen(false); setReason(""); }}
               disabled={isPending}
-              className="flex-1 py-2.5 border border-[#dfe7f2] text-sm rounded-xl hover:bg-[#eaf0f8]"
+              className="flex-1 py-2.5 border border-[var(--c-line)] text-sm rounded-xl hover:bg-[var(--c-line-soft)]"
             >
               ยกเลิก
             </button>

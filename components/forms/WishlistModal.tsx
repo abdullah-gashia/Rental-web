@@ -23,11 +23,11 @@ export default function WishlistModal({ isOpen, onClose, items, onItemClick }: W
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold">{t("wishlist_title")}</h2>
-        <button onClick={onClose} className="text-[#64748b] hover:text-[#0f1e35] text-xl leading-none">✕</button>
+        <button onClick={onClose} className="text-[var(--c-muted)] hover:text-[var(--c-ink)] text-xl leading-none">✕</button>
       </div>
 
       {wishedItems.length === 0 ? (
-        <div className="text-center py-12 text-[#64748b]">
+        <div className="text-center py-12 text-[var(--c-muted)]">
           <div className="text-4xl mb-3">🛍️</div>
           <p className="text-sm">{t("wishlist_empty")}</p>
         </div>
@@ -36,12 +36,12 @@ export default function WishlistModal({ isOpen, onClose, items, onItemClick }: W
           {wishedItems.map((item) => (
             <div
               key={item.id}
-              className="flex items-center gap-3 p-3 border border-[#dfe7f2] rounded-[14px] cursor-pointer hover:bg-[#f1f5fb] transition"
+              className="flex items-center gap-3 p-3 border border-[var(--c-line)] rounded-[14px] cursor-pointer hover:bg-[var(--c-canvas)] transition"
               onClick={() => { onClose(); onItemClick(item); }}
             >
               <div
                 className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center text-2xl"
-                style={{ background: item.color || "#eaf0f8" }}
+                style={{ background: item.color || "var(--c-line-soft)" }}
               >
                 {item.images.length > 0 ? (
                   <img src={item.images[0].url} className="w-full h-full object-contain" alt="" />
@@ -51,7 +51,7 @@ export default function WishlistModal({ isOpen, onClose, items, onItemClick }: W
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[13px] font-semibold truncate">{item.title}</p>
-                <p className="text-[13px] font-bold" style={{ color: item.listingType === "RENT" ? "#1d4ed8" : "#2563eb" }}>
+                <p className="text-[13px] font-bold" style={{ color: item.listingType === "RENT" ? "var(--c-accent-str)" : "var(--c-accent)" }}>
                   {item.price.toLocaleString()} ฿{item.listingType === "RENT" ? t("per_day") : ""}
                 </p>
               </div>

@@ -38,7 +38,7 @@ export default async function AdminItemDetailPage({ params }: Props) {
     <div className="space-y-5">
       {/* Removed banner */}
       {item.status === "REMOVED" && (
-        <div className="bg-red-50 border border-red-200 rounded-2xl px-5 py-3.5 flex items-center gap-3 text-red-700">
+        <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-2xl px-5 py-3.5 flex items-center gap-3 text-[var(--c-danger)]">
           <span className="text-xl">🗑️</span>
           <div>
             <p className="font-semibold text-sm">สินค้านี้ถูกลบแล้ว</p>
@@ -52,7 +52,7 @@ export default async function AdminItemDetailPage({ params }: Props) {
       {/* Back link */}
       <Link
         href="/admin/items"
-        className="inline-flex items-center gap-1.5 text-sm text-[#8494a9] hover:text-[#3d4d66] transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm text-[var(--c-faint)] hover:text-[var(--c-ink-2)] transition-colors"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -61,26 +61,26 @@ export default async function AdminItemDetailPage({ params }: Props) {
       </Link>
 
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-1.5 text-xs text-[#94a3b8] flex-wrap">
-        <Link href="/admin/dashboard" className="hover:text-[#3d4d66] transition-colors">
+      <nav className="flex items-center gap-1.5 text-xs text-[var(--c-faint)] flex-wrap">
+        <Link href="/admin/dashboard" className="hover:text-[var(--c-ink-2)] transition-colors">
           Admin Panel
         </Link>
         <span>/</span>
-        <Link href="/admin/items" className="hover:text-[#3d4d66] transition-colors">
+        <Link href="/admin/items" className="hover:text-[var(--c-ink-2)] transition-colors">
           สินค้า
         </Link>
         <span>/</span>
-        <span className="text-[#3d4d66] font-medium truncate max-w-[200px]">{item.title}</span>
+        <span className="text-[var(--c-ink-2)] font-medium truncate max-w-[200px]">{item.title}</span>
       </nav>
 
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-xl font-bold text-[#0f1e35]">{item.title}</h1>
+            <h1 className="text-xl font-bold text-[var(--c-ink)]">{item.title}</h1>
             <StatusBadge status={item.status} type="item" />
           </div>
-          <p className="text-sm text-[#8494a9] mt-1">
+          <p className="text-sm text-[var(--c-faint)] mt-1">
             {item.category.emoji && <span className="mr-1">{item.category.emoji}</span>}
             {item.category.nameTh}
             {" · "}

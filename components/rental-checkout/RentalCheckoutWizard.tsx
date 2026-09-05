@@ -119,18 +119,18 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-t-3xl sm:rounded-2xl w-full max-w-md z-10
+      <div className="relative bg-[var(--c-surface)] rounded-t-3xl sm:rounded-2xl w-full max-w-md z-10
                       max-h-[95vh] flex flex-col shadow-2xl">
 
         {/* Header */}
-        <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-[#eaf0f8] flex-shrink-0">
+        <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-[var(--c-line-soft)] flex-shrink-0">
           <div>
-            <h2 className="text-sm font-bold text-[#0f1e35]">🔑 ทำรายการเช่าสินค้า</h2>
-            <p className="text-[11px] text-[#8d9bb0]">ขั้นตอน {state.step}/4</p>
+            <h2 className="text-sm font-bold text-[var(--c-ink)]">🔑 ทำรายการเช่าสินค้า</h2>
+            <p className="text-[11px] text-[var(--c-faint)]">ขั้นตอน {state.step}/4</p>
           </div>
           <button
             onClick={() => !isPending && onClose()}
-            className="text-[#8d9bb0] hover:text-[#1e2d47] text-lg leading-none"
+            className="text-[var(--c-faint)] hover:text-[var(--c-ink-1)] text-lg leading-none"
           >
             ✕
           </button>
@@ -142,19 +142,19 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
             <div key={s.num} className="flex items-center gap-1 flex-1">
               <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${
                 state.step > s.num
-                  ? "bg-[#2563eb] text-white"
+                  ? "bg-[var(--c-accent)] text-white"
                   : state.step === s.num
-                    ? "bg-[#0f1e35] text-white"
-                    : "bg-[#eaf0f8] text-[#94a3b8]"
+                    ? "bg-[var(--c-ink)] text-white"
+                    : "bg-[var(--c-line-soft)] text-[var(--c-faint)]"
               }`}>
                 {state.step > s.num ? "✓" : s.num}
               </div>
               <span className={`text-[10px] hidden sm:block ${
-                state.step === s.num ? "text-[#0f1e35] font-semibold" : "text-[#94a3b8]"
+                state.step === s.num ? "text-[var(--c-ink)] font-semibold" : "text-[var(--c-faint)]"
               }`}>{s.label}</span>
               {i < STEPS.length - 1 && (
                 <div className={`flex-1 h-0.5 mx-1 ${
-                  state.step > s.num ? "bg-[#2563eb]" : "bg-[#eaf0f8]"
+                  state.step > s.num ? "bg-[var(--c-accent)]" : "bg-[var(--c-line-soft)]"
                 }`} />
               )}
             </div>
@@ -162,8 +162,8 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
         </div>
 
         {/* Item summary strip */}
-        <div className="px-5 pb-3 flex items-center gap-3 bg-[#f7f9fd] mx-5 rounded-xl flex-shrink-0">
-          <div className="w-10 h-10 rounded-lg overflow-hidden bg-[#dfe7f2] flex-shrink-0 flex items-center justify-center mt-3 mb-3">
+        <div className="px-5 pb-3 flex items-center gap-3 bg-[var(--c-subtle)] mx-5 rounded-xl flex-shrink-0">
+          <div className="w-10 h-10 rounded-lg overflow-hidden bg-[var(--c-line)] flex-shrink-0 flex items-center justify-center mt-3 mb-3">
             {img ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={img} alt="" className="w-full h-full object-contain" />
@@ -172,15 +172,15 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
             )}
           </div>
           <div className="flex-1 min-w-0 py-3">
-            <p className="text-xs font-semibold text-[#0f1e35] truncate">{item.title}</p>
-            <p className="text-[11px] text-[#8d9bb0]">
+            <p className="text-xs font-semibold text-[var(--c-ink)] truncate">{item.title}</p>
+            <p className="text-[11px] text-[var(--c-faint)]">
               ฿{dailyRate.toLocaleString()}/วัน · {item.seller.name ?? "—"}
             </p>
           </div>
           {pricing.rentalDays > 0 && (
             <div className="text-right flex-shrink-0 py-3">
-              <p className="text-xs font-bold text-[#2563eb]">฿{pricing.totalPaid.toLocaleString()}</p>
-              <p className="text-[10px] text-[#8d9bb0]">รวม</p>
+              <p className="text-xs font-bold text-[var(--c-accent)]">฿{pricing.totalPaid.toLocaleString()}</p>
+              <p className="text-[10px] text-[var(--c-faint)]">รวม</p>
             </div>
           )}
         </div>
@@ -231,14 +231,14 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
           )}
 
           {submitError && (
-            <div className="mt-4 bg-red-50 border border-red-200 text-red-700 text-xs px-3 py-2.5 rounded-xl">
+            <div className="mt-4 bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] text-[var(--c-danger)] text-xs px-3 py-2.5 rounded-xl">
               {submitError}
             </div>
           )}
         </div>
 
         {/* Footer nav */}
-        <div className="px-5 pb-5 pt-3 border-t border-[#eaf0f8] flex-shrink-0 space-y-3">
+        <div className="px-5 pb-5 pt-3 border-t border-[var(--c-line-soft)] flex-shrink-0 space-y-3">
           {/* Mini price reminder on steps 2-4 */}
           {state.step > 1 && pricing.rentalDays > 0 && (
             <PriceBreakdown pricing={pricing} compact />
@@ -249,8 +249,8 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
               <button
                 onClick={() => dispatch({ type: "PREV_STEP" })}
                 disabled={isPending}
-                className="flex-1 py-3 border border-[#dfe7f2] text-sm font-medium text-[#3d4d66]
-                           rounded-xl hover:bg-[#eaf0f8] transition disabled:opacity-50"
+                className="flex-1 py-3 border border-[var(--c-line)] text-sm font-medium text-[var(--c-ink-2)]
+                           rounded-xl hover:bg-[var(--c-line-soft)] transition disabled:opacity-50"
               >
                 ← ย้อนกลับ
               </button>
@@ -260,8 +260,8 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
               <button
                 onClick={() => dispatch({ type: "NEXT_STEP" })}
                 disabled={!canNext || isPending}
-                className="flex-1 py-3 bg-[#2563eb] text-white text-sm font-bold rounded-xl
-                           hover:bg-[#1d4ed8] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 py-3 bg-[var(--c-accent)] text-white text-sm font-bold rounded-xl
+                           hover:bg-[var(--c-accent-str)] transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 ถัดไป →
               </button>
@@ -269,8 +269,8 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
               <button
                 onClick={handleSubmit}
                 disabled={!canNext || isPending}
-                className="flex-1 py-3 bg-[#2563eb] text-white text-sm font-bold rounded-xl
-                           hover:bg-[#1d4ed8] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 py-3 bg-[var(--c-accent)] text-white text-sm font-bold rounded-xl
+                           hover:bg-[var(--c-accent-str)] transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isPending
                   ? "กำลังส่งคำขอ..."
@@ -280,7 +280,7 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
           </div>
 
           {state.step === 4 && (
-            <p className="text-[11px] text-[#94a3b8] text-center">
+            <p className="text-[11px] text-[var(--c-faint)] text-center">
               เงินจะถูกหักเมื่อเจ้าของตอบรับ · มัดจำคืนหลังคืนของสำเร็จ
             </p>
           )}

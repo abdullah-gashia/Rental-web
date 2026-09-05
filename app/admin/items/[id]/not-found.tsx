@@ -4,13 +4,13 @@ export default function ItemNotFound() {
   return (
     <div className="flex flex-col items-center justify-center py-20 text-center">
       <div className="text-6xl mb-4">📦</div>
-      <h2 className="text-xl font-bold text-[#0f1e35] mb-2">ไม่พบสินค้า</h2>
-      <p className="text-sm text-[#8494a9] mb-6 max-w-sm">
+      <h2 className="text-xl font-bold text-[var(--c-ink)] mb-2">ไม่พบสินค้า</h2>
+      <p className="text-sm text-[var(--c-faint)] mb-6 max-w-sm">
         สินค้าที่คุณกำลังค้นหาอาจถูกลบออกจากระบบหรือไม่เคยมีอยู่
       </p>
       <Link
         href="/admin/items"
-        className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#2563eb] text-white rounded-xl text-sm font-semibold hover:bg-[#1d4ed8] transition-colors"
+        className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--c-accent)] text-white rounded-xl text-sm font-semibold hover:bg-[var(--c-accent-str)] transition-colors"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

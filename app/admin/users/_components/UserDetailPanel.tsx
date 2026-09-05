@@ -108,30 +108,30 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
       <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[400]" onClick={onClose} />
 
       {/* Panel */}
-      <div className="fixed top-0 right-0 bottom-0 w-full max-w-[600px] bg-white shadow-2xl z-[401] overflow-y-auto animate-slide-in-right">
+      <div className="fixed top-0 right-0 bottom-0 w-full max-w-[600px] bg-[var(--c-surface)] shadow-2xl z-[401] overflow-y-auto animate-slide-in-right">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-[#dfe7f2] px-5 py-3.5 flex items-center justify-between z-10">
+        <div className="sticky top-0 bg-[var(--c-surface)] border-b border-[var(--c-line)] px-5 py-3.5 flex items-center justify-between z-10">
           <button
             onClick={onClose}
-            className="flex items-center gap-1.5 text-sm text-[#5b6b82] hover:text-[#1e2d47] transition"
+            className="flex items-center gap-1.5 text-sm text-[var(--c-ink-3)] hover:text-[var(--c-ink-1)] transition"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             ปิด
           </button>
-          <h2 className="text-sm font-bold text-[#0f1e35]">รายละเอียดผู้ใช้</h2>
+          <h2 className="text-sm font-bold text-[var(--c-ink)]">รายละเอียดผู้ใช้</h2>
           <div className="flex gap-2">
             <button
               onClick={onClose}
-              className="px-3 py-1.5 text-xs font-medium text-[#3d4d66] border border-[#dfe7f2] rounded-lg hover:bg-[#f1f5fb] transition"
+              className="px-3 py-1.5 text-xs font-medium text-[var(--c-ink-2)] border border-[var(--c-line)] rounded-lg hover:bg-[var(--c-canvas)] transition"
             >
               ยกเลิก
             </button>
             <button
               onClick={handleSave}
               disabled={pending || loading}
-              className="px-3 py-1.5 text-xs font-bold text-white bg-[#2563eb] rounded-lg hover:bg-[#1d4ed8] transition disabled:opacity-50 flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-bold text-white bg-[var(--c-accent)] rounded-lg hover:bg-[var(--c-accent-str)] transition disabled:opacity-50 flex items-center gap-1.5"
             >
               {pending && <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />}
               บันทึก
@@ -142,16 +142,16 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
         {loading ? (
           <div className="p-6 space-y-4">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-20 bg-[#eaf0f8] rounded-xl animate-pulse" />
+              <div key={i} className="h-20 bg-[var(--c-line-soft)] rounded-xl animate-pulse" />
             ))}
           </div>
         ) : !data ? (
-          <div className="p-10 text-center text-[#94a3b8]">ไม่พบข้อมูลผู้ใช้</div>
+          <div className="p-10 text-center text-[var(--c-faint)]">ไม่พบข้อมูลผู้ใช้</div>
         ) : (
           <div className="p-5 space-y-5">
             {/* ── Profile header ────────────────────────────────────────── */}
-            <div className="flex items-center gap-4 p-4 bg-[#f7f9fd] rounded-xl border border-[#dfe7f2]">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#2563eb] to-[#60a5fa] flex items-center justify-center text-white text-lg font-bold shadow-md flex-shrink-0">
+            <div className="flex items-center gap-4 p-4 bg-[var(--c-subtle)] rounded-xl border border-[var(--c-line)]">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[var(--c-accent)] to-[var(--c-accent-lite)] flex items-center justify-center text-white text-lg font-bold shadow-md flex-shrink-0">
                 {data.image ? (
                   <img src={data.image} alt="" className="w-full h-full rounded-full object-cover" />
                 ) : (
@@ -159,9 +159,9 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="font-semibold text-[#0f1e35] truncate">{data.name ?? "—"}</p>
-                <p className="text-xs text-[#64748b] truncate">{data.email}</p>
-                <p className="text-[11px] text-[#94a3b8] mt-0.5">สมัครเมื่อ: {formatThaiDate(data.createdAt)}</p>
+                <p className="font-semibold text-[var(--c-ink)] truncate">{data.name ?? "—"}</p>
+                <p className="text-xs text-[var(--c-muted)] truncate">{data.email}</p>
+                <p className="text-[11px] text-[var(--c-faint)] mt-0.5">สมัครเมื่อ: {formatThaiDate(data.createdAt)}</p>
               </div>
             </div>
 
@@ -177,58 +177,58 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
             <FinancialSummary data={data} />
 
             {/* ── Activity summary ─────────────────────────────────────── */}
-            <div className="p-4 bg-[#f7f9fd] rounded-xl border border-[#dfe7f2]">
-              <h3 className="text-xs font-semibold text-[#3d4d66] uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <div className="p-4 bg-[var(--c-subtle)] rounded-xl border border-[var(--c-line)]">
+              <h3 className="text-xs font-semibold text-[var(--c-ink-2)] uppercase tracking-wider mb-3 flex items-center gap-1.5">
                 📊 สรุปกิจกรรม
               </h3>
               <div className="grid grid-cols-3 gap-y-2 gap-x-4 text-sm">
-                <div><span className="text-[#64748b]">สินค้าทั้งหมด:</span> <span className="font-medium">{data.itemCount}</span></div>
-                <div><span className="text-[#64748b]">ขายแล้ว:</span> <span className="font-medium">{data.soldItemCount}</span></div>
-                <div><span className="text-[#64748b]">กำลังขาย:</span> <span className="font-medium">{data.activeItemCount}</span></div>
-                <div><span className="text-[#64748b]">ออเดอร์ (ซื้อ):</span> <span className="font-medium">{data.buyOrderCount}</span></div>
-                <div><span className="text-[#64748b]">ออเดอร์ (ขาย):</span> <span className="font-medium">{data.sellOrderCount}</span></div>
-                <div><span className="text-[#64748b]">ข้อพิพาท:</span> <span className="font-medium">{data.disputeCount}</span></div>
-                <div><span className="text-[#64748b]">ถูกยกเลิก:</span> <span className="font-medium">{data.cancelledCount}</span></div>
+                <div><span className="text-[var(--c-muted)]">สินค้าทั้งหมด:</span> <span className="font-medium">{data.itemCount}</span></div>
+                <div><span className="text-[var(--c-muted)]">ขายแล้ว:</span> <span className="font-medium">{data.soldItemCount}</span></div>
+                <div><span className="text-[var(--c-muted)]">กำลังขาย:</span> <span className="font-medium">{data.activeItemCount}</span></div>
+                <div><span className="text-[var(--c-muted)]">ออเดอร์ (ซื้อ):</span> <span className="font-medium">{data.buyOrderCount}</span></div>
+                <div><span className="text-[var(--c-muted)]">ออเดอร์ (ขาย):</span> <span className="font-medium">{data.sellOrderCount}</span></div>
+                <div><span className="text-[var(--c-muted)]">ข้อพิพาท:</span> <span className="font-medium">{data.disputeCount}</span></div>
+                <div><span className="text-[var(--c-muted)]">ถูกยกเลิก:</span> <span className="font-medium">{data.cancelledCount}</span></div>
               </div>
             </div>
 
             {/* ── Editable fields ──────────────────────────────────────── */}
-            <div className="p-4 bg-white rounded-xl border border-[#dfe7f2] space-y-3">
-              <h3 className="text-xs font-semibold text-[#3d4d66] uppercase tracking-wider flex items-center gap-1.5">
+            <div className="p-4 bg-[var(--c-surface)] rounded-xl border border-[var(--c-line)] space-y-3">
+              <h3 className="text-xs font-semibold text-[var(--c-ink-2)] uppercase tracking-wider flex items-center gap-1.5">
                 ✏️ แก้ไขข้อมูล
               </h3>
 
               {/* Name */}
               <div>
-                <label className="block text-xs font-medium text-[#3d4d66] mb-1">ชื่อที่แสดง *</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">ชื่อที่แสดง *</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   maxLength={50}
-                  className="w-full px-3 py-2 rounded-lg border border-[#dfe7f2] text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition"
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
                 />
               </div>
 
               {/* Phone */}
               <div>
-                <label className="block text-xs font-medium text-[#3d4d66] mb-1">เบอร์โทร</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">เบอร์โทร</label>
                 <input
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
-                  className="w-full px-3 py-2 rounded-lg border border-[#dfe7f2] text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition"
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
                   placeholder="0812345678"
                 />
               </div>
 
               {/* Role */}
               <div>
-                <label className="block text-xs font-medium text-[#3d4d66] mb-1">บทบาท *</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">บทบาท *</label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value as "ADMIN" | "STUDENT")}
-                  className="w-full px-3 py-2 rounded-lg border border-[#dfe7f2] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition"
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm bg-[var(--c-surface)] focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
                 >
                   <option value="STUDENT">นักศึกษา (STUDENT)</option>
                   <option value="ADMIN">แอดมิน (ADMIN)</option>
@@ -237,11 +237,11 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
 
               {/* Ban status */}
               <div>
-                <label className="block text-xs font-medium text-[#3d4d66] mb-1">สถานะบัญชี *</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">สถานะบัญชี *</label>
                 <select
                   value={banned ? "BANNED" : "ACTIVE"}
                   onChange={(e) => setBanned(e.target.value === "BANNED")}
-                  className="w-full px-3 py-2 rounded-lg border border-[#dfe7f2] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition"
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm bg-[var(--c-surface)] focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
                 >
                   <option value="ACTIVE">ปกติ (ACTIVE)</option>
                   <option value="BANNED">ถูกแบน (BANNED)</option>
@@ -250,24 +250,24 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
 
               {/* Trust score */}
               <div>
-                <label className="block text-xs font-medium text-[#3d4d66] mb-1">Trust Score * (0–200)</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">Trust Score * (0–200)</label>
                 <input
                   type="number"
                   value={trust}
                   onChange={(e) => setTrust(Math.min(200, Math.max(0, parseInt(e.target.value) || 0)))}
                   min={0}
                   max={200}
-                  className="w-full px-3 py-2 rounded-lg border border-[#dfe7f2] text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition"
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
                 />
               </div>
 
               {/* KYC status */}
               <div>
-                <label className="block text-xs font-medium text-[#3d4d66] mb-1">สถานะ KYC *</label>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">สถานะ KYC *</label>
                 <select
                   value={kyc}
                   onChange={(e) => setKyc(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-[#dfe7f2] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition"
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm bg-[var(--c-surface)] focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
                 >
                   <option value="UNVERIFIED">ยังไม่ยืนยัน (UNVERIFIED)</option>
                   <option value="PENDING">รอตรวจสอบ (PENDING)</option>
@@ -279,37 +279,37 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
 
               {/* Admin note */}
               <div>
-                <label className="block text-xs font-medium text-[#3d4d66] mb-1">
-                  บันทึก Admin <span className="text-[#94a3b8]">(ไม่แสดงให้ user เห็น)</span>
+                <label className="block text-xs font-medium text-[var(--c-ink-2)] mb-1">
+                  บันทึก Admin <span className="text-[var(--c-faint)]">(ไม่แสดงให้ user เห็น)</span>
                 </label>
                 <textarea
                   value={note}
                   onChange={(e) => setNote(e.target.value.slice(0, 500))}
                   maxLength={500}
                   rows={2}
-                  className="w-full px-3 py-2 rounded-lg border border-[#dfe7f2] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition"
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
                   placeholder="บันทึกสำหรับผู้ดูแลระบบ..."
                 />
               </div>
             </div>
 
             {/* -- Reputation ------------------------------------------- */}
-            <div className="bg-white border border-[#dfe7f2] rounded-2xl p-4 space-y-3">
+            <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-2xl p-4 space-y-3">
               <div className="flex items-center justify-between gap-3">
-                <h4 className="text-sm font-bold text-[#1e2d47]">⭐ คะแนนและรีวิว</h4>
+                <h4 className="text-sm font-bold text-[var(--c-ink-1)]">⭐ คะแนนและรีวิว</h4>
                 {data.reviewCount > 0 ? (
                   <span className="text-sm">
                     <PanelStars rating={data.avgRating ?? 0} />
-                    <span className="ml-1.5 font-bold text-[#0f1e35]">{(data.avgRating ?? 0).toFixed(1)}</span>
-                    <span className="ml-1 text-xs text-[#64748b]">({data.reviewCount} รีวิว)</span>
+                    <span className="ml-1.5 font-bold text-[var(--c-ink)]">{(data.avgRating ?? 0).toFixed(1)}</span>
+                    <span className="ml-1 text-xs text-[var(--c-muted)]">({data.reviewCount} รีวิว)</span>
                   </span>
                 ) : (
-                  <span className="text-xs text-[#64748b]">ยังไม่มีรีวิว</span>
+                  <span className="text-xs text-[var(--c-muted)]">ยังไม่มีรีวิว</span>
                 )}
               </div>
 
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs text-[#5b6b82]">ปรับคะแนนความน่าเชื่อถือ:</span>
+                <span className="text-xs text-[var(--c-ink-3)]">ปรับคะแนนความน่าเชื่อถือ:</span>
                 {[-10, -5, 5, 10].map((d) => (
                   <button
                     key={d}
@@ -317,34 +317,34 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                     onClick={() => run(() => adjustTrustScore(userId, d))}
                     className={`px-2.5 py-1 rounded-lg border text-xs font-bold transition disabled:opacity-50 ${
                       d < 0
-                        ? "border-red-200 text-red-700 hover:bg-red-50"
-                        : "border-green-200 text-green-700 hover:bg-green-50"
+                        ? "border-[var(--c-danger-line)] text-[var(--c-danger)] hover:bg-[var(--c-danger-soft)]"
+                        : "border-[var(--c-ok-line)] text-[var(--c-ok)] hover:bg-[var(--c-ok-soft)]"
                     }`}
                   >
                     {d > 0 ? `+${d}` : d}
                   </button>
                 ))}
-                <span className="text-xs text-[#64748b]">ปัจจุบัน {data.trustScore}</span>
+                <span className="text-xs text-[var(--c-muted)]">ปัจจุบัน {data.trustScore}</span>
               </div>
 
               {data.reviews.length > 0 && (
-                <div className="max-h-56 overflow-y-auto divide-y divide-[#eaf0f8] border-t border-[#eaf0f8] pt-1">
+                <div className="max-h-56 overflow-y-auto divide-y divide-[var(--c-line-soft)] border-t border-[var(--c-line-soft)] pt-1">
                   {data.reviews.map((r) => (
                     <div key={r.id} className="py-2 flex items-start gap-2">
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
                           <PanelStars rating={r.rating} />
-                          <span className="text-xs font-medium text-[#1e2d47]">{r.reviewer.name ?? "ผู้ใช้"}</span>
-                          <span className="text-[10px] text-[#94a3b8]">{formatShort(r.createdAt)}</span>
+                          <span className="text-xs font-medium text-[var(--c-ink-1)]">{r.reviewer.name ?? "ผู้ใช้"}</span>
+                          <span className="text-[10px] text-[var(--c-faint)]">{formatShort(r.createdAt)}</span>
                         </div>
-                        {r.itemTitle && <p className="text-[11px] text-[#64748b] truncate">{r.itemTitle}</p>}
-                        {r.comment && <p className="text-xs text-[#3d4d66] mt-0.5">{r.comment}</p>}
+                        {r.itemTitle && <p className="text-[11px] text-[var(--c-muted)] truncate">{r.itemTitle}</p>}
+                        {r.comment && <p className="text-xs text-[var(--c-ink-2)] mt-0.5">{r.comment}</p>}
                       </div>
                       <button
                         disabled={pending}
                         onClick={() => run(() => deleteUserReview(r.id))}
                         title="ลบรีวิวนี้ (คะแนนดาวจะถูกคำนวณใหม่)"
-                        className="text-[11px] text-red-600 hover:bg-red-50 px-2 py-1 rounded-lg transition flex-shrink-0 disabled:opacity-50"
+                        className="text-[11px] text-[var(--c-danger)] hover:bg-[var(--c-danger-soft)] px-2 py-1 rounded-lg transition flex-shrink-0 disabled:opacity-50"
                       >
                         ลบ
                       </button>
@@ -355,44 +355,44 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
             </div>
 
             {/* -- Abuse reports (admin only) ---------------------------- */}
-            <div className="bg-white border border-[#dfe7f2] rounded-2xl p-4 space-y-3">
+            <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-2xl p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-sm font-bold text-[#1e2d47]">
+                <h4 className="text-sm font-bold text-[var(--c-ink-1)]">
                   🚩 รายงานจากผู้ใช้
                   {data.openReportCount > 0 && (
-                    <span className="ml-2 px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-[11px] font-bold">
+                    <span className="ml-2 px-2 py-0.5 rounded-full bg-[var(--c-danger-soft)] text-[var(--c-danger)] text-[11px] font-bold">
                       ใหม่ {data.openReportCount}
                     </span>
                   )}
                 </h4>
-                <span className="text-[10px] text-[#94a3b8]">ผู้ถูกรายงานไม่เห็นข้อมูลนี้</span>
+                <span className="text-[10px] text-[var(--c-faint)]">ผู้ถูกรายงานไม่เห็นข้อมูลนี้</span>
               </div>
 
               {data.reports.length === 0 ? (
-                <p className="text-xs text-[#64748b] py-3 text-center">ยังไม่มีรายงาน</p>
+                <p className="text-xs text-[var(--c-muted)] py-3 text-center">ยังไม่มีรายงาน</p>
               ) : (
                 <div className="max-h-64 overflow-y-auto space-y-2">
                   {data.reports.map((rep) => (
                     <div
                       key={rep.id}
                       className={`rounded-xl border p-3 ${
-                        rep.status === "OPEN" ? "border-red-200 bg-red-50/40" : "border-[#dfe7f2] bg-[#f7f9fd]"
+                        rep.status === "OPEN" ? "border-[var(--c-danger-line)] bg-[var(--c-danger-soft)]/40" : "border-[var(--c-line)] bg-[var(--c-subtle)]"
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2 flex-wrap">
-                        <span className="text-xs font-bold text-[#1e2d47]">
+                        <span className="text-xs font-bold text-[var(--c-ink-1)]">
                           {CATEGORY_LABEL[rep.category ?? ""] ?? rep.category ?? "อื่นๆ"}
                         </span>
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          rep.status === "OPEN"       ? "bg-red-100 text-red-700"
-                          : rep.status === "REVIEWED" ? "bg-green-100 text-green-700"
-                          :                             "bg-gray-200 text-gray-600"
+                          rep.status === "OPEN"       ? "bg-[var(--c-danger-soft)] text-[var(--c-danger)]"
+                          : rep.status === "REVIEWED" ? "bg-[var(--c-ok-soft)] text-[var(--c-ok)]"
+                          :                             "bg-gray-200 text-[var(--c-ink-3)]"
                         }`}>
                           {rep.status === "OPEN" ? "รอตรวจสอบ" : rep.status === "REVIEWED" ? "ตรวจแล้ว" : "ยกเลิก"}
                         </span>
                       </div>
-                      <p className="text-xs text-[#3d4d66] mt-1.5 whitespace-pre-wrap">{rep.reason}</p>
-                      <p className="text-[10px] text-[#64748b] mt-1.5">
+                      <p className="text-xs text-[var(--c-ink-2)] mt-1.5 whitespace-pre-wrap">{rep.reason}</p>
+                      <p className="text-[10px] text-[var(--c-muted)] mt-1.5">
                         โดย {rep.reporter.name ?? rep.reporter.email} · {formatShort(rep.createdAt)}
                       </p>
                       {rep.status === "OPEN" && (
@@ -407,7 +407,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                           <button
                             disabled={pending}
                             onClick={() => run(() => setReportStatus(rep.id, "DISMISSED"))}
-                            className="text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-[#dfe7f2] text-[#3d4d66] hover:bg-[#eaf0f8] transition disabled:opacity-50"
+                            className="text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-[var(--c-line)] text-[var(--c-ink-2)] hover:bg-[var(--c-line-soft)] transition disabled:opacity-50"
                           >
                             ไม่มีมูล
                           </button>
@@ -420,27 +420,27 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
             </div>
 
             {/* -- Send the user an e-mail ------------------------------- */}
-            <div className="bg-white border border-[#dfe7f2] rounded-2xl p-4 space-y-2.5">
-              <h4 className="text-sm font-bold text-[#1e2d47]">✉️ ส่งอีเมลถึงผู้ใช้</h4>
-              <p className="text-[11px] text-[#64748b]">ส่งไปที่ {data.email}</p>
+            <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-2xl p-4 space-y-2.5">
+              <h4 className="text-sm font-bold text-[var(--c-ink-1)]">✉️ ส่งอีเมลถึงผู้ใช้</h4>
+              <p className="text-[11px] text-[var(--c-muted)]">ส่งไปที่ {data.email}</p>
               <input
                 value={mailSubject}
                 onChange={(e) => setMailSubject(e.target.value.slice(0, 150))}
                 placeholder="หัวข้อ"
-                className="w-full px-3 py-2 rounded-lg border border-[#dfe7f2] text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition"
+                className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
               />
               <textarea
                 value={mailBody}
                 onChange={(e) => setMailBody(e.target.value.slice(0, 3000))}
                 rows={4}
                 placeholder="ข้อความถึงผู้ใช้..."
-                className="w-full px-3 py-2 rounded-lg border border-[#dfe7f2] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 focus:border-[#2563eb] transition"
+                className="w-full px-3 py-2 rounded-lg border border-[var(--c-line)] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30 focus:border-[var(--c-accent)] transition"
               />
               <div className="flex justify-end">
                 <button
                   onClick={handleSendEmail}
                   disabled={pending || !mailSubject.trim() || !mailBody.trim()}
-                  className="px-4 py-2 rounded-xl bg-[#2563eb] text-white text-sm font-bold hover:bg-[#1d4ed8] transition disabled:opacity-40"
+                  className="px-4 py-2 rounded-xl bg-[var(--c-accent)] text-white text-sm font-bold hover:bg-[var(--c-accent-str)] transition disabled:opacity-40"
                 >
                   {pending ? "กำลังส่ง…" : "ส่งอีเมล"}
                 </button>
@@ -456,17 +456,17 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
             </div>
 
             {/* ── Bottom action bar ────────────────────────────────────── */}
-            <div className="flex justify-end gap-3 pt-3 border-t border-[#dfe7f2]">
+            <div className="flex justify-end gap-3 pt-3 border-t border-[var(--c-line)]">
               <button
                 onClick={onClose}
-                className="px-5 py-2.5 text-sm font-medium text-[#3d4d66] border border-[#dfe7f2] rounded-xl hover:bg-[#f1f5fb] transition"
+                className="px-5 py-2.5 text-sm font-medium text-[var(--c-ink-2)] border border-[var(--c-line)] rounded-xl hover:bg-[var(--c-canvas)] transition"
               >
                 ยกเลิก
               </button>
               <button
                 onClick={handleSave}
                 disabled={pending}
-                className="px-5 py-2.5 text-sm font-bold text-white bg-[#2563eb] rounded-xl hover:bg-[#1d4ed8] transition disabled:opacity-50 flex items-center gap-2"
+                className="px-5 py-2.5 text-sm font-bold text-white bg-[var(--c-accent)] rounded-xl hover:bg-[var(--c-accent-str)] transition disabled:opacity-50 flex items-center gap-2"
               >
                 {pending && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
                 บันทึกการเปลี่ยนแปลง
@@ -493,11 +493,11 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
 
 function StatCard({ label, val, color }: { label: string; val: string; color: string }) {
   const colorMap: Record<string, string> = {
-    green:  "bg-green-50 text-green-700 border-green-200",
-    red:    "bg-red-50 text-red-700 border-red-200",
-    yellow: "bg-yellow-50 text-yellow-700 border-yellow-200",
+    green:  "bg-[var(--c-ok-soft)] text-[var(--c-ok)] border-[var(--c-ok-line)]",
+    red:    "bg-[var(--c-danger-soft)] text-[var(--c-danger)] border-[var(--c-danger-line)]",
+    yellow: "bg-[var(--c-warn-soft)] text-[var(--c-warn)] border-[var(--c-warn-line)]",
     purple: "bg-purple-50 text-purple-700 border-purple-200",
-    gray:   "bg-gray-50 text-gray-600 border-gray-200",
+    gray:   "bg-[var(--c-subtle)] text-[var(--c-ink-3)] border-[var(--c-line)]",
   };
   return (
     <div className={`p-2.5 rounded-lg border text-center ${colorMap[color] ?? colorMap.gray}`}>
@@ -511,7 +511,7 @@ function QuickLink({ href, label }: { href: string; label: string }) {
   return (
     <a
       href={href}
-      className="px-3 py-1.5 text-xs font-medium text-[#3d4d66] border border-[#dfe7f2] rounded-lg hover:bg-[#f1f5fb] hover:text-[#2563eb] transition"
+      className="px-3 py-1.5 text-xs font-medium text-[var(--c-ink-2)] border border-[var(--c-line)] rounded-lg hover:bg-[var(--c-canvas)] hover:text-[var(--c-accent)] transition"
     >
       🔗 {label}
     </a>
@@ -524,7 +524,7 @@ function PanelStars({ rating }: { rating: number }) {
   return (
     <span className="inline-flex text-[13px] leading-none align-middle">
       {[1, 2, 3, 4, 5].map((s) => (
-        <span key={s} className={s <= rounded ? "text-amber-400" : "text-[#dfe7f2]"}>★</span>
+        <span key={s} className={s <= rounded ? "text-amber-400" : "text-[var(--c-line)]"}>★</span>
       ))}
     </span>
   );

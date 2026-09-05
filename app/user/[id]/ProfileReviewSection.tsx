@@ -22,7 +22,7 @@ function Stars({ rating }: { rating: number }) {
   return (
     <span className="inline-flex">
       {[1, 2, 3, 4, 5].map((s) => (
-        <span key={s} className={s <= rating ? "text-amber-400" : "text-[#dfe7f2]"}>★</span>
+        <span key={s} className={s <= rating ? "text-amber-400" : "text-[var(--c-line)]"}>★</span>
       ))}
     </span>
   );
@@ -58,14 +58,14 @@ export default function ProfileReviewSection({
           ) : (
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold text-[#0f1e35]">มีประสบการณ์กับผู้ขายคนนี้?</p>
-                <p className="text-xs text-[#64748b] mt-0.5">
+                <p className="text-sm font-semibold text-[var(--c-ink)]">มีประสบการณ์กับผู้ขายคนนี้?</p>
+                <p className="text-xs text-[var(--c-muted)] mt-0.5">
                   แชร์รีวิวของคุณเพื่อช่วยให้ชุมชนปลอดภัยขึ้น
                 </p>
               </div>
               <button
                 onClick={() => setFormVisible(true)}
-                className="flex-shrink-0 bg-[#2563eb] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-[#1d4ed8] transition"
+                className="flex-shrink-0 bg-[var(--c-accent)] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-[var(--c-accent-str)] transition"
               >
                 เขียนรีวิว
               </button>
@@ -73,35 +73,35 @@ export default function ProfileReviewSection({
           )}
         </div>
       ) : (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-4 text-sm font-semibold text-emerald-700">
+        <div className="bg-[var(--c-ok-soft)] border border-[var(--c-ok-line)] rounded-2xl px-5 py-4 text-sm font-semibold text-[var(--c-ok)]">
           ✅ ส่งรีวิวเรียบร้อยแล้ว ขอบคุณที่ช่วยสร้างชุมชนที่ดี!
         </div>
       )}
 
       {/* ── Reviews List ───────────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-[#dfe7f2] overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#dfe7f2]">
-          <h2 className="text-sm font-bold text-[#0f1e35]">
+      <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] overflow-hidden">
+        <div className="px-6 py-4 border-b border-[var(--c-line)]">
+          <h2 className="text-sm font-bold text-[var(--c-ink)]">
             รีวิว
-            <span className="ml-2 text-[#64748b] font-normal">({reviews.length})</span>
+            <span className="ml-2 text-[var(--c-muted)] font-normal">({reviews.length})</span>
           </h2>
         </div>
 
         {reviews.length === 0 ? (
-          <div className="px-6 py-12 text-center text-[#64748b]">
+          <div className="px-6 py-12 text-center text-[var(--c-muted)]">
             <p className="text-3xl mb-2">💬</p>
             <p className="text-sm">ยังไม่มีรีวิว</p>
           </div>
         ) : (
-          <ul className="divide-y divide-[#eaf0f8]">
+          <ul className="divide-y divide-[var(--c-line-soft)]">
             {reviews.map((review) => (
               <li key={review.id} className="px-6 py-5">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#eaf0f8] flex-shrink-0 overflow-hidden flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-[var(--c-line-soft)] flex-shrink-0 overflow-hidden flex items-center justify-center">
                     {review.reviewer.image ? (
                       <img src={review.reviewer.image} alt="" className="w-full h-full object-cover" />
                     ) : (
-                      <svg className="w-4 h-4 text-[#64748b]" fill="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-[var(--c-muted)]" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                       </svg>
                     )}
@@ -109,18 +109,18 @@ export default function ProfileReviewSection({
 
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <span className="text-sm font-semibold text-[#0f1e35]">
+                      <span className="text-sm font-semibold text-[var(--c-ink)]">
                         {review.reviewer.name ?? "ผู้ใช้ไม่ระบุชื่อ"}
                       </span>
                       <Stars rating={review.rating} />
-                      <span className="text-[10px] text-[#94a3b8] ml-auto">
+                      <span className="text-[10px] text-[var(--c-faint)] ml-auto">
                         {new Date(review.createdAt).toLocaleDateString("th-TH", {
                           day: "numeric", month: "short", year: "numeric",
                         })}
                       </span>
                     </div>
                     {review.comment && (
-                      <p className="text-sm text-[#3d4d66] leading-relaxed">{review.comment}</p>
+                      <p className="text-sm text-[var(--c-ink-2)] leading-relaxed">{review.comment}</p>
                     )}
                   </div>
                 </div>

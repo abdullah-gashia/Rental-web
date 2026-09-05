@@ -48,17 +48,17 @@ export default function DeleteAccountDialog({ open, onClose, showToast }: Props)
       />
 
       {/* Panel */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
-        <h3 className="text-base font-bold text-red-700 flex items-center gap-2">
+      <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
+        <h3 className="text-base font-bold text-[var(--c-danger)] flex items-center gap-2">
           ⚠️ ยืนยันการลบบัญชี
         </h3>
 
-        <div className="text-sm text-[#3d4d66] space-y-2">
+        <div className="text-sm text-[var(--c-ink-2)] space-y-2">
           <p>
             การดำเนินการนี้<strong>ไม่สามารถย้อนกลับได้</strong> ข้อมูลทั้งหมดจะถูกลบถาวรใน 30 วัน
           </p>
           <p>
-            พิมพ์ <span className="font-bold text-red-600">ลบบัญชีของฉัน</span> เพื่อยืนยัน:
+            พิมพ์ <span className="font-bold text-[var(--c-danger)]">ลบบัญชีของฉัน</span> เพื่อยืนยัน:
           </p>
         </div>
 
@@ -68,7 +68,7 @@ export default function DeleteAccountDialog({ open, onClose, showToast }: Props)
           onChange={(e) => setConfirmText(e.target.value)}
           placeholder="พิมพ์ข้อความยืนยัน..."
           disabled={pending}
-          className="w-full px-3.5 py-2.5 rounded-xl border border-red-200 bg-red-50/30 text-sm text-[#0f1e35] focus:outline-none focus:ring-2 focus:ring-red-300 transition"
+          className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--c-danger-line)] bg-[var(--c-danger-soft)]/30 text-sm text-[var(--c-ink)] focus:outline-none focus:ring-2 focus:ring-red-300 transition"
         />
 
         <div className="flex gap-3 pt-1">
@@ -76,7 +76,7 @@ export default function DeleteAccountDialog({ open, onClose, showToast }: Props)
             type="button"
             onClick={onClose}
             disabled={pending}
-            className="flex-1 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
+            className="flex-1 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
           >
             ยกเลิก
           </button>

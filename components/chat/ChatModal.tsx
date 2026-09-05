@@ -88,18 +88,18 @@ function ItemContextCard({
     <div className="mx-0.5 mb-2">
       {/* Section label */}
       <div className="flex items-center gap-2 mb-2.5">
-        <div className="h-px flex-1 bg-[#dfe7f2]" />
-        <span className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest whitespace-nowrap">
+        <div className="h-px flex-1 bg-[var(--c-line)]" />
+        <span className="text-[10px] font-bold text-[var(--c-muted)] uppercase tracking-widest whitespace-nowrap">
           รายละเอียดสินค้า
         </span>
-        <div className="h-px flex-1 bg-[#dfe7f2]" />
+        <div className="h-px flex-1 bg-[var(--c-line)]" />
       </div>
 
       {/* Card */}
-      <div className="rounded-2xl bg-white border border-[#dfe7f2] shadow-md overflow-hidden">
+      <div className="rounded-2xl bg-[var(--c-surface)] border border-[var(--c-line)] shadow-md overflow-hidden">
 
         {/* ── Image ──────────────────────────────────────────────── */}
-        <div className="w-full aspect-[4/3] bg-[#eaf0f8] overflow-hidden flex items-center justify-center">
+        <div className="w-full aspect-[4/3] bg-[var(--c-line-soft)] overflow-hidden flex items-center justify-center">
           {context.imageUrl ? (
             <img
               src={context.imageUrl}
@@ -113,15 +113,15 @@ function ItemContextCard({
 
         {/* ── Title & Price ───────────────────────────────────────── */}
         <div className="px-4 pt-3 pb-2">
-          <h4 className="text-sm font-bold text-[#0f1e35] leading-snug line-clamp-2">{title}</h4>
-          <p className="text-xl font-extrabold text-[#2563eb] mt-1 leading-none">{priceLabel}</p>
+          <h4 className="text-sm font-bold text-[var(--c-ink)] leading-snug line-clamp-2">{title}</h4>
+          <p className="text-xl font-extrabold text-[var(--c-accent)] mt-1 leading-none">{priceLabel}</p>
         </div>
 
         {/* ── Badges ─────────────────────────────────────────────── */}
         <div className="px-4 pb-3 flex flex-wrap gap-1.5">
           {/* Condition */}
           {context.condition && (
-            <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-600 text-xs font-medium px-2.5 py-1 rounded-full">
+            <span className="inline-flex items-center gap-1 bg-[var(--c-line-soft)] text-[var(--c-ink-3)] text-xs font-medium px-2.5 py-1 rounded-full">
               ✨ สภาพ: {CONDITION_LABEL[context.condition] ?? context.condition}
             </span>
           )}
@@ -129,32 +129,32 @@ function ItemContextCard({
           {/* Negotiable */}
           <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${
             context.negotiable
-              ? "bg-emerald-50 text-emerald-700"
-              : "bg-gray-100 text-gray-500"
+              ? "bg-[var(--c-ok-soft)] text-[var(--c-ok)]"
+              : "bg-[var(--c-line-soft)] text-[var(--c-muted)]"
           }`}>
             {context.negotiable ? "💬 ต่อราคาได้" : "🔒 ราคาเน็ต/งดต่อ"}
           </span>
 
           {/* Shipping */}
           {context.allowShipping && (
-            <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-full">
+            <span className="inline-flex items-center gap-1 bg-[var(--c-accent-soft)] text-[var(--c-accent-str)] text-xs font-medium px-2.5 py-1 rounded-full">
               📦 จัดส่งไปรษณีย์ได้
             </span>
           )}
           {context.allowMeetup && !context.allowShipping && (
-            <span className="inline-flex items-center gap-1 bg-sky-50 text-sky-700 text-xs font-medium px-2.5 py-1 rounded-full">
+            <span className="inline-flex items-center gap-1 bg-[var(--c-accent-soft)] text-sky-700 text-xs font-medium px-2.5 py-1 rounded-full">
               🤝 นัดรับเท่านั้น
             </span>
           )}
           {context.allowMeetup && context.allowShipping && (
-            <span className="inline-flex items-center gap-1 bg-sky-50 text-sky-700 text-xs font-medium px-2.5 py-1 rounded-full">
+            <span className="inline-flex items-center gap-1 bg-[var(--c-accent-soft)] text-sky-700 text-xs font-medium px-2.5 py-1 rounded-full">
               🤝 นัดรับได้
             </span>
           )}
 
           {/* Location */}
           {context.location && (
-            <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-600 text-xs font-medium px-2.5 py-1 rounded-full">
+            <span className="inline-flex items-center gap-1 bg-[var(--c-line-soft)] text-[var(--c-ink-3)] text-xs font-medium px-2.5 py-1 rounded-full">
               📍 {context.location}
             </span>
           )}
@@ -162,19 +162,19 @@ function ItemContextCard({
 
         {/* ── Contact ─────────────────────────────────────────────── */}
         {context.contact && (
-          <div className="mx-4 mb-3 flex items-center justify-between gap-3 bg-[#f1f5fb] rounded-xl px-3 py-2.5 border border-[#dfe7f2]">
+          <div className="mx-4 mb-3 flex items-center justify-between gap-3 bg-[var(--c-canvas)] rounded-xl px-3 py-2.5 border border-[var(--c-line)]">
             <div className="min-w-0">
-              <p className="text-[10px] font-semibold text-[#64748b] uppercase tracking-wide mb-0.5">
+              <p className="text-[10px] font-semibold text-[var(--c-muted)] uppercase tracking-wide mb-0.5">
                 📞 ช่องทางติดต่อผู้ขาย
               </p>
-              <p className="text-sm font-bold text-[#0f1e35] truncate">{context.contact}</p>
+              <p className="text-sm font-bold text-[var(--c-ink)] truncate">{context.contact}</p>
             </div>
             <button
               onClick={handleCopy}
               className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 copied
-                  ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
-                  : "bg-white text-[#3d4d66] border border-[#dfe7f2] hover:border-[#0f1e35] hover:text-[#0f1e35]"
+                  ? "bg-emerald-100 text-[var(--c-ok)] border border-[var(--c-ok-line)]"
+                  : "bg-[var(--c-surface)] text-[var(--c-ink-2)] border border-[var(--c-line)] hover:border-[var(--c-ink)] hover:text-[var(--c-ink)]"
               }`}
             >
               {copied ? (
@@ -201,7 +201,7 @@ function ItemContextCard({
           <div className="px-4 pb-4">
             <button
               onClick={onSendGreeting}
-              className="w-full py-2.5 rounded-xl bg-[#0f1e35] text-white text-sm font-bold hover:bg-[#1e2d47] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              className="w-full py-2.5 rounded-xl bg-[var(--c-ink)] text-white text-sm font-bold hover:bg-[var(--c-ink-1)] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/>
@@ -374,15 +374,15 @@ export default function ChatModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       {/* ── Header ──────────────────────────────────────────────── */}
-      <div className="flex items-center gap-3 pb-4 border-b border-[#dfe7f2]">
-        <div className="w-10 h-10 bg-[#eaf0f8] rounded-xl flex items-center justify-center text-lg">
+      <div className="flex items-center gap-3 pb-4 border-b border-[var(--c-line)]">
+        <div className="w-10 h-10 bg-[var(--c-line-soft)] rounded-xl flex items-center justify-center text-lg">
           {itemEmoji || "📦"}
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-sm font-bold truncate">{itemTitle}</h3>
-          <p className="text-xs text-[#2563eb] font-semibold">{itemPrice.toLocaleString()} ฿</p>
+          <p className="text-xs text-[var(--c-accent)] font-semibold">{itemPrice.toLocaleString()} ฿</p>
         </div>
-        <button onClick={onClose} className="text-[#64748b] hover:text-[#0f1e35] text-xl leading-none">✕</button>
+        <button onClick={onClose} className="text-[var(--c-muted)] hover:text-[var(--c-ink)] text-xl leading-none">✕</button>
       </div>
 
       {/* ── Messages area ───────────────────────────────────────── */}
@@ -403,7 +403,7 @@ export default function ChatModal({
 
         {/* Empty state */}
         {messages.length === 0 && !loading && !itemContext && (
-          <div className="text-center text-[#64748b] text-sm py-12">
+          <div className="text-center text-[var(--c-muted)] text-sm py-12">
             <p className="text-3xl mb-2">💬</p>
             <p>เริ่มแชทกับผู้ขาย</p>
           </div>
@@ -411,7 +411,7 @@ export default function ChatModal({
 
         {/* Loading state */}
         {loading && messages.length === 0 && (
-          <div className="text-center text-[#64748b] text-sm py-12">
+          <div className="text-center text-[var(--c-muted)] text-sm py-12">
             <p>กำลังโหลด...</p>
           </div>
         )}
@@ -436,7 +436,7 @@ export default function ChatModal({
           return (
             <div key={msg.id} className={`flex flex-col ${isMine ? "items-end" : "items-start"}`}>
               {!isMine && (
-                <p className="text-[10px] text-[#64748b] mb-0.5 ml-1">{msg.sender.name}</p>
+                <p className="text-[10px] text-[var(--c-muted)] mb-0.5 ml-1">{msg.sender.name}</p>
               )}
               <div className="max-w-[75%]">
                 {hasImage && (
@@ -453,19 +453,19 @@ export default function ChatModal({
                 {hasText && (
                   <div className={`px-3.5 py-2 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
                     isMine
-                      ? "bg-[#0f1e35] text-white rounded-br-md"
-                      : "bg-[#eaf0f8] text-[#0f1e35] rounded-bl-md"
+                      ? "bg-[var(--c-ink)] text-white rounded-br-md"
+                      : "bg-[var(--c-line-soft)] text-[var(--c-ink)] rounded-bl-md"
                   }`}>
                     {msg.content}
                   </div>
                 )}
               </div>
               <div className={`flex items-center gap-1 mt-0.5 ${isMine ? "justify-end mr-1" : "ml-1"}`}>
-                <p className="text-[9px] text-[#94a3b8]">
+                <p className="text-[9px] text-[var(--c-faint)]">
                   {new Date(msg.createdAt).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}
                 </p>
                 {isMine && isLastSent && msg.read && (
-                  <span className="text-[9px] text-[#2563eb] font-semibold">อ่านแล้ว</span>
+                  <span className="text-[9px] text-[var(--c-accent)] font-semibold">อ่านแล้ว</span>
                 )}
               </div>
             </div>
@@ -476,7 +476,7 @@ export default function ChatModal({
 
       {/* ── Image preview strip ──────────────────────────────────── */}
       {imagePreview && (
-        <div className="mx-1 mb-2 flex items-center gap-2 p-2 bg-[#f1f5fb] rounded-xl border border-[#dfe7f2]">
+        <div className="mx-1 mb-2 flex items-center gap-2 p-2 bg-[var(--c-canvas)] rounded-xl border border-[var(--c-line)]">
           <div className="relative flex-shrink-0">
             <img src={imagePreview} alt="preview" className="w-14 h-14 object-contain rounded-lg" />
             {uploading && (
@@ -486,13 +486,13 @@ export default function ChatModal({
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-[#1e2d47]">{uploading ? "กำลังอัปโหลด..." : "พร้อมส่ง"}</p>
-            <p className="text-[10px] text-[#64748b]">คุณสามารถพิมพ์ข้อความเพิ่มได้</p>
+            <p className="text-xs font-medium text-[var(--c-ink-1)]">{uploading ? "กำลังอัปโหลด..." : "พร้อมส่ง"}</p>
+            <p className="text-[10px] text-[var(--c-muted)]">คุณสามารถพิมพ์ข้อความเพิ่มได้</p>
           </div>
           <button
             onClick={clearPendingImage}
             disabled={uploading}
-            className="text-[#64748b] hover:text-red-500 transition text-lg leading-none disabled:opacity-30"
+            className="text-[var(--c-muted)] hover:text-[var(--c-danger)] transition text-lg leading-none disabled:opacity-30"
             aria-label="ยกเลิกรูปภาพ"
           >
             ×
@@ -501,7 +501,7 @@ export default function ChatModal({
       )}
 
       {/* ── Input row ────────────────────────────────────────────── */}
-      <div className="pt-3 border-t border-[#dfe7f2] flex gap-2 items-center">
+      <div className="pt-3 border-t border-[var(--c-line)] flex gap-2 items-center">
         <input
           ref={fileRef}
           type="file"
@@ -513,7 +513,7 @@ export default function ChatModal({
           type="button"
           onClick={() => fileRef.current?.click()}
           disabled={uploading || !!imagePreview}
-          className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-[#dfe7f2] text-[#64748b] hover:text-[#0f1e35] hover:border-[#0f1e35] transition disabled:opacity-30 disabled:cursor-not-allowed"
+          className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-[var(--c-line)] text-[var(--c-muted)] hover:text-[var(--c-ink)] hover:border-[var(--c-ink)] transition disabled:opacity-30 disabled:cursor-not-allowed"
           aria-label="แนบรูปภาพ"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -526,12 +526,12 @@ export default function ChatModal({
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={imagePreview ? "เพิ่มข้อความ (ไม่บังคับ)…" : "พิมพ์ข้อความ…"}
-          className="flex-1 border border-[#dfe7f2] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#0f1e35]"
+          className="flex-1 border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--c-ink)]"
         />
         <button
           onClick={() => handleSend()}
           disabled={(!input.trim() && !pendingImage) || !!uploading || !conversationId}
-          className="bg-[#0f1e35] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#1e2d47] transition disabled:opacity-30 disabled:cursor-not-allowed"
+          className="bg-[var(--c-ink)] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[var(--c-ink-1)] transition disabled:opacity-30 disabled:cursor-not-allowed"
         >
           ส่ง
         </button>

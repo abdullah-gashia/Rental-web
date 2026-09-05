@@ -127,19 +127,19 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
         onClick={onClose}
       />
 
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[92vh] overflow-y-auto">
+      <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-lg max-h-[92vh] overflow-y-auto">
 
         {/* ── Header ─────────────────────────────────────────────────────────── */}
-        <div className="sticky top-0 bg-white border-b border-[#dfe7f2] px-6 py-4 flex items-start justify-between z-10 rounded-t-2xl">
+        <div className="sticky top-0 bg-[var(--c-surface)] border-b border-[var(--c-line)] px-6 py-4 flex items-start justify-between z-10 rounded-t-2xl">
           <div>
-            <h3 className="text-lg font-bold text-[#0f1e35]">แจ้งปัญหา / เปิดข้อพิพาท</h3>
-            <p className="text-xs text-[#64748b] mt-0.5">
+            <h3 className="text-lg font-bold text-[var(--c-ink)]">แจ้งปัญหา / เปิดข้อพิพาท</h3>
+            <p className="text-xs text-[var(--c-muted)] mt-0.5">
               เงินจะถูกอายัดรอการตัดสินจากผู้ดูแลระบบ
             </p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-[#64748b] hover:bg-[#eaf0f8] hover:text-[#0f1e35] transition flex-shrink-0 ml-3"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--c-muted)] hover:bg-[var(--c-line-soft)] hover:text-[var(--c-ink)] transition flex-shrink-0 ml-3"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -149,7 +149,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
 
         {/* ── Order Summary ───────────────────────────────────────────────────── */}
         <div className="px-6 pt-5">
-          <div className="flex items-center justify-between bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+          <div className="flex items-center justify-between bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-4 py-3">
             <div className="flex items-center gap-2 min-w-0">
               <span className="text-amber-500">⚠️</span>
               <span className="text-sm font-semibold text-amber-900 truncate">{itemTitle}</span>
@@ -165,25 +165,25 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
 
           {/* Reason */}
           <div>
-            <label className="block text-sm font-semibold text-[#1e2d47] mb-1.5">
-              เหตุผลในการแจ้งปัญหา <span className="text-red-500">*</span>
+            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-1.5">
+              เหตุผลในการแจ้งปัญหา <span className="text-[var(--c-danger)]">*</span>
             </label>
             <textarea
               value={reason}
               onChange={(e) => { setReason(e.target.value); setSubmitError(null); }}
               rows={4}
               disabled={isPending}
-              className="w-full border border-[#dfe7f2] rounded-xl px-4 py-3 text-sm text-[#0f1e35] placeholder-[#a3b0c2] focus:outline-none focus:ring-2 focus:ring-red-400/30 focus:border-red-400 transition resize-none disabled:opacity-60"
+              className="w-full border border-[var(--c-line)] rounded-xl px-4 py-3 text-sm text-[var(--c-ink)] placeholder-[var(--c-faint-2)] focus:outline-none focus:ring-2 focus:ring-red-400/30 focus:border-red-400 transition resize-none disabled:opacity-60"
               placeholder="อธิบายปัญหาที่พบ เช่น ไม่ได้รับสินค้า, สินค้าไม่ตรงปก, สินค้าชำรุดเสียหาย..."
             />
           </div>
 
           {/* Evidence Images */}
           <div>
-            <label className="block text-sm font-semibold text-[#1e2d47] mb-0.5">
-              หลักฐาน (รูปภาพ) <span className="text-red-500">*</span>
+            <label className="block text-sm font-semibold text-[var(--c-ink-1)] mb-0.5">
+              หลักฐาน (รูปภาพ) <span className="text-[var(--c-danger)]">*</span>
             </label>
-            <p className="text-xs text-[#64748b] mb-3">
+            <p className="text-xs text-[var(--c-muted)] mb-3">
               อย่างน้อย 1 ภาพ · สูงสุด {MAX_IMAGES} ภาพ · รูปภาพทุกชนิด ทุกขนาด
             </p>
 
@@ -192,7 +192,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
               {images.map((img, idx) => (
                 <div
                   key={idx}
-                  className="relative w-20 h-20 rounded-xl overflow-hidden bg-[#eaf0f8] border border-[#dfe7f2] flex-shrink-0"
+                  className="relative w-20 h-20 rounded-xl overflow-hidden bg-[var(--c-line-soft)] border border-[var(--c-line)] flex-shrink-0"
                 >
                   <img src={img.preview} alt="" className="w-full h-full object-contain" />
 
@@ -229,7 +229,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isPending}
-                  className="w-20 h-20 rounded-xl border-2 border-dashed border-[#d1cfc9] hover:border-red-400 hover:bg-red-50 transition flex flex-col items-center justify-center gap-1 text-[#64748b] hover:text-red-500 disabled:opacity-40"
+                  className="w-20 h-20 rounded-xl border-2 border-dashed border-[#d1cfc9] hover:border-red-400 hover:bg-[var(--c-danger-soft)] transition flex flex-col items-center justify-center gap-1 text-[var(--c-muted)] hover:text-[var(--c-danger)] disabled:opacity-40"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -251,15 +251,15 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
 
           {/* Error */}
           {submitError && (
-            <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-              <span className="text-red-500 text-sm">⚠️</span>
-              <p className="text-sm text-red-700 font-medium">{submitError}</p>
+            <div className="flex items-center gap-2 bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-4 py-3">
+              <span className="text-[var(--c-danger)] text-sm">⚠️</span>
+              <p className="text-sm text-[var(--c-danger)] font-medium">{submitError}</p>
             </div>
           )}
 
           {/* Warning notice */}
-          <div className="bg-[#f1f5fb] rounded-xl px-4 py-3 text-xs text-[#5b6b82] leading-relaxed">
-            <span className="font-semibold text-[#3d4d66]">หมายเหตุ:</span>{" "}
+          <div className="bg-[var(--c-canvas)] rounded-xl px-4 py-3 text-xs text-[var(--c-ink-3)] leading-relaxed">
+            <span className="font-semibold text-[var(--c-ink-2)]">หมายเหตุ:</span>{" "}
             การเปิดข้อพิพาทจะทำให้เงินถูกอายัดทันที และไม่สามารถยกเลิกได้
             ผู้ดูแลระบบจะตรวจสอบหลักฐานและตัดสินผลภายใน 2–3 วันทำการ
           </div>
@@ -270,7 +270,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
               type="button"
               onClick={onClose}
               disabled={isPending}
-              className="flex-1 py-3 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
+              className="flex-1 py-3 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
             >
               ยกเลิก
             </button>

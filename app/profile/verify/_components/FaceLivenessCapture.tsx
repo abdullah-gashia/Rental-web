@@ -161,18 +161,18 @@ export default function FaceLivenessCapture({ onComplete }: Props) {
       {/* Instruction */}
       <div className="text-center space-y-1">
         <p className="text-2xl">{meta.icon}</p>
-        <p className="font-semibold text-[#0f1e35]">{meta.text}</p>
-        <p className="text-sm text-[#64748b]">{meta.sub}</p>
+        <p className="font-semibold text-[var(--c-ink)]">{meta.text}</p>
+        <p className="text-sm text-[var(--c-muted)]">{meta.sub}</p>
       </div>
 
       {/* Camera error */}
       {error && !cameraReady && (
-        <div className="w-full max-w-xs bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700 text-center space-y-2">
+        <div className="w-full max-w-xs bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-4 py-3 text-sm text-[var(--c-danger)] text-center space-y-2">
           <p>📷 {error}</p>
           <p className="text-xs">คลิกที่ไอคอน 🔒 ในแถบที่อยู่ แล้วเลือก "อนุญาต" สำหรับกล้อง</p>
           <button
             onClick={() => window.location.reload()}
-            className="text-xs font-semibold text-red-700 underline"
+            className="text-xs font-semibold text-[var(--c-danger)] underline"
           >
             🔄 ลองใหม่
           </button>
@@ -192,7 +192,7 @@ export default function FaceLivenessCapture({ onComplete }: Props) {
         <div className="flex gap-3">
           <button
             onClick={handleRetake}
-            className="px-6 py-2.5 border border-[#dfe7f2] rounded-xl text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition"
+            className="px-6 py-2.5 border border-[var(--c-line)] rounded-xl text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
           >
             ถ่ายใหม่
           </button>
@@ -208,12 +208,12 @@ export default function FaceLivenessCapture({ onComplete }: Props) {
       {/* Thumbnail strip */}
       <div className="flex gap-2">
         {(["front","left","right","up"] as const).map((key) => (
-          <div key={key} className={`w-14 h-14 rounded-xl overflow-hidden border-2 flex items-center justify-center bg-[#eaf0f8] ${
-            frames[key] ? "border-emerald-400" : "border-[#dfe7f2]"
+          <div key={key} className={`w-14 h-14 rounded-xl overflow-hidden border-2 flex items-center justify-center bg-[var(--c-line-soft)] ${
+            frames[key] ? "border-emerald-400" : "border-[var(--c-line)]"
           }`}>
             {frames[key]
               ? <img src={frames[key]!} alt={key} className="w-full h-full object-cover" />
-              : <span className="text-[10px] text-[#64748b]">
+              : <span className="text-[10px] text-[var(--c-muted)]">
                   {key === "front" ? "หน้า" : key === "left" ? "ซ้าย" : key === "right" ? "ขวา" : "บน"}
                 </span>
             }

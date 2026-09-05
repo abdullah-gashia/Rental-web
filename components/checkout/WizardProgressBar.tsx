@@ -36,7 +36,7 @@ export default function WizardProgressBar({ step }: WizardProgressBarProps) {
           {/* Label */}
           <span
             className={`text-[11px] font-semibold mt-1.5 ${
-              step >= s.num ? "text-[#0f1e35]" : "text-[#a3b0c2]"
+              step >= s.num ? "text-[var(--c-ink)]" : "text-[var(--c-faint-2)]"
             }`}
           >
             {s.label}

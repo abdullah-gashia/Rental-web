@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import type { EscrowStatus, ItemStatus } from "@prisma/client";
+import { getI18n } from "@/lib/i18n/server";
 
 export const dynamic  = "force-dynamic";
 export const metadata = { title: "ภาพรวม | บัญชีของฉัน" };
@@ -20,13 +21,15 @@ const NEEDS_SELLER: EscrowStatus[] = [
   "MEETUP_SCHEDULED", "MEETUP_ARRANGED",
 ];
 
-const baht = (n: number) =>
-  `฿${n.toLocaleString("th-TH", { maximumFractionDigits: 2 })}`;
+const money = (n: number, nf: string) =>
+  `฿${n.toLocaleString(nf, { maximumFractionDigits: 2 })}`;
 
 export default async function SellerOverview() {
   const session = await auth();
   if (!session?.user?.id) redirect("/?login=1");
   const uid = session.user.id;
+  const { locale, t } = await getI18n();
+  const nf = locale === "en" ? "en-US" : "th-TH";
 
   const [
     me, liveItems, pendingItems, soldItems,
@@ -80,35 +83,34 @@ export default async function SellerOverview() {
   // The whole point of the page: a short list of things only this person can
   // clear, in the order they should clear them.
   const todo = [
-    needsAction  > 0 && { n: needsAction,  label: "คำสั่งซื้อรอคุณดำเนินการ", href: "/dashboard/orders",   bad: true },
-    rentalActive > 0 && { n: rentalActive, label: "รายการเช่าที่ยังไม่จบ",     href: "/dashboard/rentals",  bad: false },
-    pendingItems > 0 && { n: pendingItems, label: "ประกาศรอผู้ดูแลตรวจสอบ",   href: "/dashboard/my-items", bad: false },
-    borrowOpen   > 0 && { n: borrowOpen,   label: "ของที่ยืมจากงานภัทร",      href: "/dashboard/borrows",  bad: false },
+    needsAction  > 0 && { n: needsAction,  label: t("ov_todo_orders"),  href: "/dashboard/orders",   bad: true },
+    rentalActive > 0 && { n: rentalActive, label: t("ov_todo_rentals"), href: "/dashboard/rentals",  bad: false },
+    pendingItems > 0 && { n: pendingItems, label: t("ov_todo_pending"), href: "/dashboard/my-items", bad: false },
+    borrowOpen   > 0 && { n: borrowOpen,   label: t("ov_todo_borrows"), href: "/dashboard/borrows",  bad: false },
   ].filter(Boolean) as { n: number; label: string; href: string; bad: boolean }[];
 
   return (
     <div className="flex flex-col gap-6">
       <header className="ui-head">
         <div>
-          <p className="ui-eyebrow mb-1.5">บัญชีของฉัน</p>
-          <h1>สวัสดี {me?.name ?? "คุณ"}</h1>
+          <p className="ui-eyebrow mb-1.5">{t("shell_my_account")}</p>
+          <h1>{t("ov_hello", { name: me?.name ?? "" })}</h1>
           <p>
             {todo.length === 0
-              ? "ตอนนี้ไม่มีอะไรค้างอยู่ ทุกอย่างเรียบร้อยดี"
-              : `มี ${todo.reduce((s, t) => s + t.n, 0)} รายการที่รอคุณอยู่`}
+              ? t("ov_nothing")
+              : t("ov_waiting", { n: todo.reduce((sum, x) => sum + x.n, 0) })}
           </p>
         </div>
-        <a href="/" className="ui-btn ui-btn-primary">ลงประกาศใหม่</a>
+        <a href="/" className="ui-btn ui-btn-primary">{t("ov_new_listing")}</a>
       </header>
 
       {/* ── Not verified yet ─────────────────────────────────────────────── */}
       {!verified && (
         <div className="ui-note ui-note-warn flex flex-wrap items-center justify-between gap-3">
           <span>
-            <strong>ยังไม่ได้ยืนยันตัวตน</strong> — ยืนยันแล้วจึงจะลงขายสินค้าได้
-            และผู้ซื้อจะเห็นเครื่องหมายยืนยันบนโปรไฟล์ของคุณ
+            <strong>{t("ov_unverified")}</strong> — {t("ov_unverified_sub")}
           </span>
-          <a href="/profile/verify" className="ui-btn ui-btn-ghost ui-btn-sm">ยืนยันตัวตน</a>
+          <a href="/profile/verify" className="ui-btn ui-btn-ghost ui-btn-sm">{t("ov_verify_cta")}</a>
         </div>
       )}
 
@@ -116,18 +118,18 @@ export default async function SellerOverview() {
       {todo.length > 0 && (
         <section className="ui-card overflow-hidden">
           <div className="ui-card-head">
-            <h2>ต้องดำเนินการ</h2>
+            <h2>{t("ov_todo")}</h2>
           </div>
           <div>
-            {todo.map((t) => (
+            {todo.map((row) => (
               <a
-                key={t.href}
-                href={t.href}
+                key={row.href}
+                href={row.href}
                 className="flex items-center gap-3 px-5 py-3.5 border-b border-[var(--hp-border)] last:border-0 hover:bg-[var(--psu-sky)] transition-colors"
               >
-                <span className={`ui-pill ${t.bad ? "ui-pill-bad" : "ui-pill-wait"} ui-num`}>{t.n}</span>
-                <span className="text-[13.5px] text-[var(--hp-ink)] flex-1">{t.label}</span>
-                <span className="text-[13px] text-[var(--psu-blue)] font-semibold">จัดการ →</span>
+                <span className={`ui-pill ${row.bad ? "ui-pill-bad" : "ui-pill-wait"} ui-num`}>{row.n}</span>
+                <span className="text-[13.5px] text-[var(--hp-ink)] flex-1">{row.label}</span>
+                <span className="text-[13px] text-[var(--psu-blue)] font-semibold">{t("c_manage")} →</span>
               </a>
             ))}
           </div>
@@ -137,27 +139,29 @@ export default async function SellerOverview() {
       {/* ── The numbers that matter to a seller ──────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <a href="/dashboard/my-items" className="ui-stat">
-          <p className="ui-stat-k">ประกาศที่เผยแพร่อยู่</p>
+          <p className="ui-stat-k">{t("ov_live_listings")}</p>
           <p className="ui-stat-v">{liveItems}</p>
-          <p className="ui-stat-sub">ขายแล้ว {soldItems} ชิ้น</p>
+          <p className="ui-stat-sub">{t("ov_sold_n", { n: soldItems })}</p>
         </a>
         <a href="/dashboard/orders" className="ui-stat">
-          <p className="ui-stat-k">ขายสำเร็จ</p>
+          <p className="ui-stat-k">{t("ov_sales")}</p>
           <p className="ui-stat-v">{sales}</p>
-          <p className="ui-stat-sub">รายได้สะสม {baht(earned)}</p>
+          <p className="ui-stat-sub">{t("ov_earned", { amount: money(earned, nf) })}</p>
         </a>
         <div className="ui-stat">
-          <p className="ui-stat-k">กระเป๋าเงิน</p>
-          <p className="ui-stat-v">{baht(me?.walletBalance ?? 0)}</p>
-          <p className="ui-stat-sub">ยอดที่ถอน/ใช้จ่ายได้</p>
+          <p className="ui-stat-k">{t("ov_wallet")}</p>
+          <p className="ui-stat-v">{money(me?.walletBalance ?? 0, nf)}</p>
+          <p className="ui-stat-sub">{t("ov_wallet_sub")}</p>
         </div>
         <div className="ui-stat">
-          <p className="ui-stat-k">คะแนนจากผู้ซื้อ</p>
+          <p className="ui-stat-k">{t("ov_rating")}</p>
           <p className="ui-stat-v">
             {reviews > 0 ? (rating ?? 0).toFixed(1) : "—"}
           </p>
           <p className="ui-stat-sub">
-            {reviews > 0 ? `จาก ${reviews} รีวิว · ความน่าเชื่อถือ ${me?.trustScore ?? 100}` : "ยังไม่มีรีวิว"}
+            {reviews > 0
+              ? t("ov_rating_sub", { n: reviews, score: me?.trustScore ?? 100 })
+              : t("ov_no_reviews")}
           </p>
         </div>
       </div>
@@ -165,9 +169,9 @@ export default async function SellerOverview() {
       {/* ── Latest orders ────────────────────────────────────────────────── */}
       <section className="ui-card overflow-hidden">
         <div className="ui-card-head">
-          <h2>คำสั่งซื้อล่าสุด</h2>
+          <h2>{t("ov_recent")}</h2>
           <a href="/dashboard/orders" className="text-[12.5px] font-semibold text-[var(--psu-blue)] hover:underline">
-            ดูทั้งหมด →
+            {t("c_view_all")} →
           </a>
         </div>
 
@@ -178,8 +182,8 @@ export default async function SellerOverview() {
                 <path d="M3 4h2l2.4 11.2a1.5 1.5 0 0 0 1.5 1.2h7.9a1.5 1.5 0 0 0 1.5-1.2L20 8H6" />
               </svg>
             </div>
-            <h3>ยังไม่มีคำสั่งซื้อ</h3>
-            <p>เมื่อมีคนสั่งซื้อสินค้าของคุณ รายการจะขึ้นที่นี่พร้อมขั้นตอนที่ต้องทำต่อ</p>
+            <h3>{t("ov_no_orders")}</h3>
+            <p>{t("ov_no_orders_sub")}</p>
           </div>
         ) : (
           <div>
@@ -197,12 +201,12 @@ export default async function SellerOverview() {
                 <div className="min-w-0 flex-1">
                   <p className="text-[13.5px] font-medium text-[var(--hp-ink)] truncate">{o.item.title}</p>
                   <p className="text-[11.5px] text-[var(--hp-muted)]">
-                    {o.buyer.name ?? "ผู้ซื้อ"} ·{" "}
-                    {new Date(o.createdAt).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}
+                    {o.buyer.name ?? t("shell_user")} ·{" "}
+                    {new Date(o.createdAt).toLocaleDateString(nf, { day: "numeric", month: "short" })}
                   </p>
                 </div>
                 <span className="ui-num text-[13px] font-semibold text-[var(--hp-ink)] flex-shrink-0">
-                  {baht(o.amount)}
+                  {money(o.amount, nf)}
                 </span>
               </a>
             ))}

@@ -14,41 +14,41 @@ export default function PriceBreakdown({ pricing, lateFeePerDay, compact }: Prop
   if (compact) {
     return (
       <div className="flex justify-between items-center text-sm font-bold">
-        <span className="text-[#3d4d66]">ยอดชำระทั้งหมด</span>
-        <span className="text-[#2563eb] text-lg">฿{totalPaid.toLocaleString()}</span>
+        <span className="text-[var(--c-ink-2)]">ยอดชำระทั้งหมด</span>
+        <span className="text-[var(--c-accent)] text-lg">฿{totalPaid.toLocaleString()}</span>
       </div>
     );
   }
 
   return (
-    <div className="bg-[#f7f9fd] rounded-xl p-4 space-y-2 text-sm border border-[#eaf0f8]">
-      <div className="flex justify-between text-[#3d4d66]">
+    <div className="bg-[var(--c-subtle)] rounded-xl p-4 space-y-2 text-sm border border-[var(--c-line-soft)]">
+      <div className="flex justify-between text-[var(--c-ink-2)]">
         <span>ค่าเช่า (฿{rentalFee / rentalDays} × {rentalDays} วัน)</span>
         <span>฿{rentalFee.toLocaleString()}</span>
       </div>
-      <div className="flex justify-between text-[#3d4d66]">
+      <div className="flex justify-between text-[var(--c-ink-2)]">
         <span>ค่าธรรมเนียมระบบ (5%)</span>
         <span>฿{platformFee.toLocaleString()}</span>
       </div>
       {securityDeposit > 0 && (
-        <div className="flex justify-between text-[#3d4d66]">
-          <span>เงินมัดจำ <span className="text-[10px] text-green-600">(คืนหลังส่งของ)</span></span>
+        <div className="flex justify-between text-[var(--c-ink-2)]">
+          <span>เงินมัดจำ <span className="text-[10px] text-[var(--c-ok)]">(คืนหลังส่งของ)</span></span>
           <span>฿{securityDeposit.toLocaleString()}</span>
         </div>
       )}
-      <div className="border-t border-[#dfe7f2] pt-2 flex justify-between font-bold text-[#0f1e35]">
+      <div className="border-t border-[var(--c-line)] pt-2 flex justify-between font-bold text-[var(--c-ink)]">
         <span>💰 ยอดชำระทั้งหมด</span>
-        <span className="text-[#2563eb]">฿{totalPaid.toLocaleString()}</span>
+        <span className="text-[var(--c-accent)]">฿{totalPaid.toLocaleString()}</span>
       </div>
 
       {/* Info footnotes */}
-      <div className="pt-1 space-y-1 text-[11px] text-[#8d9bb0]">
+      <div className="pt-1 space-y-1 text-[11px] text-[var(--c-faint)]">
         <p>• ค่าเช่า ฿{rentalFee} + ค่าธรรมเนียม ฿{platformFee} → จ่ายให้เจ้าของเมื่อคืนของ</p>
         {securityDeposit > 0 && (
           <p>• มัดจำ ฿{securityDeposit.toLocaleString()} → คืนให้คุณเมื่อของสภาพเดิม</p>
         )}
         {(lateFeePerDay ?? 0) > 0 ? (
-          <p className="text-amber-600">• ค่าปรับหากคืนช้า: ฿{lateFeePerDay}/วัน</p>
+          <p className="text-[var(--c-warn)]">• ค่าปรับหากคืนช้า: ฿{lateFeePerDay}/วัน</p>
         ) : (
           <p>• ไม่มีค่าปรับคืนช้า</p>
         )}

@@ -55,22 +55,22 @@ interface OrderData {
 }
 
 const STATUS_LABELS: Record<string, { label: string; emoji: string; color: string }> = {
-  FUNDS_HELD:            { label: "รอจัดส่ง (Escrow)",         emoji: "🔒",  color: "text-blue-700 bg-blue-50 border-blue-200" },
-  SHIPPED:               { label: "จัดส่งแล้ว",                emoji: "📦",  color: "text-indigo-700 bg-indigo-50 border-indigo-200" },
-  DELIVERED:             { label: "ได้รับสินค้าแล้ว",          emoji: "📬",  color: "text-emerald-700 bg-emerald-50 border-emerald-200" },
-  COMPLETED:             { label: "เสร็จสิ้น",                 emoji: "✅",  color: "text-green-700 bg-green-50 border-green-200" },
-  DISPUTED:              { label: "มีข้อพิพาท",               emoji: "⚠️",  color: "text-red-700 bg-red-50 border-red-200" },
-  CANCELLED:             { label: "ยกเลิกแล้ว",               emoji: "❌",  color: "text-gray-600 bg-gray-50 border-gray-200" },
-  REFUNDED:              { label: "คืนเงินแล้ว",              emoji: "💰",  color: "text-amber-700 bg-amber-50 border-amber-200" },
-  PENDING_CONFIRMATION:  { label: "รอผู้ขายยืนยัน",           emoji: "⏳",  color: "text-amber-700 bg-amber-50 border-amber-200" },
-  MEETUP_SCHEDULED:      { label: "นัดรับแล้ว (Escrow)",       emoji: "🤝",  color: "text-blue-700 bg-blue-50 border-blue-200" },
-  MEETUP_COMPLETED:      { label: "นัดรับสำเร็จ",             emoji: "✅",  color: "text-green-700 bg-green-50 border-green-200" },
-  AWAITING_SHIPMENT:     { label: "รอจัดส่ง (COD)",            emoji: "📋",  color: "text-amber-700 bg-amber-50 border-amber-200" },
-  COD_SHIPPED:           { label: "จัดส่งแล้ว (COD)",          emoji: "📦",  color: "text-indigo-700 bg-indigo-50 border-indigo-200" },
-  COD_DELIVERED:         { label: "ได้รับ (COD)",              emoji: "📬",  color: "text-emerald-700 bg-emerald-50 border-emerald-200" },
-  MEETUP_ARRANGED:       { label: "นัดรับแล้ว (COD)",          emoji: "🤝",  color: "text-amber-700 bg-amber-50 border-amber-200" },
-  MEETUP_CASH_COMPLETED: { label: "นัดรับ+จ่ายเงินสด สำเร็จ", emoji: "💵",  color: "text-green-700 bg-green-50 border-green-200" },
-  CANCELLED_BY_ADMIN:    { label: "ผู้ดูแลยกเลิก",            emoji: "🚫",  color: "text-red-700 bg-red-50 border-red-200" },
+  FUNDS_HELD:            { label: "รอจัดส่ง (Escrow)",         emoji: "🔒",  color: "text-[var(--c-accent-str)] bg-[var(--c-accent-soft)] border-[var(--c-line-str)]" },
+  SHIPPED:               { label: "จัดส่งแล้ว",                emoji: "📦",  color: "text-[var(--c-accent-str)] bg-[var(--c-accent-soft)] border-indigo-200" },
+  DELIVERED:             { label: "ได้รับสินค้าแล้ว",          emoji: "📬",  color: "text-[var(--c-ok)] bg-[var(--c-ok-soft)] border-[var(--c-ok-line)]" },
+  COMPLETED:             { label: "เสร็จสิ้น",                 emoji: "✅",  color: "text-[var(--c-ok)] bg-[var(--c-ok-soft)] border-[var(--c-ok-line)]" },
+  DISPUTED:              { label: "มีข้อพิพาท",               emoji: "⚠️",  color: "text-[var(--c-danger)] bg-[var(--c-danger-soft)] border-[var(--c-danger-line)]" },
+  CANCELLED:             { label: "ยกเลิกแล้ว",               emoji: "❌",  color: "text-[var(--c-ink-3)] bg-[var(--c-subtle)] border-[var(--c-line)]" },
+  REFUNDED:              { label: "คืนเงินแล้ว",              emoji: "💰",  color: "text-[var(--c-warn)] bg-[var(--c-warn-soft)] border-[var(--c-warn-line)]" },
+  PENDING_CONFIRMATION:  { label: "รอผู้ขายยืนยัน",           emoji: "⏳",  color: "text-[var(--c-warn)] bg-[var(--c-warn-soft)] border-[var(--c-warn-line)]" },
+  MEETUP_SCHEDULED:      { label: "นัดรับแล้ว (Escrow)",       emoji: "🤝",  color: "text-[var(--c-accent-str)] bg-[var(--c-accent-soft)] border-[var(--c-line-str)]" },
+  MEETUP_COMPLETED:      { label: "นัดรับสำเร็จ",             emoji: "✅",  color: "text-[var(--c-ok)] bg-[var(--c-ok-soft)] border-[var(--c-ok-line)]" },
+  AWAITING_SHIPMENT:     { label: "รอจัดส่ง (COD)",            emoji: "📋",  color: "text-[var(--c-warn)] bg-[var(--c-warn-soft)] border-[var(--c-warn-line)]" },
+  COD_SHIPPED:           { label: "จัดส่งแล้ว (COD)",          emoji: "📦",  color: "text-[var(--c-accent-str)] bg-[var(--c-accent-soft)] border-indigo-200" },
+  COD_DELIVERED:         { label: "ได้รับ (COD)",              emoji: "📬",  color: "text-[var(--c-ok)] bg-[var(--c-ok-soft)] border-[var(--c-ok-line)]" },
+  MEETUP_ARRANGED:       { label: "นัดรับแล้ว (COD)",          emoji: "🤝",  color: "text-[var(--c-warn)] bg-[var(--c-warn-soft)] border-[var(--c-warn-line)]" },
+  MEETUP_CASH_COMPLETED: { label: "นัดรับ+จ่ายเงินสด สำเร็จ", emoji: "💵",  color: "text-[var(--c-ok)] bg-[var(--c-ok-soft)] border-[var(--c-ok-line)]" },
+  CANCELLED_BY_ADMIN:    { label: "ผู้ดูแลยกเลิก",            emoji: "🚫",  color: "text-[var(--c-danger)] bg-[var(--c-danger-soft)] border-[var(--c-danger-line)]" },
 };
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -93,7 +93,7 @@ export default function OrderTrackingClient({
 
   const isBuyer = order.buyerId === currentUserId;
   const isSeller = order.sellerId === currentUserId;
-  const st = STATUS_LABELS[order.status] ?? { label: order.status, emoji: "❓", color: "text-gray-600 bg-gray-50 border-gray-200" };
+  const st = STATUS_LABELS[order.status] ?? { label: order.status, emoji: "❓", color: "text-[var(--c-ink-3)] bg-[var(--c-subtle)] border-[var(--c-line)]" };
   const mainImage = order.item.images.find((i) => i.isMain) ?? order.item.images[0];
 
   // ── Actions ──────────────────────────────────────────────────────────
@@ -142,13 +142,13 @@ export default function OrderTrackingClient({
       {/* Back link */}
       <Link
         href="/dashboard/orders"
-        className="inline-flex items-center gap-1.5 text-sm text-[#64748b] hover:text-[#0f1e35] mb-6 transition"
+        className="inline-flex items-center gap-1.5 text-sm text-[var(--c-muted)] hover:text-[var(--c-ink)] mb-6 transition"
       >
         ← กลับไปรายการคำสั่งซื้อ
       </Link>
 
       {/* Header */}
-      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-6 mb-4 shadow-sm">
+      <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6 mb-4 shadow-sm">
         <div className="flex items-start gap-4">
           <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#e8e5df] flex-shrink-0 flex items-center justify-center">
             {mainImage?.url ? (
@@ -158,8 +158,8 @@ export default function OrderTrackingClient({
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <h1 className="text-lg font-extrabold text-[#0f1e35]">{order.item.title}</h1>
-            <p className="text-sm text-[#64748b] mt-0.5">
+            <h1 className="text-lg font-extrabold text-[var(--c-ink)]">{order.item.title}</h1>
+            <p className="text-sm text-[var(--c-muted)] mt-0.5">
               คำสั่งซื้อ #{order.id.slice(-8).toUpperCase()}
             </p>
             <div className={`inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full text-xs font-bold border ${st.color}`}>
@@ -171,11 +171,11 @@ export default function OrderTrackingClient({
       </div>
 
       {/* Delivery Info */}
-      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 mb-4 shadow-sm">
-        <h2 className="text-sm font-bold text-[#0f1e35] mb-3">📍 ข้อมูลการจัดส่ง</h2>
+      <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 mb-4 shadow-sm">
+        <h2 className="text-sm font-bold text-[var(--c-ink)] mb-3">📍 ข้อมูลการจัดส่ง</h2>
 
         {order.deliveryMethod === "SHIPPING" && order.shippingAddress ? (
-          <div className="text-sm text-[#3d4d66] space-y-1">
+          <div className="text-sm text-[var(--c-ink-2)] space-y-1">
             <p className="font-semibold">🚚 จัดส่งถึงที่อยู่</p>
             <p>{order.shippingAddress.recipientName}, {order.shippingAddress.phone}</p>
             <p>{order.shippingAddress.addressLine1}</p>
@@ -183,7 +183,7 @@ export default function OrderTrackingClient({
             <p>{order.shippingAddress.district}, {order.shippingAddress.province} {order.shippingAddress.postalCode}</p>
           </div>
         ) : order.deliveryMethod === "MEETUP" ? (
-          <div className="text-sm text-[#3d4d66] space-y-1">
+          <div className="text-sm text-[var(--c-ink-2)] space-y-1">
             <p className="font-semibold">🤝 นัดรับสินค้า</p>
             <p>📍 {order.meetupLocation}</p>
             {order.meetupDateTime && (
@@ -192,46 +192,46 @@ export default function OrderTrackingClient({
                 hour: "2-digit", minute: "2-digit",
               })}</p>
             )}
-            {order.meetupNote && <p className="text-[#64748b] italic">"{order.meetupNote}"</p>}
+            {order.meetupNote && <p className="text-[var(--c-muted)] italic">"{order.meetupNote}"</p>}
           </div>
         ) : (
-          <p className="text-sm text-[#64748b]">ไม่ระบุวิธีจัดส่ง (คำสั่งซื้อเดิม)</p>
+          <p className="text-sm text-[var(--c-muted)]">ไม่ระบุวิธีจัดส่ง (คำสั่งซื้อเดิม)</p>
         )}
 
         {/* Tracking info */}
         {order.trackingNumber && (
-          <div className="mt-3 pt-3 border-t border-[#dfe7f2]">
-            <p className="text-sm text-[#3d4d66]">
-              📦 เลขพัสดุ: <span className="font-bold text-[#0f1e35]">{order.trackingNumber}</span>
-              {order.trackingCarrier && <span className="text-[#64748b]"> ({order.trackingCarrier})</span>}
+          <div className="mt-3 pt-3 border-t border-[var(--c-line)]">
+            <p className="text-sm text-[var(--c-ink-2)]">
+              📦 เลขพัสดุ: <span className="font-bold text-[var(--c-ink)]">{order.trackingNumber}</span>
+              {order.trackingCarrier && <span className="text-[var(--c-muted)]"> ({order.trackingCarrier})</span>}
             </p>
           </div>
         )}
       </div>
 
       {/* Financial */}
-      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 mb-4 shadow-sm">
-        <h2 className="text-sm font-bold text-[#0f1e35] mb-3">💰 ข้อมูลการเงิน</h2>
+      <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 mb-4 shadow-sm">
+        <h2 className="text-sm font-bold text-[var(--c-ink)] mb-3">💰 ข้อมูลการเงิน</h2>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
-            <span className="text-[#3d4d66]">ราคาสินค้า</span>
+            <span className="text-[var(--c-ink-2)]">ราคาสินค้า</span>
             <span>฿{order.amount.toLocaleString()}</span>
           </div>
           {order.shippingCost > 0 && (
             <div className="flex justify-between">
-              <span className="text-[#3d4d66]">ค่าจัดส่ง</span>
+              <span className="text-[var(--c-ink-2)]">ค่าจัดส่ง</span>
               <span>฿{order.shippingCost.toLocaleString()}</span>
             </div>
           )}
           <div className="flex justify-between">
-            <span className="text-[#3d4d66]">ค่าธรรมเนียม</span>
+            <span className="text-[var(--c-ink-2)]">ค่าธรรมเนียม</span>
             <span>{order.platformFee > 0 ? `฿${order.platformFee.toLocaleString()}` : "฿0 (ฟรี)"}</span>
           </div>
-          <div className="flex justify-between font-bold text-[#0f1e35] border-t border-[#dfe7f2] pt-2">
+          <div className="flex justify-between font-bold text-[var(--c-ink)] border-t border-[var(--c-line)] pt-2">
             <span>รวมทั้งสิ้น</span>
             <span>฿{(order.totalAmount ?? order.amount).toLocaleString()}</span>
           </div>
-          <div className="flex justify-between text-xs text-[#64748b]">
+          <div className="flex justify-between text-xs text-[var(--c-muted)]">
             <span>การชำระเงิน</span>
             <span>{order.paymentMethod === "COD" ? "💵 เงินสด" : "💳 Escrow"}</span>
           </div>
@@ -239,40 +239,40 @@ export default function OrderTrackingClient({
       </div>
 
       {/* Parties */}
-      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 mb-4 shadow-sm">
-        <h2 className="text-sm font-bold text-[#0f1e35] mb-3">👤 คู่สัญญา</h2>
+      <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 mb-4 shadow-sm">
+        <h2 className="text-sm font-bold text-[var(--c-ink)] mb-3">👤 คู่สัญญา</h2>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <p className="text-xs text-[#64748b] font-semibold mb-1">ผู้ซื้อ</p>
-            <p className="font-bold text-[#0f1e35]">{order.buyer.name ?? order.buyer.email}</p>
-            {isBuyer && <span className="text-[10px] text-blue-600 font-bold">(คุณ)</span>}
+            <p className="text-xs text-[var(--c-muted)] font-semibold mb-1">ผู้ซื้อ</p>
+            <p className="font-bold text-[var(--c-ink)]">{order.buyer.name ?? order.buyer.email}</p>
+            {isBuyer && <span className="text-[10px] text-[var(--c-accent)] font-bold">(คุณ)</span>}
           </div>
           <div>
-            <p className="text-xs text-[#64748b] font-semibold mb-1">ผู้ขาย</p>
-            <p className="font-bold text-[#0f1e35]">{order.seller.name ?? order.seller.email}</p>
-            {isSeller && <span className="text-[10px] text-blue-600 font-bold">(คุณ)</span>}
+            <p className="text-xs text-[var(--c-muted)] font-semibold mb-1">ผู้ขาย</p>
+            <p className="font-bold text-[var(--c-ink)]">{order.seller.name ?? order.seller.email}</p>
+            {isSeller && <span className="text-[10px] text-[var(--c-accent)] font-bold">(คุณ)</span>}
           </div>
         </div>
       </div>
 
       {/* Status History Timeline */}
       {history.length > 0 && (
-        <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 mb-4 shadow-sm">
-          <h2 className="text-sm font-bold text-[#0f1e35] mb-3">📜 ประวัติสถานะ</h2>
+        <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 mb-4 shadow-sm">
+          <h2 className="text-sm font-bold text-[var(--c-ink)] mb-3">📜 ประวัติสถานะ</h2>
           <div className="space-y-3">
             {history.map((h: any, i: number) => {
               const hs = STATUS_LABELS[h.status];
               return (
                 <div key={i} className="flex items-start gap-3">
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs flex-shrink-0 ${
-                    i === history.length - 1 ? "bg-[#0f1e35] text-white" : "bg-[#dfe7f2] text-[#64748b]"
+                    i === history.length - 1 ? "bg-[var(--c-ink)] text-white" : "bg-[var(--c-line)] text-[var(--c-muted)]"
                   }`}>
                     {hs?.emoji ?? "·"}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#0f1e35]">{hs?.label ?? h.status}</p>
-                    <p className="text-xs text-[#64748b]">{h.note}</p>
-                    <p className="text-[10px] text-[#a3b0c2]">
+                    <p className="text-sm font-semibold text-[var(--c-ink)]">{hs?.label ?? h.status}</p>
+                    <p className="text-xs text-[var(--c-muted)]">{h.note}</p>
+                    <p className="text-[10px] text-[var(--c-faint-2)]">
                       {new Date(h.changedAt).toLocaleString("th-TH")}
                     </p>
                   </div>
@@ -284,8 +284,8 @@ export default function OrderTrackingClient({
       )}
 
       {/* Action Buttons */}
-      <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 shadow-sm space-y-3">
-        <h2 className="text-sm font-bold text-[#0f1e35] mb-1">⚡ การดำเนินการ</h2>
+      <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 shadow-sm space-y-3">
+        <h2 className="text-sm font-bold text-[var(--c-ink)] mb-1">⚡ การดำเนินการ</h2>
 
         {/* Seller: Ship */}
         {isSeller && (order.status === "FUNDS_HELD" || order.status === "AWAITING_SHIPMENT") && (
@@ -299,7 +299,7 @@ export default function OrderTrackingClient({
                 📦 จัดส่งสินค้า
               </button>
             ) : (
-              <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-4 space-y-3">
+              <div className="rounded-xl border border-indigo-200 bg-[var(--c-accent-soft)] p-4 space-y-3">
                 <input
                   type="text"
                   value={trackNum}
@@ -315,7 +315,7 @@ export default function OrderTrackingClient({
                   className="checkout-input"
                 />
                 <div className="flex gap-2">
-                  <button onClick={() => setShowShipForm(false)} className="flex-1 py-2.5 rounded-xl border border-[#dfe7f2] text-sm">
+                  <button onClick={() => setShowShipForm(false)} className="flex-1 py-2.5 rounded-xl border border-[var(--c-line)] text-sm">
                     ยกเลิก
                   </button>
                   <button
@@ -358,7 +358,7 @@ export default function OrderTrackingClient({
           <button
             onClick={handleCancel}
             disabled={isPending}
-            className="w-full py-3 rounded-xl border border-red-200 text-red-600 text-sm font-bold hover:bg-red-50 transition disabled:opacity-40"
+            className="w-full py-3 rounded-xl border border-[var(--c-danger-line)] text-[var(--c-danger)] text-sm font-bold hover:bg-[var(--c-danger-soft)] transition disabled:opacity-40"
           >
             ❌ ยกเลิกคำสั่งซื้อ
           </button>
@@ -366,14 +366,14 @@ export default function OrderTrackingClient({
 
         {/* Completed / Cancelled — no actions */}
         {["COMPLETED", "CANCELLED", "REFUNDED", "CANCELLED_BY_ADMIN"].includes(order.status) && (
-          <p className="text-center text-sm text-[#64748b] py-2">
+          <p className="text-center text-sm text-[var(--c-muted)] py-2">
             คำสั่งซื้อนี้ {order.status === "COMPLETED" ? "เสร็จสิ้นแล้ว" : "ถูกยกเลิกแล้ว"}
           </p>
         )}
 
         {/* Cancel info */}
         {order.cancelReason && (
-          <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-xs text-red-700">
+          <div className="rounded-lg bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] p-3 text-xs text-[var(--c-danger)]">
             <p className="font-semibold">เหตุผลที่ยกเลิก:</p>
             <p>{order.cancelReason}</p>
           </div>
@@ -382,7 +382,7 @@ export default function OrderTrackingClient({
         {/* Back to orders */}
         <Link
           href="/dashboard/orders"
-          className="block text-center py-2.5 text-sm text-[#64748b] hover:text-[#0f1e35] transition"
+          className="block text-center py-2.5 text-sm text-[var(--c-muted)] hover:text-[var(--c-ink)] transition"
         >
           ← กลับไปรายการทั้งหมด
         </Link>

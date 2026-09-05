@@ -74,7 +74,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
 
       {msg && !open && (
         <div role="status" className={`rounded-xl px-4 py-3 text-[13px] border ${
-          msg.ok ? "bg-[#e8f5ee] border-[#c3e3d1] text-[#1f6b45]" : "bg-[#fdecea] border-[#f6c9c4] text-[#b3261e]"
+          msg.ok ? "bg-[var(--c-ok-soft)] border-[var(--c-ok-line)] text-[var(--c-ok)]" : "bg-[var(--c-danger-soft)] border-[var(--c-danger-line)] text-[var(--c-danger)]"
         }`}>
           {msg.text}
         </div>
@@ -145,7 +145,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
                       {SOURCE_LABEL[e.source] ?? e.source}
                     </td>
                     <td className={`px-4 py-3 text-right bw-num font-semibold whitespace-nowrap ${
-                      e.kind === "OUT" ? "text-[#b3261e]" : "text-[#1f6b45]"
+                      e.kind === "OUT" ? "text-[var(--c-danger)]" : "text-[var(--c-ok)]"
                     }`}>
                       {e.kind === "OUT" ? "−" : "+"}{baht(e.amount)}
                     </td>
@@ -153,7 +153,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
                       <button
                         onClick={() => run(() => deleteFundEntry(e.id))}
                         disabled={pending}
-                        className="text-[12px] text-[var(--bw-muted)] hover:text-[#b3261e] transition"
+                        className="text-[12px] text-[var(--bw-muted)] hover:text-[var(--c-danger)] transition"
                       >
                         ลบ
                       </button>
@@ -170,7 +170,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
       {open && (
         <div className="fixed inset-0 z-[500] flex items-center justify-center p-4" role="dialog" aria-modal>
           <div className="absolute inset-0 bg-black/45 backdrop-blur-sm" onClick={pending ? undefined : () => setOpen(false)} />
-          <div className="relative bg-white rounded-2xl w-full max-w-lg p-6 border border-[var(--bw-line)]">
+          <div className="relative bg-[var(--c-surface)] rounded-2xl w-full max-w-lg p-6 border border-[var(--bw-line)]">
             <h2 className="text-[17px] font-semibold text-[var(--psu-navy)] mb-1">บันทึกรายการกองทุน</h2>
             <p className="text-[12px] text-[var(--bw-muted)] mb-5">
               คงเหลือตอนนี้ {baht(summary.balance)}
@@ -228,7 +228,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
                     <a href={form.receiptUrl} target="_blank" rel="noopener noreferrer" className="bw-thumb w-16 h-16">
                       <img src={form.receiptUrl} alt="" />
                     </a>
-                    <button onClick={() => setForm({ ...form, receiptUrl: "" })} className="text-[12px] text-[var(--bw-muted)] hover:text-[#b3261e]">
+                    <button onClick={() => setForm({ ...form, receiptUrl: "" })} className="text-[12px] text-[var(--bw-muted)] hover:text-[var(--c-danger)]">
                       ลบรูป
                     </button>
                   </div>
@@ -242,7 +242,7 @@ export default function FundClient({ summary, entries }: { summary: any; entries
 
               {msg && (
                 <div role="alert" className={`rounded-xl px-3.5 py-2.5 text-[12.5px] border ${
-                  msg.ok ? "bg-[#e8f5ee] border-[#c3e3d1] text-[#1f6b45]" : "bg-[#fdecea] border-[#f6c9c4] text-[#b3261e]"
+                  msg.ok ? "bg-[var(--c-ok-soft)] border-[var(--c-ok-line)] text-[var(--c-ok)]" : "bg-[var(--c-danger-soft)] border-[var(--c-danger-line)] text-[var(--c-danger)]"
                 }`}>
                   {msg.text}
                 </div>

@@ -12,8 +12,8 @@ function ImageCard({ label, url }: { label: string; url: string | null }) {
   if (!url) {
     return (
       <div className="space-y-2">
-        <p className="text-xs font-medium text-[#64748b] uppercase tracking-wide">{label}</p>
-        <div className="aspect-video bg-[#eaf0f8] rounded-xl flex items-center justify-center text-[#64748b] text-sm">
+        <p className="text-xs font-medium text-[var(--c-muted)] uppercase tracking-wide">{label}</p>
+        <div className="aspect-video bg-[var(--c-line-soft)] rounded-xl flex items-center justify-center text-[var(--c-muted)] text-sm">
           ไม่มีรูป
         </div>
       </div>
@@ -22,9 +22,9 @@ function ImageCard({ label, url }: { label: string; url: string | null }) {
 
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium text-[#64748b] uppercase tracking-wide">{label}</p>
+      <p className="text-xs font-medium text-[var(--c-muted)] uppercase tracking-wide">{label}</p>
       <a href={url} target="_blank" rel="noopener noreferrer" className="block group">
-        <div className="relative aspect-video bg-[#eaf0f8] rounded-xl overflow-hidden">
+        <div className="relative aspect-video bg-[var(--c-line-soft)] rounded-xl overflow-hidden">
           <Image
             src={url}
             alt={label}
@@ -77,9 +77,9 @@ export default async function VerificationDetailPage({
   });
 
   const STATUS_BADGE: Record<string, string> = {
-    PENDING:  "bg-amber-100 text-amber-700",
-    APPROVED: "bg-emerald-100 text-emerald-700",
-    REJECTED: "bg-red-100 text-red-700",
+    PENDING:  "bg-[var(--c-warn-soft)] text-[var(--c-warn)]",
+    APPROVED: "bg-emerald-100 text-[var(--c-ok)]",
+    REJECTED: "bg-[var(--c-danger-soft)] text-[var(--c-danger)]",
   };
 
   return (
@@ -87,7 +87,7 @@ export default async function VerificationDetailPage({
       {/* Back */}
       <Link
         href="/admin/verifications"
-        className="inline-flex items-center gap-1.5 text-sm text-[#64748b] hover:text-[#0f1e35] transition"
+        className="inline-flex items-center gap-1.5 text-sm text-[var(--c-muted)] hover:text-[var(--c-ink)] transition"
       >
         ← กลับรายการ
       </Link>
@@ -95,10 +95,10 @@ export default async function VerificationDetailPage({
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-[#0f1e35]">ตรวจสอบคำขอยืนยันตัวตน</h1>
-          <p className="text-sm text-[#64748b] mt-0.5 font-mono">{request.id}</p>
+          <h1 className="text-xl font-bold text-[var(--c-ink)]">ตรวจสอบคำขอยืนยันตัวตน</h1>
+          <p className="text-sm text-[var(--c-muted)] mt-0.5 font-mono">{request.id}</p>
         </div>
-        <span className={`px-3 py-1.5 rounded-full text-sm font-semibold ${STATUS_BADGE[request.status] ?? "bg-gray-100 text-gray-700"}`}>
+        <span className={`px-3 py-1.5 rounded-full text-sm font-semibold ${STATUS_BADGE[request.status] ?? "bg-[var(--c-line-soft)] text-[var(--c-ink-2)]"}`}>
           {request.status === "PENDING" ? "รอตรวจสอบ" : request.status === "APPROVED" ? "อนุมัติแล้ว" : "ปฏิเสธแล้ว"}
         </span>
       </div>
@@ -107,8 +107,8 @@ export default async function VerificationDetailPage({
         {/* Left: Images */}
         <div className="lg:col-span-2 space-y-6">
           {/* ID Card */}
-          <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 space-y-4">
-            <h2 className="font-semibold text-[#0f1e35]">บัตรประจำตัว</h2>
+          <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 space-y-4">
+            <h2 className="font-semibold text-[var(--c-ink)]">บัตรประจำตัว</h2>
             <div className="grid grid-cols-2 gap-4">
               <ImageCard label="ด้านหน้า" url={request.idCardImageUrl} />
               <ImageCard label="ด้านหลัง" url={request.idCardBackUrl} />
@@ -116,8 +116,8 @@ export default async function VerificationDetailPage({
           </div>
 
           {/* Face liveness */}
-          <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 space-y-4">
-            <h2 className="font-semibold text-[#0f1e35]">Face Liveness</h2>
+          <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 space-y-4">
+            <h2 className="font-semibold text-[var(--c-ink)]">Face Liveness</h2>
             <SelfieGrid request={request} />
           </div>
         </div>
@@ -125,8 +125,8 @@ export default async function VerificationDetailPage({
         {/* Right: Info + Review */}
         <div className="space-y-4">
           {/* Applicant info */}
-          <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5 space-y-3">
-            <h2 className="font-semibold text-[#0f1e35]">ข้อมูลผู้สมัคร</h2>
+          <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 space-y-3">
+            <h2 className="font-semibold text-[var(--c-ink)]">ข้อมูลผู้สมัคร</h2>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2.5">
                 {request.user.image ? (
@@ -134,17 +134,17 @@ export default async function VerificationDetailPage({
                     <Image src={request.user.image} alt="" fill className="object-cover" />
                   </div>
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-[#dfe7f2] flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-[var(--c-line)] flex items-center justify-center text-sm font-bold flex-shrink-0">
                     {request.user.name?.[0]?.toUpperCase() ?? "?"}
                   </div>
                 )}
                 <div>
-                  <p className="font-medium text-[#0f1e35]">{request.user.name ?? "—"}</p>
-                  <p className="text-xs text-[#64748b]">{request.user.email}</p>
+                  <p className="font-medium text-[var(--c-ink)]">{request.user.name ?? "—"}</p>
+                  <p className="text-xs text-[var(--c-muted)]">{request.user.email}</p>
                 </div>
               </div>
 
-              <hr className="border-[#dfe7f2]" />
+              <hr className="border-[var(--c-line)]" />
 
               {[
                 { label: "ประเภท", value: request.psuIdType === "STUDENT" ? "นักศึกษา" : "บุคลากร" },
@@ -154,21 +154,21 @@ export default async function VerificationDetailPage({
                 { label: "ส่งเมื่อ", value: submittedDate },
               ].map(({ label, value, mono }) => (
                 <div key={label} className="flex justify-between gap-2">
-                  <span className="text-[#64748b]">{label}</span>
-                  <span className={`font-medium text-[#1e2d47] text-right ${mono ? "font-mono" : ""}`}>{value}</span>
+                  <span className="text-[var(--c-muted)]">{label}</span>
+                  <span className={`font-medium text-[var(--c-ink-1)] text-right ${mono ? "font-mono" : ""}`}>{value}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Review panel */}
-          <div className="bg-white rounded-2xl border border-[#dfe7f2] p-5">
+          <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
             <ReviewPanel request={request} />
           </div>
 
           {/* Previous rejection */}
           {request.status === "REJECTED" && request.rejectionReason && (
-            <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-sm text-red-700">
+            <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-2xl p-4 text-sm text-[var(--c-danger)]">
               <p className="font-semibold mb-1">เหตุผลที่ปฏิเสธก่อนหน้า</p>
               <p>{request.rejectionReason}</p>
             </div>

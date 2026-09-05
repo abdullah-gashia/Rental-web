@@ -19,8 +19,8 @@ export default function TrendingCarousel() {
 
   const renderCard = (card: TrendCard, i: number) => {
     const bg = card.grad ? { background: card.grad } : { background: card.bg, border: card.border };
-    const textColor = card.dark ? "#fff" : "#0f1e35";
-    const subColor = card.dark ? "rgba(255,255,255,0.6)" : "#64748b";
+    const textColor = card.dark ? "#fff" : "var(--c-ink)";
+    const subColor = card.dark ? "rgba(255,255,255,0.6)" : "var(--c-muted)";
     const label = locale === "en" ? card.labelEn : card.labelTh;
     const sub = locale === "en" ? card.subEn : card.subTh;
 
@@ -43,8 +43,8 @@ export default function TrendingCarousel() {
     <section className="mb-12">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold tracking-tight">{t("trending_title")}</h2>
-        <span className="flex items-center gap-1.5 text-xs font-medium text-[#2563eb]">
-          <span className="w-2 h-2 bg-[#2563eb] rounded-full animate-pulse" />
+        <span className="flex items-center gap-1.5 text-xs font-medium text-[var(--c-accent)]">
+          <span className="w-2 h-2 bg-[var(--c-accent)] rounded-full animate-pulse" />
           Live
         </span>
       </div>

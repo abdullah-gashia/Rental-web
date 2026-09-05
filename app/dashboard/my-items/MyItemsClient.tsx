@@ -53,14 +53,14 @@ function isGraceExpired(scheduledAt: string): boolean {
 // ─── Status badge ─────────────────────────────────────
 
 const STATUS_CONFIG: Record<string, { label: string; bg: string; text: string; dot: string }> = {
-  PENDING:     { label: "รอตรวจสอบ",   bg: "bg-yellow-50",  text: "text-yellow-700", dot: "bg-yellow-400" },
-  APPROVED:    { label: "อนุมัติแล้ว", bg: "bg-green-50",   text: "text-green-700",  dot: "bg-green-500"  },
-  REJECTED:    { label: "ถูกปฏิเสธ",   bg: "bg-red-50",     text: "text-red-700",    dot: "bg-red-500"    },
-  UNAVAILABLE: { label: "ถูกลบ",       bg: "bg-gray-100",   text: "text-gray-500",   dot: "bg-gray-400"   },
-  ACTIVE:      { label: "เผยแพร่",     bg: "bg-green-50",   text: "text-green-700",  dot: "bg-green-500"  },
-  SOLD:        { label: "ขายแล้ว",     bg: "bg-blue-50",    text: "text-blue-700",   dot: "bg-blue-400"   },
+  PENDING:     { label: "รอตรวจสอบ",   bg: "bg-[var(--c-warn-soft)]",  text: "text-[var(--c-warn)]", dot: "bg-yellow-400" },
+  APPROVED:    { label: "อนุมัติแล้ว", bg: "bg-[var(--c-ok-soft)]",   text: "text-[var(--c-ok)]",  dot: "bg-green-500"  },
+  REJECTED:    { label: "ถูกปฏิเสธ",   bg: "bg-[var(--c-danger-soft)]",     text: "text-[var(--c-danger)]",    dot: "bg-red-500"    },
+  UNAVAILABLE: { label: "ถูกลบ",       bg: "bg-[var(--c-line-soft)]",   text: "text-[var(--c-muted)]",   dot: "bg-gray-400"   },
+  ACTIVE:      { label: "เผยแพร่",     bg: "bg-[var(--c-ok-soft)]",   text: "text-[var(--c-ok)]",  dot: "bg-green-500"  },
+  SOLD:        { label: "ขายแล้ว",     bg: "bg-[var(--c-accent-soft)]",    text: "text-[var(--c-accent-str)]",   dot: "bg-blue-400"   },
   RENTED:      { label: "ให้เช่าอยู่",  bg: "bg-purple-50",  text: "text-purple-700", dot: "bg-purple-400" },
-  EXPIRED:     { label: "หมดอายุ",     bg: "bg-gray-100",   text: "text-gray-500",   dot: "bg-gray-400"   },
+  EXPIRED:     { label: "หมดอายุ",     bg: "bg-[var(--c-line-soft)]",   text: "text-[var(--c-muted)]",   dot: "bg-gray-400"   },
 };
 
 // ─── Filters ──────────────────────────────────────────
@@ -79,7 +79,7 @@ const FILTERS: { key: FilterKey; label: string }[] = [
 
 function StatusBadge({ status }: { status: ItemStatus }) {
   const cfg = STATUS_CONFIG[status] ?? {
-    label: status, bg: "bg-gray-100", text: "text-gray-600", dot: "bg-gray-400",
+    label: status, bg: "bg-[var(--c-line-soft)]", text: "text-[var(--c-ink-3)]", dot: "bg-gray-400",
   };
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${cfg.bg} ${cfg.text}`}>
@@ -102,24 +102,24 @@ function DeleteModal({
   return (
     <div className="fixed inset-0 z-[300] flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 fade-up">
+      <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 fade-up">
         <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-[var(--c-warn)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h3 className="text-lg font-bold text-[#0f1e35] text-center mb-2">กำหนดลบสินค้า?</h3>
-        <p className="text-sm text-[#3d4d66] text-center mb-1 px-2">
+        <h3 className="text-lg font-bold text-[var(--c-ink)] text-center mb-2">กำหนดลบสินค้า?</h3>
+        <p className="text-sm text-[var(--c-ink-2)] text-center mb-1 px-2">
           สินค้า <span className="font-semibold">&ldquo;{item.title}&rdquo;</span> จะถูกลบออกหลังจาก
         </p>
-        <p className="text-sm font-bold text-orange-600 text-center mb-4">24 ชั่วโมง</p>
-        <div className="bg-orange-50 border border-orange-200 rounded-xl px-4 py-3 mb-6 text-xs text-orange-700 text-center">
+        <p className="text-sm font-bold text-[var(--c-warn)] text-center mb-4">24 ชั่วโมง</p>
+        <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-4 py-3 mb-6 text-xs text-[var(--c-warn)] text-center">
           คุณสามารถ <span className="font-semibold">ยกเลิก</span>การลบได้ตลอดระหว่าง 24 ชั่วโมงนี้
         </div>
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-medium text-[#3d4d66] hover:bg-[#f1f5fb] transition"
+            className="flex-1 px-4 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-medium text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition"
           >
             ยกเลิก
           </button>
@@ -302,14 +302,14 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
             // ── Card styles ──────────────────────────────
             const cardClass = isScheduled
               ? expired
-                ? "bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300 p-4 flex gap-4 items-start opacity-60"
-                : "bg-red-50/40 rounded-2xl border-2 border-red-300 p-4 flex gap-4 items-start"
-              : "bg-white rounded-2xl border border-[#dfe7f2] p-4 flex gap-4 items-start hover:shadow-sm transition";
+                ? "bg-[var(--c-subtle)] rounded-2xl border-2 border-dashed border-[var(--c-line-str)] p-4 flex gap-4 items-start opacity-60"
+                : "bg-[var(--c-danger-soft)]/40 rounded-2xl border-2 border-[var(--c-danger-line)] p-4 flex gap-4 items-start"
+              : "bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-4 flex gap-4 items-start hover:shadow-sm transition";
 
             return (
               <div key={item.id} className={cardClass}>
                 {/* Thumbnail */}
-                <div className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden flex items-center justify-center ${isScheduled ? "bg-[#eaf0f8] opacity-70" : "bg-[#eaf0f8]"}`}>
+                <div className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden flex items-center justify-center ${isScheduled ? "bg-[var(--c-line-soft)] opacity-70" : "bg-[var(--c-line-soft)]"}`}>
                   {imgUrl ? (
                     <img src={imgUrl} alt={item.title} className="w-full h-full object-contain" />
                   ) : (
@@ -322,14 +322,14 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                   {/* Title row */}
                   <div className="flex items-start justify-between gap-2 flex-wrap">
                     <div className="min-w-0">
-                      <h3 className={`text-sm font-semibold truncate ${isScheduled ? "text-[#666] line-through" : "text-[#0f1e35]"}`}>
+                      <h3 className={`text-sm font-semibold truncate ${isScheduled ? "text-[#666] line-through" : "text-[var(--c-ink)]"}`}>
                         {item.title}
                       </h3>
-                      <p className="text-xs text-[#5b6b82] mt-0.5">{item.category.nameTh}</p>
+                      <p className="text-xs text-[var(--c-ink-3)] mt-0.5">{item.category.nameTh}</p>
                     </div>
                     <div className="flex-shrink-0">
                       {isScheduled ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-700">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-100 text-[var(--c-warn)]">
                           <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
                           รอลบ
                         </span>
@@ -340,26 +340,26 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                   </div>
 
                   {/* Price */}
-                  <p className={`text-base font-bold mt-2 ${isScheduled ? "text-[#94a3b8] line-through" : "text-[#2563eb]"}`}>
+                  <p className={`text-base font-bold mt-2 ${isScheduled ? "text-[var(--c-faint)] line-through" : "text-[var(--c-accent)]"}`}>
                     ฿{item.price.toLocaleString()}
                     {item.listingType === "RENT" && <span className="text-xs font-normal">/เดือน</span>}
                   </p>
 
                   {/* ── Countdown banner (grace period active) ── */}
                   {isScheduled && !expired && expiry && (
-                    <div className="mt-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5">
+                    <div className="mt-2 bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-3 py-2.5">
                       <div className="flex items-center gap-2 mb-1">
-                        <svg className="w-4 h-4 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-[var(--c-danger)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span className="text-xs font-semibold text-red-700">กำลังจะถูกลบใน</span>
+                        <span className="text-xs font-semibold text-[var(--c-danger)]">กำลังจะถูกลบใน</span>
                         <CountdownTimer
                           targetDate={expiry}
-                          className="text-xs font-bold text-red-700"
+                          className="text-xs font-bold text-[var(--c-danger)]"
                           onExpire={() => router.refresh()}
                         />
                       </div>
-                      <p className="text-[11px] text-red-600 leading-relaxed">
+                      <p className="text-[11px] text-[var(--c-danger)] leading-relaxed">
                         สินค้ายังปรากฏต่อผู้ซื้อพร้อมคำเตือน คุณสามารถยกเลิกได้ก่อนหมดเวลา
                       </p>
                     </div>
@@ -367,21 +367,21 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
 
                   {/* ── Expired grace period ── */}
                   {isScheduled && expired && (
-                    <div className="mt-2 bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 flex items-center gap-2">
-                      <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="mt-2 bg-[var(--c-line-soft)] border border-[var(--c-line)] rounded-xl px-3 py-2 flex items-center gap-2">
+                      <svg className="w-4 h-4 text-[var(--c-faint)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
-                      <p className="text-xs text-gray-500">หมดเวลา — สินค้าถูกลบออกจากหน้าหลักแล้ว</p>
+                      <p className="text-xs text-[var(--c-muted)]">หมดเวลา — สินค้าถูกลบออกจากหน้าหลักแล้ว</p>
                     </div>
                   )}
 
                   {/* Reject reason (normal items only) */}
                   {!isScheduled && item.status === "REJECTED" && item.rejectReason && (
-                    <div className="mt-2 flex items-start gap-2 bg-red-50 border border-red-100 rounded-xl px-3 py-2">
-                      <svg className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="mt-2 flex items-start gap-2 bg-[var(--c-danger-soft)] border border-red-100 rounded-xl px-3 py-2">
+                      <svg className="w-4 h-4 text-[var(--c-danger)] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
-                      <p className="text-xs text-red-700">
+                      <p className="text-xs text-[var(--c-danger)]">
                         <span className="font-semibold">เหตุผล:</span> {item.rejectReason}
                       </p>
                     </div>
@@ -389,11 +389,11 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
 
                   {/* Pending note (normal items only) */}
                   {!isScheduled && item.status === "PENDING" && (
-                    <div className="mt-2 flex items-center gap-2 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                    <div className="mt-2 flex items-center gap-2 bg-[var(--c-warn-soft)] border border-yellow-100 rounded-xl px-3 py-2">
                       <svg className="w-4 h-4 text-yellow-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      <p className="text-xs text-yellow-700">รอผู้ดูแลระบบตรวจสอบ อาจใช้เวลา 1–24 ชั่วโมง</p>
+                      <p className="text-xs text-[var(--c-warn)]">รอผู้ดูแลระบบตรวจสอบ อาจใช้เวลา 1–24 ชั่วโมง</p>
                     </div>
                   )}
 
@@ -405,7 +405,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                         <button
                           onClick={() => handleCancelDeletion(item)}
                           disabled={isPending}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-green-300 bg-green-50 text-xs font-semibold text-green-700 hover:bg-green-100 transition disabled:opacity-50"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-green-300 bg-[var(--c-ok-soft)] text-xs font-semibold text-[var(--c-ok)] hover:bg-[var(--c-ok-soft)] transition disabled:opacity-50"
                         >
                           {isPending ? (
                             <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -426,7 +426,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                         <>
                           <a
                             href={`/dashboard/edit/${item.id}`}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#dfe7f2] text-xs font-medium text-[#1e2d47] hover:bg-[#f1f5fb] transition"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--c-line)] text-xs font-medium text-[var(--c-ink-1)] hover:bg-[var(--c-canvas)] transition"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -435,7 +435,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                           </a>
                           <button
                             onClick={() => setDeleteTarget(item)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-orange-200 text-xs font-medium text-orange-600 hover:bg-orange-50 transition"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--c-warn-line)] text-xs font-medium text-[var(--c-warn)] hover:bg-[var(--c-warn-soft)] transition"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

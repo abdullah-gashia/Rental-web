@@ -47,28 +47,28 @@ export default function ReasonDialog({
       />
 
       {/* Panel */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
-        <h3 className="text-base font-bold text-[#0f1e35]">{title}</h3>
+      <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
+        <h3 className="text-base font-bold text-[var(--c-ink)]">{title}</h3>
 
         {/* Reason textarea */}
         <div>
-          <label className="text-sm text-[#3d4d66] font-medium block mb-1.5">
-            เหตุผล <span className="text-red-500">*</span>
+          <label className="text-sm text-[var(--c-ink-2)] font-medium block mb-1.5">
+            เหตุผล <span className="text-[var(--c-danger)]">*</span>
           </label>
           <textarea
-            className="w-full border border-[#dfe7f2] rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 focus:border-[#2563eb] transition"
+            className="w-full border border-[var(--c-line)] rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/20 focus:border-[var(--c-accent)] transition"
             placeholder="ระบุเหตุผล..."
             rows={3}
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             maxLength={500}
           />
-          <p className="text-xs text-[#94a3b8] text-right mt-1">{reason.length}/500</p>
+          <p className="text-xs text-[var(--c-faint)] text-right mt-1">{reason.length}/500</p>
         </div>
 
         {/* Quick reason chips */}
         <div>
-          <p className="text-xs text-[#8494a9] mb-2">เหตุผลที่พบบ่อย:</p>
+          <p className="text-xs text-[var(--c-faint)] mb-2">เหตุผลที่พบบ่อย:</p>
           <div className="flex flex-wrap gap-1.5">
             {COMMON_REASONS.map((r) => (
               <button
@@ -77,8 +77,8 @@ export default function ReasonDialog({
                 onClick={() => setReason(r)}
                 className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                   reason === r
-                    ? "bg-[#2563eb] text-white border-[#2563eb]"
-                    : "bg-[#f7f9fd] text-[#3d4d66] border-[#dfe7f2] hover:border-[#c5c2bc]"
+                    ? "bg-[var(--c-accent)] text-white border-[var(--c-accent)]"
+                    : "bg-[var(--c-subtle)] text-[var(--c-ink-2)] border-[var(--c-line)] hover:border-[#c5c2bc]"
                 }`}
               >
                 {r}
@@ -88,7 +88,7 @@ export default function ReasonDialog({
         </div>
 
         {/* Warning */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 text-xs text-amber-700 flex items-start gap-2">
+        <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-xl px-3 py-2 text-xs text-[var(--c-warn)] flex items-start gap-2">
           <span className="mt-0.5">⚠️</span>
           <span>ผู้ขายจะได้รับแจ้งเตือนพร้อมเหตุผล</span>
         </div>
@@ -99,7 +99,7 @@ export default function ReasonDialog({
             type="button"
             onClick={handleClose}
             disabled={loading}
-            className="flex-1 py-2.5 rounded-xl border border-[#dfe7f2] text-sm font-semibold text-[#3d4d66] hover:bg-[#f1f5fb] transition disabled:opacity-50"
+            className="flex-1 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-semibold text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
           >
             ยกเลิก
           </button>
@@ -108,7 +108,7 @@ export default function ReasonDialog({
             onClick={handleConfirm}
             disabled={loading || !reason.trim()}
             className={`flex-1 py-2.5 rounded-xl text-sm font-bold text-white transition disabled:opacity-50 flex items-center justify-center gap-2 ${
-              danger ? "bg-red-600 hover:bg-red-700" : "bg-[#2563eb] hover:bg-[#1d4ed8]"
+              danger ? "bg-red-600 hover:bg-red-700" : "bg-[var(--c-accent)] hover:bg-[var(--c-accent-str)]"
             }`}
           >
             {loading && (

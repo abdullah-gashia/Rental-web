@@ -143,7 +143,7 @@ function SpotlightCard({ featured, onClick }: { featured: FeaturedItemDisplay; o
       <div className="hp-hero-scrim" />
 
       <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 z-10">
-        <span className="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-md bg-white/15 backdrop-blur-sm border border-white/25 text-white text-[11px] font-semibold mb-3">
+        <span className="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-md bg-[var(--c-surface)]/15 backdrop-blur-sm border border-white/25 text-white text-[11px] font-semibold mb-3">
           {customLabel ?? "กำลังมาแรง"}
         </span>
 
@@ -152,7 +152,7 @@ function SpotlightCard({ featured, onClick }: { featured: FeaturedItemDisplay; o
         </h2>
 
         <div className="flex flex-wrap items-center gap-3 mt-4">
-          <span className="hp-btn bg-white text-[var(--psu-navy)] hover:bg-white/90 h-9 px-5">
+          <span className="hp-btn bg-[var(--c-surface)] text-[var(--psu-navy)] hover:bg-[var(--c-surface)]/90 h-9 px-5">
             ดูรายละเอียด
           </span>
           <span className="hp-num text-white text-[15px] font-medium">
@@ -160,7 +160,7 @@ function SpotlightCard({ featured, onClick }: { featured: FeaturedItemDisplay; o
           </span>
           {item.seller.name && (
             <span className="text-white/70 text-[12.5px] flex items-center gap-1.5">
-              <span className="w-px h-3.5 bg-white/25" />
+              <span className="w-px h-3.5 bg-[var(--c-surface)]/25" />
               {item.seller.name}
             </span>
           )}

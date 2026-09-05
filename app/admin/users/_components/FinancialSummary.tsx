@@ -18,8 +18,8 @@ export default function FinancialSummary({ data }: Props) {
   const hasEscrow = data.escrowOrders.length > 0;
 
   return (
-    <div className="p-4 bg-[#f7f9fd] rounded-xl border border-[#dfe7f2] space-y-3">
-      <h3 className="text-xs font-semibold text-[#3d4d66] uppercase tracking-wider flex items-center gap-1.5">
+    <div className="p-4 bg-[var(--c-subtle)] rounded-xl border border-[var(--c-line)] space-y-3">
+      <h3 className="text-xs font-semibold text-[var(--c-ink-2)] uppercase tracking-wider flex items-center gap-1.5">
         💰 สรุปการเงิน
       </h3>
 
@@ -59,8 +59,8 @@ export default function FinancialSummary({ data }: Props) {
 
       {/* Escrow order details */}
       {hasEscrow && (
-        <div className="border-t border-[#dfe7f2] pt-3">
-          <p className="text-xs font-medium text-[#5b6b82] mb-2 flex items-center gap-1">
+        <div className="border-t border-[var(--c-line)] pt-3">
+          <p className="text-xs font-medium text-[var(--c-ink-3)] mb-2 flex items-center gap-1">
             ⚠️ รายการ Escrow ที่ยังดำเนินอยู่:
           </p>
           <div className="space-y-0.5 max-h-[200px] overflow-y-auto">
@@ -74,18 +74,18 @@ export default function FinancialSummary({ data }: Props) {
               return (
                 <div
                   key={order.id}
-                  className="flex items-center justify-between text-sm py-2 px-2 rounded-lg hover:bg-white transition"
+                  className="flex items-center justify-between text-sm py-2 px-2 rounded-lg hover:bg-[var(--c-surface)] transition"
                 >
                   <div className="min-w-0 flex-1">
-                    <span className="text-[10px] text-[#64748b] bg-[#eaf0f8] px-1.5 py-0.5 rounded mr-1.5">
+                    <span className="text-[10px] text-[var(--c-muted)] bg-[var(--c-line-soft)] px-1.5 py-0.5 rounded mr-1.5">
                       {role}
                     </span>
-                    <span className="text-[#1e2d47] text-xs truncate">
+                    <span className="text-[var(--c-ink-1)] text-xs truncate">
                       {order.itemTitle}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                    <span className="text-xs font-medium text-[#1e2d47]">
+                    <span className="text-xs font-medium text-[var(--c-ink-1)]">
                       ฿{fmt(amount)}
                     </span>
                     <StatusBadge status={order.status} type="order" />
@@ -111,17 +111,17 @@ function FinRow({
   badgeColor: string;
 }) {
   const colors: Record<string, string> = {
-    green:  "text-green-700 bg-green-50",
-    yellow: "text-yellow-700 bg-yellow-50",
-    blue:   "text-blue-700 bg-blue-50",
-    gray:   "text-gray-500 bg-gray-50",
+    green:  "text-[var(--c-ok)] bg-[var(--c-ok-soft)]",
+    yellow: "text-[var(--c-warn)] bg-[var(--c-warn-soft)]",
+    blue:   "text-[var(--c-accent-str)] bg-[var(--c-accent-soft)]",
+    gray:   "text-[var(--c-muted)] bg-[var(--c-subtle)]",
   };
 
   return (
     <div className="flex items-center justify-between">
       <div>
-        <p className="text-xs text-[#64748b]">{label}</p>
-        <p className="text-sm font-semibold text-[#0f1e35]">฿{fmt(amount)}</p>
+        <p className="text-xs text-[var(--c-muted)]">{label}</p>
+        <p className="text-sm font-semibold text-[var(--c-ink)]">฿{fmt(amount)}</p>
       </div>
       <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${colors[badgeColor] ?? colors.gray}`}>
         {badge}
