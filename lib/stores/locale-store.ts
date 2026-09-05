@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import { type Locale, type DictionaryKey, translate } from "@/lib/i18n/dictionaries";
 import { translatePhrase } from "@/lib/i18n/phrases";
+import { rememberLanguage } from "@/lib/actions/language";
 
 /**
  * Language, held in a cookie and nothing else.
@@ -46,8 +47,14 @@ export const useLocaleStore = create<LocaleState>((set, get) => ({
     writeCookie(locale);
     set({ locale });
     // Server components already rendered in the old language, so the page has
-    // to come back from the server before the change is complete.
-    if (typeof window !== "undefined") window.location.reload();
+    // to come back from the server before the change is complete. The account's
+    // copy is written first — reloading straight away would cut the request
+    // off — but a failure there must not stop the reload, so it is a finally.
+    if (typeof window !== "undefined") {
+      // Keeps the settings page from showing one language while the page it
+      // sits on is rendered in another.
+      void rememberLanguage(locale).finally(() => window.location.reload());
+    }
   },
 
   toggleLocale: () => get().setLocale(get().locale === "th" ? "en" : "th"),
