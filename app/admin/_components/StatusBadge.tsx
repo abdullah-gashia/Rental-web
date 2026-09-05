@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 // Server Component — no interactivity needed.
 
 type BadgeSpec = { label: string; cls: string };
@@ -56,7 +57,8 @@ interface StatusBadgeProps {
   type:   "user" | "role" | "item" | "order";
 }
 
-export default function StatusBadge({ status, type }: StatusBadgeProps) {
+export default async function StatusBadge({ status, type }: StatusBadgeProps) {
+  const tr = await getTr();
   const spec = MAPS[type][status] ?? {
     label: status,
     cls:   "bg-[var(--c-subtle)] text-[var(--c-ink-3)] border-[var(--c-line)]",
@@ -65,7 +67,7 @@ export default function StatusBadge({ status, type }: StatusBadgeProps) {
     <span
       className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap ${spec.cls}`}
     >
-      {spec.label}
+      {tr(spec.label)}
     </span>
   );
 }

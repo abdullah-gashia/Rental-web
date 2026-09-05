@@ -202,7 +202,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
               <div key={group.label}>
                 {/* Day label */}
                 <div className="px-4 py-2.5 bg-[var(--c-subtle)]">
-                  <p className="text-xs font-bold text-[var(--c-muted)] uppercase tracking-wide">{group.label}</p>
+                  <p className="text-xs font-bold text-[var(--c-muted)] uppercase tracking-wide">{tr(group.label)}</p>
                 </div>
                 {group.items.map((ix) => (
                   <div key={ix.id} className="flex items-center gap-3 px-4 py-3 hover:bg-[var(--c-subtle)] transition">

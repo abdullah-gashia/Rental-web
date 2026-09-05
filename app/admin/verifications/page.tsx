@@ -76,7 +76,7 @@ export default async function AdminVerificationsPage({
                   : "text-[var(--c-muted)] hover:text-[var(--c-ink-2)]"
               }`}
             >
-              {tab.label}
+              {tr(tab.label)}
               {count > 0 && (
                 <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold ${
                   isActive && tab.value === "PENDING"

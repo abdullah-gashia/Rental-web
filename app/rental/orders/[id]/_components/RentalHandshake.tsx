@@ -225,7 +225,7 @@ export default function RentalHandshake({
                   condition === c.value ? c.color : "border-[var(--c-line)] text-[var(--c-ink-2)]"
                 }`}
               >
-                {c.label}
+                {tr(c.label)}
               </button>
             ))}
           </div>

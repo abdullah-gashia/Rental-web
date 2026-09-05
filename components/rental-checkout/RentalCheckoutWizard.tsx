@@ -155,7 +155,7 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
               </div>
               <span className={`text-[10px] hidden sm:block ${
                 state.step === s.num ? "text-[var(--c-ink)] font-semibold" : "text-[var(--c-faint)]"
-              }`}>{s.label}</span>
+              }`}>{tr(s.label)}</span>
               {i < STEPS.length - 1 && (
                 <div className={`flex-1 h-0.5 mx-1 ${
                   state.step > s.num ? "bg-[var(--c-accent)]" : "bg-[var(--c-line-soft)]"

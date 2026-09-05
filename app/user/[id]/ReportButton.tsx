@@ -89,7 +89,7 @@ export default function ReportButton({
                         : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:bg-[var(--c-canvas)]"
                     }`}
                   >
-                    {c.label}
+                    {tr(c.label)}
                   </button>
                 ))}
               </div>

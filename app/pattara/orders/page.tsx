@@ -50,7 +50,7 @@ export default async function OfficeOrdersPage({
             href={x.key ? `/pattara/orders?f=${x.key}` : "/pattara/orders"}
             className={`bw-pill !text-[12px] !px-3.5 !py-1.5 ${(f ?? "") === x.key ? "bw-pill-go" : "bw-pill-done"}`}
           >
-            {x.label}
+            {tr(x.label)}
           </Link>
         ))}
       </div>

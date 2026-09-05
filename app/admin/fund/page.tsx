@@ -45,7 +45,7 @@ export default async function AdminFundPage() {
           { label: tr("อุปกรณ์ในคลัง"), value: tr("{0} ชิ้น", [itemCount]),                                        color: "text-[var(--c-ink)]" },
         ].map((s) => (
           <div key={s.label} className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-4">
-            <p className="text-xs text-[var(--c-muted)] mb-1">{s.label}</p>
+            <p className="text-xs text-[var(--c-muted)] mb-1">{tr(s.label)}</p>
             <p className={`text-xl font-extrabold ${s.color}`}>{s.value}</p>
           </div>
         ))}

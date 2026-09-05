@@ -152,7 +152,7 @@ export default function ShippingModal({ orderId, itemTitle, onClose, onSuccess }
                   }`}
                 >
                   <span className="text-xl">{m.icon}</span>
-                  <span className="leading-tight text-center">{m.label}</span>
+                  <span className="leading-tight text-center">{tr(m.label)}</span>
                 </button>
               ))}
             </div>

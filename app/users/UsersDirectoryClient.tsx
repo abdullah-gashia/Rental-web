@@ -96,7 +96,7 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
                 : "bg-[var(--c-surface)] border-[var(--hp-border)] text-[var(--hp-ink-2)] hover:border-[var(--hp-border-str)]"
             }`}
           >
-            {t.label} <span className="hp-num opacity-65">{t.n}</span>
+            {tr(t.label)} <span className="hp-num opacity-65">{t.n}</span>
           </button>
         ))}
       </div>

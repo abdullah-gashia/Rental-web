@@ -63,7 +63,7 @@ export default function SideRail({ activeCat, onCatChange }: SideRailProps) {
             className={`hp-rail-item ${activeCat === it.key ? "active" : ""}`}
           >
             {icon(it.path)}
-            <span>{it.label}</span>
+            <span>{tr(it.label)}</span>
           </button>
         ))}
       </nav>

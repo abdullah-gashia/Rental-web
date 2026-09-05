@@ -321,7 +321,7 @@ export default function OfficeItemsClient({
                     className="bw-input"
                   >
                     <option value="">{tr("ไม่ผูก")}</option>
-                    {purchases.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}
+                    {purchases.map((p) => <option key={p.id} value={p.id}>{tr(p.label)}</option>)}
                   </select>
                   <p className="text-[11px] text-[var(--bw-muted)] mt-1.5">{tr("ผูกไว้เพื่อให้หน้าเว็บบอกได้ว่าเงินก้อนไหนกลายเป็นของชิ้นนี้")}</p>
                 </div>

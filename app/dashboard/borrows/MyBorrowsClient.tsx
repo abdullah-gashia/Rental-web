@@ -111,7 +111,7 @@ export default function MyBorrowsClient({
                   onClick={() => setTab(t.key)}
                   className={`bw-pill !text-[12.5px] !px-3.5 !py-1.5 ${tab === t.key ? "bw-pill-go" : "bw-pill-done"}`}
                 >
-                  {t.label} <span className="bw-num opacity-60">{n}</span>
+                  {tr(t.label)} <span className="bw-num opacity-60">{n}</span>
                 </button>
               );
             })}

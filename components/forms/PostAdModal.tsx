@@ -474,7 +474,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                       : "border-[var(--c-line)] hover:border-[var(--c-ink)] text-[var(--c-ink-2)]"
                   }`}
                 >
-                  {c.label}
+                  {tr(c.label)}
                 </button>
               ))}
             </div>

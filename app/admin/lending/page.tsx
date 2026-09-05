@@ -138,7 +138,7 @@ export default async function AdminLendingPage({
                     : "bg-[var(--c-surface)] border-[var(--c-line)] text-[var(--c-ink-2)] hover:border-[var(--c-line-str)]"
                 }`}
               >
-                {x.label}
+                {tr(x.label)}
               </Link>
             ))}
           </div>

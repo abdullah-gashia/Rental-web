@@ -80,13 +80,14 @@ const FILTERS: { key: FilterKey; label: string }[] = [
 ];
 
 function StatusBadge({ status }: { status: ItemStatus }) {
+  const tr = useLocaleStore((s) => s.tr);
   const cfg = STATUS_CONFIG[status] ?? {
     label: status, bg: "bg-[var(--c-line-soft)]", text: "text-[var(--c-ink-3)]", dot: "bg-gray-400",
   };
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${cfg.bg} ${cfg.text}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-      {cfg.label}
+      {tr(cfg.label)}
     </span>
   );
 }
@@ -248,7 +249,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
             aria-pressed={filter === f.key}
             className={`ui-chip flex-shrink-0 ${filter === f.key ? "is-on" : ""}`}
           >
-            {f.label}
+            {tr(f.label)}
             <span className="ui-chip-n">{counts[f.key]}</span>
           </button>
         ))}

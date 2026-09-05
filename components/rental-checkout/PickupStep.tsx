@@ -79,7 +79,7 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
                   : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:border-[var(--c-faint)]"
               }`}
             >
-              <p className="font-semibold">{loc.label}</p>
+              <p className="font-semibold">{tr(loc.label)}</p>
               <p className="text-[10px] opacity-70 mt-0.5">{loc.description}</p>
             </button>
           ))}
@@ -174,7 +174,7 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
                       : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:border-[var(--c-faint)]"
                   }`}
                 >
-                  <p className="font-semibold">{loc.label}</p>
+                  <p className="font-semibold">{tr(loc.label)}</p>
                   <p className="text-[10px] opacity-70 mt-0.5">{loc.description}</p>
                 </button>
               ))}

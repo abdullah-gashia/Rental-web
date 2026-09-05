@@ -120,11 +120,12 @@ const STATUS_META: Record<EscrowStatus, { label: string; bg: string; text: strin
 };
 
 function StatusBadge({ status }: { status: EscrowStatus }) {
+  const tr = useLocaleStore((s) => s.tr);
   const m = STATUS_META[status] ?? STATUS_META.FUNDS_HELD;
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${m.bg} ${m.text}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${m.dot}`} />
-      {m.label}
+      {tr(m.label)}
     </span>
   );
 }

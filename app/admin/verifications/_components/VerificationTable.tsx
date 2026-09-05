@@ -76,7 +76,7 @@ export default function VerificationTable({ requests, filter }: Props) {
                 <td className="py-3 pr-4 text-[var(--c-muted)]">{date}</td>
                 <td className="py-3 pr-4">
                   <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${meta.cls}`}>
-                    {meta.label}
+                    {tr(meta.label)}
                   </span>
                 </td>
                 <td className="py-3">

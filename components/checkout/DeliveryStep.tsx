@@ -91,7 +91,7 @@ function ShippingAddressForm({
                     : "border-[var(--c-line)] hover:border-[var(--c-ink)]"
                 }`}
               >
-                <span className="font-semibold">{sa.isDefault ? "🏠" : "📍"} {sa.label}</span>
+                <span className="font-semibold">{sa.isDefault ? "🏠" : "📍"} {tr(sa.label)}</span>
                 <span className="text-[var(--c-muted)] ml-2">— {sa.recipientName}, {sa.district}</span>
               </button>
             ))}
@@ -268,7 +268,7 @@ function MeetupForm({
             >
               <div className="meetup-card-icon">🏫</div>
               <div className="min-w-0">
-                <p className="text-[12px] font-bold text-[var(--c-ink)] leading-tight truncate">{loc.label}</p>
+                <p className="text-[12px] font-bold text-[var(--c-ink)] leading-tight truncate">{tr(loc.label)}</p>
                 <p className="text-[10px] text-[var(--c-muted)] mt-0.5 leading-tight line-clamp-2">{loc.description}</p>
               </div>
             </button>

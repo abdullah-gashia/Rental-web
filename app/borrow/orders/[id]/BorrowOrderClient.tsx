@@ -200,7 +200,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
                 <span className="flex flex-col items-center gap-1 w-[74px] text-center">
                   <span className="bw-step-dot">{done && !now ? "✓" : i + 1}</span>
                   <span className={`text-[10.5px] leading-tight ${now ? "font-semibold text-[var(--psu-blue)]" : done ? "text-[var(--bw-ink-2)]" : "text-[#a9b4c4]"}`}>
-                    {step.label}
+                    {tr(step.label)}
                   </span>
                 </span>
               </li>
@@ -272,7 +272,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
               { label: tr("ตอนคืน"),    list: order.returnPhotos, note: order.returnNote },
             ].map((g) => (
               <div key={g.label}>
-                <p className="bw-label mb-2">{g.label} ({g.list.length})</p>
+                <p className="bw-label mb-2">{tr(g.label)} ({g.list.length})</p>
                 {g.list.length === 0 ? (
                   <p className="text-[12px] text-[var(--bw-muted)]">{tr("ยังไม่มีรูป")}</p>
                 ) : (

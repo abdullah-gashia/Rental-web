@@ -160,7 +160,7 @@ export default function AddressesTab({ addresses, showToast }: Props) {
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="text-sm font-semibold text-[var(--c-ink)]">
-                    🏠 {addr.label}
+                    🏠 {tr(addr.label)}
                   </span>
                   {addr.isDefault && (
                     <span className="inline-flex items-center rounded-full border border-[var(--c-accent)]/30 bg-[var(--c-warn-soft)] px-2 py-0.5 text-[10px] font-semibold text-[var(--c-accent)]">{tr("⭐ ค่าเริ่มต้น")}</span>

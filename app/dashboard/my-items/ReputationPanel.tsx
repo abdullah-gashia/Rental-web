@@ -151,7 +151,7 @@ export default function ReputationPanel({ reputation }: { reputation: Reputation
           ].map((c) => (
             <div key={c.label}>
               <p className="text-lg font-bold text-[var(--c-ink)] leading-none">{c.value}</p>
-              <p className="text-[11px] text-[var(--c-muted)] mt-1">{c.label}</p>
+              <p className="text-[11px] text-[var(--c-muted)] mt-1">{tr(c.label)}</p>
             </div>
           ))}
         </div>
@@ -170,7 +170,7 @@ export default function ReputationPanel({ reputation }: { reputation: Reputation
                   : "border-transparent text-[var(--c-muted)] hover:text-[var(--c-ink-2)]"
               }`}
             >
-              {t.label}
+              {tr(t.label)}
               <span className="ml-1.5 text-[11px] text-[var(--c-faint)]">{t.count}</span>
             </button>
           ))}

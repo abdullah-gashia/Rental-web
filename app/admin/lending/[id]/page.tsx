@@ -203,7 +203,7 @@ export default async function AdminLendingDetailPage({
                     <span className={`text-[10.5px] mt-1 leading-tight ${
                       current ? "font-bold text-[var(--c-accent)]" : done ? "text-[var(--c-ink-2)]" : "text-[var(--c-faint-2)]"
                     }`}>
-                      {step.label}
+                      {tr(step.label)}
                     </span>
                   </div>
                   {i < RENTAL_STEPS.length - 1 && (

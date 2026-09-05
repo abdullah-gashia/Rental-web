@@ -45,7 +45,7 @@ export default function Footer() {
                   href={l.href}
                   className="text-[13px] text-[var(--hp-ink-2)] hover:text-[var(--psu-indigo)] transition-colors"
                 >
-                  {l.label}
+                  {tr(l.label)}
                 </a>
               ))}
             </div>

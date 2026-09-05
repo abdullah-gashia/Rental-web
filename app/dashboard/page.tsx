@@ -29,6 +29,7 @@ const money = (n: number, nf: string) =>
   `฿${n.toLocaleString(nf, { maximumFractionDigits: 2 })}`;
 
 export default async function SellerOverview() {
+  const tr = await getTr();
   const session = await auth();
   if (!session?.user?.id) redirect("/?login=1");
   const uid = session.user.id;
@@ -132,7 +133,7 @@ export default async function SellerOverview() {
                 className="flex items-center gap-3 px-5 py-3.5 border-b border-[var(--hp-border)] last:border-0 hover:bg-[var(--psu-sky)] transition-colors"
               >
                 <span className={`ui-pill ${row.bad ? "ui-pill-bad" : "ui-pill-wait"} ui-num`}>{row.n}</span>
-                <span className="text-[13.5px] text-[var(--hp-ink)] flex-1">{row.label}</span>
+                <span className="text-[13.5px] text-[var(--hp-ink)] flex-1">{tr(row.label)}</span>
                 <span className="text-[13px] text-[var(--psu-blue)] font-semibold">{t("c_manage")} →</span>
               </a>
             ))}
