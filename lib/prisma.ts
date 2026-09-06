@@ -12,7 +12,33 @@ type NotificationRow = {
 };
 
 function createBaseClient() {
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  /**
+   * Neon suspends the compute when nothing has touched it for a few minutes,
+   * and the first request after that has to wait for it to wake. With the
+   * defaults that showed up as "Connection terminated unexpectedly": the page
+   * sat for twenty seconds and then failed, while the request before and after
+   * it took one second each.
+   *
+   * So: give a cold start room to finish, keep the socket alive so an idle one
+   * is not quietly dropped in between, and let the pool retire its own idle
+   * clients before the server does — a connection the server has already
+   * closed looks fine to the pool until someone tries to use it.
+   */
+  const pool = new Pool({
+    connectionString:        process.env.DATABASE_URL,
+    max:                     5,
+    connectionTimeoutMillis: 30_000,   // a cold start can take twenty
+    idleTimeoutMillis:       20_000,   // shorter than the server's own cutoff
+    keepAlive:               true,
+    keepAliveInitialDelayMillis: 5_000,
+  });
+
+  // An idle client dropped by the server emits here. Without a listener that
+  // is an unhandled error event, which takes the whole process down.
+  pool.on("error", (e) => {
+    console.warn("[db] idle client dropped:", e instanceof Error ? e.message : e);
+  });
+
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });
 }
