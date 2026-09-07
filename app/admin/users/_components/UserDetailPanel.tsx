@@ -8,8 +8,9 @@ import { formatThaiDate }                      from "../../_lib/utils";
 import StatusBadge                             from "../../_components/StatusBadge";
 import FinancialSummary                        from "./FinancialSummary";
 import { REPORT_CATEGORY_LABEL as CATEGORY_LABEL } from "@/lib/report-categories";
+import { isBanActive } from "@/lib/ban";
 import { getUserDetail, adminEditUser, adjustTrustScore,
-         deleteUserReview, setReportStatus, sendUserEmail } from "../actions";
+         deleteUserReview, setReportStatus, reviewAllReports, sendUserEmail } from "../actions";
 
 interface Props {
   userId:    string;
@@ -68,10 +69,14 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
     }
   };
 
-  const run = (fn: () => Promise<{ success: boolean; message?: string; error?: string }>) => {
+  const run = (
+    fn: () => Promise<{ success: boolean; message?: string; error?: string; params?: (string | number)[] }>,
+  ) => {
     startTransition(async () => {
       const res = await fn();
-      showToast(res.success, res.success ? tr(res.message ?? "") : tr(res.error ?? ""));
+      // params travel with the sentence: a count baked into the string before
+      // translation would match no dictionary entry.
+      showToast(res.success, tr((res.success ? res.message : res.error) ?? "", res.params));
       if (res.success) await refresh();
     });
   };
@@ -158,7 +163,20 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="font-semibold text-[var(--c-ink)] truncate">{data.name ?? "—"}</p>
+                <p className="font-semibold text-[var(--c-ink)] truncate flex items-center gap-2">
+                  <span className="truncate">{data.name ?? "—"}</span>
+                  {/* Reports waiting to be looked at, said at the top rather than
+                      only down beside the reports — this is the first thing an
+                      administrator opening a profile needs to know. */}
+                  {data.openReportCount > 0 && (
+                    <span
+                      title={tr("มีรายงานที่ยังไม่ได้ตรวจสอบ")}
+                      className="flex-shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] text-[var(--c-danger)] text-[11px] font-bold"
+                    >
+                      🚩 {data.openReportCount}
+                    </span>
+                  )}
+                </p>
                 <p className="text-xs text-[var(--c-muted)] truncate">{data.email}</p>
                 <p className="text-[11px] text-[var(--c-faint)] mt-0.5">{tr("สมัครเมื่อ: {0}", [formatThaiDate(data.createdAt)])}</p>
               </div>
@@ -166,7 +184,15 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
 
             {/* ── Status badges row ────────────────────────────────────── */}
             <div className="grid grid-cols-4 gap-2">
-              <StatCard label={tr("สถานะ")} val={data.isBanned ? tr("ถูกแบน") : tr("ปกติ")} color={data.isBanned ? "red" : "green"} />
+              <StatCard
+                label={tr("สถานะ")}
+                val={
+                  !isBanActive(data) ? tr("ปกติ")
+                    : data.banUntil ? tr("ถูกแบนถึง {0}", [formatShort(data.banUntil)])
+                    : tr("ถูกแบนจนกว่าจะปลด")
+                }
+                color={isBanActive(data) ? "red" : "green"}
+              />
               <StatCard label={tr("ยืนยัน")} val={tr(VERIFICATION_LABELS[data.verificationStatus] ?? data.verificationStatus)} color={data.verificationStatus === "APPROVED" ? "green" : "yellow"} />
               <StatCard label="Trust" val={String(data.trustScore)} color={data.trustScore >= 80 ? "green" : data.trustScore >= 50 ? "yellow" : "red"} />
               <StatCard label={tr("บทบาท")} val={data.role === "ADMIN" ? tr("แอดมิน") : tr("นักศึกษา")} color={data.role === "ADMIN" ? "purple" : "gray"} />
@@ -350,12 +376,23 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
             <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-2xl p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-bold text-[var(--c-ink-1)]">
-                  🚩 รายงานจากผู้ใช้
+                  🚩 {tr("รายงานจากผู้ใช้")}
                   {data.openReportCount > 0 && (
                     <span className="ml-2 px-2 py-0.5 rounded-full bg-[var(--c-danger-soft)] text-[var(--c-danger)] text-[11px] font-bold">{tr("ใหม่ {0}", [data.openReportCount])}</span>
                   )}
                 </h4>
-                <span className="text-[10px] text-[var(--c-faint)]">{tr("ผู้ถูกรายงานไม่เห็นข้อมูลนี้")}</span>
+                <div className="flex items-center gap-2">
+                  {/* Clears the flag in one go; per-report buttons stay below
+                      for when only some of them have been dealt with. */}
+                  {data.openReportCount > 0 && (
+                    <button
+                      disabled={pending}
+                      onClick={() => run(() => reviewAllReports(data.id))}
+                      className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-green-600 text-white hover:bg-green-700 transition disabled:opacity-50"
+                    >{tr("ตรวจสอบแล้วทั้งหมด")}</button>
+                  )}
+                  <span className="text-[10px] text-[var(--c-faint)]">{tr("ผู้ถูกรายงานไม่เห็นข้อมูลนี้")}</span>
+                </div>
               </div>
 
               {data.reports.length === 0 ? (
@@ -383,6 +420,23 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                       </div>
                       <p className="text-xs text-[var(--c-ink-2)] mt-1.5 whitespace-pre-wrap">{rep.reason}</p>
                       <p className="text-[10px] text-[var(--c-muted)] mt-1.5">{tr("โดย {0} · {1}", [rep.reporter.name ?? rep.reporter.email, formatShort(rep.createdAt)])}</p>
+
+                      {rep.images.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          {rep.images.map((url) => (
+                            <a
+                              key={url}
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title={tr("เปิดรูปเต็ม")}
+                              className="block w-14 h-14 rounded-lg overflow-hidden border border-[var(--c-line)] hover:border-[var(--c-line-str)] transition"
+                            >
+                              <img src={url} alt="" className="w-full h-full object-cover" />
+                            </a>
+                          ))}
+                        </div>
+                      )}
                       {rep.status === "OPEN" && (
                         <div className="flex gap-2 mt-2">
                           <button

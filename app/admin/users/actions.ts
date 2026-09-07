@@ -1,6 +1,7 @@
 "use server";
 
 import { z }                from "zod";
+import { BAN_DURATIONS, banExpiryFor, type BanDurationKey } from "@/lib/ban";
 import { auth }             from "@/lib/auth";
 import { prisma }           from "@/lib/prisma";
 import { revalidatePath }   from "next/cache";
@@ -78,6 +79,7 @@ export async function getUsers(
       email:      u.email,
       role:       u.role,
       isBanned:   u.isBanned,
+      banUntil:   u.banUntil?.toISOString() ?? null,
       trustScore: u.trustScore,
       itemCount:  u._count.items,
       orderCount: u._count.escrowOrdersBuying,
@@ -94,12 +96,18 @@ export async function getUsers(
 
 // ─── banUser ──────────────────────────────────────────────────────────────────
 
-const BanSchema = z.object({ userId: z.string().min(1) });
+const BanSchema = z.object({
+  userId:   z.string().min(1),
+  duration: z.enum(["3d", "1w", "1m", "until"]).default("until"),
+});
 
-export async function banUser(userId: string): Promise<ActionResult> {
+export async function banUser(
+  userId: string,
+  duration: BanDurationKey = "until",
+): Promise<ActionResult> {
   try {
     const admin = await requireAdmin();
-    const { userId: id } = BanSchema.parse({ userId });
+    const { userId: id, duration: length } = BanSchema.parse({ userId, duration });
     if (id === admin.id) return { success: false, error: "ไม่สามารถแบนตัวเองได้" };
 
     // Administrator accounts are not bannable. A banned admin is locked out of
@@ -113,12 +121,17 @@ export async function banUser(userId: string): Promise<ActionResult> {
       return { success: false, error: "ไม่สามารถแบนบัญชีผู้ดูแลระบบได้" };
     }
 
+    // A null expiry means the ban stands until an administrator lifts it.
+    const banUntil = banExpiryFor(length);
+
     await prisma.user.update({
       where: { id },
-      data:  { isBanned: true, bannedAt: new Date() },
+      data:  { isBanned: true, bannedAt: new Date(), banUntil },
     });
     revalidatePath("/admin/users");
-    return { success: true, message: "แบนผู้ใช้เรียบร้อยแล้ว" };
+
+    const label = BAN_DURATIONS.find((d) => d.key === length)?.label ?? "";
+    return { success: true, message: "แบนผู้ใช้เรียบร้อยแล้ว ({0})", params: [label] };
   } catch (e: unknown) {
     return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
   }
@@ -132,7 +145,7 @@ export async function unbanUser(userId: string): Promise<ActionResult> {
     BanSchema.parse({ userId });
     await prisma.user.update({
       where: { id: userId },
-      data:  { isBanned: false, bannedAt: null },
+      data:  { isBanned: false, bannedAt: null, banUntil: null },
     });
     revalidatePath("/admin/users");
     return { success: true, message: "ปลดแบนผู้ใช้เรียบร้อยแล้ว" };
@@ -234,7 +247,7 @@ export async function getUserDetail(userId: string): Promise<UserDetail | null> 
     where: { id: userId },
     select: {
       id: true, name: true, email: true, image: true, phone: true, bio: true,
-      role: true, isBanned: true, trustScore: true,
+      role: true, isBanned: true, banUntil: true, trustScore: true,
       walletBalance: true, escrowBalance: true,
       createdAt: true, verificationStatus: true,
       psuIdNumber: true, psuIdType: true, verifiedAt: true,
@@ -337,7 +350,7 @@ export async function getUserDetail(userId: string): Promise<UserDetail | null> 
       orderBy: { createdAt: "desc" },
       take: 30,
       select: {
-        id: true, reason: true, category: true, status: true,
+        id: true, reason: true, category: true, status: true, images: true,
         adminNote: true, createdAt: true, reviewedAt: true,
         reporter: { select: { id: true, name: true, email: true } },
       },
@@ -349,6 +362,7 @@ export async function getUserDetail(userId: string): Promise<UserDetail | null> 
     ...user,
     createdAt: user.createdAt.toISOString(),
     verifiedAt: user.verifiedAt?.toISOString() ?? null,
+    banUntil: user.banUntil?.toISOString() ?? null,
     avgRating:   ratingAgg._avg.rating ?? null,
     reviewCount: ratingAgg._count.rating,
     reviews: reviewRows.map((r) => ({
@@ -358,7 +372,7 @@ export async function getUserDetail(userId: string): Promise<UserDetail | null> 
       itemTitle: r.order?.item.title ?? null,
     })),
     reports: reportRows.map((r) => ({
-      id: r.id, reason: r.reason, category: r.category,
+      id: r.id, reason: r.reason, category: r.category, images: r.images,
       status: r.status, adminNote: r.adminNote,
       createdAt: r.createdAt.toISOString(),
       reviewedAt: r.reviewedAt?.toISOString() ?? null,
@@ -526,6 +540,31 @@ export async function setReportStatus(
 
     revalidatePath("/admin/users");
     return { success: true, message: "อัปเดตสถานะรายงานแล้ว" };
+  } catch (e) {
+    return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
+  }
+}
+
+// ─── reviewAllReports ──────────────────────────────────────────
+
+/**
+ * Marks every open report against one user as reviewed.
+ *
+ * The flag beside the name counts open reports, so clearing them one by one is
+ * the only way to make it go away otherwise — tedious once somebody has been
+ * reported eight times over the same thing.
+ */
+export async function reviewAllReports(userId: string): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+
+    const { count } = await prisma.report.updateMany({
+      where: { reportedId: userId, status: "OPEN" },
+      data:  { status: "REVIEWED", reviewedAt: new Date() },
+    });
+
+    revalidatePath("/admin/users");
+    return { success: true, message: "ทำเครื่องหมายว่าตรวจสอบแล้ว {0} รายการ", params: [count] };
   } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : "เกิดข้อผิดพลาด" };
   }

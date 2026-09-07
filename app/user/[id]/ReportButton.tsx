@@ -5,6 +5,7 @@ import { useTr } from "@/lib/i18n/LocaleProvider";
 import { useState, useTransition } from "react";
 import { submitReport } from "@/lib/actions/report-actions";
 import { REPORT_CATEGORIES } from "@/lib/report-categories";
+import { prepareImageForUpload } from "@/lib/utils/image-upload";
 
 interface Props {
   reportedId: string;
@@ -31,6 +32,41 @@ export default function ReportButton({
   const [error, setError]       = useState<string | null>(null);
   const [done, setDone]         = useState(alreadyReported);
   const [pending, startTransition] = useTransition();
+  // Screenshots of the chat or the item. Any size goes in — the picker shrinks
+  // a photo before it leaves the browser, so a 12 MP phone shot is not carried
+  // over the wire at full resolution just to be looked at once.
+  const [images, setImages]     = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
+
+  const MAX_IMAGES = 5;
+
+  async function addImages(files: FileList | null) {
+    if (!files?.length) return;
+    setError(null);
+    const room = MAX_IMAGES - images.length;
+    if (room <= 0) {
+      setError(tr("แนบรูปได้สูงสุด {0} รูป", [MAX_IMAGES]));
+      return;
+    }
+
+    setUploading(true);
+    const added: string[] = [];
+    for (const file of Array.from(files).slice(0, room)) {
+      try {
+        const { file: prepared } = await prepareImageForUpload(file);
+        const body = new FormData();
+        body.append("file", prepared);
+        const res = await fetch("/api/upload", { method: "POST", body });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error ?? tr("อัปโหลดไม่สำเร็จ"));
+        added.push(json.url as string);
+      } catch (e) {
+        setError(e instanceof Error ? tr(e.message) : tr("อัปโหลดไม่สำเร็จ"));
+      }
+    }
+    setImages((prev) => [...prev, ...added]);
+    setUploading(false);
+  }
 
   // You cannot report yourself, and there is nothing to offer a signed-out visitor
   if (isSelf) return null;
@@ -47,9 +83,9 @@ export default function ReportButton({
     if (reason.trim().length < 10) { setError(tr("กรุณาอธิบายเหตุผลอย่างน้อย 10 ตัวอักษร")); return; }
 
     startTransition(async () => {
-      const res = await submitReport({ reportedId, category, reason });
+      const res = await submitReport({ reportedId, category, reason, images });
       if (res.success) { setOpen(false); setDone(true); }
-      else setError(tr(res.error));
+      else setError(tr(res.error, res.params));
     });
   }
 
@@ -104,6 +140,55 @@ export default function ReportButton({
                 placeholder={tr("เกิดอะไรขึ้น? ยิ่งละเอียดยิ่งตรวจสอบได้เร็ว")}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--c-line)] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-[var(--c-danger-line)] transition"
               />
+            </div>
+
+            {/* Screenshots */}
+            <div className="mb-4">
+              <label className="block text-xs font-medium text-[var(--c-ink-1)] mb-1.5">
+                {tr("แนบรูปหลักฐาน")}
+                <span className="text-[var(--c-faint)]"> {tr("({0}/{1})", [images.length, MAX_IMAGES])}</span>
+              </label>
+
+              <div className="flex flex-wrap gap-2">
+                {images.map((url) => (
+                  <div key={url} className="relative w-16 h-16 rounded-lg overflow-hidden border border-[var(--c-line)]">
+                    <img src={url} alt="" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setImages((prev) => prev.filter((u) => u !== url))}
+                      aria-label={tr("ลบรูปนี้")}
+                      className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/60 text-white text-xs leading-none flex items-center justify-center hover:bg-black/80"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+
+                {images.length < MAX_IMAGES && (
+                  <label className="w-16 h-16 rounded-lg border border-dashed border-[var(--c-line)] flex flex-col items-center justify-center text-[10px] text-[var(--c-muted)] cursor-pointer hover:border-[var(--c-line-str)] transition">
+                    {uploading ? (
+                      <span className="w-4 h-4 border-2 border-[var(--c-muted)] border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        <span className="text-lg leading-none">+</span>
+                        {tr("เพิ่มรูป")}
+                      </>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className="hidden"
+                      disabled={uploading}
+                      onChange={(e) => { addImages(e.target.files); e.target.value = ""; }}
+                    />
+                  </label>
+                )}
+              </div>
+
+              <p className="text-[10px] text-[var(--c-faint)] mt-1.5">
+                {tr("รูปภาพทุกชนิด ทุกขนาด · ระบบย่อขนาดให้อัตโนมัติ")}
+              </p>
             </div>
 
             {error && (

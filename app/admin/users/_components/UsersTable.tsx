@@ -10,6 +10,7 @@ import StatusBadge                  from "../../_components/StatusBadge";
 import ConfirmDialog                from "../../_components/ConfirmDialog";
 import UserDetailPanel              from "./UserDetailPanel";
 import { banUser, unbanUser, updateUserRole } from "../actions";
+import { BAN_DURATIONS, isBanActive, type BanDurationKey } from "@/lib/ban";
 
 interface Props {
   rows: UserRow[];
@@ -32,6 +33,8 @@ export default function UsersTable({ rows }: Props) {
 
   // ── Detail panel state ──────────────────────────────────────────────────────
   const [detailUserId, setDetailUserId] = useState<string | null>(null);
+  // How long the ban being confirmed should run for.
+  const [banLength, setBanLength] = useState<BanDurationKey>("until");
 
   function showToast(ok: boolean, msg: string) {
     setToast({ ok, msg });
@@ -42,11 +45,11 @@ export default function UsersTable({ rows }: Props) {
     if (!dialog) return;
     startTransition(async () => {
       let res;
-      if (dialog.kind === "ban")   res = await banUser(dialog.userId);
+      if (dialog.kind === "ban")   res = await banUser(dialog.userId, banLength);
       else if (dialog.kind === "unban") res = await unbanUser(dialog.userId);
       else res = await updateUserRole(dialog.userId, dialog.newRole!);
       setDialog(null);
-      showToast(res.success, res.success ? tr(res.message) : tr(res.error));
+      showToast(res.success, res.success ? tr(res.message, res.params) : tr(res.error, res.params));
     });
   }
 
@@ -91,7 +94,29 @@ export default function UsersTable({ rows }: Props) {
         loading={pending}
         onConfirm={handleConfirm}
         onCancel={() => setDialog(null)}
-      />
+      >
+        {dialog?.kind === "ban" && (
+          <div className="mt-4">
+              <p className="text-xs font-medium text-[var(--c-ink-1)] mb-2">{tr("ระยะเวลาแบน")}</p>
+              <div className="grid grid-cols-2 gap-2">
+                {BAN_DURATIONS.map((d) => (
+                  <button
+                    key={d.key}
+                    type="button"
+                    onClick={() => setBanLength(d.key)}
+                    className={`px-3 py-2 rounded-xl border text-xs font-semibold transition ${
+                      banLength === d.key
+                        ? "border-[var(--c-danger-line)] bg-[var(--c-danger-soft)] text-[var(--c-danger)]"
+                        : "border-[var(--c-line)] text-[var(--c-ink-2)] hover:bg-[var(--c-line-soft)]"
+                    }`}
+                  >
+                    {tr(d.label)}
+                  </button>
+                ))}
+              </div>
+            </div>
+        )}
+      </ConfirmDialog>
 
       {/* Detail Panel */}
       {detailUserId && (
@@ -144,7 +169,7 @@ export default function UsersTable({ rows }: Props) {
 
                 {/* Status */}
                 <td className="px-4 py-3">
-                  <StatusBadge status={u.isBanned ? "BANNED" : "ACTIVE"} type="user" />
+                  <StatusBadge status={isBanActive(u) ? "BANNED" : "ACTIVE"} type="user" />
                 </td>
 
                 {/* Trust score */}
@@ -201,7 +226,7 @@ export default function UsersTable({ rows }: Props) {
                     user={u}
                     onView={() => setDetailUserId(u.id)}
                     onEdit={() => setDetailUserId(u.id)}
-                    onBan={() => setDialog({ kind: "ban",   userId: u.id, label: u.name ?? u.email })}
+                    onBan={() => { setBanLength("until"); setDialog({ kind: "ban", userId: u.id, label: u.name ?? u.email }); }}
                     onUnban={() => setDialog({ kind: "unban", userId: u.id, label: u.name ?? u.email })}
                     onRole={(r) => setDialog({ kind: "role", userId: u.id, label: u.name ?? u.email, newRole: r })}
                   />
@@ -289,7 +314,7 @@ function ActionsDropdown({
                 <div className="my-1 border-t border-[var(--c-line-soft)]" />
 
                 {/* Ban / Unban */}
-                {user.isBanned ? (
+                {isBanActive(user) ? (
                   <MenuItem
                     label={tr("ปลดแบน")}
                     icon="✅"

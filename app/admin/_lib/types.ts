@@ -14,9 +14,16 @@ export type PaginatedResponse<T> = {
 
 // ─── Server Action responses ──────────────────────────────────────────────────
 
+/**
+ * `params` carries the values that belong inside the message.
+ *
+ * The sentence comes back with {0} still in it, because the client translates
+ * it — and a sentence with a value glued into the middle matches no dictionary
+ * entry.
+ */
 export type ActionResult =
-  | { success: true;  message: string }
-  | { success: false; error: string   };
+  | { success: true;  message: string; params?: (string | number)[] }
+  | { success: false; error: string;   params?: (string | number)[] };
 
 // ─── Table query params ───────────────────────────────────────────────────────
 
@@ -36,6 +43,8 @@ export type UserRow = {
   email:      string;
   role:       "ADMIN" | "STUDENT" | "PATTARA";
   isBanned:   boolean;
+  /** When the ban lifts by itself; null while banned means it does not. */
+  banUntil:   string | null;
   trustScore: number;
   itemCount:  number;
   orderCount: number;
@@ -51,6 +60,8 @@ export type ReportRow = {
   id:         string;
   reason:     string;
   category:   string | null;
+  /** Screenshots the reporter attached — usually what settles a report. */
+  images:     string[];
   status:     "OPEN" | "REVIEWED" | "DISMISSED";
   adminNote:  string | null;
   createdAt:  string;
@@ -105,6 +116,8 @@ export type UserDetail = {
   bio:                string | null;
   role:               "ADMIN" | "STUDENT" | "PATTARA";
   isBanned:           boolean;
+  /** When the ban lifts by itself; null while banned means it does not. */
+  banUntil:           string | null;
   trustScore:         number;
   walletBalance:      number;
   escrowBalance:      number;

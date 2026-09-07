@@ -4,6 +4,7 @@ import bcryptjs from "bcryptjs";
 import { randomInt } from "crypto";
 import { prismaNoMail as prisma } from "@/lib/prisma";
 import { sendPasswordResetCodeEmail } from "@/lib/email";
+import { isBanActive } from "@/lib/ban";
 
 /**
  * Forgotten-password reset by six-digit code.
@@ -59,7 +60,7 @@ export async function requestPasswordReset(rawEmail: string): Promise<ResetResul
 
   const user = await prisma.user.findUnique({
     where:  { email },
-    select: { id: true, password: true, isBanned: true },
+    select: { id: true, password: true, isBanned: true, banUntil: true },
   });
 
   // Everything below is deliberately silent about what it found.
@@ -78,7 +79,7 @@ export async function requestPasswordReset(rawEmail: string): Promise<ResetResul
 
   // An account with no password signs in through Google; there is nothing to
   // reset, and a banned account should not be handed a way back in.
-  const eligible = Boolean(user?.password) && !user?.isBanned;
+  const eligible = Boolean(user?.password) && !isBanActive(user);
   if (!eligible) return { success: true, message: NEUTRAL };
 
   const code = sixDigits();

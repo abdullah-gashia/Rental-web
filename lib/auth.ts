@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { isBanActive } from "@/lib/ban";
 import { authSecret } from "@/lib/auth-secret";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
@@ -40,7 +41,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         // ── Ban check: block BEFORE password verification so we don't
         //    leak "wrong password" vs "banned" timing difference
-        if (user.isBanned) {
+        if (isBanActive(user)) {
           throw new Error("ACCOUNT_BANNED");
         }
 
@@ -56,7 +57,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email:    user.email,
           image:    user.image,
           role:     user.role,
-          isBanned: user.isBanned,
+          isBanned: isBanActive(user),
         };
       },
     }),
@@ -116,9 +117,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       const existing = await prisma.user.findUnique({
         where:  { email: user.email },
-        select: { isBanned: true },
+        select: { isBanned: true, banUntil: true },
       });
-      if (existing?.isBanned) return false;
+      if (isBanActive(existing)) return false;
 
       return true;
     },
@@ -141,10 +142,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         try {
           const fresh = await prisma.user.findUnique({
             where:  { id: token.id as string },
-            select: { isBanned: true, role: true },
+            select: { isBanned: true, banUntil: true, role: true },
           });
           if (fresh) {
-            token.isBanned = fresh.isBanned;
+            // A ban that has run its length is over, whatever the flag says.
+            token.isBanned = isBanActive(fresh);
             token.role     = fresh.role;
           }
         } catch {

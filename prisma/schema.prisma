@@ -82,6 +82,11 @@ model User {
   escrowBalance Float     @default(0)    // funds held pending order completion
   isBanned      Boolean   @default(false)
   bannedAt      DateTime?
+  /// When a ban lifts by itself. Null while banned means it does not — it
+  /// stands until an administrator takes it off. Read it with
+  /// lib/ban.ts rather than testing isBanned alone, or an expired ban keeps
+  /// locking somebody out.
+  banUntil      DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -1040,6 +1045,9 @@ model Report {
   id        String       @id @default(cuid())
   reason    String       @db.Text
   category  String?
+  /// Screenshots the reporter attached. Words alone are hard to act on; a
+  /// picture of the chat or the item is usually what settles it.
+  images    String[]
   status    ReportStatus @default(OPEN)
   adminNote String?      @db.Text
   createdAt DateTime     @default(now())

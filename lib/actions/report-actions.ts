@@ -14,13 +14,32 @@ import { REPORT_CATEGORY_VALUES } from "@/lib/report-categories";
  */
 
 type ActionResult =
-  | { success: true;  message: string }
-  | { success: false; error: string   };
+  | { success: true;  message: string; params?: (string | number)[] }
+  | { success: false; error: string;   params?: (string | number)[] };
+
+/**
+ * At most five screenshots, and only ones this site stored itself.
+ *
+ * A report is read by an administrator, so an attacker who could name any URL
+ * would be aiming it at them — an off-site address turns the review screen
+ * into a way to pull content from somewhere else, or to learn when an admin
+ * looked. Only paths under /uploads/ are accepted, which is what the upload
+ * endpoint returns and nothing else can forge.
+ */
+const MAX_REPORT_IMAGES = 5;
+
+function cleanImages(input: unknown): string[] | null {
+  if (!Array.isArray(input)) return [];
+  const urls = input.filter((u): u is string => typeof u === "string").map((u) => u.trim());
+  if (urls.length > MAX_REPORT_IMAGES) return null;
+  return urls.every((u) => /^\/uploads\/[A-Za-z0-9._-]+$/.test(u)) ? urls : null;
+}
 
 export async function submitReport(input: {
   reportedId: string;
   category: string;
   reason: string;
+  images?: string[];
 }): Promise<ActionResult> {
   const session = await auth();
   if (!session?.user?.id) {
@@ -41,6 +60,11 @@ export async function submitReport(input: {
   }
   if (reason.length > 2000) {
     return { success: false, error: "เหตุผลยาวเกินไป (สูงสุด 2000 ตัวอักษร)" };
+  }
+
+  const images = cleanImages(input.images);
+  if (images === null) {
+    return { success: false, error: "แนบรูปได้สูงสุด {0} รูป และต้องเป็นรูปที่อัปโหลดผ่านระบบ", params: [MAX_REPORT_IMAGES] };
   }
 
   const reported = await prisma.user.findUnique({
@@ -69,7 +93,7 @@ export async function submitReport(input: {
   }
 
   await prisma.report.create({
-    data: { reporterId, reportedId: input.reportedId, category: input.category, reason },
+    data: { reporterId, reportedId: input.reportedId, category: input.category, reason, images },
   });
 
   // Deliberately no notification to the reported user.
