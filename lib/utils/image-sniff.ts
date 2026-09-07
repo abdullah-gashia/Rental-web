@@ -62,6 +62,20 @@ export function sniffImageFormat(buf: Uint8Array): ImageFormat | null {
   return null;
 }
 
+/**
+ * Content type to serve a detected format as.
+ *
+ * Disk storage never needed one — the extension told the web server what to
+ * say. Blob storage has no extension to read, so the type travels with the
+ * bytes, and getting it wrong means the browser downloads the picture instead
+ * of showing it.
+ */
+export const FORMAT_MIME: Record<ImageFormat, string> = {
+  jpg:  "image/jpeg", png: "image/png",  webp: "image/webp",
+  gif:  "image/gif",  avif: "image/avif", bmp: "image/bmp",
+  tiff: "image/tiff", heic: "image/heic", ico: "image/x-icon",
+};
+
 /** File extension to write for a detected format. */
 export const FORMAT_EXTENSION: Record<ImageFormat, string> = {
   jpg: "jpg", png: "png", webp: "webp", gif: "gif", avif: "avif",

@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
 import { randomUUID } from "crypto";
 import { rateLimit } from "@/lib/rate-limit";
-import { sniffImageFormat, looksLikeSvg, FORMAT_EXTENSION } from "@/lib/utils/image-sniff";
+import { sniffImageFormat, looksLikeSvg, FORMAT_EXTENSION, FORMAT_MIME } from "@/lib/utils/image-sniff";
+import { storeUpload } from "@/lib/uploads";
 
 // Pictures are downscaled in the browser before they get here (see
 // lib/utils/image-upload.ts), so this is a backstop against an oversized or
@@ -79,22 +78,21 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // ── Write to public/uploads/ ───────────────────────
+  // ── Store it ─────────────────────────
   //
   // The name is generated, never derived from the upload: a client-supplied
-  // filename is how "../../.env" and "evil.php" get written.
-  const filename  = `${randomUUID()}.${FORMAT_EXTENSION[format]}`;
-  const uploadDir = join(process.cwd(), "public", "uploads");
+  // filename is how "../../.env" and "evil.php" get written. Blob storage or
+  // the local disk, depending on what is configured — see lib/uploads.ts.
+  const filename = `${randomUUID()}.${FORMAT_EXTENSION[format]}`;
 
   try {
-    await mkdir(uploadDir, { recursive: true });
-    await writeFile(join(uploadDir, filename), buffer);
-  } catch {
+    const url = await storeUpload(buffer, filename, FORMAT_MIME[format]);
+    return NextResponse.json({ url });
+  } catch (e) {
+    console.error("[upload] could not store the file:", e);
     return NextResponse.json(
       { error: "เกิดข้อผิดพลาดในการบันทึกไฟล์" },
       { status: 500 },
     );
   }
-
-  return NextResponse.json({ url: `/uploads/${filename}` });
 }

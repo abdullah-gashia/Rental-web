@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'lh5.googleusercontent.com' },
       { protocol: 'https', hostname: 'lh6.googleusercontent.com' },
       { protocol: 'https', hostname: 'avatars.githubusercontent.com' },
+      // Uploads live here once a Blob store is attached (see lib/uploads.ts).
+      { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
     ],
   },
 

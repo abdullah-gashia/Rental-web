@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { REPORT_CATEGORY_VALUES } from "@/lib/report-categories";
+import { isUploadedImageUrl } from "@/lib/uploads";
 
 /**
  * Abuse reports filed from a public profile.
@@ -23,8 +24,9 @@ type ActionResult =
  * A report is read by an administrator, so an attacker who could name any URL
  * would be aiming it at them — an off-site address turns the review screen
  * into a way to pull content from somewhere else, or to learn when an admin
- * looked. Only paths under /uploads/ are accepted, which is what the upload
- * endpoint returns and nothing else can forge.
+ * looked. Only addresses the upload endpoint itself hands out are accepted —
+ * a local /uploads/ path, or this site’s blob store — and nothing else can
+ * forge one.
  */
 const MAX_REPORT_IMAGES = 5;
 
@@ -32,7 +34,7 @@ function cleanImages(input: unknown): string[] | null {
   if (!Array.isArray(input)) return [];
   const urls = input.filter((u): u is string => typeof u === "string").map((u) => u.trim());
   if (urls.length > MAX_REPORT_IMAGES) return null;
-  return urls.every((u) => /^\/uploads\/[A-Za-z0-9._-]+$/.test(u)) ? urls : null;
+  return urls.every(isUploadedImageUrl) ? urls : null;
 }
 
 export async function submitReport(input: {

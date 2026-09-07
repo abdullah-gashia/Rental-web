@@ -9,6 +9,7 @@ import { revalidatePath } from "next/cache";
 import { EscrowStatus }   from "@prisma/client";
 import bcryptjs          from "bcryptjs";
 import { GENERATED_PASSWORD_NOTICE } from "@/lib/auth";
+import { isUploadedImageUrl } from "@/lib/uploads";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -502,7 +503,7 @@ export async function updateAvatar(url: string): Promise<ActionResult> {
     const sessionUser = await requireUser();
 
     const clean = url.trim();
-    if (!clean.startsWith("/uploads/") || clean.includes("..")) {
+    if (!isUploadedImageUrl(clean)) {
       return { success: false, error: "ที่อยู่รูปไม่ถูกต้อง" };
     }
 
