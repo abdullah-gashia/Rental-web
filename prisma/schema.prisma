@@ -247,6 +247,26 @@ model Session {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+/// A six-digit code sent to someone who has forgotten their password.
+///
+/// The code is stored as a bcrypt hash, not in the clear: whoever can read
+/// this table should not thereby be able to take over accounts. One row per
+/// address, so asking again replaces the last code rather than leaving a
+/// second one alive. `attempts` caps guessing — a six-digit code is only a
+/// million possibilities, which is nothing without a limit.
+model PasswordResetCode {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  codeHash   String
+  expiresAt  DateTime
+  attempts   Int      @default(0)
+  lastSentAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  @@index([expiresAt])
+  @@map("password_reset_codes")
+}
+
 model VerificationToken {
   identifier String
   token      String   @unique

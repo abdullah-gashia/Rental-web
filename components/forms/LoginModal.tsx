@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import ForgotPasswordForm from "./ForgotPasswordForm";
 import { useT, useTr } from "@/lib/i18n/LocaleProvider";
 import { useToastStore } from "@/lib/stores/toast-store";
 import { useAuthStore } from "@/lib/stores/auth-store";
@@ -24,9 +25,14 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(initialError);
   const [googleLoading, setGoogleLoading] = useState(false);
+  // The reset flow replaces the sign-in form inside this same dialog,
+  // so nobody loses the page they were on to go and reset a password.
+  const [forgot, setForgot] = useState(false);
 
   // Surface an error handed in from the page (OAuth bounce-back)
   useEffect(() => { if (initialError) setError(initialError); }, [initialError]);
+
+  useEffect(() => { if (!isOpen) setForgot(false); }, [isOpen]);
 
   const handleGoogle = async () => {
     setError("");
@@ -83,6 +89,10 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
+      {forgot ? (
+        <ForgotPasswordForm onBack={() => setForgot(false)} />
+      ) : (
+      <>
       <div className="flex justify-between items-start mb-6">
         <div>
           <h2 className="text-xl font-bold">{t("login_title")}</h2>
@@ -144,7 +154,18 @@ export default function LoginModal({ isOpen, onClose, initialError = "" }: Login
           {loading ? tr("กำลังเข้าสู่ระบบ…") : t("login_btn")}
         </button>
       </form>
-      <p className="text-xs text-center text-[var(--c-faint)] mt-4">{tr("ทดสอบ: somchai.p@psu.ac.th / password123")}</p>
+
+      <button
+        type="button"
+        onClick={() => { setError(""); setForgot(true); }}
+        className="w-full text-center text-sm text-[var(--c-accent)] hover:underline mt-4"
+      >
+        {tr("ลืมรหัสผ่าน?")}
+      </button>
+
+      <p className="text-xs text-center text-[var(--c-faint)] mt-3">{tr("ทดสอบ: somchai.p@psu.ac.th / password123")}</p>
+      </>
+      )}
     </Modal>
   );
 }

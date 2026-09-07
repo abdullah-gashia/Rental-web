@@ -269,3 +269,77 @@ export async function sendAdminMessageEmail(input: {
     return { sent: false, reason: e instanceof Error ? e.message : "unknown error" };
   }
 }
+
+// ─── Password reset code ──────────────────────────────────────────────────────
+
+/**
+ * Sends the six-digit code that lets somebody set a new password.
+ *
+ * The code is spelled out in the subject line as well as the body: a person
+ * checking mail on a phone can often read it from the notification without
+ * opening anything. The mail says plainly what to do if they did not ask for
+ * it, because an unexpected reset mail is how people find out someone is
+ * trying to get into their account.
+ */
+export async function sendPasswordResetCodeEmail(input: {
+  to: string;
+  code: string;
+  minutesValid: number;
+}): Promise<{ sent: boolean; reason?: string }> {
+  const mailer = getTransporter();
+  if (!mailer) {
+    return { sent: false, reason: "GMAIL_USER / GMAIL_APP_PASSWORD not configured" };
+  }
+
+  const { to, code, minutesValid } = input;
+
+  const text = [
+    "รหัสยืนยันสำหรับตั้งรหัสผ่านใหม่ PSU Store",
+    "",
+    `รหัสของคุณคือ ${code}`,
+    `ใช้ได้ภายใน ${minutesValid} นาที`,
+    "",
+    "ถ้าคุณไม่ได้เป็นคนขอ ไม่ต้องทำอะไร รหัสนี้จะหมดอายุไปเอง",
+    "และรหัสผ่านเดิมของคุณยังใช้ได้ตามปกติ",
+  ].join("\n");
+
+  const html = `
+<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;max-width:520px;margin:0 auto;padding:28px 24px;color:#0f172a">
+  <p style="margin:0 0 6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2563eb;font-weight:700">
+    PSU Store
+  </p>
+  <h1 style="margin:0 0 18px;font-size:20px;font-weight:700">ตั้งรหัสผ่านใหม่</h1>
+
+  <p style="margin:0 0 20px;font-size:14px;line-height:1.8;color:#334155">
+    กรอกรหัสนี้ในหน้าเว็บเพื่อยืนยันว่าเป็นคุณ
+  </p>
+
+  <div style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:18px;text-align:center">
+    <span style="font-size:34px;font-weight:700;letter-spacing:.22em;font-family:ui-monospace,'SF Mono',Menlo,monospace;color:#0a2b5e">
+      ${code}
+    </span>
+  </div>
+
+  <p style="margin:16px 0 0;font-size:13px;color:#64748b">
+    ใช้ได้ภายใน ${minutesValid} นาที
+  </p>
+
+  <p style="margin:26px 0 0;padding-top:16px;border-top:1px solid #e3e8f0;font-size:12px;line-height:1.8;color:#94a3b8">
+    ถ้าคุณไม่ได้เป็นคนขอ ไม่ต้องทำอะไร รหัสนี้จะหมดอายุไปเอง
+    และรหัสผ่านเดิมของคุณยังใช้ได้ตามปกติ &middot; PSU Store
+  </p>
+</div>`.trim();
+
+  try {
+    await mailer.sendMail({
+      from: `"PSU Store" <${GMAIL_USER}>`,
+      to,
+      subject: `${code} คือรหัสยืนยันสำหรับตั้งรหัสผ่านใหม่ — PSU Store`,
+      text,
+      html,
+    });
+    return { sent: true };
+  } catch (e) {
+    return { sent: false, reason: e instanceof Error ? e.message : "unknown error" };
+  }
+}
