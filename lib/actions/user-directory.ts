@@ -104,31 +104,48 @@ export async function getUserDirectory(search?: string): Promise<DirectoryUser[]
 }
 
 /** The listings shown on a public profile. */
+/**
+ * Everything this person has on sale, and how many that really is.
+ *
+ * The count used to come from the length of this list, which was capped at
+ * twenty-four — so a seller with fifty listings was told they had twenty-four,
+ * and only twenty-four were drawn. The cap is still here as a guard against a
+ * single profile trying to render thousands of cards, but it is well clear of
+ * anything real, and the total is counted separately so the heading is honest
+ * even when the list is not the whole of it.
+ */
+const PROFILE_ITEM_CAP = 200;
+
 export async function getUserPublicItems(userId: string) {
   const graceCutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
-  const items = await prisma.item.findMany({
-    where: {
-      sellerId: userId,
-      status: "APPROVED",
-      OR: [
-        { scheduledForDeletionAt: null },
-        { scheduledForDeletionAt: { gt: graceCutoff } },
-      ],
-    },
+  const visible = {
+    sellerId: userId,
+    status: "APPROVED" as const,
+    OR: [
+      { scheduledForDeletionAt: null },
+      { scheduledForDeletionAt: { gt: graceCutoff } },
+    ],
+  };
+
+  const [items, total] = await Promise.all([
+    prisma.item.findMany({
+    where: visible,
     orderBy: { createdAt: "desc" },
-    take: 24,
+    take: PROFILE_ITEM_CAP,
     select: {
       id: true, title: true, price: true, emoji: true, listingType: true,
       location: true, rentalRate: true, dailyRate: true, rentalRateType: true,
       category: { select: { nameTh: true } },
       images: { select: { url: true }, orderBy: { order: "asc" }, take: 1 },
     },
-  });
+    }),
+    prisma.item.count({ where: visible }),
+  ]);
 
   const suffix: Record<string, string> = { DAILY: "/วัน", MONTHLY: "/เดือน", YEARLY: "/ปี" };
 
-  return items.map((i) => {
+  const rows = items.map((i) => {
     const isRent = i.listingType === "RENT";
     const amount = isRent ? (i.rentalRate ?? i.dailyRate ?? 0) : i.price;
     return {
@@ -143,4 +160,6 @@ export async function getUserPublicItems(userId: string) {
       href: `/?q=${encodeURIComponent(i.title)}`,
     };
   });
+
+  return { items: rows, total };
 }

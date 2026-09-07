@@ -8,6 +8,7 @@ import { getUserPublicItems } from "@/lib/actions/user-directory";
 import { hasOpenReport } from "@/lib/actions/report-actions";
 import ProfileReviewSection from "./ProfileReviewSection";
 import OfficeProfile from "./OfficeProfile";
+import ProfileItemGrid from "./ProfileItemGrid";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -148,39 +149,7 @@ export default async function UserProfilePage({ params }: PageProps) {
         </div>
 
         {/* ── What this person has for sale ───────────────────────────────── */}
-        {publicItems.length > 0 && (
-          <section className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 sm:p-6 mb-6">
-            <h2 className="text-base font-bold text-[var(--c-ink)] mb-4">{tr("สินค้าของผู้ใช้รายนี้")}<span className="ml-2 text-xs font-normal text-[var(--c-muted)]">{tr("{0} รายการ", [publicItems.length])}</span>
-            </h2>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {publicItems.map((it) => (
-                <a
-                  key={it.id}
-                  href={it.href}
-                  className="group block rounded-xl border border-[var(--c-line)] overflow-hidden hover:border-[var(--c-line-str)] transition"
-                >
-                  <div className="aspect-square bg-[var(--c-subtle-2)] flex items-center justify-center overflow-hidden">
-                    {it.imageUrl
-                      ? <img src={it.imageUrl} alt={it.title} className="w-full h-full object-contain" />
-                      : <span className="text-3xl opacity-50">{it.emoji ?? "\ud83d\udce6"}</span>}
-                  </div>
-                  <div className="p-2.5">
-                    <p className="text-[12.5px] font-medium text-[var(--c-ink)] line-clamp-2 leading-snug group-hover:text-[var(--c-accent)]">
-                      {it.title}
-                    </p>
-                    <p className={`text-[13px] font-bold mt-1 ${it.isRent ? "text-[var(--c-accent-str)]" : "text-[var(--c-ink)]"}`}>
-                      {it.priceLabel}
-                    </p>
-                    <p className="text-[11px] text-[var(--c-muted)] truncate mt-0.5">
-                      {it.categoryTh}{it.location ? ` \u00b7 ${it.location}` : ""}
-                    </p>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </section>
-        )}
+        <ProfileItemGrid items={publicItems.items} total={publicItems.total} />
 
         {/* ── Leave a Review + Reviews List ───────────────────────────────── */}
         {/* ProfileReviewSection is a Client Component — it handles the review
