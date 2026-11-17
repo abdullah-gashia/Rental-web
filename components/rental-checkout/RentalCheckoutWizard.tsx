@@ -81,7 +81,7 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
     }
   }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const pricing = calcRentalPricing(state.startDate, state.endDate, dailyRate, securityDeposit);
+  const pricing = calcRentalPricing(state.startDate, state.endDate, dailyRate, securityDeposit, state.paymentMethod);
   const canNext = canAdvance(state, minRentalDays, maxRentalDays);
 
   function handleSubmit() {

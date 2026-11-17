@@ -3,12 +3,24 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { heldByPlatform, settleRental } from "@/lib/rental-money";
 
 type ActionResult = { success: true } | { success: false; error: string };
 
 function appendHistory(existing: any, status: string, note?: string) {
   const arr = Array.isArray(existing) ? existing : [];
   return [...arr, { status, changedAt: new Date().toISOString(), note: note ?? "" }];
+}
+
+/**
+ * A signature drawn on the canvas arrives as a PNG data URL. Anything else, or
+ * anything implausibly large for a signature, is refused rather than stored.
+ */
+function cleanSignature(sig: string | null | undefined): string | null {
+  if (typeof sig !== "string") return null;
+  if (!/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(sig)) return null;
+  if (sig.length > 400_000) return null;
+  return sig;
 }
 
 function revalidateOrder(orderId: string) {
@@ -68,7 +80,7 @@ export async function rejectRentalOrder(orderId: string, reason: string): Promis
     // Refund wallet
     await tx.user.update({
       where: { id: order.renterId },
-      data: { walletBalance: { increment: order.totalPaid } },
+      data: { walletBalance: { increment: heldByPlatform(order) } },
     });
     // Update order
     await tx.rentalOrder.update({
@@ -115,7 +127,7 @@ export async function cancelRentalOrder(orderId: string, reason: string): Promis
   await prisma.$transaction(async (tx) => {
     await tx.user.update({
       where: { id: order.renterId },
-      data: { walletBalance: { increment: order.totalPaid } },
+      data: { walletBalance: { increment: heldByPlatform(order) } },
     });
     await tx.rentalOrder.update({
       where: { id: orderId },
@@ -140,6 +152,7 @@ export async function confirmRentalPickup(
   orderId: string,
   photos: string[],
   conditionNote: string,
+  signature?: string | null,
 ): Promise<ActionResult> {
   const session = await auth();
   if (!session?.user?.id) return { success: false, error: "กรุณาเข้าสู่ระบบ" };
@@ -160,8 +173,15 @@ export async function confirmRentalPickup(
     pickupConditionNote: conditionNote || order.pickupConditionNote,
   };
 
-  if (isRenter) update.pickupRenterConfirm = true;
-  else          update.pickupOwnerConfirm  = true;
+  if (isRenter) {
+    // The renter signs the agreement at collection; keep the drawing as proof.
+    const sig = cleanSignature(signature);
+    if (!sig) return { success: false, error: "กรุณาลงลายเซ็นดิจิทัลก่อน" };
+    update.pickupSignature     = sig;
+    update.pickupRenterConfirm = true;
+  } else {
+    update.pickupOwnerConfirm  = true;
+  }
 
   // Check if both will have confirmed after this update
   const renterConfirmed = isRenter ? true : order.pickupRenterConfirm;
@@ -194,6 +214,7 @@ export async function confirmRentalReturn(
   returnCondition: string,
   conditionNote: string,
   damageFeeRequested: number,
+  signature?: string | null,
 ): Promise<ActionResult> {
   const session = await auth();
   if (!session?.user?.id) return { success: false, error: "กรุณาเข้าสู่ระบบ" };
@@ -219,6 +240,10 @@ export async function confirmRentalReturn(
     update.status = "RETURN_SCHEDULED";
     update.statusHistory = appendHistory(order.statusHistory, "RETURN_SCHEDULED", "ผู้เช่ายืนยันคืนของแล้ว รอเจ้าของตรวจสอบ");
   } else {
+    // The owner signs the return receipt; keep the drawing as proof.
+    const sig = cleanSignature(signature);
+    if (!sig) return { success: false, error: "กรุณาลงลายเซ็นดิจิทัลก่อน" };
+    update.returnSignature    = sig;
     update.returnOwnerConfirm = true;
     // Owner sets damage fee
     if (damageFeeRequested > 0) {
@@ -230,8 +255,12 @@ export async function confirmRentalReturn(
   const ownerConfirmed  = isRenter ? order.returnOwnerConfirm : true;
 
   if (renterConfirmed && ownerConfirmed) {
-    // Both confirmed — settle
-    const settled = await settleRentalOrder(orderId, order, damageFeeRequested);
+    // Both confirmed — settle. What this person just sent (photos, condition,
+    // note, signature) has to reach the settlement too: before, the second
+    // confirmation was thrown away, so an owner who confirmed last could mark an
+    // item lost and still have it settled as returned.
+    const { status: _s, statusHistory: _h, ...sent } = update;
+    const settled = await settleRentalOrder(orderId, { ...order, ...sent }, damageFeeRequested, sent);
     if (!settled.success) return settled;
     return { success: true };
   }
@@ -247,12 +276,11 @@ async function settleRentalOrder(
   orderId: string,
   order: any,
   extraDamageFees: number,
+  sent: Record<string, unknown> = {},
 ): Promise<ActionResult> {
   const damageFees   = Math.max(order.damageFees, extraDamageFees);
-  const lateFees     = order.lateFees;
-  const depositRefund = Math.max(0, order.securityDeposit - damageFees);
-  const ownerPayout  = order.rentalFee - order.platformFee + lateFees + damageFees;
   const isLost       = order.returnCondition === "LOST";
+  const { depositRefund, ownerPayout } = settleRental(order, damageFees, isLost);
 
   try {
     await prisma.$transaction(async (tx) => {
@@ -277,6 +305,7 @@ async function settleRentalOrder(
       await tx.rentalOrder.update({
         where: { id: orderId },
         data: {
+          ...sent,
           status:          finalStatus,
           damageFees,
           depositRefund:   isLost ? 0 : depositRefund,

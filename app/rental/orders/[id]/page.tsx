@@ -8,6 +8,7 @@ import { getRentalOrderDetail } from "@/lib/actions/rental-checkout";
 import OwnerActions   from "./_components/OwnerActions";
 import RenterActions  from "./_components/RenterActions";
 import RentalHandshake from "./_components/RentalHandshake";
+import { heldByPlatform } from "@/lib/rental-money";
 
 export const dynamic = "force-dynamic";
 
@@ -306,8 +307,11 @@ export default async function RentalOrderDetailPage({ params }: Props) {
                 <Row label={tr("เงินมัดจำ")}           value={`฿${order.securityDeposit.toLocaleString()}`} />
                 <div className="border-t border-[var(--c-line-soft)] pt-1.5 flex justify-between font-bold text-[var(--c-ink)]">
                   <span>{tr("ยอดที่หักไป")}</span>
-                  <span>฿{order.totalPaid.toLocaleString()}</span>
+                  <span>฿{heldByPlatform(order).toLocaleString()}</span>
                 </div>
+                {order.paymentMethod === "COD" && (
+                  <Row label={tr("ค่าเช่าจ่ายเป็นเงินสดตอนรับของ")} value={`฿${order.rentalFee.toLocaleString()}`} />
+                )}
                 {order.lateFees > 0 && <Row label={tr("ค่าปรับล่าช้า")} value={`฿${order.lateFees.toLocaleString()}`} color="text-[var(--c-danger)]" />}
                 {order.damageFees > 0 && <Row label={tr("ค่าเสียหาย")}   value={`฿${order.damageFees.toLocaleString()}`} color="text-[var(--c-danger)]" />}
                 {order.depositRefund !== null && isRenter && (
@@ -323,10 +327,10 @@ export default async function RentalOrderDetailPage({ params }: Props) {
             <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5">
               <h3 className="text-xs font-bold text-[var(--c-faint)] uppercase tracking-wide mb-3">{tr("นัดรับ / คืน")}</h3>
               <div className="space-y-1.5 text-sm">
-                {order.pickupLocation && <Row label={tr("ที่นัดรับ")}   value={`📍 ${order.pickupLocation}`} />}
+                {order.pickupLocation && <Row label={tr("ที่นัดรับ")}   value={`📍 ${tr(order.pickupLocation)}`} />}
                 {order.pickupDateTime && <Row label={tr("เวลานัดรับ")}  value={fmt(order.pickupDateTime)} />}
                 {order.returnLocation && order.returnLocation !== order.pickupLocation && (
-                  <Row label={tr("ที่นัดคืน")} value={`📍 ${order.returnLocation}`} />
+                  <Row label={tr("ที่นัดคืน")} value={`📍 ${tr(order.returnLocation)}`} />
                 )}
                 {order.pickupNote && <Row label={tr("หมายเหตุ")} value={order.pickupNote} />}
               </div>

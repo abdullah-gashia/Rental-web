@@ -3,6 +3,7 @@
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import type { RentalCheckoutState, RentalPricing } from "./useRentalCheckoutReducer";
+import { rentalPlatformFee } from "@/lib/rental-money";
 
 interface Props {
   state: RentalCheckoutState;
@@ -14,11 +15,12 @@ interface Props {
 export default function PaymentStep({ state, pricing, walletBalance, onSetPayment }: Props) {
   const tr = useTr();
   const balance = walletBalance ?? 0;
-  const { totalPaid, securityDeposit, rentalFee, platformFee } = pricing;
+  const { securityDeposit, rentalFee } = pricing;
 
-  // For COD: only the deposit needs to come from wallet
+  // Escrow: rent + fee + deposit from the wallet. Cash: only the deposit; the
+  // rent is paid in cash and no fee is charged (lib/rental-money.ts).
   const codRequiredFromWallet = securityDeposit;
-  const escrowRequired        = totalPaid;
+  const escrowRequired        = rentalFee + rentalPlatformFee(rentalFee, "ESCROW") + securityDeposit;
 
   const canAffordEscrow = balance >= escrowRequired;
   const canAffordCOD    = balance >= codRequiredFromWallet;
@@ -115,8 +117,8 @@ export default function PaymentStep({ state, pricing, walletBalance, onSetPaymen
               <span>฿{securityDeposit.toLocaleString()}</span>
             </div>
             <div className="flex justify-between text-xs text-[var(--c-warn)]">
-              <span>{tr("ค่าเช่า + ค่าธรรมเนียม (จ่ายสด)")}</span>
-              <span>฿{(rentalFee + platformFee).toLocaleString()}</span>
+              <span>{tr("ค่าเช่า (จ่ายสดตอนรับของ ไม่มีค่าธรรมเนียม)")}</span>
+              <span>฿{rentalFee.toLocaleString()}</span>
             </div>
           </>
         )}

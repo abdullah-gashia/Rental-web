@@ -10,6 +10,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { RENTAL_REQUEST_TIMEOUT_DAYS } from "@/lib/rental-config";
+import { heldByPlatform } from "@/lib/rental-money";
 
 // ─── 1. Overdue Detection ─────────────────────────────────────────────────────
 
@@ -19,7 +20,8 @@ export async function processOverdueRentals(): Promise<{ processed: number }> {
   // Find ACTIVE orders whose rentalEndDate has passed
   const overdueOrders = await prisma.rentalOrder.findMany({
     where: {
-      status: "ACTIVE",
+      // OVERDUE too: the late fee keeps growing for every day the item is not back
+      status: { in: ["ACTIVE", "OVERDUE"] },
       rentalEndDate: { lt: now },
     },
     include: {
@@ -34,6 +36,15 @@ export async function processOverdueRentals(): Promise<{ processed: number }> {
     );
     const lateFeePerDay = order.item.lateFeePerDay ?? 0;
     const accumulatedLateFees = lateFeePerDay * overdueDays;
+
+    // Already overdue and already told: only the fee moves on.
+    if (order.status === "OVERDUE") {
+      if (accumulatedLateFees !== order.lateFees) {
+        await prisma.rentalOrder.update({ where: { id: order.id }, data: { lateFees: accumulatedLateFees } });
+      }
+      processed++;
+      continue;
+    }
 
     const history = Array.isArray(order.statusHistory) ? order.statusHistory : [];
 
@@ -121,7 +132,7 @@ export async function autoExpireRentalRequests(): Promise<{ expired: number }> {
       // Refund wallet
       await tx.user.update({
         where: { id: order.renterId },
-        data: { walletBalance: { increment: order.totalPaid } },
+        data: { walletBalance: { increment: heldByPlatform(order) } },
       });
 
       // Restore item

@@ -923,6 +923,7 @@ model RentalOrder {
   pickupRenterConfirm   Boolean   @default(false)
   pickupOwnerConfirm    Boolean   @default(false)
   pickupConditionNote   String?
+  pickupSignature       String?   @db.Text // renter's signature on the agreement (PNG data URL)
   actualPickupAt        DateTime?
 
   // ── Return (Digital Handshake #2) ──
@@ -934,6 +935,7 @@ model RentalOrder {
   returnOwnerConfirm    Boolean   @default(false)
   returnCondition       String?   // SAME | MINOR_DAMAGE | MAJOR_DAMAGE | LOST
   returnConditionNote   String?
+  returnSignature       String?   @db.Text // owner's signature on the return receipt (PNG data URL)
 
   // ── Renewal ──
   renewalCount      Int     @default(0)
@@ -946,6 +948,11 @@ model RentalOrder {
   // ── Agreement ──
   agreementAcceptedAt DateTime?
   agreementText       String?   @db.Text
+  // ── Payment ──
+  // ESCROW: rent, fee and deposit held by the platform. COD: only the deposit
+  // is held; the rent is paid in cash at collection and no fee is charged.
+  // NULL on rows created before this column existed means ESCROW.
+  paymentMethod       PaymentMethod?
 
   // ── Cancellation ──
   cancelledAt   DateTime?

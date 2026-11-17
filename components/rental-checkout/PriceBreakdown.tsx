@@ -46,7 +46,10 @@ export default function PriceBreakdown({ pricing, lateFeePerDay, compact }: Prop
 
       {/* Info footnotes */}
       <div className="pt-1 space-y-1 text-[11px] text-[var(--c-faint)]">
-        <p>{tr("• ค่าเช่า ฿{0} + ค่าธรรมเนียม ฿{1} → จ่ายให้เจ้าของเมื่อคืนของ", [rentalFee, platformFee])}</p>
+        <p>{tr("• ค่าเช่า ฿{0} → จ่ายให้เจ้าของเมื่อคืนของ", [rentalFee.toLocaleString()])}</p>
+        {platformFee > 0 && (
+          <p>{tr("• ค่าธรรมเนียม ฿{0} → เข้ากองทุนงานภัทรเพื่อซื้ออุปกรณ์ให้นักศึกษายืมฟรี", [platformFee.toLocaleString()])}</p>
+        )}
         {securityDeposit > 0 && (
           <p>{tr("• มัดจำ ฿{0} → คืนให้คุณเมื่อของสภาพเดิม", [securityDeposit.toLocaleString()])}</p>
         )}

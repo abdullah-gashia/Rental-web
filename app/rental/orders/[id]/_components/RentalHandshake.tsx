@@ -124,9 +124,9 @@ export default function RentalHandshake({
     startTransition(async () => {
       let res;
       if (type === "pickup") {
-        res = await confirmRentalPickup(orderId, photos, conditionNote);
+        res = await confirmRentalPickup(orderId, photos, conditionNote, signature);
       } else {
-        res = await confirmRentalReturn(orderId, photos, condition, conditionNote, damageFee);
+        res = await confirmRentalReturn(orderId, photos, condition, conditionNote, damageFee, signature);
       }
       if (!res.success) setError((res as any).error);
       else router.refresh();

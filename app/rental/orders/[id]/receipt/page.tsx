@@ -146,6 +146,10 @@ export default async function RentalReceiptPage({ params, searchParams }: Props)
                     <FinRow label={tr("ค่าเสียหาย")}
                              value={`฿${order.damageFees.toLocaleString()}`} accent />
                   )}
+                  {order.paymentMethod === "COD" && (
+                    <FinRow label={tr("ค่าเช่าจ่ายเป็นเงินสดตอนรับของ")}
+                             value={`฿${order.rentalFee.toLocaleString()}`} />
+                  )}
                   <tr className="bg-[var(--c-subtle)] font-bold border-t border-[var(--c-line)]">
                     <td className="px-4 py-3 text-[var(--c-ink-1)]">{tr("ยอดรวม")}</td>
                     <td className="px-4 py-3 text-right text-[var(--c-ink-1)]">
@@ -205,6 +209,7 @@ export default async function RentalReceiptPage({ params, searchParams }: Props)
                 role={isReturn ? tr("เจ้าของสินค้า") : tr("ผู้เช่า")}
                 name={isReturn ? order.owner.name ?? "—" : order.renter.name ?? "—"}
                 dateStr={isReturn ? fmtDate(order.actualReturnDate) : fmtDate(order.actualPickupAt)}
+                image={isReturn ? order.returnSignature : order.pickupSignature}
               />
               <SigBlock
                 role={isReturn ? tr("ผู้เช่า") : tr("เจ้าของสินค้า")}
@@ -250,11 +255,14 @@ function FinRow({
   );
 }
 
-async function SigBlock({ role, name, dateStr }: { role: string; name: string; dateStr: string }) {
+async function SigBlock({ role, name, dateStr, image }: { role: string; name: string; dateStr: string; image?: string | null }) {
   const tr = await getTr();
   return (
     <div>
-      <div className="h-16 border-b-2 border-[var(--c-line-str)] mb-2" />
+      <div className="h-16 border-b-2 border-[var(--c-line-str)] mb-2 flex items-end justify-center">
+        {/* the drawing made at the hand-over, when there is one */}
+        {image && <img src={image} alt={tr("ลายเซ็น")} className="max-h-16 max-w-full object-contain" />}
+      </div>
       <p className="text-xs font-semibold text-[var(--c-ink-2)]">{role}</p>
       <p className="text-xs text-[var(--c-muted)]">{name}</p>
       <p className="text-[11px] text-[var(--c-faint)] mt-0.5">{tr("วันที่: {0}", [dateStr])}</p>

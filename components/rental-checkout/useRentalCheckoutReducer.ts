@@ -1,6 +1,7 @@
 "use client";
 
 import { useReducer } from "react";
+import { rentalPlatformFee, type RentalPaymentMethod } from "@/lib/rental-money";
 
 // ─── State ────────────────────────────────────────────────────────────────────
 
@@ -61,10 +62,11 @@ export function calcRentalPricing(
   endDate: string,
   dailyRate: number,
   securityDeposit: number,
+  paymentMethod: RentalPaymentMethod = "ESCROW",
 ): RentalPricing {
   const rentalDays    = calcRentalDays(startDate, endDate);
   const rentalFee     = dailyRate * rentalDays;
-  const platformFee   = Math.round(rentalFee * 0.05 * 100) / 100;
+  const platformFee   = rentalPlatformFee(rentalFee, paymentMethod);
   const totalPaid     = rentalFee + platformFee + securityDeposit;
   return { rentalDays, rentalFee, platformFee, securityDeposit, totalPaid };
 }

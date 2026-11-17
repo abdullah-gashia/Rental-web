@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { RENTAL_REQUEST_TIMEOUT_MS } from "@/lib/rental-config";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { rentalPlatformFee, heldByPlatform } from "@/lib/rental-money";
 
 // ─── Validation Schema ────────────────────────────────────────────────────────
 
@@ -123,9 +124,9 @@ export async function createRentalOrder(input: CreateRentalInput): Promise<Renta
   const dailyRate       = item.dailyRate       ?? 0;
   const securityDeposit = item.securityDeposit ?? 0;
   const rentalFee       = dailyRate * rentalDays;
-  const platformFee     = Math.round(rentalFee * 0.05 * 100) / 100;
+  const platformFee     = rentalPlatformFee(rentalFee, data.paymentMethod);
   const totalPaid       = rentalFee + platformFee + securityDeposit;
-  const escrowDeduct    = data.paymentMethod === "ESCROW" ? totalPaid : securityDeposit;
+  const escrowDeduct    = heldByPlatform({ paymentMethod: data.paymentMethod, totalPaid, securityDeposit });
 
   // 8. Wallet check
   if (renter.walletBalance < escrowDeduct) {
@@ -167,6 +168,7 @@ export async function createRentalOrder(input: CreateRentalInput): Promise<Renta
           securityDeposit,
           platformFee,
           totalPaid,
+          paymentMethod:   data.paymentMethod,
           pickupLocation:  data.pickupLocation,
           pickupDateTime:  new Date(data.pickupDateTime),
           pickupNote:      data.pickupNote ?? null,

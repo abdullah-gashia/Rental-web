@@ -11,13 +11,15 @@ import {
   processOverdueBorrows,
 } from "@/lib/cron/borrow";
 
-// Secured by CRON_SECRET — call this every hour via Vercel Cron or an external
-// scheduler. Prefer the header form:
+// Secured by CRON_SECRET. vercel.json runs it once a day at 01:00 UTC (08:00 in
+// Thailand), which is what the Hobby plan allows; Vercel sends the secret as a
+// Bearer header by itself once CRON_SECRET is set in the project. Late fees are
+// counted in whole days, so a daily run loses nothing. Other schedulers should
+// prefer the header form:
 //   curl -H "Authorization: Bearer $CRON_SECRET" https://.../api/cron/rentals
 // The ?secret= form still works for schedulers that cannot send headers, but a
 // query string is written to access logs and referrers, so it is second choice.
 //
-// vercel.json: { "crons": [{ "path": "/api/cron/rentals", "schedule": "0 * * * *" }] }
 
 /** Constant-time compare so the secret cannot be guessed a character at a time. */
 function secretMatches(provided: string | null, expected: string): boolean {
