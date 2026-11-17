@@ -237,7 +237,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
         {/* ── Parties + private notes ────────────────────────────────── */}
         <div className="bw-panel">
           <h2 className="bw-h">{tr("ผู้เกี่ยวข้อง")}</h2>
-          <Row k={tr("ผู้ให้ยืม")} v={order.office?.name ?? tr("งานภัทร")} />
+          <Row k={tr("ผู้ให้ยืม")} v={tr(order.office?.name) || tr("งานภัทร")} />
           {isOffice && order.borrower && (
             <>
               <Row k={tr("ผู้ยืม")} v={order.borrower.name ?? "—"} />

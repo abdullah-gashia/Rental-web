@@ -204,7 +204,7 @@ export default function BroadcastForm({ counts, adminEmail, mailReady }: Props) 
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={pending ? undefined : () => setConfirm(false)} />
           <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
             <h3 className="text-base font-bold text-[var(--c-ink)]">{tr("ยืนยันการส่ง?")}</h3>
-            <p className="text-sm text-[var(--c-ink-2)] leading-relaxed">{tr("อีเมลจะถูกส่งถึง")}<span className="font-bold text-[var(--c-accent)]">{tr("{0} คน", [reachable])}</span>{tr("ในกลุ่ม &ldquo;{0}&rdquo; ทันที และ", [tr(AUDIENCE_LABEL[audience])])}<span className="font-semibold">{tr("ยกเลิกไม่ได้")}</span>
+            <p className="text-sm text-[var(--c-ink-2)] leading-relaxed">{tr("อีเมลจะถูกส่งถึง")}<span className="font-bold text-[var(--c-accent)]">{tr("{0} คน", [reachable])}</span>{tr("ในกลุ่ม “{0}” ทันที และ", [tr(AUDIENCE_LABEL[audience])])}<span className="font-semibold">{tr("ยกเลิกไม่ได้")}</span>
             </p>
             <div className="rounded-xl bg-[var(--c-subtle)] border border-[var(--c-line)] px-4 py-3">
               <p className="text-xs text-[var(--c-muted)]">{tr("หัวข้อ")}</p>

@@ -83,7 +83,7 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
               }`}
             >
               <p className="font-semibold">{tr(loc.label)}</p>
-              <p className="text-[10px] opacity-70 mt-0.5">{loc.description}</p>
+              <p className="text-[10px] opacity-70 mt-0.5">{tr(loc.description)}</p>
             </button>
           ))}
           {/* Custom option */}
@@ -178,7 +178,7 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
                   }`}
                 >
                   <p className="font-semibold">{tr(loc.label)}</p>
-                  <p className="text-[10px] opacity-70 mt-0.5">{loc.description}</p>
+                  <p className="text-[10px] opacity-70 mt-0.5">{tr(loc.description)}</p>
                 </button>
               ))}
               <button

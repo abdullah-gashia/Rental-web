@@ -16,7 +16,8 @@ export async function generateMetadata() {
 
 async function PendingCard({ submittedAt }: { submittedAt: Date | string }) {
   const tr = await getTr();
-  const date = new Date(submittedAt).toLocaleDateString("th-TH", {
+  const __loc = await getLocale();
+  const date = new Date(submittedAt).toLocaleDateString(dateTag(__loc), {
     year: "numeric", month: "long", day: "numeric",
     hour: "2-digit", minute: "2-digit",
   });
@@ -55,12 +56,13 @@ async function ApprovedCard({
   verifiedAt: Date | string | null;
 }) {
   const tr = await getTr();
+  const __loc = await getLocale();
   const masked = psuIdNumber
     ? psuIdNumber.slice(0, 3) + "•".repeat(psuIdNumber.length - 3)
     : "—";
 
   const date = verifiedAt
-    ? new Date(verifiedAt).toLocaleDateString("th-TH", {
+    ? new Date(verifiedAt).toLocaleDateString(dateTag(__loc), {
         year: "numeric", month: "long", day: "numeric",
       })
     : "—";

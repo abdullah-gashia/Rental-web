@@ -120,7 +120,7 @@ export default function ConsoleSidebar({
         </div>
         <div className="min-w-0">
           <p className="text-[12.5px] font-semibold text-[var(--hp-ink)] truncate">
-            {user.name ?? userFallback}
+            {user.name ? tr(user.name) : userFallback}
           </p>
           <p className="text-[10.5px] text-[var(--hp-muted)] truncate">{user.email}</p>
         </div>

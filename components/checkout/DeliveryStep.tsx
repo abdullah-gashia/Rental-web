@@ -269,7 +269,7 @@ function MeetupForm({
               <div className="meetup-card-icon">🏫</div>
               <div className="min-w-0">
                 <p className="text-[12px] font-bold text-[var(--c-ink)] leading-tight truncate">{tr(loc.label)}</p>
-                <p className="text-[10px] text-[var(--c-muted)] mt-0.5 leading-tight line-clamp-2">{loc.description}</p>
+                <p className="text-[10px] text-[var(--c-muted)] mt-0.5 leading-tight line-clamp-2">{tr(loc.description)}</p>
               </div>
             </button>
           );

@@ -133,7 +133,7 @@ export default function BorrowItemClient({ item }: { item: any }) {
               <div className="bw-panel">
                 <h2 className="bw-h">{tr("ผู้ให้ยืม")}</h2>
                 <p className="text-[14px] font-semibold text-[var(--psu-navy)]">
-                  {office.officeName ?? office.name ?? tr("งานภัทร")}
+                  {tr(office.officeName ?? office.name) || tr("งานภัทร")}
                 </p>
                 {office.officeDescription && (
                   <p className="text-[13px] text-[var(--bw-ink-2)] leading-[1.9] mt-1.5">

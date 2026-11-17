@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useT } from "@/lib/i18n/LocaleProvider";
+import { useT, useTr } from "@/lib/i18n/LocaleProvider";
 import type { ItemWithDetails } from "@/lib/types";
 import ProductCard from "./ProductCard";
 import Panel from "@/components/ui/Panel";
@@ -17,6 +17,7 @@ interface ProductGridProps {
 export default function ProductGrid({ title, items, limit = 10, onItemClick }: ProductGridProps) {
   const [expanded, setExpanded] = useState(false);
   const t = useT();
+  const tr = useTr();
 
   const visible = expanded ? items : items.slice(0, limit);
 
@@ -25,7 +26,7 @@ export default function ProductGrid({ title, items, limit = 10, onItemClick }: P
   return (
     <Panel
       title={title}
-      sub={`${items.length} รายการ`}
+      sub={tr("{0} รายการ", [items.length])}
       meta={
         items.length > limit ? (
           <button onClick={() => setExpanded(!expanded)} className="hp-btn hp-btn-ghost h-8 text-[12.5px]">

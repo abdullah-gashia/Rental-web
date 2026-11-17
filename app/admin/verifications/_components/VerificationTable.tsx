@@ -26,7 +26,7 @@ export default function VerificationTable({ requests, filter }: Props) {
     return (
       <div className="text-center py-16 text-[var(--c-muted)]">
         <p className="text-4xl mb-3">📭</p>
-        <p className="font-medium">{tr("ไม่มีคำขอ")}{filter === "PENDING" ? tr("ที่รอตรวจสอบ") : ""}</p>
+        <p className="font-medium">{filter === "PENDING" ? tr("ไม่มีคำขอที่รอตรวจสอบ") : tr("ไม่มีคำขอ")}</p>
       </div>
     );
   }

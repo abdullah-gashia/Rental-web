@@ -721,7 +721,7 @@ html:has(.hp-root) body { background: var(--hp-canvas); }
 
 /* ─── Panels ──────────────────────────────────────── */
 .hp-panel {
-  background: var(--hp-panel, #fff);
+  background: var(--hp-panel, var(--c-surface));
   border: 1px solid rgba(15, 30, 53, 0.06);
   border-radius: 12px;
   padding: 20px;

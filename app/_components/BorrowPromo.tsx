@@ -52,7 +52,7 @@ export default function BorrowPromo({ items, raised, itemsTotal, timesLent }: Pr
 
   return (
     <section className="bw-scope mb-6">
-      <div className="rounded-[14px] border border-[var(--psu-sky-200)] bg-[linear-gradient(180deg,#f5f9ff,#ffffff_55%)] overflow-hidden">
+      <div className="rounded-[14px] border border-[var(--psu-sky-200)] bg-[linear-gradient(180deg,var(--c-subtle),var(--c-surface)_55%)] overflow-hidden">
         <div className="px-5 pt-5 pb-4 flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-[var(--psu-blue)]">

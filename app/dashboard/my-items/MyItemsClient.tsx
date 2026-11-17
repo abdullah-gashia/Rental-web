@@ -291,7 +291,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
             </>
           ) : (
             <>
-              <h3>{tr("ไม่มีประกาศในหมวด &ldquo;{0}&rdquo;", [FILTERS.find((f) => f.key === filter)?.label])}</h3>
+              <h3>{tr("ไม่มีประกาศในหมวด “{0}”", [FILTERS.find((f) => f.key === filter)?.label])}</h3>
               <p>{tr("ลองเลือกหมวดอื่น หรือดูประกาศทั้งหมดของคุณ")}</p>
               <button onClick={() => setFilter("ALL")} className="ui-btn ui-btn-ghost mt-4">{tr("ดูทั้งหมด")}</button>
             </>

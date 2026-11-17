@@ -14,6 +14,7 @@ export interface ReceiptData {
   buyerName:     string;
   sellerName:    string;
   deliveryMethod?:      string;
+  paymentMethod?:       string;   // ESCROW | COD
   // Shipping details (optional)
   shippingMethod?:      string;
   trackingNumber?:      string;
@@ -32,6 +33,10 @@ interface Props {
 export default function ReceiptModal({ data, onClose }: Props) {
   const __loc = useLocale();
   const tr = useTr();
+  // A cash order was never in escrow; the receipt says how it was actually paid.
+  const paidInCash = data.paymentMethod === "COD";
+  const paidBadge  = paidInCash ? tr("✅ ชำระเงินสดแล้ว") : tr("✅ ชำระเงินแล้ว (PAID via Escrow)");
+  const paidStatus = paidInCash ? tr("✅ จ่ายเงินสดตอนรับของ") : "✅ PAID via Escrow";
   const printRef = useRef<HTMLDivElement>(null);
 
   const shortId     = data.orderId.slice(-10).toUpperCase();
@@ -92,7 +97,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
 <body>
   <div class="header">
     <div class="logo">PSU<span>.</span>STORE</div>
-    <div class="badge">${tr("✅ ชำระเงินแล้ว (PAID via Escrow)")}</div>
+    <div class="badge">${paidBadge}</div>
     <div class="title">${tr("ใบเสร็จรับเงิน")}</div>
     <div class="ref">${tr("หมายเลขอ้างอิง: #{0}", [shortId])}</div>
   </div>
@@ -103,7 +108,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
     <div class="row"><span class="label">${tr("ผู้ซื้อ")}</span><span class="value">${data.buyerName}</span></div>
     <div class="row"><span class="label">${tr("ผู้ขาย")}</span><span class="value">${data.sellerName}</span></div>
     <div class="row"><span class="label">${tr("วันที่เสร็จสิ้น")}</span><span class="value">${completedDate}</span></div>
-    <div class="row"><span class="label">${tr("สถานะ")}</span><span class="value">✅ PAID via Escrow</span></div>
+    <div class="row"><span class="label">${tr("สถานะ")}</span><span class="value">${paidStatus}</span></div>
   </div>
 
   <div class="amount">฿${data.amount.toLocaleString("th-TH")}</div>
@@ -177,7 +182,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
             <p className="text-xl font-black tracking-tighter">
               PSU<span style={{ color: "var(--c-accent)" }}>.</span>STORE
             </p>
-            <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">{tr("✅ ชำระเงินแล้ว (PAID via Escrow)")}</span>
+            <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">{paidBadge}</span>
             <p className="text-xs text-[var(--c-muted)] font-mono">#{shortId}</p>
           </div>
 
@@ -189,7 +194,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
               { label: tr("ผู้ซื้อ"),         value: data.buyerName  || tr("ไม่ระบุ") },
               { label: tr("ผู้ขาย"),         value: data.sellerName || tr("ไม่ระบุ") },
               { label: tr("วันที่เสร็จสิ้น"), value: completedDate },
-              { label: tr("สถานะ"),          value: "✅ PAID via Escrow" },
+              { label: tr("สถานะ"),          value: paidStatus },
             ].map(({ label, value }) => (
               <div key={label} className="flex items-start justify-between gap-2 text-sm">
                 <span className="text-[var(--c-muted)] flex-shrink-0">{label}</span>

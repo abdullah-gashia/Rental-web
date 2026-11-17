@@ -46,7 +46,7 @@ export default function DeleteDialog({
 
       {/* Panel */}
       <div className="relative bg-[var(--c-surface)] rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
-        <h3 className="text-base font-bold text-[var(--c-ink)] flex items-center gap-2">{tr("🗑️ ลบสินค้า &ldquo;{0}&rdquo; ถาวร", [itemTitle])}</h3>
+        <h3 className="text-base font-bold text-[var(--c-ink)] flex items-center gap-2">{tr("🗑️ ลบสินค้า “{0}” ถาวร", [itemTitle])}</h3>
 
         {/* Danger warning */}
         <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl px-3 py-2.5 text-sm text-[var(--c-danger)] flex items-start gap-2">
@@ -73,7 +73,7 @@ export default function DeleteDialog({
 
         {/* Type-to-confirm */}
         <div>
-          <label className="text-sm text-[var(--c-ink-2)] font-medium block mb-1.5">{tr("พิมพ์ชื่อสินค้า &ldquo;")}<span className="font-bold text-[var(--c-ink)]">{itemTitle}</span>{tr("&rdquo; เพื่อยืนยัน:")}</label>
+          <label className="text-sm text-[var(--c-ink-2)] font-medium block mb-1.5">{tr("พิมพ์ชื่อสินค้า “")}<span className="font-bold text-[var(--c-ink)]">{itemTitle}</span>{tr("” เพื่อยืนยัน:")}</label>
           <input
             type="text"
             className={`w-full border rounded-xl p-3 text-sm focus:outline-none focus:ring-2 transition ${

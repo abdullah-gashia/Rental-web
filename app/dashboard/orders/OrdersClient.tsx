@@ -499,6 +499,7 @@ export default function OrdersClient({
       buyerName:            bo.buyer?.name  ?? so.buyer?.name  ?? tr("ไม่ระบุ"),
       sellerName:           bo.seller?.name ?? so.seller?.name ?? tr("ไม่ระบุ"),
       deliveryMethod:       order.deliveryMethod   ?? undefined,
+      paymentMethod:        order.paymentMethod    ?? undefined,
       shippingMethod:       order.shippingMethod   ?? undefined,
       trackingNumber:       order.trackingNumber   ?? undefined,
       shippingProofImage:   order.shippingProofImage  ?? undefined,

@@ -146,7 +146,7 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
                         {th ? tr("หน่วยงาน") : "Office"}
                       </span>
                       <p className="text-[14px] font-semibold text-[var(--hp-ink)] truncate group-hover:text-[var(--psu-indigo)]">
-                        {u.name ?? (th ? tr("งานภัทร") : "Office")}
+                        {u.name ? tr(u.name) : (th ? tr("งานภัทร") : "Office")}
                       </p>
                       <p className="text-[11.5px] text-[var(--hp-muted)] mt-0.5 truncate">
                         {(u.officeLocation ? tr(u.officeLocation) : null) ?? (th ? tr("ให้ยืมอุปกรณ์ฟรีสำหรับนักศึกษา") : "Free equipment lending")}
