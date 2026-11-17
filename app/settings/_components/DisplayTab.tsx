@@ -124,7 +124,7 @@ export default function DisplayTab({ preferences, showToast }: Props) {
           className="px-6 py-2.5 bg-[var(--c-accent)] hover:bg-[var(--c-accent-str)] text-white rounded-xl text-sm font-bold transition disabled:opacity-50 flex items-center gap-2"
         >
           {pending && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-          บันทึกการเปลี่ยนแปลง
+          {tr("บันทึกการเปลี่ยนแปลง")}
         </button>
       </div>
     </div>

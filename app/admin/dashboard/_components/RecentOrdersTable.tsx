@@ -1,5 +1,8 @@
 "use client";
 
+import type { Locale } from "@/lib/i18n/dictionaries";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { dateTag } from "@/lib/i18n/dates";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 import type { TrFn } from "@/lib/i18n/phrases";
 
@@ -31,7 +34,7 @@ function formatBaht(v: number): string {
   }).format(v);
 }
 
-function relativeTime(iso: string, tr: TrFn): string {
+function relativeTime(iso: string, tr: TrFn, loc: Locale): string {
   const diff = Date.now() - new Date(iso).getTime();
   const mins  = Math.floor(diff / 60_000);
   if (mins < 1)   return tr("เมื่อกี้");
@@ -40,11 +43,12 @@ function relativeTime(iso: string, tr: TrFn): string {
   if (hrs < 24)   return tr("{0} ชม. ที่แล้ว", [hrs]);
   const days = Math.floor(hrs / 24);
   if (days < 30)  return tr("{0} วันที่แล้ว", [days]);
-  return new Intl.DateTimeFormat("th-TH", { dateStyle: "medium" }).format(new Date(iso));
+  return new Intl.DateTimeFormat(dateTag(loc), { dateStyle: "medium" }).format(new Date(iso));
 }
 
 export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
   const tr = useTr();
+  const __loc = useLocale();
   if (orders.length === 0) {
     return (
       <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-5 shadow-sm">
@@ -103,7 +107,7 @@ export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
                   </td>
 
                   <td className="px-5 py-3.5 text-right text-xs text-[var(--c-muted)] whitespace-nowrap">
-                    {relativeTime(order.createdAt, tr)}
+                    {relativeTime(order.createdAt, tr, __loc)}
                   </td>
                 </tr>
               );

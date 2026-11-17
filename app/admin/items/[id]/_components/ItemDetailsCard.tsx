@@ -1,3 +1,4 @@
+import { getTr } from "@/lib/i18n/server";
 import StatusBadge from "../../../_components/StatusBadge";
 import { formatCurrency } from "../../../_lib/utils";
 
@@ -26,55 +27,56 @@ interface Props {
   };
 }
 
-export default function ItemDetailsCard({ item }: Props) {
+export default async function ItemDetailsCard({ item }: Props) {
+  const tr = await getTr();
   return (
     <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
-      <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-4">รายละเอียดสินค้า</h3>
+      <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-4">{tr("รายละเอียดสินค้า")}</h3>
 
       <div className="space-y-3.5">
         {/* Price */}
-        <Row label="ราคา">
+        <Row label={tr("ราคา")}>
           <span className="text-lg font-bold text-[var(--c-accent)]">
             {formatCurrency(item.price)}
           </span>
           {item.negotiable && (
             <span className="ml-2 text-xs text-[var(--c-ink-3)] bg-[var(--c-canvas)] rounded-full px-2 py-0.5">
-              ต่อรองได้
+              {tr("ต่อรองได้")}
             </span>
           )}
         </Row>
 
         {/* Category */}
-        <Row label="หมวดหมู่">
+        <Row label={tr("หมวดหมู่")}>
           <span className="text-[var(--c-ink-1)]">
             {item.category.emoji && <span className="mr-1">{item.category.emoji}</span>}
-            {item.category.nameTh}
+            {tr(item.category.nameTh)}
           </span>
         </Row>
 
         {/* Condition */}
-        <Row label="สภาพ">
+        <Row label={tr("สภาพ")}>
           <span className="text-[var(--c-ink-1)]">
-            {CONDITION_TH[item.condition] || item.condition}
+            {tr(CONDITION_TH[item.condition] || item.condition)}
           </span>
         </Row>
 
         {/* Listing Type */}
-        <Row label="ประเภท">
+        <Row label={tr("ประเภท")}>
           <span className="text-[var(--c-ink-1)]">
-            {item.listingType === "SELL" ? "ขาย" : "เช่า"}
+            {item.listingType === "SELL" ? tr("ขาย") : tr("เช่า")}
           </span>
         </Row>
 
         {/* Status */}
-        <Row label="สถานะ">
+        <Row label={tr("สถานะ")}>
           <StatusBadge status={item.status} type="item" />
         </Row>
 
         {/* Rejection reason */}
         {item.rejectReason && (
           <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-xl p-3 text-sm">
-            <span className="font-medium text-[var(--c-danger)]">เหตุผล:</span>
+            <span className="font-medium text-[var(--c-danger)]">{tr("เหตุผล:")}</span>
             <span className="text-[var(--c-danger)] ml-1">{item.rejectReason}</span>
           </div>
         )}
@@ -82,25 +84,25 @@ export default function ItemDetailsCard({ item }: Props) {
         {/* Divider */}
         <div className="border-t border-[var(--c-line-soft)] pt-3.5">
           <p className="text-xs font-semibold text-[var(--c-faint)] uppercase tracking-wider mb-3">
-            การจัดส่งและชำระเงิน
+            {tr("การจัดส่งและชำระเงิน")}
           </p>
 
           <div className="grid grid-cols-3 gap-2 mb-3">
-            <DeliveryChip label="จัดส่ง" enabled={item.allowShipping} />
-            <DeliveryChip label="นัดรับ" enabled={item.allowMeetup} />
+            <DeliveryChip label={tr("จัดส่ง")} enabled={item.allowShipping} />
+            <DeliveryChip label={tr("นัดรับ")} enabled={item.allowMeetup} />
             <DeliveryChip label="COD" enabled={item.allowCOD} />
           </div>
 
           {/* Location */}
           {item.location && (
-            <Row label="สถานที่">
-              <span className="text-[var(--c-ink-1)]">📍 {item.location}</span>
+            <Row label={tr("สถานที่")}>
+              <span className="text-[var(--c-ink-1)]">📍 {tr(item.location)}</span>
             </Row>
           )}
 
           {/* Shipping note */}
           {item.shippingNote && (
-            <Row label="หมายเหตุ">
+            <Row label={tr("หมายเหตุ")}>
               <span className="text-[var(--c-ink-2)] text-xs italic">{item.shippingNote}</span>
             </Row>
           )}

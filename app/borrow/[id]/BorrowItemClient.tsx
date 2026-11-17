@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
@@ -16,6 +18,7 @@ import {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export default function BorrowItemClient({ item }: { item: any }) {
+  const __loc = useLocale();
   const tr = useTr();
   const router    = useRouter();
   const openModal = useModalStore((s) => s.open);
@@ -140,11 +143,11 @@ export default function BorrowItemClient({ item }: { item: any }) {
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-[var(--bw-line)]">
                   <div>
                     <dt className="bw-label">{tr("จุดรับ–คืนของ")}</dt>
-                    <dd className="text-[13px] mt-1">{office.officeLocation ?? tr("ติดต่อเจ้าหน้าที่")}</dd>
+                    <dd className="text-[13px] mt-1">{tr(office.officeLocation) || tr("ติดต่อเจ้าหน้าที่")}</dd>
                   </div>
                   <div>
                     <dt className="bw-label">{tr("เวลาทำการ")}</dt>
-                    <dd className="text-[13px] mt-1">{office.officeHours ?? tr("ติดต่อเจ้าหน้าที่")}</dd>
+                    <dd className="text-[13px] mt-1">{tr(office.officeHours) || tr("ติดต่อเจ้าหน้าที่")}</dd>
                   </div>
                 </dl>
               </div>
@@ -193,9 +196,9 @@ export default function BorrowItemClient({ item }: { item: any }) {
                         <span className="bw-num text-[15px] font-semibold w-16 text-right">{tr("{0} วัน", [days])}</span>
                       </div>
                       <p className="text-[11.5px] text-[var(--bw-muted)] mt-2">
-                        ครบกำหนดคืน{" "}
+                        {tr("ครบกำหนดคืน")}{" "}
                         <strong className="text-[var(--bw-ink)]">
-                          {due.toLocaleDateString("th-TH", { day: "numeric", month: "long", year: "numeric" })}
+                          {due.toLocaleDateString(dateTag(__loc), { day: "numeric", month: "long", year: "numeric" })}
                         </strong>
                       </p>
                     </div>

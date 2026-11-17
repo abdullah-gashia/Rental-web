@@ -110,7 +110,7 @@ export default function DeleteDialog({
             {loading && (
               <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             )}
-            ลบถาวร
+            {tr("ลบถาวร")}
           </button>
         </div>
       </div>

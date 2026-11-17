@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 import type { TrFn } from "@/lib/i18n/phrases";
 
@@ -46,6 +48,7 @@ function relativeTime(iso: string, tr: TrFn): string {
 }
 
 export default function HistoryClient({ initialHistory, trackingEnabled: initialTracking }: Props) {
+  const __loc = useLocale();
   const tr = useTr();
   const [history,  setHistory]  = useState<HistoryResult>(initialHistory);
   const [tracking, setTracking] = useState(initialTracking);
@@ -110,7 +113,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
     const label =
       diffDays === 0 ? tr("วันนี้") :
       diffDays === 1 ? tr("เมื่อวาน") :
-      d.toLocaleDateString("th-TH", { day: "numeric", month: "long", year: "numeric" });
+      d.toLocaleDateString(dateTag(__loc), { day: "numeric", month: "long", year: "numeric" });
 
     const idx = seen.get(label);
     if (idx === undefined) {
@@ -214,7 +217,7 @@ export default function HistoryClient({ initialHistory, trackingEnabled: initial
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-[var(--c-ink)] truncate">{ix.item.title}</p>
                       <p className="text-xs text-[var(--c-muted)]">
-                        {ix.item.categoryTh} · {relativeTime(ix.createdAt, tr)}
+                        {tr(ix.item.categoryTh)} · {relativeTime(ix.createdAt, tr)}
                       </p>
                     </div>
 

@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useMemo } from "react";
@@ -40,6 +42,7 @@ export default function MyBorrowsClient({
   suspendedUntil: string | null;
   tier: string;
 }) {
+  const __loc = useLocale();
   const tr = useTr();
   const [tab, setTab] = useState<(typeof TABS)[number]["key"]>("open");
 
@@ -151,7 +154,7 @@ export default function MyBorrowsClient({
                       </div>
                       <p className="text-[11.5px] text-[var(--bw-muted)] mt-1">
                         {tr(BORROW_CATEGORY_LABEL[o.item.category] ?? o.item.category)}
-                        {" · "}ขอยืม {o.requestedDays} วัน
+                        {" · "}{tr("ขอยืม")}{" "}{o.requestedDays}{" "}{tr("วัน")}
                         {o.office?.name ? ` · ${o.office.name}` : ""}
                       </p>
                     </div>
@@ -161,7 +164,7 @@ export default function MyBorrowsClient({
                         <>
                           <p className="bw-label">{tr("คืนภายใน")}</p>
                           <p className={`text-[13px] font-semibold mt-0.5 ${left !== null && left < 0 ? "text-[var(--c-danger)]" : ""}`}>
-                            {new Date(o.dueDate).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}
+                            {new Date(o.dueDate).toLocaleDateString(dateTag(__loc), { day: "numeric", month: "short" })}
                           </p>
                           <p className={`text-[11px] ${left !== null && left < 0 ? "text-[var(--c-danger)]" : "text-[var(--bw-muted)]"}`}>
                             {left === null ? "" : left < 0 ? tr("เลย {0} วัน", [Math.abs(left)]) : left === 0 ? tr("วันนี้") : tr("อีก {0} วัน", [left])}
@@ -169,7 +172,7 @@ export default function MyBorrowsClient({
                         </>
                       ) : (
                         <p className="text-[11.5px] text-[var(--bw-muted)]">
-                          {new Date(o.createdAt).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" })}
+                          {new Date(o.createdAt).toLocaleDateString(dateTag(__loc), { day: "numeric", month: "short", year: "numeric" })}
                         </p>
                       )}
                     </div>

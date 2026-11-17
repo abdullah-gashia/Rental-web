@@ -324,7 +324,7 @@ function MeetupForm({
             type="text"
             value={state.meetupNote ?? ""}
             onChange={(e) => dispatch({ type: "SET_MEETUP_NOTE", payload: e.target.value })}
-            placeholder='เช่น tr("ใส่เสื้อสีแดง")'
+            placeholder={tr('เช่น "ใส่เสื้อสีแดง"')}
             className="checkout-input"
           />
         </div>

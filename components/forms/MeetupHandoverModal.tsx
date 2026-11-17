@@ -335,7 +335,7 @@ export default function MeetupHandoverModal({
           </div>
           <p className="text-xs text-[var(--c-muted)]">
             <span className="font-semibold text-[var(--c-ink-2)]">{itemTitle}</span>
-            {" · "}ผู้ซื้อ: <span className="font-semibold text-[var(--c-ink-2)]">{buyerName}</span>
+            {" · "}{tr("ผู้ซื้อ:")}{" "}<span className="font-semibold text-[var(--c-ink-2)]">{buyerName}</span>
           </p>
         </div>
 

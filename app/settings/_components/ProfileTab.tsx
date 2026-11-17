@@ -231,7 +231,7 @@ export default function ProfileTab({ userData, showToast }: ProfileTabProps) {
           {pending && (
             <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
           )}
-          บันทึกการเปลี่ยนแปลง
+          {tr("บันทึกการเปลี่ยนแปลง")}
         </button>
       </div>
 

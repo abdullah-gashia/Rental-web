@@ -113,7 +113,7 @@ export default function NotificationDropdown({ onClose }: NotificationDropdownPr
               </div>
               <div className="flex-1 min-w-0">
                 <p className={`text-[13px] leading-snug ${!notif.isRead ? "font-semibold text-[var(--c-ink)]" : "text-[var(--c-ink-2)]"}`}>
-                  {notif.message}
+                  {tr(notif.message)}
                 </p>
                 <p className={`text-[11px] mt-0.5 ${!notif.isRead ? "text-[var(--c-accent)] font-medium" : "text-[var(--c-muted)]"}`}>
                   {timeAgo(notif.createdAt, tr)}

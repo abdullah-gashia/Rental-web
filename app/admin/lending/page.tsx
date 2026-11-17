@@ -145,7 +145,7 @@ export default async function AdminLendingPage({
         </div>
 
         {recentOrders.length === 0 ? (
-          <div className="py-10 text-center text-[var(--c-faint)] text-sm">{tr("ไม่มีคำสั่งเช่าในหมวด &ldquo;{0}&rdquo;", [activeFilter.label])}</div>
+          <div className="py-10 text-center text-[var(--c-faint)] text-sm">{tr("ไม่มีคำสั่งเช่าในหมวด &ldquo;{0}&rdquo;", [tr(activeFilter.label)])}</div>
         ) : (
           <div className="space-y-1">
             {recentOrders.map((order) => (
@@ -157,7 +157,7 @@ export default async function AdminLendingPage({
                   <p className="text-sm font-medium text-[var(--c-ink)] truncate">{order.item.title}</p>
                   <p className="text-xs text-[var(--c-faint)]">
                     {order.renter.name ?? "—"} → {order.owner.name ?? "—"}
-                    {" · "}฿{order.dailyRate}/วัน × {order.rentalDays} วัน
+                    {" · "}{tr("฿{0}/วัน × {1} วัน", [order.dailyRate, order.rentalDays])}
                   </p>
                 </div>
                 <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border flex-shrink-0 ${statusColor(order.status)}`}>

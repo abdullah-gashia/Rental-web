@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useMemo, useTransition } from "react";
@@ -34,6 +36,7 @@ export default function OfficeItemsClient({
   items: any[];
   purchases: { id: string; label: string }[];
 }) {
+  const __loc = useLocale();
   const tr = useTr();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -197,7 +200,7 @@ export default function OfficeItemsClient({
                         {i.heldBy}
                         {i.dueDate && (
                           <span className="block text-[10.5px] text-[var(--bw-muted)]">
-                            คืน {new Date(i.dueDate).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}
+                            {tr("คืน")}{" "}{new Date(i.dueDate).toLocaleDateString(dateTag(__loc), { day: "numeric", month: "short" })}
                           </span>
                         )}
                       </a>

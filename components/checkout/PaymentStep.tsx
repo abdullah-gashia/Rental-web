@@ -62,7 +62,7 @@ export default function PaymentStep({
             <p className="text-sm font-bold mt-1">{tr("จ่ายเงินสด")}</p>
             <p className="text-[11px] text-[var(--c-warn)] font-semibold">{tr("⚠️ ไม่มีการคุ้มครอง")}</p>
             <p className="text-[10px] text-[var(--c-muted)] mt-0.5 leading-tight">
-              จ่ายตอนรับของ ({deliveryMethod === "SHIPPING" ? tr("เก็บเงินปลายทาง") : tr("จ่ายตอนนัดรับ")})
+              {tr("จ่ายตอนรับของ ({0})", [deliveryMethod === "SHIPPING" ? tr("เก็บเงินปลายทาง") : tr("จ่ายตอนนัดรับ")])}
             </p>
           </button>
         )}

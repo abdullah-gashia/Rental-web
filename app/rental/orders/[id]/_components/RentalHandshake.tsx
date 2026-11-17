@@ -140,7 +140,7 @@ export default function RentalHandshake({
         <h3 className="text-sm font-bold text-[var(--c-ink)] mb-2">{title}</h3>
         <div className="flex items-center gap-2 text-sm text-[var(--c-ok)] bg-[var(--c-ok-soft)] rounded-xl px-3 py-2.5">
           <span>✅</span>
-          <span>คุณยืนยันแล้ว{otherConfirmed ? "" : tr(" — รอ{0}ยืนยัน", [otherLabel])}</span>
+          <span>{tr("คุณยืนยันแล้ว")}{otherConfirmed ? "" : tr(" — รอ{0}ยืนยัน", [otherLabel])}</span>
         </div>
         {!otherConfirmed && (
           <p className="text-xs text-[var(--c-faint)] mt-2">{tr("เมื่อ{0}ยืนยันด้วย สถานะจะเปลี่ยนอัตโนมัติ", [otherLabel])}</p>
@@ -190,7 +190,7 @@ export default function RentalHandshake({
       {/* Photo upload */}
       <div>
         <p className="text-xs font-semibold text-[var(--c-ink-2)] mb-2">
-          📷 ถ่ายรูปสภาพสินค้า {type === "pickup" ? tr("(ก่อนรับ)") : tr("(หลังคืน)")}
+          {tr("📷 ถ่ายรูปสภาพสินค้า")}{" "}{type === "pickup" ? tr("(ก่อนรับ)") : tr("(หลังคืน)")}
         </p>
         <label className="flex items-center gap-2 px-3 py-2.5 border-2 border-dashed border-[var(--c-line)]
                           rounded-xl cursor-pointer hover:border-[var(--c-accent)]/50 transition">

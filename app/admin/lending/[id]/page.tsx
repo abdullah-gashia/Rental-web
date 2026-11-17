@@ -1,3 +1,6 @@
+import type { Locale } from "@/lib/i18n/dictionaries";
+import { getLocale } from "@/lib/i18n/server";
+import { dateTag } from "@/lib/i18n/dates";
 import { getTr } from "@/lib/i18n/server";
 import { auth }     from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
@@ -15,17 +18,17 @@ export async function generateMetadata() {
 
 // ─── Formatting helpers ───────────────────────────────────────────────────────
 
-const dt = (d: Date | null | undefined) =>
+const dt = (d: Date | null | undefined, loc: Locale) =>
   d
-    ? new Date(d).toLocaleString("th-TH", {
+    ? new Date(d).toLocaleString(dateTag(loc), {
         day: "numeric", month: "short", year: "numeric",
         hour: "2-digit", minute: "2-digit",
       })
     : "—";
 
-const day = (d: Date | null | undefined) =>
+const day = (d: Date | null | undefined, loc: Locale) =>
   d
-    ? new Date(d).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" })
+    ? new Date(d).toLocaleDateString(dateTag(loc), { day: "numeric", month: "short", year: "numeric" })
     : "—";
 
 const baht = (n: number | null | undefined) =>
@@ -108,6 +111,7 @@ export default async function AdminLendingDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const tr = await getTr();
+  const __loc = await getLocale();
   const session = await auth();
   const admin = session?.user as { role?: string } | undefined;
   if (!admin || admin.role !== "ADMIN") redirect("/");
@@ -174,7 +178,7 @@ export default async function AdminLendingDetailPage({
             : "bg-[var(--c-warn-soft)] border-[var(--c-warn-line)] text-amber-800"
         }`}>{tr("⏳ เจ้าของยังไม่ตอบรับ — รอมาแล้ว")}<span className="font-bold">{tr("{0} วัน", [waitingDays])}</span>
           {order.expiresAt && (
-            <>{tr("· ระบบจะยกเลิกและคืนเงินอัตโนมัติเมื่อ")}<span className="font-semibold">{dt(order.expiresAt)}</span></>
+            <>{tr("· ระบบจะยกเลิกและคืนเงินอัตโนมัติเมื่อ")}<span className="font-semibold">{dt(order.expiresAt, __loc)}</span></>
           )}
         </div>
       )}
@@ -237,8 +241,8 @@ export default async function AdminLendingDetailPage({
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-[var(--c-ink)]">{order.item.title}</p>
               <p className="text-xs text-[var(--c-muted)] mt-0.5">
-                {order.item.category.nameTh}
-                {order.item.location ? ` · ${order.item.location}` : ""}
+                {tr(order.item.category.nameTh)}
+                {order.item.location ? ` · ${tr(order.item.location)}` : ""}
               </p>
               <p className="text-xs text-[var(--c-ink-3)] mt-2 line-clamp-3 leading-relaxed">
                 {order.item.description}
@@ -272,7 +276,7 @@ export default async function AdminLendingDetailPage({
                 <p className="text-sm font-semibold text-[var(--c-ink)]">{u.name ?? "—"}</p>
                 <p className="text-xs text-[var(--c-muted)] break-all">{u.email ?? "—"}</p>
                 <p className="text-xs text-[var(--c-muted)]">
-                  {u.phone ?? tr("ไม่ระบุเบอร์")} · คะแนนความน่าเชื่อถือ {u.trustScore}
+                  {u.phone ?? tr("ไม่ระบุเบอร์")}{" "}{tr("· คะแนนความน่าเชื่อถือ")}{" "}{u.trustScore}
                 </p>
               </div>
             ))}
@@ -293,16 +297,16 @@ export default async function AdminLendingDetailPage({
 
         {/* ── Schedule ─────────────────────────────────────────────────── */}
         <Card title={tr("กำหนดเวลา")}>
-          <Row label={tr("สร้างคำขอเมื่อ")}  value={dt(order.createdAt)} />
-          <Row label={tr("คำขอหมดอายุ")}     value={dt(order.expiresAt)} />
-          <Row label={tr("เริ่มเช่า")}        value={day(order.rentalStartDate)} />
-          <Row label={tr("ครบกำหนดคืน")}     value={day(order.rentalEndDate)} strong />
-          <Row label={tr("คืนจริงเมื่อ")}     value={dt(order.actualReturnDate)} />
+          <Row label={tr("สร้างคำขอเมื่อ")}  value={dt(order.createdAt, __loc)} />
+          <Row label={tr("คำขอหมดอายุ")}     value={dt(order.expiresAt, __loc)} />
+          <Row label={tr("เริ่มเช่า")}        value={day(order.rentalStartDate, __loc)} />
+          <Row label={tr("ครบกำหนดคืน")}     value={day(order.rentalEndDate, __loc)} strong />
+          <Row label={tr("คืนจริงเมื่อ")}     value={dt(order.actualReturnDate, __loc)} />
           <Row label={tr("ต่ออายุแล้ว")}      value={tr("{0} ครั้ง", [order.renewalCount])} />
-          <Row label={tr("ยอมรับข้อตกลง")}   value={dt(order.agreementAcceptedAt)} />
-          {order.cancelledAt && <Row label={tr("ยกเลิกเมื่อ")} value={dt(order.cancelledAt)} />}
+          <Row label={tr("ยอมรับข้อตกลง")}   value={dt(order.agreementAcceptedAt, __loc)} />
+          {order.cancelledAt && <Row label={tr("ยกเลิกเมื่อ")} value={dt(order.cancelledAt, __loc)} />}
           {order.cancelReason && <Row label={tr("เหตุผลที่ยกเลิก")} value={order.cancelReason} />}
-          <Row label={tr("เสร็จสิ้นเมื่อ")}    value={dt(order.completedAt)} />
+          <Row label={tr("เสร็จสิ้นเมื่อ")}    value={dt(order.completedAt, __loc)} />
         </Card>
 
         {/* ── Handshake #1 ─────────────────────────────────────────────── */}
@@ -316,8 +320,8 @@ export default async function AdminLendingDetailPage({
           }
         >
           <Row label={tr("สถานที่")}      value={order.pickupLocation ?? "—"} />
-          <Row label={tr("วันเวลานัด")}    value={dt(order.pickupDateTime)} />
-          <Row label={tr("ส่งมอบจริง")}    value={dt(order.actualPickupAt)} />
+          <Row label={tr("วันเวลานัด")}    value={dt(order.pickupDateTime, __loc)} />
+          <Row label={tr("ส่งมอบจริง")}    value={dt(order.actualPickupAt, __loc)} />
           <Row label={tr("หมายเหตุ")}     value={order.pickupNote ?? "—"} />
           <Row label={tr("สภาพตอนรับ")}   value={order.pickupConditionNote ?? "—"} />
           <Photos urls={order.pickupPhotos} label={tr("รูปตอนส่งมอบ")} />
@@ -334,7 +338,7 @@ export default async function AdminLendingDetailPage({
           }
         >
           <Row label={tr("สถานที่")}     value={order.returnLocation ?? "—"} />
-          <Row label={tr("วันเวลานัด")}   value={dt(order.returnDateTime)} />
+          <Row label={tr("วันเวลานัด")}   value={dt(order.returnDateTime, __loc)} />
           <Row label={tr("สภาพที่คืน")}   value={order.returnCondition ?? "—"} />
           <Row label={tr("หมายเหตุ")}    value={order.returnConditionNote ?? order.returnNote ?? "—"} />
           <Photos urls={order.returnPhotos} label={tr("รูปตอนคืน")} />
@@ -359,10 +363,10 @@ export default async function AdminLendingDetailPage({
                       {statusLabel(h.status ?? "—")}
                     </span>
                     <span className="text-[11px] text-[var(--c-muted)]">
-                      {h.changedAt ? dt(new Date(h.changedAt)) : "—"}
+                      {h.changedAt ? dt(new Date(h.changedAt), __loc) : "—"}
                     </span>
                   </div>
-                  {h.note && <p className="text-xs text-[var(--c-ink-2)] mt-1 leading-relaxed">{h.note}</p>}
+                  {h.note && <p className="text-xs text-[var(--c-ink-2)] mt-1 leading-relaxed">{tr(h.note)}</p>}
                 </div>
               </li>
             ))}

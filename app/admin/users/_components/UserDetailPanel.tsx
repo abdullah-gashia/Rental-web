@@ -1,5 +1,8 @@
 "use client";
 
+import type { Locale } from "@/lib/i18n/dictionaries";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { dateTag } from "@/lib/i18n/dates";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition, useEffect } from "react";
@@ -25,6 +28,7 @@ const VERIFICATION_LABELS: Record<string, string> = {
 
 export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
   const tr = useTr();
+  const __loc = useLocale();
   const [data, setData]    = useState<UserDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [pending, startTransition] = useTransition();
@@ -138,7 +142,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
               className="px-3 py-1.5 text-xs font-bold text-white bg-[var(--c-accent)] rounded-lg hover:bg-[var(--c-accent-str)] transition disabled:opacity-50 flex items-center gap-1.5"
             >
               {pending && <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-              บันทึก
+              {tr("บันทึก")}
             </button>
           </div>
         </div>
@@ -178,7 +182,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                   )}
                 </p>
                 <p className="text-xs text-[var(--c-muted)] truncate">{data.email}</p>
-                <p className="text-[11px] text-[var(--c-faint)] mt-0.5">{tr("สมัครเมื่อ: {0}", [formatThaiDate(data.createdAt)])}</p>
+                <p className="text-[11px] text-[var(--c-faint)] mt-0.5">{tr("สมัครเมื่อ: {0}", [formatThaiDate(data.createdAt, __loc)])}</p>
               </div>
             </div>
 
@@ -188,7 +192,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                 label={tr("สถานะ")}
                 val={
                   !isBanActive(data) ? tr("ปกติ")
-                    : data.banUntil ? tr("ถูกแบนถึง {0}", [formatShort(data.banUntil)])
+                    : data.banUntil ? tr("ถูกแบนถึง {0}", [formatShort(data.banUntil, __loc)])
                     : tr("ถูกแบนจนกว่าจะปลด")
                 }
                 color={isBanActive(data) ? "red" : "green"}
@@ -355,7 +359,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                         <div className="flex items-center gap-2 flex-wrap">
                           <PanelStars rating={r.rating} />
                           <span className="text-xs font-medium text-[var(--c-ink-1)]">{r.reviewer.name ?? tr("ผู้ใช้")}</span>
-                          <span className="text-[10px] text-[var(--c-faint)]">{formatShort(r.createdAt)}</span>
+                          <span className="text-[10px] text-[var(--c-faint)]">{formatShort(r.createdAt, __loc)}</span>
                         </div>
                         {r.itemTitle && <p className="text-[11px] text-[var(--c-muted)] truncate">{r.itemTitle}</p>}
                         {r.comment && <p className="text-xs text-[var(--c-ink-2)] mt-0.5">{r.comment}</p>}
@@ -419,7 +423,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                         </span>
                       </div>
                       <p className="text-xs text-[var(--c-ink-2)] mt-1.5 whitespace-pre-wrap">{rep.reason}</p>
-                      <p className="text-[10px] text-[var(--c-muted)] mt-1.5">{tr("โดย {0} · {1}", [rep.reporter.name ?? rep.reporter.email, formatShort(rep.createdAt)])}</p>
+                      <p className="text-[10px] text-[var(--c-muted)] mt-1.5">{tr("โดย {0} · {1}", [rep.reporter.name ?? rep.reporter.email, formatShort(rep.createdAt, __loc)])}</p>
 
                       {rep.images.length > 0 && (
                         <div className="flex flex-wrap gap-1.5 mt-2">
@@ -505,7 +509,7 @@ export default function UserDetailPanel({ userId, onClose, showToast }: Props) {
                 className="px-5 py-2.5 text-sm font-bold text-white bg-[var(--c-accent)] rounded-xl hover:bg-[var(--c-accent-str)] transition disabled:opacity-50 flex items-center gap-2"
               >
                 {pending && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-                บันทึกการเปลี่ยนแปลง
+                {tr("บันทึกการเปลี่ยนแปลง")}
               </button>
             </div>
           </div>
@@ -566,6 +570,6 @@ function PanelStars({ rating }: { rating: number }) {
   );
 }
 
-function formatShort(iso: string) {
-  return new Date(iso).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "2-digit" });
+function formatShort(iso: string, loc: Locale) {
+  return new Date(iso).toLocaleDateString(dateTag(loc), { day: "numeric", month: "short", year: "2-digit" });
 }

@@ -1,3 +1,5 @@
+import { dateTag } from "@/lib/i18n/dates";
+import { getLocale } from "@/lib/i18n/server";
 import { getTr } from "@/lib/i18n/server";
 import { notFound }       from "next/navigation";
 import { getRentalOrderDetail } from "@/lib/actions/rental-checkout";
@@ -19,6 +21,7 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export default async function RentalReceiptPage({ params, searchParams }: Props) {
+  const __loc = await getLocale();
   const tr = await getTr();
   const { id }   = await params;
   const { type } = await searchParams;
@@ -28,10 +31,10 @@ export default async function RentalReceiptPage({ params, searchParams }: Props)
   const isReturn   = type === "return";
   const item       = order.item;
   const fmtDate    = (iso: string | null) =>
-    iso ? new Date(iso).toLocaleDateString("th-TH", {
+    iso ? new Date(iso).toLocaleDateString(dateTag(__loc), {
       year: "numeric", month: "long", day: "numeric",
     }) : "—";
-  const today      = new Date().toLocaleDateString("th-TH", {
+  const today      = new Date().toLocaleDateString(dateTag(__loc), {
     year: "numeric", month: "long", day: "numeric",
   });
   const refCode    = order.refCode.slice(0, 12).toUpperCase();
@@ -65,9 +68,12 @@ export default async function RentalReceiptPage({ params, searchParams }: Props)
               <div className="text-lg font-bold text-[var(--c-ink-1)]">
                 {isReturn ? tr("ใบเสร็จคืนสินค้า") : tr("สัญญาเช่าทรัพย์สิน")}
               </div>
-              <div className="text-xs text-[var(--c-muted)] mt-0.5">
-                {isReturn ? "Return Receipt" : "Rental Contract Agreement"}
-              </div>
+              {/* The English subtitle is for the Thai document; in English it would repeat the title. */}
+              {__loc === "th" && (
+                <div className="text-xs text-[var(--c-muted)] mt-0.5">
+                  {isReturn ? "Return Receipt" : "Rental Contract Agreement"}
+                </div>
+              )}
               <div className="text-xs text-[var(--c-faint)] mt-1.5">{tr("เลขที่: {0}", [refCode])}<br />{tr("วันที่: {0}", [today])}</div>
             </div>
           </div>
@@ -98,7 +104,7 @@ export default async function RentalReceiptPage({ params, searchParams }: Props)
             <h2 className="text-xs font-bold text-[var(--c-faint)] uppercase tracking-widest mb-3">{tr("ทรัพย์สินที่เช่า")}</h2>
             <div className="bg-[var(--c-subtle)] rounded-xl p-4">
               <div className="font-semibold text-[var(--c-ink-1)] text-base">{item.title}</div>
-              <div className="text-xs text-[var(--c-muted)] mt-0.5">{item.category?.nameTh}</div>
+              <div className="text-xs text-[var(--c-muted)] mt-0.5">{tr(item.category?.nameTh)}</div>
             </div>
           </section>
 
@@ -182,10 +188,9 @@ export default async function RentalReceiptPage({ params, searchParams }: Props)
                 <p>{tr("1. ผู้เช่าต้องดูแลสินค้าเสมือนเป็นของตนเองและคืนในสภาพเดิม")}</p>
                 <p>{tr("2. หากสินค้าชำรุดเสียหาย ผู้เช่ายินยอมให้หักค่าเสียหายจากเงินมัดจำ")}</p>
                 <p>{tr("3. หากสินค้าสูญหาย ยินยอมให้ริบเงินมัดจำทั้งจำนวน")}</p>
-                <p>4. ค่าปรับคืนช้า: ฿{(item.lateFeePerDay ?? 0) > 0
+                <p>{tr("4. ค่าปรับคืนช้า: ฿{0}/วัน", [(item.lateFeePerDay ?? 0) > 0
                   ? (item.lateFeePerDay ?? 0).toLocaleString()
-                  : "0"}/วัน
-                </p>
+                  : "0"])}</p>
                 <p>{tr("5. ข้อตกลงนี้มีผลผูกพันตามประมวลกฎหมายแพ่งและพาณิชย์ มาตรา 537–571")}</p>
                 <p>{tr("6. แพลตฟอร์มใช้ Digital Handshake เป็นหลักฐานในการตัดสินข้อพิพาท")}</p>
               </div>

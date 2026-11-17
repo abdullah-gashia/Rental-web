@@ -1,3 +1,5 @@
+import { dateTag } from "@/lib/i18n/dates";
+import { getLocale } from "@/lib/i18n/server";
 import { getTr } from "@/lib/i18n/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
@@ -12,7 +14,8 @@ export async function generateMetadata() {
 
 // ─── Status Display Components ────────────────────────────────────────────────
 
-function PendingCard({ submittedAt }: { submittedAt: Date | string }) {
+async function PendingCard({ submittedAt }: { submittedAt: Date | string }) {
+  const tr = await getTr();
   const date = new Date(submittedAt).toLocaleDateString("th-TH", {
     year: "numeric", month: "long", day: "numeric",
     hour: "2-digit", minute: "2-digit",
@@ -21,28 +24,28 @@ function PendingCard({ submittedAt }: { submittedAt: Date | string }) {
   return (
     <div className="max-w-md mx-auto text-center space-y-6 py-12 px-4">
       <div className="text-6xl">⏳</div>
-      <h1 className="text-2xl font-bold text-[var(--c-ink)]">รอการตรวจสอบ</h1>
+      <h1 className="text-2xl font-bold text-[var(--c-ink)]">{tr("รอการตรวจสอบ")}</h1>
       <p className="text-[var(--c-ink-2)]">
-        คำขอของคุณอยู่ระหว่างการตรวจสอบโดยแอดมิน กรุณารอผลภายใน 24 ชั่วโมง
+        {tr("คำขอของคุณอยู่ระหว่างการตรวจสอบโดยแอดมิน กรุณารอผลภายใน 24 ชั่วโมง")}
       </p>
       <div className="bg-[var(--c-warn-soft)] border border-[var(--c-warn-line)] rounded-2xl px-5 py-4 text-sm text-amber-800">
-        <p className="font-semibold mb-1">ส่งคำขอเมื่อ</p>
+        <p className="font-semibold mb-1">{tr("ส่งคำขอเมื่อ")}</p>
         <p>{date}</p>
       </div>
       <p className="text-xs text-[var(--c-muted)]">
-        คุณจะได้รับการแจ้งเตือนเมื่อผลการตรวจสอบออก
+        {tr("คุณจะได้รับการแจ้งเตือนเมื่อผลการตรวจสอบออก")}
       </p>
       <Link
         href="/dashboard"
         className="inline-block px-6 py-2.5 bg-[var(--c-canvas)] rounded-xl text-sm font-semibold text-[var(--c-ink-1)] hover:bg-[#eee] transition"
       >
-        กลับหน้าหลัก
+        {tr("กลับหน้าหลัก")}
       </Link>
     </div>
   );
 }
 
-function ApprovedCard({
+async function ApprovedCard({
   psuIdNumber,
   psuIdType,
   verifiedAt,
@@ -51,6 +54,7 @@ function ApprovedCard({
   psuIdType: string | null;
   verifiedAt: Date | string | null;
 }) {
+  const tr = await getTr();
   const masked = psuIdNumber
     ? psuIdNumber.slice(0, 3) + "•".repeat(psuIdNumber.length - 3)
     : "—";
@@ -64,20 +68,20 @@ function ApprovedCard({
   return (
     <div className="max-w-md mx-auto text-center space-y-6 py-12 px-4">
       <div className="text-6xl">✅</div>
-      <h1 className="text-2xl font-bold text-[var(--c-ink)]">ยืนยันตัวตนแล้ว</h1>
-      <p className="text-[var(--c-ink-2)]">บัญชีของคุณผ่านการยืนยันตัวตนเรียบร้อยแล้ว คุณสามารถลงขายสินค้าได้</p>
+      <h1 className="text-2xl font-bold text-[var(--c-ink)]">{tr("ยืนยันตัวตนแล้ว")}</h1>
+      <p className="text-[var(--c-ink-2)]">{tr("บัญชีของคุณผ่านการยืนยันตัวตนเรียบร้อยแล้ว คุณสามารถลงขายสินค้าได้")}</p>
 
       <div className="bg-[var(--c-ok-soft)] border border-[var(--c-ok-line)] rounded-2xl px-5 py-4 text-sm text-emerald-800 space-y-2">
         <div className="flex justify-between">
-          <span className="text-[var(--c-ok)]">ประเภท</span>
-          <span className="font-semibold">{psuIdType === "STUDENT" ? "นักศึกษา" : "บุคลากร"}</span>
+          <span className="text-[var(--c-ok)]">{tr("ประเภท")}</span>
+          <span className="font-semibold">{psuIdType === "STUDENT" ? tr("นักศึกษา") : tr("บุคลากร")}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-[var(--c-ok)]">รหัสประจำตัว</span>
+          <span className="text-[var(--c-ok)]">{tr("รหัสประจำตัว")}</span>
           <span className="font-semibold font-mono">{masked}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-[var(--c-ok)]">ยืนยันเมื่อ</span>
+          <span className="text-[var(--c-ok)]">{tr("ยืนยันเมื่อ")}</span>
           <span className="font-semibold">{date}</span>
         </div>
       </div>
@@ -86,7 +90,7 @@ function ApprovedCard({
         href="/dashboard/my-items"
         className="inline-block px-6 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 transition"
       >
-        ไปที่สินค้าของฉัน →
+        {tr("ไปที่สินค้าของฉัน →")}
       </Link>
     </div>
   );
@@ -99,8 +103,9 @@ async function RejectedBanner({
   reason: string | null;
   submittedAt: Date | string;
 }) {
+  const __loc = await getLocale();
   const tr = await getTr();
-  const date = new Date(submittedAt).toLocaleDateString("th-TH", {
+  const date = new Date(submittedAt).toLocaleDateString(dateTag(__loc), {
     year: "numeric", month: "long", day: "numeric",
   });
 

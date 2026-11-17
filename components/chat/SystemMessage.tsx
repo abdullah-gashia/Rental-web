@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 // ─── System-message protocol ──────────────────────────────────────────────────
@@ -58,8 +60,9 @@ export function parseSystemMessage(content: string): ParsedSystem | null {
 // ─── Shipping Receipt Card ────────────────────────────────────────────────────
 
 function ShippingCard({ data }: { data: ShippingPayload }) {
+  const __loc = useLocale();
   const tr = useTr();
-  const shippedDate = new Date(data.shippedAt).toLocaleString("th-TH", {
+  const shippedDate = new Date(data.shippedAt).toLocaleString(dateTag(__loc), {
     day: "numeric", month: "short", year: "numeric",
     hour: "2-digit", minute: "2-digit",
   });
@@ -146,8 +149,9 @@ function ShippingCard({ data }: { data: ShippingPayload }) {
 // ─── Purchase Receipt Card ────────────────────────────────────────────────────
 
 function ReceiptCard({ data }: { data: ReceiptPayload }) {
+  const __loc = useLocale();
   const tr = useTr();
-  const completedDate = new Date(data.completedAt).toLocaleString("th-TH", {
+  const completedDate = new Date(data.completedAt).toLocaleString(dateTag(__loc), {
     day: "numeric", month: "long", year: "numeric",
     hour: "2-digit", minute: "2-digit",
   });

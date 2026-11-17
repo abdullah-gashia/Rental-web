@@ -15,7 +15,7 @@ export default function DashboardError({
       <div className="text-5xl mb-4 select-none">⚠️</div>
       <h2 className="text-lg font-bold text-[var(--c-ink)] mb-2">{tr("เกิดข้อผิดพลาดในการโหลดข้อมูล")}</h2>
       <p className="text-sm text-[var(--c-ink-3)] max-w-sm mb-6">
-        กรุณาลองใหม่อีกครั้ง หากปัญหายังคงอยู่ โปรดติดต่อนักพัฒนา
+        {tr("กรุณาลองใหม่อีกครั้ง หากปัญหายังคงอยู่ โปรดติดต่อนักพัฒนา")}
         {error.digest && (
           <span className="block mt-1 font-mono text-xs text-[var(--c-faint-2)]">
             [{error.digest}]

@@ -1,3 +1,4 @@
+import { getLocale } from "@/lib/i18n/server";
 import { getTr } from "@/lib/i18n/server";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,6 +32,7 @@ interface Props {
 }
 
 export default async function SellerCard({ seller }: Props) {
+  const __loc = await getLocale();
   const tr = await getTr();
   const verification = VERIFICATION_TH[seller.verificationStatus] ?? {
     label: seller.verificationStatus, color: "text-[var(--c-muted)]",
@@ -124,7 +126,7 @@ export default async function SellerCard({ seller }: Props) {
         </div>
         <div className="flex items-center justify-between">
           <span className="text-[var(--c-faint)]">{tr("สมัครเมื่อ")}</span>
-          <span className="text-[var(--c-ink-1)]">{formatThaiDate(seller.createdAt)}</span>
+          <span className="text-[var(--c-ink-1)]">{formatThaiDate(seller.createdAt, __loc)}</span>
         </div>
       </div>
 

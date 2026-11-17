@@ -1,24 +1,28 @@
+import type { Locale } from "@/lib/i18n/dictionaries";
 // ─── Date formatting ──────────────────────────────────────────────────────────
 
 const MONTH_TH = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.",
                    "ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
 
-export function formatThaiDate(date: Date | string): string {
+export function formatThaiDate(date: Date | string, loc: Locale = "th"): string {
   const d = typeof date === "string" ? new Date(date) : date;
+  // An English page gets an English date and the Gregorian year.
+  if (loc === "en") return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
   // Thai year = Gregorian + 543
   return `${d.getDate()} ${MONTH_TH[d.getMonth()]} ${d.getFullYear() + 543}`;
 }
 
-export function formatRelativeDate(date: Date | string): string {
+export function formatRelativeDate(date: Date | string, loc: Locale = "th"): string {
+  const en = loc === "en";
   const diff = Date.now() - new Date(date).getTime();
   const mins  = Math.floor(diff / 60_000);
-  if (mins < 1)   return "เมื่อกี้";
-  if (mins < 60)  return `${mins} นาทีที่แล้ว`;
+  if (mins < 1)   return en ? "just now" : "เมื่อกี้";
+  if (mins < 60)  return en ? `${mins} min ago` : `${mins} นาทีที่แล้ว`;
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24)   return `${hrs} ชม. ที่แล้ว`;
+  if (hrs < 24)   return en ? `${hrs} hr ago` : `${hrs} ชม. ที่แล้ว`;
   const days = Math.floor(hrs / 24);
-  if (days < 30)  return `${days} วันที่แล้ว`;
-  return formatThaiDate(date);
+  if (days < 30)  return en ? `${days} days ago` : `${days} วันที่แล้ว`;
+  return formatThaiDate(date, loc);
 }
 
 // ─── Currency ─────────────────────────────────────────────────────────────────

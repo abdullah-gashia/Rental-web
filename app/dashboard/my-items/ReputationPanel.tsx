@@ -1,5 +1,8 @@
 "use client";
 
+import type { Locale } from "@/lib/i18n/dictionaries";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { dateTag } from "@/lib/i18n/dates";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
@@ -40,12 +43,13 @@ function Stars({ rating, className = "" }: { rating: number; className?: string 
   );
 }
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("th-TH", { year: "numeric", month: "short", day: "numeric" });
+function formatDate(iso: string, loc: Locale) {
+  return new Date(iso).toLocaleDateString(dateTag(loc), { year: "numeric", month: "short", day: "numeric" });
 }
 
 function ReviewList({ reviews, empty }: { reviews: ReviewRow[]; empty: string }) {
   const tr = useTr();
+  const __loc = useLocale();
   if (reviews.length === 0) {
     return <p className="text-sm text-[var(--c-muted)] py-8 text-center">{empty}</p>;
   }
@@ -64,7 +68,7 @@ function ReviewList({ reviews, empty }: { reviews: ReviewRow[]; empty: string })
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm font-semibold text-[var(--c-ink-1)]">{r.reviewer.name ?? tr("ผู้ใช้")}</span>
               <Stars rating={r.rating} className="text-xs" />
-              <span className="text-[11px] text-[var(--c-faint)]">{formatDate(r.createdAt)}</span>
+              <span className="text-[11px] text-[var(--c-faint)]">{formatDate(r.createdAt, __loc)}</span>
             </div>
 
             {r.itemTitle && (

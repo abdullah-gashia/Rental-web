@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
@@ -44,6 +46,7 @@ const SELLER_REASONS_MEETUP = [
 export default function CancelOrderModal({
   orderId, itemTitle, amount, role, paymentMethod, meetupDateTime, onClose, onSuccess,
 }: Props) {
+  const __loc = useLocale();
   const tr = useTr();
   const isMeetupOrder = !!meetupDateTime;
   const reasons = role === "buyer"
@@ -65,7 +68,7 @@ export default function CancelOrderModal({
     if (role !== "seller" || !isMeetupOrder || !meetupDateTime) return null;
     const cutoff = new Date(new Date(meetupDateTime).getTime() + 30 * 60 * 1000);
     if (new Date() < cutoff) {
-      return cutoff.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
+      return cutoff.toLocaleTimeString(dateTag(__loc), { hour: "2-digit", minute: "2-digit" });
     }
     return null; // past cutoff, cancel is unlocked
   })();

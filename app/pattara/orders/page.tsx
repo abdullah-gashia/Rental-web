@@ -1,3 +1,5 @@
+import { dateTag } from "@/lib/i18n/dates";
+import { getLocale } from "@/lib/i18n/server";
 import { getTr } from "@/lib/i18n/server";
 import Link from "next/link";
 import { getOfficeOrders } from "@/lib/actions/borrow-orders";
@@ -32,6 +34,7 @@ export default async function OfficeOrdersPage({
 }: {
   searchParams: Promise<{ f?: string }>;
 }) {
+  const __loc = await getLocale();
   const tr = await getTr();
   const { f } = await searchParams;
   const orders = await getOfficeOrders(f);
@@ -102,7 +105,7 @@ export default async function OfficeOrdersPage({
                       <td className="px-4 py-3">
                         {o.dueDate ? (
                           <>
-                            <p className="bw-num">{new Date(o.dueDate).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "2-digit" })}</p>
+                            <p className="bw-num">{new Date(o.dueDate).toLocaleDateString(dateTag(__loc), { day: "numeric", month: "short", year: "2-digit" })}</p>
                             <p className={`text-[11px] ${left !== null && left < 0 ? "text-[var(--c-danger)] font-semibold" : "text-[var(--bw-muted)]"}`}>
                               {left === null ? "" : left < 0 ? tr("เลย {0} วัน", [Math.abs(left)]) : left === 0 ? tr("วันนี้") : tr("อีก {0} วัน", [left])}
                             </p>

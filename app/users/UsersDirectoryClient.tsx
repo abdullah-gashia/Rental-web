@@ -149,7 +149,7 @@ export default function UsersDirectoryClient({ users }: { users: DirectoryUser[]
                         {u.name ?? (th ? tr("งานภัทร") : "Office")}
                       </p>
                       <p className="text-[11.5px] text-[var(--hp-muted)] mt-0.5 truncate">
-                        {u.officeLocation ?? (th ? tr("ให้ยืมอุปกรณ์ฟรีสำหรับนักศึกษา") : "Free equipment lending")}
+                        {(u.officeLocation ? tr(u.officeLocation) : null) ?? (th ? tr("ให้ยืมอุปกรณ์ฟรีสำหรับนักศึกษา") : "Free equipment lending")}
                       </p>
                       <div className="flex items-center gap-2 mt-2 flex-wrap">
                         <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded-md border bg-[var(--c-accent-soft)] text-[var(--c-accent-str)] border-[#cfe0ff]">

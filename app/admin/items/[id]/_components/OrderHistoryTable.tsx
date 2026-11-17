@@ -1,3 +1,4 @@
+import { getLocale } from "@/lib/i18n/server";
 import { getTr } from "@/lib/i18n/server";
 import Link from "next/link";
 import StatusBadge from "../../../_components/StatusBadge";
@@ -28,11 +29,12 @@ interface Props {
 }
 
 export default async function OrderHistoryTable({ orders }: Props) {
+  const __loc = await getLocale();
   const tr = await getTr();
   return (
     <div className="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-line)] p-6">
       <h3 className="text-sm font-semibold text-[var(--c-ink-2)] mb-4">
-        ประวัติคำสั่งซื้อ
+        {tr("ประวัติคำสั่งซื้อ")}
         {orders.length > 0 && (
           <span className="text-[var(--c-faint)] font-normal ml-1">({orders.length})</span>
         )}
@@ -103,7 +105,7 @@ export default async function OrderHistoryTable({ orders }: Props) {
                       <StatusBadge status={order.status} type="order" />
                     </td>
                     <td className="py-2.5 text-right text-[var(--c-ink-3)] whitespace-nowrap text-xs">
-                      {formatThaiDate(order.createdAt)}
+                      {formatThaiDate(order.createdAt, __loc)}
                     </td>
                   </tr>
                 );

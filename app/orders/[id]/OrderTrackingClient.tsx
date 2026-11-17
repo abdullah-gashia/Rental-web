@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
@@ -84,6 +86,7 @@ export default function OrderTrackingClient({
   order: OrderData;
   currentUserId: string;
 }) {
+  const __loc = useLocale();
   const tr = useTr();
   const router = useRouter();
   const showToast = useToastStore((s) => s.show);
@@ -184,9 +187,9 @@ export default function OrderTrackingClient({
         ) : order.deliveryMethod === "MEETUP" ? (
           <div className="text-sm text-[var(--c-ink-2)] space-y-1">
             <p className="font-semibold">{tr("🤝 นัดรับสินค้า")}</p>
-            <p>📍 {order.meetupLocation}</p>
+            <p>📍 {tr(order.meetupLocation)}</p>
             {order.meetupDateTime && (
-              <p>🕐 {new Date(order.meetupDateTime).toLocaleDateString("th-TH", {
+              <p>🕐 {new Date(order.meetupDateTime).toLocaleDateString(dateTag(__loc), {
                 weekday: "short", day: "numeric", month: "short", year: "numeric",
                 hour: "2-digit", minute: "2-digit",
               })}</p>
@@ -268,10 +271,10 @@ export default function OrderTrackingClient({
                     {hs?.emoji ?? "·"}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[var(--c-ink)]">{hs?.label ?? h.status}</p>
-                    <p className="text-xs text-[var(--c-muted)]">{h.note}</p>
+                    <p className="text-sm font-semibold text-[var(--c-ink)]">{tr(hs?.label ?? h.status)}</p>
+                    <p className="text-xs text-[var(--c-muted)]">{tr(h.note)}</p>
                     <p className="text-[10px] text-[var(--c-faint-2)]">
-                      {new Date(h.changedAt).toLocaleString("th-TH")}
+                      {new Date(h.changedAt).toLocaleString(dateTag(__loc))}
                     </p>
                   </div>
                 </div>
@@ -359,7 +362,7 @@ export default function OrderTrackingClient({
         {/* Completed / Cancelled — no actions */}
         {["COMPLETED", "CANCELLED", "REFUNDED", "CANCELLED_BY_ADMIN"].includes(order.status) && (
           <p className="text-center text-sm text-[var(--c-muted)] py-2">
-            คำสั่งซื้อนี้ {order.status === "COMPLETED" ? tr("เสร็จสิ้นแล้ว") : tr("ถูกยกเลิกแล้ว")}
+            {tr("คำสั่งซื้อนี้")}{" "}{order.status === "COMPLETED" ? tr("เสร็จสิ้นแล้ว") : tr("ถูกยกเลิกแล้ว")}
           </p>
         )}
 

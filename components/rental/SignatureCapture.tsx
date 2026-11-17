@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useRef, useState, useEffect, useCallback } from "react";
@@ -13,6 +15,7 @@ interface Props {
 }
 
 export default function SignatureCapture({ onComplete, onCancel, agreementText, signerName, signerRole }: Props) {
+  const __loc = useLocale();
   const tr = useTr();
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const [isDrawing,    setIsDrawing]    = useState(false);
@@ -80,8 +83,8 @@ export default function SignatureCapture({ onComplete, onCancel, agreementText, 
   }, [hasSignature, onComplete]);
 
   const now = new Date();
-  const dateStr = now.toLocaleDateString("th-TH", { year: "numeric", month: "long", day: "numeric" });
-  const timeStr = now.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
+  const dateStr = now.toLocaleDateString(dateTag(__loc), { year: "numeric", month: "long", day: "numeric" });
+  const timeStr = now.toLocaleTimeString(dateTag(__loc), { hour: "2-digit", minute: "2-digit" });
 
   return (
     <div className="space-y-4">

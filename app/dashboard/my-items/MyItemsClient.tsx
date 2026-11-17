@@ -336,7 +336,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                       <h3 className={`text-sm font-semibold truncate ${isScheduled ? "text-[#666] line-through" : "text-[var(--c-ink)]"}`}>
                         {item.title}
                       </h3>
-                      <p className="text-xs text-[var(--c-ink-3)] mt-0.5">{item.category.nameTh}</p>
+                      <p className="text-xs text-[var(--c-ink-3)] mt-0.5">{tr(item.category.nameTh)}</p>
                     </div>
                     <div className="flex-shrink-0">
                       {isScheduled ? (
@@ -424,7 +424,7 @@ export default function MyItemsClient({ items, userName, reputation }: Props) {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                             </svg>
                           )}
-                          ยกเลิกการลบ
+                          {tr("ยกเลิกการลบ")}
                         </button>
                       )
                     ) : (

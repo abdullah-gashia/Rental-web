@@ -1,3 +1,5 @@
+import { dateTag } from "@/lib/i18n/dates";
+import { getLocale } from "@/lib/i18n/server";
 import { getTr } from "@/lib/i18n/server";
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
@@ -9,13 +11,14 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-function ImageCard({ label, url }: { label: string; url: string | null }) {
+async function ImageCard({ label, url }: { label: string; url: string | null }) {
+  const tr = await getTr();
   if (!url) {
     return (
       <div className="space-y-2">
         <p className="text-xs font-medium text-[var(--c-muted)] uppercase tracking-wide">{label}</p>
         <div className="aspect-video bg-[var(--c-line-soft)] rounded-xl flex items-center justify-center text-[var(--c-muted)] text-sm">
-          ไม่มีรูป
+          {tr("ไม่มีรูป")}
         </div>
       </div>
     );
@@ -35,7 +38,7 @@ function ImageCard({ label, url }: { label: string; url: string | null }) {
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition" />
           <span className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition">
-            เปิดเต็ม ↗
+            {tr("เปิดเต็ม ↗")}
           </span>
         </div>
       </a>
@@ -43,13 +46,14 @@ function ImageCard({ label, url }: { label: string; url: string | null }) {
   );
 }
 
-function SelfieGrid({ request }: { request: NonNullable<Awaited<ReturnType<typeof getVerificationDetail>>> }) {
+async function SelfieGrid({ request }: { request: NonNullable<Awaited<ReturnType<typeof getVerificationDetail>>> }) {
+  const tr = await getTr();
   return (
     <div className="grid grid-cols-2 gap-4">
-      <ImageCard label="หน้าตรง" url={request.selfieFrontUrl} />
-      <ImageCard label="หันซ้าย" url={request.selfieLeftUrl} />
-      <ImageCard label="หันขวา" url={request.selfieRightUrl} />
-      <ImageCard label="เงยหน้า" url={request.selfieUpUrl} />
+      <ImageCard label={tr("หน้าตรง")} url={request.selfieFrontUrl} />
+      <ImageCard label={tr("หันซ้าย")} url={request.selfieLeftUrl} />
+      <ImageCard label={tr("หันขวา")} url={request.selfieRightUrl} />
+      <ImageCard label={tr("เงยหน้า")} url={request.selfieUpUrl} />
     </div>
   );
 }
@@ -59,6 +63,7 @@ export default async function VerificationDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const __loc = await getLocale();
   const tr = await getTr();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
@@ -73,7 +78,7 @@ export default async function VerificationDetailPage({
   const request = await getVerificationDetail(id);
   if (!request) notFound();
 
-  const submittedDate = new Date(request.submittedAt).toLocaleDateString("th-TH", {
+  const submittedDate = new Date(request.submittedAt).toLocaleDateString(dateTag(__loc), {
     year: "numeric", month: "long", day: "numeric",
     hour: "2-digit", minute: "2-digit",
   });

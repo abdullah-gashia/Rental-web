@@ -1,3 +1,5 @@
+import { dateTag } from "@/lib/i18n/dates";
+import { getLocale } from "@/lib/i18n/server";
 import { getTr } from "@/lib/i18n/server";
 import { notFound } from "next/navigation";
 import Brand from "@/components/layout/Brand";
@@ -28,6 +30,7 @@ function Stars({ rating }: { rating: number }) {
 }
 
 export default async function UserProfilePage({ params }: PageProps) {
+  const __loc = await getLocale();
   const tr = await getTr();
   const { id } = await params;
 
@@ -56,7 +59,7 @@ export default async function UserProfilePage({ params }: PageProps) {
   const avgRating  = user.avgRating;
   const reviewCount = user.reviewCount;
 
-  const memberSince = new Date(user.createdAt).toLocaleDateString("th-TH", {
+  const memberSince = new Date(user.createdAt).toLocaleDateString(dateTag(__loc), {
     year: "numeric", month: "long",
   });
 

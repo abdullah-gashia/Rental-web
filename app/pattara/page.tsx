@@ -1,3 +1,5 @@
+import { dateTag } from "@/lib/i18n/dates";
+import { getLocale } from "@/lib/i18n/server";
 import { getTr } from "@/lib/i18n/server";
 import { getOfficeStats, getOfficeOrders } from "@/lib/actions/borrow-orders";
 import { getFundSummary } from "@/lib/actions/fund";
@@ -22,6 +24,7 @@ const PILL: Record<string, string> = {
 const baht = (n: number) => `฿${n.toLocaleString("th-TH", { maximumFractionDigits: 2 })}`;
 
 export default async function PattaraOverview() {
+  const __loc = await getLocale();
   const tr = await getTr();
   const [stats, recent, fund] = await Promise.all([
     getOfficeStats(),
@@ -92,7 +95,7 @@ export default async function PattaraOverview() {
       <section className="bw-panel">
         <div className="flex items-center justify-between gap-3 mb-4">
           <h2 className="text-[15px] font-semibold text-[var(--psu-navy)]">
-            ต้องดำเนินการ
+            {tr("ต้องดำเนินการ")}
             {needsAction.length > 0 && (
               <span className="ml-2 text-[12px] font-normal text-[var(--bw-muted)]">{tr("{0} รายการ", [needsAction.length])}</span>
             )}
@@ -119,7 +122,7 @@ export default async function PattaraOverview() {
                   <p className="text-[13.5px] font-medium truncate">{o.item.title}</p>
                   <p className="text-[11.5px] text-[var(--bw-muted)] truncate">
                     {o.borrower?.name ?? "—"}
-                    {o.dueDate ? tr(" · คืน {0}", [new Date(o.dueDate).toLocaleDateString("th-TH", { day: "numeric", month: "short" })]) : ""}
+                    {o.dueDate ? tr(" · คืน {0}", [new Date(o.dueDate).toLocaleDateString(dateTag(__loc), { day: "numeric", month: "short" })]) : ""}
                   </p>
                 </div>
                 <span className={`bw-pill ${PILL[o.status] ?? "bw-pill-off"} flex-shrink-0`}>

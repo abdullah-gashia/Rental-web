@@ -82,10 +82,10 @@ export default function ProfileItemGrid({
                 {it.title}
               </p>
               <p className={`text-[13px] font-bold mt-1 ${it.isRent ? "text-[var(--c-accent-str)]" : "text-[var(--c-ink)]"}`}>
-                {it.priceLabel}
+                {tr(it.priceLabel)}
               </p>
               <p className="text-[11px] text-[var(--c-muted)] truncate mt-0.5">
-                {it.categoryTh}{it.location ? ` · ${it.location}` : ""}
+                {tr(it.categoryTh)}{it.location ? ` · ${tr(it.location)}` : ""}
               </p>
             </div>
           </a>

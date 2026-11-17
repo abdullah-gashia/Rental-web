@@ -1,4 +1,6 @@
 "use client";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { Locale } from "@/lib/i18n/dictionaries";
 
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
@@ -20,12 +22,14 @@ interface Props {
 const MONTH_TH = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.",
                    "ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
 
-function formatThaiDate(iso: string): string {
+function formatThaiDate(iso: string, loc: Locale): string {
   const d = new Date(iso);
+  if (loc === "en") return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
   return `${d.getDate()} ${MONTH_TH[d.getMonth()]} ${d.getFullYear() + 543}`;
 }
 
 export default function SecurityTab({ userData, showToast }: Props) {
+  const __loc = useLocale();
   const tr = useTr();
   const [tracking, setTracking] = useState(userData.trackingEnabled);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -85,7 +89,7 @@ export default function SecurityTab({ userData, showToast }: Props) {
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-[var(--c-ink-2)]">{tr("สมัครเมื่อ")}</span>
-            <span className="text-sm font-medium text-[var(--c-ink-1)]">{formatThaiDate(userData.createdAt)}</span>
+            <span className="text-sm font-medium text-[var(--c-ink-1)]">{formatThaiDate(userData.createdAt, __loc)}</span>
           </div>
 
           <div className="flex items-center justify-between border-t border-[var(--c-line)] pt-3 mt-1">
@@ -138,7 +142,7 @@ export default function SecurityTab({ userData, showToast }: Props) {
           disabled={pending}
           className="flex items-center gap-2 text-sm text-[var(--c-ink-2)] hover:text-[var(--c-danger)] transition disabled:opacity-50"
         >
-          🗑️ ล้างประวัติการเข้าชมทั้งหมด
+          {tr("🗑️ ล้างประวัติการเข้าชมทั้งหมด")}
           {pending && <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />}
         </button>
       </div>
@@ -151,7 +155,7 @@ export default function SecurityTab({ userData, showToast }: Props) {
           disabled={pending}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[var(--c-line)] text-sm font-medium text-[var(--c-ink-1)] hover:bg-[var(--c-canvas)] transition disabled:opacity-50"
         >
-          📥 ดาวน์โหลดข้อมูลของฉัน
+          {tr("📥 ดาวน์โหลดข้อมูลของฉัน")}
           {pending && <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />}
         </button>
         <p className="text-[11px] text-[var(--c-muted)] flex items-center gap-1">

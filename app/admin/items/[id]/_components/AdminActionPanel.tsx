@@ -123,7 +123,7 @@ export default function AdminActionPanel({ item }: Props) {
                          hover:bg-green-700 transition-colors flex items-center justify-center gap-2
                          disabled:opacity-50 text-sm"
             >
-              {pending ? <Spinner /> : "✅"} อนุมัติสินค้า
+              {pending ? <Spinner /> : "✅"}{" "}{tr("อนุมัติสินค้า")}
             </button>
           )}
 
@@ -158,7 +158,7 @@ export default function AdminActionPanel({ item }: Props) {
                          hover:bg-blue-700 transition-colors flex items-center justify-center gap-2
                          disabled:opacity-50 text-sm"
             >
-              {pending ? <Spinner /> : "🔓"} ปลดระงับ
+              {pending ? <Spinner /> : "🔓"}{" "}{tr("ปลดระงับ")}
             </button>
           )}
 
@@ -171,7 +171,7 @@ export default function AdminActionPanel({ item }: Props) {
                          hover:bg-green-700 transition-colors flex items-center justify-center gap-2
                          disabled:opacity-50 text-sm"
             >
-              {pending ? <Spinner /> : "✅"} อนุมัติใหม่
+              {pending ? <Spinner /> : "✅"}{" "}{tr("อนุมัติใหม่")}
             </button>
           )}
 

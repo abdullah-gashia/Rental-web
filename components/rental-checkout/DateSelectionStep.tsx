@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { calcRentalDays, calcRentalPricing } from "./useRentalCheckoutReducer";
@@ -19,6 +21,7 @@ interface Props {
 }
 
 export default function DateSelectionStep({ state, item, onChange }: Props) {
+  const __loc = useLocale();
   const tr = useTr();
   const today = new Date().toISOString().slice(0, 10);
   const maxStart = (() => {
@@ -103,9 +106,9 @@ export default function DateSelectionStep({ state, item, onChange }: Props) {
           <div className="flex items-center gap-2 bg-[var(--c-accent-soft)] border border-blue-100 rounded-xl px-3 py-2 text-sm">
             <span className="text-[var(--c-accent)] font-bold">{tr("📅 {0} วัน", [rentalDays])}</span>
             <span className="text-blue-500 text-xs">
-              ({new Date(startDate).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}
+              ({new Date(startDate).toLocaleDateString(dateTag(__loc), { day: "numeric", month: "short" })}
               {" – "}
-              {new Date(endDate).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" })})
+              {new Date(endDate).toLocaleDateString(dateTag(__loc), { day: "numeric", month: "short", year: "numeric" })})
             </span>
           </div>
           <PriceBreakdown pricing={pricing} lateFeePerDay={item.lateFeePerDay} />

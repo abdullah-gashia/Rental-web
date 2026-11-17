@@ -50,7 +50,7 @@ export default function BroadcastForm({ counts, adminEmail, mailReady }: Props) 
   return (
     <div className="space-y-5">
       {!mailReady && (
-        <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-2xl px-4 py-3 text-sm text-[var(--c-danger)]">{tr("ยังส่งอีเมลไม่ได้ — ตั้งค่า")}<code className="font-mono text-xs">GMAIL_USER</code> และ{" "}
+        <div className="bg-[var(--c-danger-soft)] border border-[var(--c-danger-line)] rounded-2xl px-4 py-3 text-sm text-[var(--c-danger)]">{tr("ยังส่งอีเมลไม่ได้ — ตั้งค่า")}<code className="font-mono text-xs">GMAIL_USER</code>{" "}{tr("และ")}{" "}
           <code className="font-mono text-xs">GMAIL_APP_PASSWORD</code>{tr("ก่อน")}</div>
       )}
 
@@ -80,7 +80,7 @@ export default function BroadcastForm({ counts, adminEmail, mailReady }: Props) 
                     {n}
                   </span>
                 </div>
-                <p className="text-[11px] text-[var(--c-muted)] mt-0.5">{AUDIENCE_HINT[a]}</p>
+                <p className="text-[11px] text-[var(--c-muted)] mt-0.5">{tr(AUDIENCE_HINT[a])}</p>
               </button>
             );
           })}

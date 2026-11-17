@@ -40,26 +40,32 @@ function CustomTooltip({
   active?: boolean;
   payload?: { name: string; value: number; payload: { percent: number } }[];
 }) {
+  const tr = useTr();
   if (!active || !payload?.length) return null;
   const item = payload[0];
   const pct  = ((item.payload.percent ?? 0) * 100).toFixed(1);
   return (
     <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-xl shadow-lg px-4 py-3 text-sm">
-      <p className="font-semibold text-[var(--c-ink-1)]">{STATUS_TH[item.name] ?? item.name}</p>
+      <p className="font-semibold text-[var(--c-ink-1)]">{tr(STATUS_TH[item.name] ?? item.name)}</p>
       <p className="text-[var(--c-ink-2)] mt-0.5">
-        {item.value} รายการ{" "}
+        {item.value}{" "}{tr("รายการ")}{" "}
         <span className="text-[var(--c-muted)]">({pct}%)</span>
       </p>
     </div>
   );
 }
 
-function legendFormatter(value: string) {
+function LegendLabel({ value }: { value: string }) {
+  const tr = useTr();
   return (
     <span style={{ fontSize: 12, color: "var(--c-ink-2)" }}>
-      {STATUS_TH[value] ?? value}
+      {tr(STATUS_TH[value] ?? value)}
     </span>
   );
+}
+
+function legendFormatter(value: string) {
+  return <LegendLabel value={value} />;
 }
 
 export default function StatusPieChart({ data }: StatusPieChartProps) {
@@ -82,7 +88,7 @@ export default function StatusPieChart({ data }: StatusPieChartProps) {
       aria-label={tr("กราฟสัดส่วนสถานะสินค้า")}
     >
       <h3 className="text-sm font-semibold text-[var(--c-ink-1)] mb-4">
-        สัดส่วนสถานะสินค้า{" "}
+        {tr("สัดส่วนสถานะสินค้า")}{" "}
         <span className="text-xs font-normal text-[var(--c-muted)]">{tr("({0} รายการ)", [total])}</span>
       </h3>
 

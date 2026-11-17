@@ -257,8 +257,7 @@ export default function DisputeModal({ orderId, itemTitle, amount, onClose, onSu
           {/* Warning notice */}
           <div className="bg-[var(--c-canvas)] rounded-xl px-4 py-3 text-xs text-[var(--c-ink-3)] leading-relaxed">
             <span className="font-semibold text-[var(--c-ink-2)]">{tr("หมายเหตุ:")}</span>{" "}
-            การเปิดข้อพิพาทจะทำให้เงินถูกอายัดทันที และไม่สามารถยกเลิกได้
-            ผู้ดูแลระบบจะตรวจสอบหลักฐานและตัดสินผลภายใน 2–3 วันทำการ
+            {tr("การเปิดข้อพิพาทจะทำให้เงินถูกอายัดทันที และไม่สามารถยกเลิกได้ ผู้ดูแลระบบจะตรวจสอบหลักฐานและตัดสินผลภายใน 2–3 วันทำการ")}
           </div>
 
           {/* Action buttons */}

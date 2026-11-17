@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import type { CheckoutState, CheckoutAction } from "./useCheckoutReducer";
@@ -20,6 +22,7 @@ export default function ReviewStep({
   itemTitle,
   sellerName,
 }: ReviewStepProps) {
+  const __loc = useLocale();
   const tr = useTr();
   const deliveryMethod = state.deliveryMethod ?? "SHIPPING";
   const paymentMethod = state.paymentMethod ?? "ESCROW";
@@ -33,7 +36,7 @@ export default function ReviewStep({
       {/* Item */}
       <div className="rounded-xl bg-[var(--c-canvas)] border border-[var(--c-line)] p-3">
         <p className="text-sm font-bold text-[var(--c-ink)]">{itemTitle}</p>
-        <p className="text-xs text-[var(--c-muted)]">ขายโดย: {sellerName ?? "ไม่ระบุชื่อ"}</p>
+        <p className="text-xs text-[var(--c-muted)]">{tr("ขายโดย:")}{" "}{sellerName ?? tr("ไม่ระบุชื่อ")}</p>
       </div>
 
       {/* Delivery summary */}
@@ -68,7 +71,7 @@ export default function ReviewStep({
             {state.meetupDateTime && (
               <p>
                 🕐{" "}
-                {new Date(state.meetupDateTime).toLocaleDateString("th-TH", {
+                {new Date(state.meetupDateTime).toLocaleDateString(dateTag(__loc), {
                   weekday: "short",
                   day: "numeric",
                   month: "short",
@@ -96,7 +99,7 @@ export default function ReviewStep({
           {paymentMethod === "ESCROW" ? (
             <span>{tr("💳 Escrow (กักเงินจนกว่าจะรับของ)")}</span>
           ) : (
-            <span>💵 จ่ายเงินสด ({deliveryMethod === "SHIPPING" ? tr("เก็บเงินปลายทาง") : tr("จ่ายตอนนัดรับ")})</span>
+            <span>{tr("💵 จ่ายเงินสด ({0})", [deliveryMethod === "SHIPPING" ? tr("เก็บเงินปลายทาง") : tr("จ่ายตอนนัดรับ")])}</span>
           )}
         </p>
       </div>
@@ -115,7 +118,7 @@ export default function ReviewStep({
         )}
         <div className="flex justify-between text-sm">
           <span className="text-[var(--c-ink-2)]">
-            ค่าธรรมเนียม {paymentMethod === "ESCROW" ? "(5%)" : ""}
+            {tr("ค่าธรรมเนียม")}{" "}{paymentMethod === "ESCROW" ? "(5%)" : ""}
           </span>
           <span>
             {breakdown.platformFee > 0
@@ -138,7 +141,7 @@ export default function ReviewStep({
           className="mt-0.5 rounded"
         />
         <span className="text-xs text-[var(--c-ink-2)] leading-relaxed">
-          ฉันยอมรับเงื่อนไขการซื้อขายของ PSU Store{" "}
+          {tr("ฉันยอมรับเงื่อนไขการซื้อขายของ PSU Store")}{" "}
           <span className="text-[var(--c-danger)]">*</span>
         </span>
       </label>

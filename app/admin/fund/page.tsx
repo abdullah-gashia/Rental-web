@@ -1,3 +1,5 @@
+import { dateTag } from "@/lib/i18n/dates";
+import { getLocale } from "@/lib/i18n/server";
 import { getTr } from "@/lib/i18n/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -18,6 +20,7 @@ const SOURCE_LABEL: Record<string, string> = {
 };
 
 export default async function AdminFundPage() {
+  const __loc = await getLocale();
   const tr = await getTr();
   const session = await auth();
   if ((session?.user as { role?: string } | undefined)?.role !== "ADMIN") redirect("/");
@@ -96,7 +99,7 @@ export default async function AdminFundPage() {
                 {entries.map((e) => (
                   <tr key={e.id}>
                     <td className="px-4 py-3 whitespace-nowrap text-xs text-[var(--c-ink-3)]">
-                      {new Date(e.occurredAt).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" })}
+                      {new Date(e.occurredAt).toLocaleDateString(dateTag(__loc), { day: "numeric", month: "short", year: "numeric" })}
                     </td>
                     <td className="px-4 py-3">
                       {e.note}

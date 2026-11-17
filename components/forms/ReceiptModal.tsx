@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useRef } from "react";
@@ -28,11 +30,12 @@ interface Props {
 }
 
 export default function ReceiptModal({ data, onClose }: Props) {
+  const __loc = useLocale();
   const tr = useTr();
   const printRef = useRef<HTMLDivElement>(null);
 
   const shortId     = data.orderId.slice(-10).toUpperCase();
-  const completedDate = new Date(data.completedAt).toLocaleString("th-TH", {
+  const completedDate = new Date(data.completedAt).toLocaleString(dateTag(__loc), {
     weekday: "long", day: "numeric", month: "long",
     year: "numeric", hour: "2-digit", minute: "2-digit",
   });
@@ -53,7 +56,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
     if (!printRef.current) return;
 
     const html = `<!DOCTYPE html>
-<html lang="th">
+<html lang="${__loc}">
 <head>
   <meta charset="UTF-8" />
   <title>${tr("ใบเสร็จ #{0}", [shortId])}</title>
@@ -126,7 +129,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
     <div class="photo-box">
       <img src="${data.handoverPhotoUrl}" alt="${tr("ภาพถ่ายหลักฐานการส่งมอบ")}" />
     </div>
-    ${data.handoverConfirmedAt ? tr("<div class=\"timestamp\">บันทึกเมื่อ: {0}</div>", [new Date(data.handoverConfirmedAt).toLocaleString("th-TH", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })]) : ""}` : ""}
+    ${data.handoverConfirmedAt ? tr("<div class=\"timestamp\">บันทึกเมื่อ: {0}</div>", [new Date(data.handoverConfirmedAt).toLocaleString(dateTag(__loc), { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })]) : ""}` : ""}
   </div>` : ""}
 
   <div class="footer">
@@ -265,8 +268,8 @@ export default function ReceiptModal({ data, onClose }: Props) {
                   </a>
                   {data.handoverConfirmedAt && (
                     <p className="text-[10px] text-[var(--c-muted)]">
-                      บันทึกเมื่อ:{" "}
-                      {new Date(data.handoverConfirmedAt).toLocaleString("th-TH", {
+                      {tr("บันทึกเมื่อ:")}{" "}
+                      {new Date(data.handoverConfirmedAt).toLocaleString(dateTag(__loc), {
                         day: "numeric", month: "long", year: "numeric",
                         hour: "2-digit", minute: "2-digit",
                       })}

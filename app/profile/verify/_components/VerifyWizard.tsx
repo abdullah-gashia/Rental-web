@@ -166,7 +166,7 @@ function PsuIdStep({ form, onChange, onNext }: {
         {/* Auto-detect hint (shown only when system guessed, not when user chose) */}
         {!explicitlyChosen && form.psuIdType && (
           <p className="text-xs text-blue-500 mt-1.5">
-            ✨ ระบบตรวจพบว่าเป็นรหัส{form.psuIdType === "STUDENT" ? tr("นักศึกษา") : tr("บุคลากร")} (สามารถเปลี่ยนได้)
+            {tr("✨ ระบบตรวจพบว่าเป็นรหัส")}{form.psuIdType === "STUDENT" ? tr("นักศึกษา") : tr("บุคลากร")}{" "}{tr("(สามารถเปลี่ยนได้)")}
           </p>
         )}
       </div>
@@ -199,7 +199,7 @@ function PsuIdStep({ form, onChange, onNext }: {
             hint.status === "error"  ? "text-[var(--c-danger)]"     :
             hint.status === "typing" ? "text-[var(--c-muted)]"   : "hidden"
           }`}>
-            {hint.message}
+            {tr(hint.message)}
           </p>
         )}
 

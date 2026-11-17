@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useRef, useTransition } from "react";
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export default function UsersTable({ rows }: Props) {
+  const __loc = useLocale();
   const tr = useTr();
   const [pending, startTransition] = useTransition();
 
@@ -217,7 +219,7 @@ export default function UsersTable({ rows }: Props) {
 
                 {/* Created */}
                 <td className="px-4 py-3 text-[var(--c-ink-3)] whitespace-nowrap">
-                  {formatThaiDate(u.createdAt)}
+                  {formatThaiDate(u.createdAt, __loc)}
                 </td>
 
                 {/* Actions */}

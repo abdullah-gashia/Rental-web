@@ -156,7 +156,7 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
                 <p className="text-sm font-semibold group-hover:text-[var(--c-accent)] transition truncate">
                   {item.seller.name}
                 </p>
-                <p className="text-xs text-[var(--c-muted)]">📍 {item.location}</p>
+                <p className="text-xs text-[var(--c-muted)]">📍 {tr(item.location)}</p>
               </div>
             </a>
             <div className="ml-auto text-sm flex-shrink-0">
@@ -205,7 +205,7 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
                     onClick={() => { onClose(); openModal("login"); }}
                     className="ui-btn ui-btn-primary flex-1"
                   >
-                    เข้าสู่ระบบเพื่อ{isRentListing ? tr("เช่า") : tr("ซื้อ")}
+                    {tr("เข้าสู่ระบบเพื่อ")}{isRentListing ? tr("เช่า") : tr("ซื้อ")}
                   </button>
                 ) : (
                   <>
@@ -243,11 +243,11 @@ export default function ProductDetail({ item, isOpen, onClose, onChatClick }: Pr
               <div className="text-[var(--hp-muted)]">{t("category_label")}</div>
               {/* The raw slug used to be printed here — "secondhand" rather
                   than tr("สินค้ามือสอง"). */}
-              <div className="font-medium">{item.category.nameTh ?? item.category.slug}</div>
+              <div className="font-medium">{tr(item.category.nameTh) || item.category.slug}</div>
               <div className="text-[var(--hp-muted)]">{t("condition_label")}</div>
               <div className="font-medium">{conditionMap[item.condition]}</div>
               <div className="text-[var(--hp-muted)]">{tr("สถานที่")}</div>
-              <div className="font-medium">{item.location ?? "—"}</div>
+              <div className="font-medium">{tr(item.location) || "—"}</div>
             </div>
           </div>
         </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
@@ -35,6 +37,7 @@ export default function ProfileReviewSection({
   sellerId,
   sellerName,
 }: ProfileReviewSectionProps) {
+  const __loc = useLocale();
   const tr = useTr();
   const router = useRouter();
   const [formVisible, setFormVisible] = useState(false);
@@ -109,7 +112,7 @@ export default function ProfileReviewSection({
                       </span>
                       <Stars rating={review.rating} />
                       <span className="text-[10px] text-[var(--c-faint)] ml-auto">
-                        {new Date(review.createdAt).toLocaleDateString("th-TH", {
+                        {new Date(review.createdAt).toLocaleDateString(dateTag(__loc), {
                           day: "numeric", month: "short", year: "numeric",
                         })}
                       </span>

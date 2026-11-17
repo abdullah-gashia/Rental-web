@@ -1,5 +1,8 @@
 "use client";
 
+import type { Locale } from "@/lib/i18n/dictionaries";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { dateTag } from "@/lib/i18n/dates";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import {
@@ -23,8 +26,8 @@ interface RevenueChartProps {
 }
 
 // Format "YYYY-MM-DD" → short Thai label e.g. "14 เม.ย."
-function fmtDate(iso: string) {
-  return new Date(iso).toLocaleDateString("th-TH", { day: "numeric", month: "short" });
+function fmtDate(iso: string, loc: Locale) {
+  return new Date(iso).toLocaleDateString(dateTag(loc), { day: "numeric", month: "short" });
 }
 
 function baht(n: number) {
@@ -36,12 +39,13 @@ function baht(n: number) {
 // Custom tooltip
 function CustomTooltip({ active, payload, label }: any) {
   const tr = useTr();
+  const __loc = useLocale();
   if (!active || !payload?.length) return null;
   const fee    = payload[0]?.value ?? 0;
   const orders = payload[1]?.value ?? 0;
   return (
     <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-xl px-3 py-2 shadow-lg text-xs space-y-0.5">
-      <p className="font-bold text-[var(--c-ink)] mb-1">{fmtDate(label)}</p>
+      <p className="font-bold text-[var(--c-ink)] mb-1">{fmtDate(label, __loc)}</p>
       <p className="text-purple-700 font-semibold">{tr("รายได้แพลตฟอร์ม: {0}", [baht(fee)])}</p>
       <p className="text-[var(--c-muted)]">{tr("คำสั่งซื้อ: {0} รายการ", [orders])}</p>
     </div>
@@ -50,6 +54,7 @@ function CustomTooltip({ active, payload, label }: any) {
 
 export default function RevenueChart({ data }: RevenueChartProps) {
   const tr = useTr();
+  const __loc = useLocale();
   // Sparse ticks: show every other label so the axis doesn't crowd on mobile
   const tickDates = data.filter((_, i) => i % 2 === 0).map((d) => d.date);
 
@@ -70,7 +75,7 @@ export default function RevenueChart({ data }: RevenueChartProps) {
           <XAxis
             dataKey="date"
             ticks={tickDates}
-            tickFormatter={fmtDate}
+            tickFormatter={(v) => fmtDate(v, __loc)}
             tick={{ fontSize: 10, fill: "var(--c-muted)" }}
             axisLine={false}
             tickLine={false}

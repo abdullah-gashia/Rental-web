@@ -33,7 +33,7 @@ export default function OrderSummaryCard({
       <div className="flex-1 min-w-0">
         <p className="text-sm font-bold text-[var(--c-ink)] truncate">{title}</p>
         <p className="text-xs text-[var(--c-muted)]">
-          ขายโดย: {sellerName ?? tr("ไม่ระบุชื่อ")}
+          {tr("ขายโดย:")}{" "}{sellerName ?? tr("ไม่ระบุชื่อ")}
         </p>
       </div>
 

@@ -359,7 +359,7 @@ export default function EditItemClient({
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-xs text-[var(--c-ink-3)] mb-0.5">{item.category.nameTh}</p>
+          <p className="text-xs text-[var(--c-ink-3)] mb-0.5">{tr(item.category.nameTh)}</p>
           <p className="text-sm font-semibold text-[var(--c-ink)] truncate">{item.title}</p>
           <span className={`inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-xs font-semibold border ${STATUS_COLORS[item.status] ?? "bg-[var(--c-subtle)] text-[var(--c-ink-3)] border-[var(--c-line)]"}`}>
             {tr(STATUS_LABELS[item.status] ?? item.status)}

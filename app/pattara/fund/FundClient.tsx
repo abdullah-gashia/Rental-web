@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
@@ -24,6 +26,7 @@ const blank: FundEntryInput = {
 };
 
 export default function FundClient({ summary, entries }: { summary: any; entries: any[] }) {
+  const __loc = useLocale();
   const tr = useTr();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -123,12 +126,12 @@ export default function FundClient({ summary, entries }: { summary: any; entries
                 {entries.map((e) => (
                   <tr key={e.id} className="border-b border-[var(--bw-line)] last:border-0">
                     <td className="px-4 py-3 whitespace-nowrap bw-num text-[12px]">
-                      {new Date(e.occurredAt).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "2-digit" })}
+                      {new Date(e.occurredAt).toLocaleDateString(dateTag(__loc), { day: "numeric", month: "short", year: "2-digit" })}
                     </td>
                     <td className="px-4 py-3">
                       <p className="truncate max-w-[300px]">{e.note}</p>
                       <p className="text-[11px] text-[var(--bw-muted)]">
-                        บันทึกโดย {e.recordedBy ?? "—"}
+                        {tr("บันทึกโดย")}{" "}{e.recordedBy ?? "—"}
                         {e.items.length > 0 && tr(" · ผูกกับ {0} ชิ้น", [e.items.length])}
                         {e.receiptUrl && (
                           <> · <a href={e.receiptUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--psu-blue)] hover:underline">{tr("ดูใบเสร็จ")}</a></>

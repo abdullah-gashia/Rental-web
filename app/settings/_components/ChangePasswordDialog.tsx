@@ -209,7 +209,7 @@ export default function ChangePasswordDialog({ open, onClose, showToast }: Props
             {pending && (
               <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             )}
-            ยืนยันเปลี่ยนรหัสผ่าน
+            {tr("ยืนยันเปลี่ยนรหัสผ่าน")}
           </button>
         </div>
       </form>

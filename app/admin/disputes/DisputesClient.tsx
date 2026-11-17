@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
@@ -127,6 +129,7 @@ function ChatLog({
   buyerId:  string;
   sellerId: string;
 }) {
+  const __loc = useLocale();
   const tr = useTr();
   const [open, setOpen] = useState(false);
 
@@ -172,7 +175,7 @@ function ChatLog({
                       <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
                       <span className="text-[10px] text-[var(--c-accent)] font-bold uppercase tracking-wider">{tr("ข้อมูลระบบ (System Record)")}</span>
                       <span className="text-[10px] text-[var(--c-faint-2)] ml-auto">
-                        {new Date(msg.createdAt).toLocaleString("th-TH", {
+                        {new Date(msg.createdAt).toLocaleString(dateTag(__loc), {
                           month: "short", day: "numeric",
                           hour: "2-digit", minute: "2-digit",
                         })}
@@ -196,7 +199,7 @@ function ChatLog({
                         {isBuyer ? tr("(ผู้ซื้อ)") : tr("(ผู้ขาย)")}
                       </span>
                       <span className="text-[10px] text-[var(--c-faint-2)] ml-auto">
-                        {new Date(msg.createdAt).toLocaleString("th-TH", {
+                        {new Date(msg.createdAt).toLocaleString(dateTag(__loc), {
                           month: "short", day: "numeric",
                           hour: "2-digit", minute: "2-digit",
                         })}
@@ -225,6 +228,7 @@ function DisputeCard({
   onResolve: (orderId: string, resolution: "REFUND_BUYER" | "RELEASE_TO_SELLER") => void;
   resolving: boolean;
 }) {
+  const __loc = useLocale();
   const tr = useTr();
   const [confirmAction, setConfirmAction] = useState<"REFUND_BUYER" | "RELEASE_TO_SELLER" | null>(null);
 
@@ -245,7 +249,7 @@ function DisputeCard({
         <span className="flex items-center gap-1.5 text-xs font-bold text-[var(--c-danger)]">
           <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />{tr("ข้อพิพาท")}</span>
         <span className="text-xs text-[var(--c-danger)] font-medium ml-auto">
-          เปิดเมื่อ {new Date(filedDate).toLocaleDateString("th-TH", {
+          {tr("เปิดเมื่อ")}{" "}{new Date(filedDate).toLocaleDateString(dateTag(__loc), {
             day: "numeric", month: "short", year: "numeric",
             hour: "2-digit", minute: "2-digit",
           })}
@@ -303,10 +307,10 @@ function DisputeCard({
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            เหตุผล
+            {tr("เหตุผล")}
             {reporter && (
               <span className="ml-auto font-normal text-[var(--c-muted)] normal-case tracking-normal">
-                รายงานโดย{reporterLabel} ({reporter.name ?? tr("ไม่ระบุชื่อ")})
+                {tr("รายงานโดย")}{reporterLabel} ({reporter.name ?? tr("ไม่ระบุชื่อ")})
               </span>
             )}
           </div>
@@ -330,7 +334,7 @@ function DisputeCard({
         {confirmAction ? (
           <div className="rounded-2xl border-2 border-amber-300 bg-[var(--c-warn-soft)] p-4 space-y-3">
             <p className="text-sm font-bold text-amber-900">
-              ยืนยัน:{" "}
+              {tr("ยืนยัน:")}{" "}
               {confirmAction === "REFUND_BUYER"
                 ? tr("คืนเงิน ฿") + order.amount.toLocaleString() + tr("ให้ผู้ซื้อ")
                 : tr("โอนเงิน ฿") + order.amount.toLocaleString() + tr("ให้ผู้ขาย")}
@@ -347,7 +351,7 @@ function DisputeCard({
                 className="flex-1 py-2.5 rounded-xl bg-amber-600 text-white text-sm font-bold hover:bg-amber-700 transition disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {resolving && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-                ยืนยัน
+                {tr("ยืนยัน")}
               </button>
             </div>
           </div>

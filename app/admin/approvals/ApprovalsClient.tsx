@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 import { rentalUnit } from "@/lib/rental-unit";
 
@@ -160,6 +162,7 @@ function RejectModal({
 // ─── Main Component ──────────────────────────────────
 
 export default function ApprovalsClient({ items: initialItems }: { items: PendingItem[] }) {
+  const __loc = useLocale();
   const tr = useTr();
   const [items, setItems]             = useState<PendingItem[]>(initialItems);
   const [rejectTarget, setRejectTarget] = useState<PendingItem | null>(null);
@@ -202,7 +205,7 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
   }
 
   function formatDate(iso: string) {
-    return new Date(iso).toLocaleDateString("th-TH", {
+    return new Date(iso).toLocaleDateString(dateTag(__loc), {
       day: "numeric", month: "short", year: "numeric",
       hour: "2-digit", minute: "2-digit",
     });
@@ -265,7 +268,7 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
                       <div className="flex items-start justify-between gap-2 flex-wrap">
                         <div>
                           <span className="inline-flex items-center gap-1 bg-[var(--c-line-soft)] text-[var(--c-ink-3)] text-[10px] font-semibold px-2 py-0.5 rounded-full mb-1">
-                            {item.category.emoji} {item.category.nameTh}
+                            {item.category.emoji} {tr(item.category.nameTh)}
                           </span>
                           <h3 className="text-base font-bold text-[var(--c-ink)]">{item.title}</h3>
                         </div>
@@ -283,7 +286,7 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
                         <div className="mt-2.5 flex items-start gap-2 rounded-xl border border-[var(--c-line)] bg-[var(--c-subtle)] px-3 py-2">
                           <SafetyBadge score={item.safetyScore} />
                           <p className="text-[11px] text-[var(--c-ink-3)] leading-relaxed flex-1 min-w-0">
-                            {item.moderationReason ?? "—"}
+                            {tr(item.moderationReason) || "—"}
                           </p>
                         </div>
                       )}
@@ -327,7 +330,7 @@ export default function ApprovalsClient({ items: initialItems }: { items: Pendin
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                       )}
-                      อนุมัติ
+                      {tr("อนุมัติ")}
                     </button>
                     <button
                       onClick={() => setRejectTarget(item)}

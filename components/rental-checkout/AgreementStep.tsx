@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
@@ -21,18 +23,19 @@ interface Props {
 }
 
 export default function AgreementStep({ state, item, pricing, onSetAgreement, onGotoStep }: Props) {
+  const __loc = useLocale();
   const tr = useTr();
   const [expanded, setExpanded] = useState(false);
 
   const startLabel = state.startDate
-    ? new Date(state.startDate).toLocaleDateString("th-TH", { day: "numeric", month: "long", year: "numeric" })
+    ? new Date(state.startDate).toLocaleDateString(dateTag(__loc), { day: "numeric", month: "long", year: "numeric" })
     : "—";
   const endLabel = state.endDate
-    ? new Date(state.endDate).toLocaleDateString("th-TH", { day: "numeric", month: "long", year: "numeric" })
+    ? new Date(state.endDate).toLocaleDateString(dateTag(__loc), { day: "numeric", month: "long", year: "numeric" })
     : "—";
 
   const pickupDateLabel = state.pickupDateTime
-    ? new Date(state.pickupDateTime).toLocaleString("th-TH", {
+    ? new Date(state.pickupDateTime).toLocaleString(dateTag(__loc), {
         day: "numeric", month: "short", year: "numeric",
         hour: "2-digit", minute: "2-digit",
       })
@@ -60,7 +63,7 @@ export default function AgreementStep({ state, item, pricing, onSetAgreement, on
           <div>
             <p className="text-[11px] font-semibold text-[var(--c-faint)] uppercase tracking-wide mb-0.5">{tr("นัดรับ")}</p>
             <p className="text-sm font-semibold text-[var(--c-ink)]">
-              📍 {state.pickupLocation || "—"}
+              📍 {tr(state.pickupLocation) || "—"}
             </p>
             <p className="text-xs text-[var(--c-ink-3)]">{pickupDateLabel}</p>
           </div>

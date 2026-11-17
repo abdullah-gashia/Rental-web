@@ -74,7 +74,7 @@ export default async function RentalDashboardPage() {
           {/* ── ฉันเป็นผู้เช่า ── */}
           <section>
             <h2 className="text-sm font-bold text-[var(--c-ink-1)] mb-3 flex items-center gap-2">
-              📥 ฉันเป็นผู้เช่า
+              {tr("📥 ฉันเป็นผู้เช่า")}
               {activeAsRenter.length > 0 && (
                 <span className="px-2 py-0.5 bg-[var(--c-accent)] text-white text-[10px] font-bold rounded-full">{tr("{0} กำลังดำเนิน", [activeAsRenter.length])}</span>
               )}
@@ -93,7 +93,7 @@ export default async function RentalDashboardPage() {
           {/* ── ฉันเป็นเจ้าของ ── */}
           <section>
             <h2 className="text-sm font-bold text-[var(--c-ink-1)] mb-3 flex items-center gap-2">
-              📤 ฉันเป็นเจ้าของ
+              {tr("📤 ฉันเป็นเจ้าของ")}
               {activeAsOwner.length > 0 && (
                 <span className="px-2 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded-full">{tr("{0} กำลังดำเนิน", [activeAsOwner.length])}</span>
               )}

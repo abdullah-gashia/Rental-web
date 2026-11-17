@@ -1,3 +1,5 @@
+import { dateTag } from "@/lib/i18n/dates";
+import { getLocale } from "@/lib/i18n/server";
 import { getTr } from "@/lib/i18n/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -51,6 +53,7 @@ const STATUS_COLOR: Record<string, string> = {
 interface Props { params: Promise<{ id: string }> }
 
 export default async function RentalOrderDetailPage({ params }: Props) {
+  const __loc = await getLocale();
   const tr = await getTr();
   const { id } = await params;
   const order  = await getRentalOrderDetail(id);
@@ -62,13 +65,13 @@ export default async function RentalOrderDetailPage({ params }: Props) {
   const img      = item.images.find((i: any) => i.isMain)?.url ?? item.images[0]?.url;
 
   const fmt = (iso: string | null) =>
-    iso ? new Date(iso).toLocaleString("th-TH", {
+    iso ? new Date(iso).toLocaleString(dateTag(__loc), {
       year: "numeric", month: "short", day: "numeric",
       hour: "2-digit", minute: "2-digit",
     }) : "—";
 
   const fmtDate = (iso: string | null) =>
-    iso ? new Date(iso).toLocaleDateString("th-TH", {
+    iso ? new Date(iso).toLocaleDateString(dateTag(__loc), {
       year: "numeric", month: "long", day: "numeric",
     }) : "—";
 
@@ -97,7 +100,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
           <div>
             <h1 className="text-xl font-bold text-[var(--c-ink)]">{item.title}</h1>
             <p className="text-sm text-[var(--c-ink-3)] mt-1">
-              รหัส: {order.refCode.slice(0, 8).toUpperCase()}
+              {tr("รหัส:")}{" "}{order.refCode.slice(0, 8).toUpperCase()}
               {" · "}
               {isRenter ? tr("คุณเป็นผู้เช่า") : tr("คุณเป็นเจ้าของ")}
             </p>
@@ -248,9 +251,9 @@ export default async function RentalOrderDetailPage({ params }: Props) {
                         <p className="font-semibold text-[var(--c-ink)]">
                           {tr(STATUS_LABEL[h.status] ?? h.status)}
                         </p>
-                        {h.note && <p className="text-[var(--c-ink-3)]">{h.note}</p>}
+                        {h.note && <p className="text-[var(--c-ink-3)]">{tr(h.note)}</p>}
                         <p className="text-[var(--c-faint)]">
-                          {new Date(h.changedAt).toLocaleString("th-TH")}
+                          {new Date(h.changedAt).toLocaleString(dateTag(__loc))}
                         </p>
                       </div>
                     </div>
@@ -278,7 +281,7 @@ export default async function RentalOrderDetailPage({ params }: Props) {
                 <Link href={`/items/${item.id}`} className="text-sm font-semibold text-[var(--c-ink)] hover:text-[var(--c-accent)] truncate block">
                   {item.title}
                 </Link>
-                <p className="text-xs text-[var(--c-faint)]">{item.category?.nameTh ?? "—"}</p>
+                <p className="text-xs text-[var(--c-faint)]">{tr(item.category?.nameTh) || "—"}</p>
               </div>
             </div>
 
@@ -354,7 +357,8 @@ function Row({ label, value, color }: { label: string; value: string; color?: st
   );
 }
 
-function PartyRow({ label, user }: { label: string; user: any }) {
+async function PartyRow({ label, user }: { label: string; user: any }) {
+  const tr = await getTr();
   return (
     <div className="flex items-center gap-2.5">
       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--c-accent)] to-[var(--c-accent-lite)]
@@ -364,7 +368,7 @@ function PartyRow({ label, user }: { label: string; user: any }) {
       <div>
         <p className="text-xs font-semibold text-[var(--c-ink)]">{label}: {user.name ?? "—"}</p>
         {user.verificationStatus === "APPROVED" && (
-          <p className="text-[11px] text-[var(--c-ok)]">✅ ยืนยันตัวตนแล้ว</p>
+          <p className="text-[11px] text-[var(--c-ok)]">{tr("✅ ยืนยันตัวตนแล้ว")}</p>
         )}
       </div>
     </div>

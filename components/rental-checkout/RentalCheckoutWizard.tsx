@@ -177,7 +177,7 @@ export default function RentalCheckoutWizard({ isOpen, onClose, item }: Props) {
           <div className="flex-1 min-w-0 py-3">
             <p className="text-xs font-semibold text-[var(--c-ink)] truncate">{item.title}</p>
             <p className="text-[11px] text-[var(--c-faint)]">
-              ฿{dailyRate.toLocaleString()}/วัน · {item.seller.name ?? "—"}
+              {tr("฿{0}/วัน · {1}", [dailyRate.toLocaleString(), item.seller.name ?? "—"])}
             </p>
           </div>
           {pricing.rentalDays > 0 && (

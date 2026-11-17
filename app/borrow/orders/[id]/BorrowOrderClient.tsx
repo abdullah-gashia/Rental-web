@@ -1,5 +1,8 @@
 "use client";
 
+import type { Locale } from "@/lib/i18n/dictionaries";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { dateTag } from "@/lib/i18n/dates";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
@@ -26,10 +29,10 @@ const PILL: Record<string, string> = {
   REJECTED: "bw-pill-off", CANCELLED: "bw-pill-off",
 };
 
-const fmtDate = (iso: string | null) =>
-  iso ? new Date(iso).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" }) : "—";
-const fmtDT = (iso: string | null) =>
-  iso ? new Date(iso).toLocaleString("th-TH", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
+const fmtDate = (iso: string | null, loc: Locale) =>
+  iso ? new Date(iso).toLocaleDateString(dateTag(loc), { day: "numeric", month: "short", year: "numeric" }) : "—";
+const fmtDT = (iso: string | null, loc: Locale) =>
+  iso ? new Date(iso).toLocaleString(dateTag(loc), { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
 
 /** Days left, or days over. Negative means late. */
 function daysLeft(due: string | null): number | null {
@@ -49,6 +52,7 @@ function Row({ k, v }: { k: string; v: React.ReactNode }) {
 /** Photo picker that compresses in the browser before uploading. */
 function PhotoPicker({ photos, onChange }: { photos: string[]; onChange: (p: string[]) => void }) {
   const tr = useTr();
+  const __loc = useLocale();
   const [busy, setBusy] = useState(false);
   const [err, setErr]   = useState<string | null>(null);
 
@@ -100,6 +104,7 @@ function PhotoPicker({ photos, onChange }: { photos: string[]; onChange: (p: str
 
 export default function BorrowOrderClient({ order, backHref }: { order: any; backHref: string }) {
   const tr = useTr();
+  const __loc = useLocale();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [msg, setMsg]   = useState<{ ok: boolean; text: string } | null>(null);
@@ -172,7 +177,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
         }`}>
           <div>
             <p className="bw-label">{tr("กำหนดคืน")}</p>
-            <p className="text-[15px] font-semibold mt-0.5">{fmtDate(order.dueDate)}</p>
+            <p className="text-[15px] font-semibold mt-0.5">{fmtDate(order.dueDate, __loc)}</p>
           </div>
           <p className={`text-[14px] font-semibold ${left !== null && left < 0 ? "text-[var(--c-danger)]" : "text-[var(--psu-blue)]"}`}>
             {left === null ? "" : left < 0 ? tr("เลยกำหนดมา {0} วัน", [Math.abs(left)]) : left === 0 ? tr("ครบกำหนดวันนี้") : tr("เหลืออีก {0} วัน", [left])}
@@ -214,14 +219,14 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
         <div className="bw-panel">
           <h2 className="bw-h">{tr("รายละเอียด")}</h2>
           <Row k={tr("ระยะเวลาที่ขอ")} v={tr("{0} วัน", [order.requestedDays])} />
-          <Row k={tr("ส่งคำขอเมื่อ")}   v={fmtDT(order.requestedAt)} />
-          <Row k={tr("อนุมัติเมื่อ")}    v={fmtDT(order.approvedAt)} />
+          <Row k={tr("ส่งคำขอเมื่อ")}   v={fmtDT(order.requestedAt, __loc)} />
+          <Row k={tr("อนุมัติเมื่อ")}    v={fmtDT(order.approvedAt, __loc)} />
           {order.approvedByName && <Row k={tr("อนุมัติโดย")} v={order.approvedByName} />}
-          <Row k={tr("นัดรับ")}        v={fmtDT(order.scheduledPickupAt)} />
-          <Row k={tr("รับของจริง")}     v={fmtDT(order.actualPickupAt)} />
-          <Row k={tr("นัดคืน")}        v={fmtDT(order.scheduledReturnAt)} />
-          <Row k={tr("คืนจริง")}        v={fmtDT(order.actualReturnAt)} />
-          <Row k={tr("จุดนัด")}         v={order.meetupLocation ?? "—"} />
+          <Row k={tr("นัดรับ")}        v={fmtDT(order.scheduledPickupAt, __loc)} />
+          <Row k={tr("รับของจริง")}     v={fmtDT(order.actualPickupAt, __loc)} />
+          <Row k={tr("นัดคืน")}        v={fmtDT(order.scheduledReturnAt, __loc)} />
+          <Row k={tr("คืนจริง")}        v={fmtDT(order.actualReturnAt, __loc)} />
+          <Row k={tr("จุดนัด")}         v={tr(order.meetupLocation) || "—"} />
           <Row k={tr("ต่ออายุแล้ว")}    v={tr("{0} ครั้ง", [order.renewalCount])} />
           {order.returnCondition && (
             <Row k={tr("สภาพตอนคืน")} v={tr(CONDITION_LABEL[order.returnCondition] ?? order.returnCondition)} />
@@ -311,7 +316,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
                 disabled={isBorrower ? order.pickupBorrowerConfirm : order.pickupLenderConfirm}
                 className="bw-btn bw-btn-primary"
               >
-                ✓ ยืนยัน{isBorrower ? tr("รับของ") : tr("ส่งมอบ")}
+                {tr("✓ ยืนยัน")}{isBorrower ? tr("รับของ") : tr("ส่งมอบ")}
               </button>
             )}
 
@@ -378,7 +383,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
             <div className="mt-4 pt-4 border-t border-[var(--bw-line)] flex flex-col gap-3 max-w-lg">
               <div>
                 <label className="bw-label block mb-1.5">
-                  รูปสภาพอุปกรณ์{!isBorrower && tr("(จำเป็น)")}
+                  {tr("รูปสภาพอุปกรณ์")}{!isBorrower && tr("(จำเป็น)")}
                 </label>
                 <PhotoPicker photos={photos} onChange={setPhotos} />
                 <p className="text-[11.5px] text-[var(--bw-muted)] mt-1 leading-[1.7]">{tr("รูปชุดนี้คือหลักฐานเดียวที่ใช้เทียบตอนคืน")}</p>
@@ -392,7 +397,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
                 disabled={pending}
                 className="bw-btn bw-btn-primary self-start"
               >
-                ยืนยัน{isBorrower ? tr("รับของ") : tr("ส่งมอบ")}
+                {tr("ยืนยัน")}{isBorrower ? tr("รับของ") : tr("ส่งมอบ")}
               </button>
             </div>
           )}
@@ -419,7 +424,7 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
             <div className="mt-4 pt-4 border-t border-[var(--bw-line)] flex flex-col gap-3 max-w-lg">
               <div>
                 <label className="bw-label block mb-1.5">
-                  รูปสภาพตอนคืน{!isBorrower && tr("(จำเป็น)")}
+                  {tr("รูปสภาพตอนคืน")}{!isBorrower && tr("(จำเป็น)")}
                 </label>
                 <PhotoPicker photos={photos} onChange={setPhotos} />
               </div>
@@ -481,14 +486,12 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
           {/* Confirmation state, so nobody wonders who has done what */}
           {["APPROVED", "PICKUP_SCHEDULED", "ITEM_HANDED_OVER"].includes(st) && (
             <p className="text-[12px] text-[var(--bw-muted)] mt-4 pt-4 border-t border-[var(--bw-line)]">
-              การส่งมอบ: ผู้ยืม {order.pickupBorrowerConfirm ? tr("✓ ยืนยันแล้ว") : tr("○ ยังไม่ยืนยัน")} ·
-              เจ้าหน้าที่ {order.pickupLenderConfirm ? tr("✓ ยืนยันแล้ว") : tr("○ ยังไม่ยืนยัน")}
+              {tr("การส่งมอบ: ผู้ยืม")}{" "}{order.pickupBorrowerConfirm ? tr("✓ ยืนยันแล้ว") : tr("○ ยังไม่ยืนยัน")}{" "}{tr("· เจ้าหน้าที่")}{" "}{order.pickupLenderConfirm ? tr("✓ ยืนยันแล้ว") : tr("○ ยังไม่ยืนยัน")}
             </p>
           )}
           {["RETURN_REQUESTED", "RETURN_SCHEDULED", "RETURNED"].includes(st) && (
             <p className="text-[12px] text-[var(--bw-muted)] mt-4 pt-4 border-t border-[var(--bw-line)]">
-              การคืน: ผู้ยืม {order.returnBorrowerConfirm ? tr("✓ ยืนยันแล้ว") : tr("○ ยังไม่ยืนยัน")} ·
-              เจ้าหน้าที่ {order.returnLenderConfirm ? tr("✓ ยืนยันแล้ว") : tr("○ ยังไม่ยืนยัน")}
+              {tr("การคืน: ผู้ยืม")}{" "}{order.returnBorrowerConfirm ? tr("✓ ยืนยันแล้ว") : tr("○ ยังไม่ยืนยัน")}{" "}{tr("· เจ้าหน้าที่")}{" "}{order.returnLenderConfirm ? tr("✓ ยืนยันแล้ว") : tr("○ ยังไม่ยืนยัน")}
             </p>
           )}
         </div>
@@ -512,10 +515,10 @@ export default function BorrowOrderClient({ order, backHref }: { order: any; bac
                     <span className={`bw-pill ${PILL[h.status] ?? "bw-pill-off"}`}>
                       {tr(BORROW_STATUS_LABEL[h.status] ?? h.status)}
                     </span>
-                    <span className="text-[11px] text-[var(--bw-muted)]">{fmtDT(h.changedAt)}</span>
+                    <span className="text-[11px] text-[var(--bw-muted)]">{fmtDT(h.changedAt, __loc)}</span>
                     {h.by && <span className="text-[11px] text-[var(--bw-muted)]">· {h.by}</span>}
                   </div>
-                  {h.note && <p className="text-[12.5px] text-[var(--bw-ink-2)] mt-1 leading-[1.8]">{h.note}</p>}
+                  {h.note && <p className="text-[12.5px] text-[var(--bw-ink-2)] mt-1 leading-[1.8]">{tr(h.note)}</p>}
                 </div>
               </li>
             ))}

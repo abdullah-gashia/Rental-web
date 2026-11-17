@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -148,7 +150,7 @@ function ItemContextCard({
           {/* Location */}
           {context.location && (
             <span className="inline-flex items-center gap-1 bg-[var(--c-line-soft)] text-[var(--c-ink-3)] text-xs font-medium px-2.5 py-1 rounded-full">
-              📍 {context.location}
+              📍 {tr(context.location)}
             </span>
           )}
         </div>
@@ -213,6 +215,7 @@ export default function ChatModal({
   convLoading,
   itemContext,
 }: ChatModalProps) {
+  const __loc = useLocale();
   const tr = useTr();
   const [messages,     setMessages]     = useState<ChatMessage[]>([]);
   const [msgLoading,   setMsgLoading]   = useState(false);
@@ -448,7 +451,7 @@ export default function ChatModal({
               </div>
               <div className={`flex items-center gap-1 mt-0.5 ${isMine ? "justify-end mr-1" : "ml-1"}`}>
                 <p className="text-[9px] text-[var(--c-faint)]">
-                  {new Date(msg.createdAt).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}
+                  {new Date(msg.createdAt).toLocaleTimeString(dateTag(__loc), { hour: "2-digit", minute: "2-digit" })}
                 </p>
                 {isMine && isLastSent && msg.read && (
                   <span className="text-[9px] text-[var(--c-accent)] font-semibold">{tr("อ่านแล้ว")}</span>

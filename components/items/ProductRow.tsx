@@ -1,6 +1,6 @@
 "use client";
 
-import { useT, useLocale } from "@/lib/i18n/LocaleProvider";
+import { useT, useLocale, useTr } from "@/lib/i18n/LocaleProvider";
 import type { ItemWithDetails } from "@/lib/types";
 
 interface ProductRowProps {
@@ -15,6 +15,7 @@ interface ProductRowProps {
 export default function ProductRow({ item, onClick }: ProductRowProps) {
   const t = useT();
   const locale = useLocale();
+  const tr = useTr();
 
   const isRent     = item.listingType === "RENT";
   const rentAmount = item.rentalRate ?? item.dailyRate ?? 0;
@@ -27,7 +28,7 @@ export default function ProductRow({ item, onClick }: ProductRowProps) {
     : `฿${item.price.toLocaleString()}`;
 
   const categoryName = locale === "th" ? item.category.nameTh : item.category.nameEn;
-  const meta = [categoryName, item.location].filter(Boolean).join(" · ");
+  const meta = [categoryName, item.location ? tr(item.location) : null].filter(Boolean).join(" · ");
 
   return (
     <button type="button" className="hp-row group" onClick={onClick}>

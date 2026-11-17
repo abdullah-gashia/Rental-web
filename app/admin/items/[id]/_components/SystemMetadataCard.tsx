@@ -1,4 +1,6 @@
 "use client";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { Locale } from "@/lib/i18n/dictionaries";
 
 import type { TrFn } from "@/lib/i18n/phrases";
 import { useTr } from "@/lib/i18n/LocaleProvider";
@@ -20,6 +22,7 @@ interface Props {
 }
 
 export default function SystemMetadataCard({ item }: Props) {
+  const __loc = useLocale();
   const tr = useTr();
   const [copied, setCopied] = useState(false);
 
@@ -49,14 +52,14 @@ export default function SystemMetadataCard({ item }: Props) {
         {/* Created */}
         <Row label={tr("สร้างเมื่อ")}>
           <span className="text-sm text-[var(--c-ink-1)]">
-            {formatThaiDateWithTime(item.createdAt, tr)}
+            {formatThaiDateWithTime(item.createdAt, tr, __loc)}
           </span>
         </Row>
 
         {/* Updated */}
         <Row label={tr("แก้ไขล่าสุด")}>
           <span className="text-sm text-[var(--c-ink-1)]">
-            {formatThaiDateWithTime(item.updatedAt, tr)}
+            {formatThaiDateWithTime(item.updatedAt, tr, __loc)}
           </span>
         </Row>
 
@@ -64,7 +67,7 @@ export default function SystemMetadataCard({ item }: Props) {
         <Row label={tr("เข้าชมล่าสุด")}>
           <span className="text-sm text-[var(--c-ink-1)]">
             {item.lastViewedAt
-              ? formatThaiDateWithTime(item.lastViewedAt, tr)
+              ? formatThaiDateWithTime(item.lastViewedAt, tr, __loc)
               : tr("ยังไม่มีผู้เข้าชม")}
           </span>
         </Row>
@@ -113,8 +116,11 @@ function StatBox({
   );
 }
 
-function formatThaiDateWithTime(date: string, tr: TrFn): string {
+function formatThaiDateWithTime(date: string, tr: TrFn, loc: Locale): string {
   const d = new Date(date);
+  if (loc === "en") {
+    return d.toLocaleString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  }
   const MONTH_TH = [tr("ม.ค."),tr("ก.พ."),tr("มี.ค."),tr("เม.ย."),tr("พ.ค."),tr("มิ.ย."),
                      tr("ก.ค."),tr("ส.ค."),tr("ก.ย."),tr("ต.ค."),tr("พ.ย."),tr("ธ.ค.")];
   const hours = d.getHours().toString().padStart(2, "0");

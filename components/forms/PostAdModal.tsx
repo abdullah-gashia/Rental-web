@@ -637,7 +637,7 @@ export default function PostAdModal({ isOpen, onClose }: PostAdModalProps) {
                   value={rentalTerms}
                   onChange={(e) => setRentalTerms(e.target.value)}
                   rows={2}
-                  placeholder={'เช่น tr("ห้ามแกะชิ้นส่วน"), tr("คืนพร้อมกล่องและอุปกรณ์ครบ")'}
+                  placeholder={tr('เช่น "ห้ามแกะชิ้นส่วน", "คืนพร้อมกล่องและอุปกรณ์ครบ"')}
                   className="w-full border border-[var(--c-line)] rounded-xl px-4 py-2.5 text-sm resize-none outline-none transition focus:border-[var(--c-ink)] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
                 />
               </div>

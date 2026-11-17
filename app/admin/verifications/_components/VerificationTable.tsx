@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import Link from "next/link";
@@ -18,12 +20,13 @@ interface Props {
 }
 
 export default function VerificationTable({ requests, filter }: Props) {
+  const __loc = useLocale();
   const tr = useTr();
   if (requests.length === 0) {
     return (
       <div className="text-center py-16 text-[var(--c-muted)]">
         <p className="text-4xl mb-3">📭</p>
-        <p className="font-medium">ไม่มีคำขอ{filter === "PENDING" ? tr("ที่รอตรวจสอบ") : ""}</p>
+        <p className="font-medium">{tr("ไม่มีคำขอ")}{filter === "PENDING" ? tr("ที่รอตรวจสอบ") : ""}</p>
       </div>
     );
   }
@@ -44,7 +47,7 @@ export default function VerificationTable({ requests, filter }: Props) {
         <tbody className="divide-y divide-[var(--c-line-soft)]">
           {requests.map((r) => {
             const meta = STATUS_META[r.status] ?? STATUS_META.PENDING;
-            const date = new Date(r.submittedAt).toLocaleDateString("th-TH", {
+            const date = new Date(r.submittedAt).toLocaleDateString(dateTag(__loc), {
               day: "numeric", month: "short", year: "numeric",
             });
 

@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState } from "react";
@@ -19,6 +21,7 @@ interface Props {
 }
 
 export default function PickupStep({ state, startDate, onUpdate }: Props) {
+  const __loc = useLocale();
   const tr = useTr();
   const [useCustomPickup,  setUseCustomPickup]  = useState(
     !CAMPUS_MEETUP_LOCATIONS.some((l) => l.label === state.pickupLocation)
@@ -31,7 +34,7 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
 
   // Formatted date label for the static tr("วันที่นัดรับ") row
   const formattedStartDate = startDate
-    ? new Date(startDate).toLocaleDateString("th-TH", {
+    ? new Date(startDate).toLocaleDateString(dateTag(__loc), {
         year: "numeric", month: "long", day: "numeric", weekday: "long",
       })
     : "—";
@@ -211,7 +214,7 @@ export default function PickupStep({ state, startDate, onUpdate }: Props) {
           value={state.pickupNote}
           onChange={(e) => patch({ pickupNote: e.target.value })}
           rows={2}
-          placeholder='เช่น tr("ใส่เสื้อสีแดง") หรือ tr("จะโทรก่อนถึง 10 นาที")'
+          placeholder={tr('เช่น "ใส่เสื้อสีแดง" หรือ "จะโทรก่อนถึง 10 นาที"')}
           className="w-full px-3 py-2.5 border border-[var(--c-line)] rounded-xl text-sm resize-none
                      focus:outline-none focus:ring-2 focus:ring-[var(--c-accent)]/30"
         />

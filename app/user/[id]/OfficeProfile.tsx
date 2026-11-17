@@ -1,3 +1,5 @@
+import { dateTag } from "@/lib/i18n/dates";
+import { getLocale } from "@/lib/i18n/server";
 import { getTr } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
 import Brand from "@/components/layout/Brand";
@@ -15,6 +17,7 @@ import { BORROW_CATEGORY_LABEL, ITEM_STATUS_LABEL } from "@/lib/borrow-config";
  * apply. What matters here is what it has, where it is, and when it is open.
  */
 export default async function OfficeProfile({ user }: { user: any }) {
+  const __loc = await getLocale();
   const tr = await getTr();
   const [items, lentCount, activeCount] = await Promise.all([
     prisma.lendingItem.findMany({
@@ -35,7 +38,7 @@ export default async function OfficeProfile({ user }: { user: any }) {
     prisma.lendingItem.count({ where: { ownerId: user.id, status: "AVAILABLE" } }),
   ]);
 
-  const since = new Date(user.createdAt).toLocaleDateString("th-TH", { year: "numeric", month: "long" });
+  const since = new Date(user.createdAt).toLocaleDateString(dateTag(__loc), { year: "numeric", month: "long" });
 
   return (
     <div className="bw-root min-h-screen">
@@ -80,11 +83,11 @@ export default async function OfficeProfile({ user }: { user: any }) {
           <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-[var(--bw-line)]">
             <div>
               <dt className="bw-label">{tr("จุดรับ–คืนของ")}</dt>
-              <dd className="text-[13px] mt-1">{user.officeLocation ?? tr("ติดต่อเจ้าหน้าที่")}</dd>
+              <dd className="text-[13px] mt-1">{tr(user.officeLocation) || tr("ติดต่อเจ้าหน้าที่")}</dd>
             </div>
             <div>
               <dt className="bw-label">{tr("เวลาทำการ")}</dt>
-              <dd className="text-[13px] mt-1">{user.officeHours ?? tr("ติดต่อเจ้าหน้าที่")}</dd>
+              <dd className="text-[13px] mt-1">{tr(user.officeHours) || tr("ติดต่อเจ้าหน้าที่")}</dd>
             </div>
           </dl>
         </section>

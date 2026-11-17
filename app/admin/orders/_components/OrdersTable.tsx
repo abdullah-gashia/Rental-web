@@ -1,5 +1,6 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
 import { Fragment, useState, useTransition } from "react";
 import Image                        from "next/image";
 import type { OrderRow }            from "../../_lib/types";
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function OrdersTable({ rows }: Props) {
+  const __loc = useLocale();
   const tr = useTr();
   const [pending, startTransition] = useTransition();
 
@@ -202,7 +204,7 @@ export default function OrdersTable({ rows }: Props) {
                   <td>
                     <StatusBadge status={order.status} type="order" />
                     <p className="text-[11.5px] text-[var(--hp-muted)] mt-1">
-                      {formatRelativeDate(order.createdAt)}
+                      {formatRelativeDate(order.createdAt, __loc)}
                     </p>
                   </td>
 
@@ -243,12 +245,12 @@ export default function OrdersTable({ rows }: Props) {
                         </div>
                         <div>
                           <p className="text-[var(--c-faint)] text-xs mb-1">{tr("วันที่สั่งซื้อ")}</p>
-                          <p className="text-[var(--c-ink-1)]">{formatThaiDate(order.createdAt)}</p>
+                          <p className="text-[var(--c-ink-1)]">{formatThaiDate(order.createdAt, __loc)}</p>
                         </div>
                         {order.shippedAt && (
                           <div>
                             <p className="text-[var(--c-faint)] text-xs mb-1">{tr("วันที่จัดส่ง")}</p>
-                            <p className="text-[var(--c-ink-1)]">{formatThaiDate(order.shippedAt)}</p>
+                            <p className="text-[var(--c-ink-1)]">{formatThaiDate(order.shippedAt, __loc)}</p>
                           </div>
                         )}
                         {order.trackingNumber && (
@@ -285,7 +287,7 @@ export default function OrdersTable({ rows }: Props) {
                           )}
                           {order.meetupDateTime && (
                             <p className="text-[var(--c-ink-2)] text-xs mt-0.5">
-                              🕐 {new Date(order.meetupDateTime).toLocaleString("th-TH", {
+                              🕐 {new Date(order.meetupDateTime).toLocaleString(dateTag(__loc), {
                                 dateStyle: "medium", timeStyle: "short",
                               })}
                             </p>

@@ -47,7 +47,7 @@ export default function Pagination({ meta }: PaginationProps) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 px-1 py-3">
       <p className="text-sm text-[var(--c-ink-3)]">{tr("แสดง")}<span className="font-medium text-[var(--c-ink-1)]">{from}–{to}</span>{" "}
-        จาก <span className="font-medium text-[var(--c-ink-1)]">{totalCount.toLocaleString()}</span>{tr("รายการ")}</p>
+        {tr("จาก")}{" "}<span className="font-medium text-[var(--c-ink-1)]">{totalCount.toLocaleString()}</span>{tr("รายการ")}</p>
 
       <div className="flex items-center gap-1">
         {/* Prev */}

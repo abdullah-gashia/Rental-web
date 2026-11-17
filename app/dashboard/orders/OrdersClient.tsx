@@ -1,5 +1,7 @@
 "use client";
 
+import { dateTag } from "@/lib/i18n/dates";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition, useCallback } from "react";
@@ -181,10 +183,11 @@ function ShippingDetails({ order }: { order: BaseOrder }) {
 // ─── Meetup Details ───────────────────────────────────────────────────────────
 
 function MeetupDetails({ order }: { order: BaseOrder }) {
+  const __loc = useLocale();
   const tr = useTr();
   if (!order.meetupLocation) return null;
   const dt = order.meetupDateTime
-    ? new Date(order.meetupDateTime).toLocaleString("th-TH", {
+    ? new Date(order.meetupDateTime).toLocaleString(dateTag(__loc), {
         day: "numeric", month: "short", year: "numeric",
         hour: "2-digit", minute: "2-digit",
       })
@@ -195,7 +198,7 @@ function MeetupDetails({ order }: { order: BaseOrder }) {
         <span>🤝</span><span>{tr("นัดรับสินค้า")}</span>
       </div>
       <div className="flex items-center gap-1.5 text-[var(--c-ink-2)]">
-        <span>📍</span><span>{order.meetupLocation}</span>
+        <span>📍</span><span>{tr(order.meetupLocation)}</span>
       </div>
       {dt && (
         <div className="flex items-center gap-1.5 text-[var(--c-ink-2)]">
@@ -238,12 +241,13 @@ function OrderCard({
   onReview:         (order: BuyOrder | SellOrder) => void;
   pending:          boolean;
 }) {
+  const __loc = useLocale();
   const tr = useTr();
   const counterparty = role === "buyer"
     ? (order as BuyOrder).seller
     : (order as SellOrder).buyer;
 
-  const date = new Date(order.createdAt).toLocaleDateString("th-TH", {
+  const date = new Date(order.createdAt).toLocaleDateString(dateTag(__loc), {
     day: "numeric", month: "short", year: "numeric",
   });
 
@@ -282,7 +286,7 @@ function OrderCard({
     : false;
   const meetupCutoffTime = order.meetupDateTime
     ? new Date(new Date(order.meetupDateTime).getTime() + 30 * 60 * 1000)
-        .toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })
+        .toLocaleTimeString(dateTag(__loc), { hour: "2-digit", minute: "2-digit" })
     : null;
 
   // Buyer can cancel any pre-shipment status; seller can cancel meetup only after 30 min
@@ -420,7 +424,7 @@ function OrderCard({
               )}
               {isCompleted && order.myReview && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[var(--c-canvas)] text-[var(--c-muted)] border border-[var(--c-line)]">
-                  {"⭐".repeat(order.myReview.rating)} รีวิวแล้ว
+                  {"⭐".repeat(order.myReview.rating)}{" "}{tr("รีวิวแล้ว")}
                 </span>
               )}
             </div>

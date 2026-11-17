@@ -1,6 +1,7 @@
 "use client";
+import type { Locale } from "@/lib/i18n/dictionaries";
 
-import { useTr } from "@/lib/i18n/LocaleProvider";
+import { useTr, useLocale } from "@/lib/i18n/LocaleProvider";
 
 import {
   ComposedChart,
@@ -24,8 +25,9 @@ const MONTH_SHORT: Record<number, string> = {
   6: "ก.ค.", 7: "ส.ค.", 8: "ก.ย.", 9: "ต.ค.", 10: "พ.ย.", 11: "ธ.ค.",
 };
 
-function formatDate(iso: string): string {
+function formatDate(iso: string, loc: Locale = "th"): string {
   const d = new Date(iso + "T00:00:00");
+  if (loc === "en") return d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
   return `${d.getDate()} ${MONTH_SHORT[d.getMonth()]}`;
 }
 
@@ -48,10 +50,11 @@ function CustomTooltip({
   label?: string;
 }) {
   const tr = useTr();
+  const __loc = useLocale();
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-[var(--c-surface)] border border-[var(--c-line)] rounded-xl shadow-lg px-4 py-3 text-sm">
-      <p className="font-semibold text-[var(--c-ink-1)] mb-1.5">{label ? formatDate(label) : ""}</p>
+      <p className="font-semibold text-[var(--c-ink-1)] mb-1.5">{label ? formatDate(label, __loc) : ""}</p>
       {payload.map((p) => (
         <p key={p.name} style={{ color: p.color }} className="flex items-center gap-1.5">
           <span className="font-medium">
@@ -66,7 +69,8 @@ function CustomTooltip({
 
 export default function SalesChart({ data }: SalesChartProps) {
   const tr = useTr();
-  const formatted = data.map((d) => ({ ...d, dateLabel: formatDate(d.date) }));
+  const __loc = useLocale();
+  const formatted = data.map((d) => ({ ...d, dateLabel: formatDate(d.date, __loc) }));
 
   return (
     <div
@@ -74,7 +78,7 @@ export default function SalesChart({ data }: SalesChartProps) {
       aria-label={tr("กราฟยอดขายรายวัน 7 วันล่าสุด")}
     >
       <h3 className="text-sm font-semibold text-[var(--c-ink-1)] mb-4">
-        ยอดขายรายวัน{" "}
+        {tr("ยอดขายรายวัน")}{" "}
         <span className="text-xs font-normal text-[var(--c-muted)]">{tr("(7 วันล่าสุด)")}</span>
       </h3>
 

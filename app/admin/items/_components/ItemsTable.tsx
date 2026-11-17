@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useTr } from "@/lib/i18n/LocaleProvider";
 
 import { useState, useTransition } from "react";
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function ItemsTable({ rows }: Props) {
+  const __loc = useLocale();
   const tr = useTr();
   const [pending, startTransition] = useTransition();
 
@@ -144,7 +146,7 @@ export default function ItemsTable({ rows }: Props) {
                     <div className="min-w-0">
                       <p className="font-medium text-[var(--c-ink)] truncate max-w-[200px]">{item.title}</p>
                       {item.category && (
-                        <p className="text-xs text-[var(--c-muted)]">{item.category}</p>
+                        <p className="text-xs text-[var(--c-muted)]">{tr(item.category)}</p>
                       )}
                     </div>
                   </div>
@@ -178,7 +180,7 @@ export default function ItemsTable({ rows }: Props) {
 
                 {/* Date */}
                 <td className="px-4 py-3 text-[var(--c-ink-3)] whitespace-nowrap">
-                  {formatThaiDate(item.createdAt)}
+                  {formatThaiDate(item.createdAt, __loc)}
                 </td>
 
                 {/* Actions */}

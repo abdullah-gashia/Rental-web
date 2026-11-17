@@ -1,3 +1,4 @@
+import { getLocale } from "@/lib/i18n/server";
 import { getTr } from "@/lib/i18n/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export default async function AdminItemDetailPage({ params }: Props) {
+  const __loc = await getLocale();
   const tr = await getTr();
   const { id } = await params;
   const item = await getAdminItemDetail(id);
@@ -80,13 +82,13 @@ export default async function AdminItemDetailPage({ params }: Props) {
           </div>
           <p className="text-sm text-[var(--c-faint)] mt-1">
             {item.category.emoji && <span className="mr-1">{item.category.emoji}</span>}
-            {item.category.nameTh}
+            {tr(item.category.nameTh)}
             {" · "}
             {CONDITION_TH[item.condition] || item.condition}
             {" · "}
             {item.listingType === "SELL" ? tr("ขาย") : tr("เช่า")}
             {" · "}
-            โพสต์เมื่อ {formatThaiDate(item.createdAt)}
+            {tr("โพสต์เมื่อ")}{" "}{formatThaiDate(item.createdAt, __loc)}
           </p>
         </div>
       </div>
